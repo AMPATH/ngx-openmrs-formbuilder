@@ -1,0 +1,12 @@
+.container{
+    margin: auto;
+    margin-top: 100px;
+}
+
+#create-form{
+    height: 500px;
+    border-right: 1px solid lightgray;
+}
+a{
+    margin: auto;
+}
