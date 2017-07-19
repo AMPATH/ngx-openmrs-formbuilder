@@ -1,7 +1,7 @@
 <md-sidenav-container >
     <md-sidenav #sidenav mode="over" class="app-sidenav">
     
-       <app-navigator [schema]="schema" (clickedElement)="setSchemaEditor($event)"></app-navigator>
+       <app-navigator [schema]="schema"></app-navigator>
     
         </md-sidenav>
         <md-toolbar color="primary">
@@ -12,16 +12,16 @@
         </md-toolbar>
     <div class="app-content">
         <div flex class="row">
-<div *ngIf="schema" class="col-md-3">
-
-</div>
-<div class="col-md-4">
-    <app-element-editor></app-element-editor>
-    </div>
-<div class="col-md-5">
-    <app-schema-editor></app-schema-editor>
-    </div>
-</div>
+            <div class="col-md-4">
+                <app-element-editor ></app-element-editor>
+                </div>
+            <div class="col-md-4">
+                <app-schema-editor [schema]="strSchema"></app-schema-editor>
+            </div>
+            <div *ngIf="schema" class="col-md-4">
+                <app-form-renderer></app-form-renderer>
+            </div>
+        </div>
         
     </div>
 </md-sidenav-container>

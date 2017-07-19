@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FetchFormsService } from './fetch-forms.service'
-
+import { FetchFormsService } from './Services/fetch-forms.service'
+import { NavigatorService } from './Services/navigator.service'
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,9 @@ import { FetchFormsService } from './fetch-forms.service'
 export class AppComponent implements OnInit{
 
    schema:any ="";
-  constructor(private fs: FetchFormsService){
+   selectedSchema:any ="";
+   strSchema:string="";
+  constructor(private fs: FetchFormsService, private ns: NavigatorService){
     
   }
 
@@ -18,6 +20,14 @@ export class AppComponent implements OnInit{
     
       this.fs.fetchAvailableForms().subscribe(
           res => this.schema = res
+      )
+        
+      this.ns.getSelectedElement().subscribe(
+          res => {
+              this.selectedSchema = res;
+              this.strSchema = JSON.stringify(this.selectedSchema,null,'\t');
+              console.log(this.strSchema)
+          }
       )
   }
 

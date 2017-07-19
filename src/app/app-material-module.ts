@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import {CommonModule} from '@angular/common';
 import {MdSidenavModule, MdButtonModule,MdIconModule,MdToolbarModule,MdListModule} from '@angular/material';
 
 @NgModule({
-    imports:[MdSidenavModule],
+    imports:[CommonModule],
     exports:[MdSidenavModule,MdIconModule,MdButtonModule,MdToolbarModule,MdListModule]
 })
 export class AppMaterialModule{}

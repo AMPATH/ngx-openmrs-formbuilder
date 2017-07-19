@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import {AceEditorComponent} from 'ng2-ace-editor';
 import 'brace/index';
 import 'brace/mode/json';
@@ -16,8 +16,14 @@ import 'brace/theme/chrome';
 export class SchemaEditorComponent implements OnInit {
 
    @ViewChild('editor') editor;
-    schema: string = "hello world";
+   private _schema;
  
+   @Input()
+   set schema(newSchema:string){
+      this._schema = newSchema;
+      this.editor.setText(this._schema);
+      this.editor.getEditor().scrollToLine(1);
+   }
 
   constructor() { }
 

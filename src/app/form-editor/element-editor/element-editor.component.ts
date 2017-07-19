@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 
 @Component({
   selector: 'app-element-editor',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./element-editor.component.css']
 })
 export class ElementEditorComponent implements OnInit {
+
+  @Input() schema:any;
 
   constructor() { }
 

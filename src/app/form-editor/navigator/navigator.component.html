@@ -1,16 +1,15 @@
 <div [class.well]="schema.name">
 
 <div *ngIf="schema.name">
-  <hr>
- <h4 id="schema" (click)="onClicked($event)"><i class="fa fa-caret-down"></i> {{schema.name}}</h4>
+ <h4 id="schema" (click)="onClicked(schema)"><i class="fa fa-lg fa-caret-down"></i> {{schema.name}}</h4>
 </div>
 
 <div  style="margin-left:20px" *ngIf="schema.pages">
    <a> <i class="fa fa-plus"></i> Add new page</a>
   <div *ngFor="let page of schema.pages; let i=index;">
     
-    <h6 (click)="onClicked($event)" class="element">{{page.label}}</h6>
-    <a [href]="'#page'+i" data-toggle="collapse"><i class="fa fa-caret-down"> </i></a>
+    <h6 (click)="onClicked(page)" class="element">{{page.label}}</h6>
+    <a [href]="'#page'+i" data-toggle="collapse"><i class="fa fa-lg fa-caret-down"> </i></a>
     <div [id]="'page'+ i" class="collapse">
      <app-navigator [pageIndex]="i" [schema]="page">
 
@@ -23,8 +22,8 @@
 <div style="margin-left:20px" *ngIf="schema.sections">
   <a><i class="fa fa-plus"></i> Add new section</a>
   <div *ngFor="let section of schema.sections; let j= index;">
-    <p (click)="onClicked($event)" class="element" >{{section.label}}</p>
-    <a [href]="'#section'+pageIndex+j" data-toggle="collapse"><i class="fa fa-caret-down"> </i></a>
+    <p (click)="onClicked(section)" class="element" >{{section.label}}</p>
+    <a [href]="'#section'+pageIndex+j" data-toggle="collapse"><i class="fa fa-lg fa-caret-down"> </i></a>
     <div [id]="'section'+pageIndex+j" class="collapse">
     <app-navigator [sectionIndex]="j" [schema]="section"></app-navigator>
   </div>
@@ -35,7 +34,7 @@
   <a><i class="fa fa-plus"></i> Add new question</a>
   <div *ngFor="let question of schema.questions; let k=index;">
     <a [href]="'#question'+sectionIndex+k" data-toggle="collapse"></a>
-      <p class="element" (click)="onClicked($event)">{{question.label}}</p>
+      <p class="element" (click)="onClicked(question)">{{question.label}}</p>
     <div [id]="'question'+sectionIndex+k" class="collapse">
     <app-navigator [schema]="question"></app-navigator>
 </div>

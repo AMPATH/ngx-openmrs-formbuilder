@@ -1,5 +1,5 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
-
+import {NavigatorService} from '../../Services/navigator.service'
 
 @Component({
   selector: 'app-navigator',
@@ -15,7 +15,7 @@ export class NavigatorComponent implements OnInit {
 
   @Output() clickedElement= new EventEmitter<any>();
 
-  constructor() {
+  constructor(private ns: NavigatorService) {
   
    }
 
@@ -23,10 +23,8 @@ export class NavigatorComponent implements OnInit {
     
   }
 
-  onClicked(event){
-    event.preventDefault();
-    event.stopPropagation();
-    this.clickedElement.emit(event);
+  onClicked(schema){
+    this.ns.setSelectedElement(schema);
   }
 
 }
