@@ -15,8 +15,15 @@
 a{
     font-size: 16px;
     margin-bottom:20px;
+    font-weight:bold;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 #schema{
     margin-bottom:20px;
+}
+
+.display{
+    display:none;
 }

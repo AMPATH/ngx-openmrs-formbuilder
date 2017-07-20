@@ -5,16 +5,22 @@
 </div>
 
 <div  style="margin-left:20px" *ngIf="schema.pages">
-   <a> <i class="fa fa-plus-square"></i> Add new page</a>
+   <a (click)="pageToggler()"> <i class="fa fa-plus-square"></i> Add new page</a>
+   <div [class.display]="pageToggle">
+     <form [formGroup]="addPageForm" noValidate>
+      <div class="form-group">
+        <input class="form-control" type="text" placeholder="Enter new page name" formControlName="pageLabel"><br/>
+        </div>
+       <button (click)="createPage()" class="btn btn-primary btn-sm" [disabled]="!addPageForm.valid">Create</button>
+       <button (click)="pageToggler()" class="btn btn-default btn-sm">Cancel</button>
+     </form>
+      </div>
+</div>
   <div *ngFor="let page of schema.pages; let i=index;">
-    
-    <h6 (click)="onClicked(page)" class="element">{{page.label}}</h6>
     <a [href]="'#page'+i" data-toggle="collapse"><i class="fa fa-chevron-down"> </i></a>
+    <h6 (click)="onClicked(page)" class="element">{{page.label}}</h6>
     <div [id]="'page'+ i" class="collapse">
-     <app-navigator [pageIndex]="i" [schema]="page">
-
-     </app-navigator>
-     
+     <app-navigator [pageIndex]="i" [schema]="page"></app-navigator>
      </div>
     </div>
 </div>
@@ -22,8 +28,8 @@
 <div style="margin-left:20px" *ngIf="schema.sections">
   <a><i class="fa fa-plus-square"></i> Add new section</a>
   <div *ngFor="let section of schema.sections; let j= index;">
-    <p (click)="onClicked(section)" class="element" >{{section.label}}</p>
     <a [href]="'#section'+pageIndex+j" data-toggle="collapse"><i class="fa fa-chevron-down"> </i></a>
+    <p (click)="onClicked(section)" class="element" >{{section.label}}</p>
     <div [id]="'section'+pageIndex+j" class="collapse">
     <app-navigator [sectionIndex]="j" [schema]="section"></app-navigator>
   </div>
@@ -41,4 +47,3 @@
 </div>
 </div>
 
-</div>

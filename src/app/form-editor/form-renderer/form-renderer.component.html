@@ -1,3 +1,11 @@
 <div class="text-center" style="background-color:#ebebeb;">
   Form Renderer
 </div>
+
+<div *ngIf="form">
+<form-renderer [node]="form.rootNode"></form-renderer>
+
+		<div class="form-row text-center">
+			<button class="btn btn-lg btn-primary" type="submit" (click)="onSubmit($event)">Save</button>
+		</div>
+</div>

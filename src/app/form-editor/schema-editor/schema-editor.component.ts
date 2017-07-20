@@ -22,7 +22,7 @@ export class SchemaEditorComponent implements OnInit {
    set schema(newSchema:string){
       this._schema = newSchema;
       this.editor.setText(this._schema);
-      this.editor.getEditor().scrollToLine(1);
+      this.editor.getEditor().scrollToLine(0);
    }
 
   constructor() { }

@@ -4,16 +4,25 @@ import {Subject, Observable} from 'rxjs';
 export class NavigatorService {
 
   schema: {};
-  subject:Subject<{}> = new Subject<{}>();
-
+  selectedElementSubject:Subject<{}> = new Subject<{}>();
+  schemaSubject:Subject<{}> = new Subject<{}>();
   constructor() {}
 
   setSelectedElement(schema){
       this.schema = schema;
-      this.subject.next(schema);
+      this.selectedElementSubject.next(schema);
   }
 
   getSelectedElement():Observable<{}>{
-    return this.subject.asObservable()  }
+    return this.selectedElementSubject.asObservable();
+ }
 
+ setSchema(schema){
+   this.schema = schema;
+   this.schemaSubject.next(schema);
+ }
+
+ getSchema(){
+   return this.schemaSubject.asObservable();
+ }
 }

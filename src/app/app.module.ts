@@ -3,16 +3,17 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppMaterialModule} from './app-material-module';
+import {FormEntryModule} from 'ng2-openmrs-formentry';
+import {AceEditorModule} from 'ng2-ace-editor';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-
-import { AppComponent } from './app.component';
-import { NavigatorComponent } from './form-editor/navigator/navigator.component';
 
 import { FetchFormsService } from './Services/fetch-forms.service';
 import {NavigatorService} from './Services/navigator.service';
 
+import { AppComponent } from './app.component';
+import { NavigatorComponent } from './form-editor/navigator/navigator.component';
 import { SchemaEditorComponent } from './form-editor/schema-editor/schema-editor.component';
-import {AceEditorModule} from 'ng2-ace-editor';
 import { ElementEditorComponent } from './form-editor/element-editor/element-editor.component';
 import { FormRendererComponent } from './form-editor/form-renderer/form-renderer.component';
 
@@ -27,9 +28,13 @@ import { FormRendererComponent } from './form-editor/form-renderer/form-renderer
   ],
   imports: [
     BrowserModule,
+    AppMaterialModule,
+    ReactiveFormsModule,
+    FormEntryModule,
+    BrowserAnimationsModule,
     HttpModule,
-    AceEditorModule,
-    AppMaterialModule
+    AceEditorModule
+    
   ],
   providers: [FetchFormsService,NavigatorService],
   bootstrap: [AppComponent]

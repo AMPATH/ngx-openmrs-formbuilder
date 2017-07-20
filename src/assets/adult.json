@@ -170,7 +170,7 @@
       "sections": [
         {
           "label": "Encounter Details",
-          "isExpanded": "True",
+          "isExpanded": "true",
           "questions": [
             {
               "label": "Visit date",

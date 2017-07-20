@@ -1,9 +1,7 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MdSidenavModule, MdButtonModule,MdIconModule,MdToolbarModule,MdListModule} from '@angular/material';
+import {MdSidenavModule, MdButtonModule,MdIconModule,MdToolbarModule} from '@angular/material';
 
 @NgModule({
-    imports:[CommonModule],
-    exports:[MdSidenavModule,MdIconModule,MdButtonModule,MdToolbarModule,MdListModule]
+    exports:[MdSidenavModule,MdIconModule,MdButtonModule,MdToolbarModule]
 })
 export class AppMaterialModule{}

@@ -9,32 +9,40 @@ import { NavigatorService } from './Services/navigator.service'
 })
 export class AppComponent implements OnInit{
 
-   schema:any ="";
-   selectedSchema:any ="";
-   strSchema:string="";
+   schema:any;
+   selectedSchema:any;
+   strSchema:string;
   constructor(private fs: FetchFormsService, private ns: NavigatorService){
     
   }
 
   ngOnInit(){
-    
+    //onLoad
       this.fs.fetchAvailableForms().subscribe(
-          res => this.schema = res
+          res => {
+              this.schema = res;
+              this.strSchema = JSON.stringify(this.schema,null,'\t');
+            }
       )
-        
+      //on element clicked for editing
       this.ns.getSelectedElement().subscribe(
           res => {
               this.selectedSchema = res;
               this.strSchema = JSON.stringify(this.selectedSchema,null,'\t');
-              console.log(this.strSchema)
           }
       )
+
+      //on element added/deleted/modified
+      this.ns.getSchema().subscribe(
+          res => {
+              this.schema = res;
+              this.strSchema = JSON.stringify(this.schema,null,'\t')
+          }
+      )
+
   }
 
 
-  setSchemaEditor(event){
-      console.log(event);
-  }
 
 }
 

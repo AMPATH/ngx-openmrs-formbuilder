@@ -15,9 +15,6 @@ export class FetchFormsService {
   fetchAvailableForms():Observable<any>{
     return this.http.get(this.url)
     .map(res=> res.json())
-    
-
-
   }
 
 }
