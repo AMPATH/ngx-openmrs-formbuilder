@@ -20,21 +20,42 @@
     <a [href]="'#page'+i" data-toggle="collapse"><i class="fa fa-chevron-down"> </i></a>
     <h6 (click)="onClicked(page)" class="element">{{page.label}}</h6>
     <div [id]="'page'+ i" class="collapse">
-     <app-navigator [pageIndex]="i" [schema]="page"></app-navigator>
+     <app-navigator [pageIndex]="i" [_schema]="page" [formSchema]="_formSchema"></app-navigator>
      </div>
     </div>
 </div>
 
 <div style="margin-left:20px" *ngIf="schema.sections">
-  <a><i class="fa fa-plus-square"></i> Add new section</a>
+
+  <a (click)="sectionToggler()"><i class="fa fa-plus-square"></i> Add new section</a>
+  <div [class.display]="sectionToggle">
+     <form [formGroup]="addSectionForm" noValidate>
+      <div class="form-group">
+        <input class="form-control" type="text" placeholder="Enter new section name" formControlName="sectionLabel"><br/>
+        </div>
+      <div class="form-group">
+        <select class="form-control" type="text" formControlName="isExpanded">
+          <option value="" disabled selected>Expanded</option>
+          <option [value]="true">True</option>
+          <option [value]="false">False</option>
+          </select><br/>
+        </div>
+       <button (click)="createSection(pageIndex)" class="btn btn-primary btn-sm" [disabled]="!addSectionForm.valid">Create</button>
+       <button (click)="sectionToggler()" class="btn btn-default btn-sm">Cancel</button>
+     </form>
+  </div>
+
+
   <div *ngFor="let section of schema.sections; let j= index;">
     <a [href]="'#section'+pageIndex+j" data-toggle="collapse"><i class="fa fa-chevron-down"> </i></a>
     <p (click)="onClicked(section)" class="element" >{{section.label}}</p>
     <div [id]="'section'+pageIndex+j" class="collapse">
-    <app-navigator [sectionIndex]="j" [schema]="section"></app-navigator>
+    <app-navigator [sectionIndex]="j" [_schema]="section" [formSchema]="_formSchema"></app-navigator>
   </div>
   </div>
+
 </div>
+
 
 <div style="margin-left:20px" *ngIf="schema.questions">
   <a><i class="fa fa-plus-square"></i> Add new question</a>
@@ -42,7 +63,7 @@
     <a [href]="'#question'+sectionIndex+k" data-toggle="collapse"></a>
       <p class="element" (click)="onClicked(question)">{{question.label}}</p>
     <div [id]="'question'+sectionIndex+k" class="collapse">
-    <app-navigator [schema]="question"></app-navigator>
+    <app-navigator [_schema]="question"></app-navigator>
 </div>
 </div>
 </div>

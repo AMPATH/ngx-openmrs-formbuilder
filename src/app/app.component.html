@@ -1,9 +1,9 @@
-<div *ngIf="schema">
+
 <md-sidenav-container >
-    <md-sidenav #sidenav mode="over" class="app-sidenav">
-    
-       <app-navigator [schema]="schema"></app-navigator>
-    
+    <md-sidenav #sidenav mode="over" class="app-sidenav" fullscreen>
+    <div *ngIf="schema">
+       <app-navigator [_schema]="schema" [formSchema]="schema"></app-navigator>
+    </div>
         </md-sidenav>
         <md-toolbar color="primary">
             <button md-icon-button (click)="sidenav.toggle()">
@@ -11,7 +11,7 @@
                 <span style="font-size:24px; margin-left:30px;">FORM EDITOR</span>
             </button>
         </md-toolbar>
-    <div class="app-content">
+    <div class="app-content" *ngIf="schema">  
         <div flex class="row">
             <div class="col-md-4">
                 <app-element-editor></app-element-editor>
@@ -21,12 +21,9 @@
                 <app-schema-editor [schema]="strSchema"></app-schema-editor>
             </div>
             
-            <div class="col-md-4">
+            <div class="col-md-4" *ngIf="schema">
                 <app-form-renderer [schema]="schema"></app-form-renderer>
             </div>
-        </div>
-        
+        </div> 
     </div>
 </md-sidenav-container>
-
-</div>

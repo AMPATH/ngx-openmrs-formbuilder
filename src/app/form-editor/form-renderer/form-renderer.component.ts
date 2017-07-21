@@ -14,12 +14,17 @@ export class FormRendererComponent implements OnInit {
 
   constructor(private fc: FormFactory, private ns: NavigatorService) { }
 
+  @Input()
+  set schema(schema:any){
+    //this._schema = schema;
+    //this.form = this.fc.createForm(this._schema,{});
+  }
   
 
   ngOnInit() {
       this.ns.getSchema().subscribe(res => {
         this._schema = res;
-        console.log("NOTEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+        this.form = this.fc.createForm(this._schema,{});
       })
   }
 
