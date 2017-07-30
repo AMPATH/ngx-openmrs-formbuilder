@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SchemaEditorComponent } from './schema-editor.component';
+import { DynamicQuestionComponent } from './dynamic-question.component';
 
-describe('SchemaEditorComponent', () => {
-  let component: SchemaEditorComponent;
-  let fixture: ComponentFixture<SchemaEditorComponent>;
+describe('DynamicQuestionComponent', () => {
+  let component: DynamicQuestionComponent;
+  let fixture: ComponentFixture<DynamicQuestionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SchemaEditorComponent ]
+      declarations: [ DynamicQuestionComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SchemaEditorComponent);
+    fixture = TestBed.createComponent(DynamicQuestionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -22,5 +22,4 @@ describe('SchemaEditorComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
-
 });

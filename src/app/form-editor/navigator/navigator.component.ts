@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, EventEmitter } from '@angular/core';
-import {NavigatorService} from '../../Services/navigator.service';
-import {FormControl, FormGroup, FormBuilder,Validators} from '@angular/forms';
-import {Page} from '../form-elements/Page'
+import { NavigatorService } from '../../Services/navigator.service';
+import { QuestionControlService } from '../../Services/question-control.service';
+import { FormControl, FormGroup, FormBuilder,Validators } from '@angular/forms';
+import { FormElementFactory } from '../form-elements/form-element-factory';
 
 @Component({
   selector: 'app-navigator',
@@ -28,7 +29,8 @@ export class NavigatorComponent implements OnInit {
     this._formSchema = schema; //maintains the full form
   }
 
-  constructor(private fb: FormBuilder,private ns: NavigatorService) {}
+  constructor(private fb: FormBuilder,private ns: NavigatorService,private qcs:QuestionControlService,
+    private formElementFactory:FormElementFactory) {}
 
 
 
@@ -59,19 +61,42 @@ export class NavigatorComponent implements OnInit {
   //when element is clicked in navigator
   onClicked(schema){
     this.ns.setSelectedElement(schema);
+    
+    
   }
 
   //creating a new page
   createPage(){
-    this.schema.pages.push(new Page(this.addPageForm.get('pageLabel').value));
+    let options = {
+      "label":this.addPageForm.get('pageLabel').value
+    }
+    let newPage = this.formElementFactory.createFormElement("page",options);
+    this.schema.pages.push();
     this.ns.setSchema(this.schema);
     this.pageToggler();
   }
 
   createSection(pageIndex){
-    this.schema.sections.push({"label":this.addSectionForm.get('sectionLabel').value,"isExpanded":this.addSectionForm.get('isExpanded').value, "questions":[]})
+
+    let options = {
+      "label":this.addSectionForm.get('sectionLabel').value,
+      "isExpanded":this.addSectionForm.get('isExpanded').value,
+    }
+    let newSection = this.formElementFactory.createFormElement("section",options)
+    this.schema.sections.push(newSection)
     this._formSchema.pages[pageIndex] =this.schema;
     this.ns.setSchema(this._formSchema);
     this.sectionToggle=true;
   }
+
+  createNewQuestion(pageIndex:number,sectionIndex:number){
+    console.log(" \n pageIndex: " + pageIndex + "section index: "+sectionIndex);
+    
+    let newQuestion = this.formElementFactory.createFormElement("question",{});
+    //transform schema into property model array
+    let propertyModelArray = this.qcs.toPropertyModelArray(newQuestion);
+    this.ns.addNewQuestionSchema(propertyModelArray);
+    
+  }
+  
 }

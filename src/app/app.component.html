@@ -1,29 +1,16 @@
-
-<md-sidenav-container >
-    <md-sidenav #sidenav mode="over" class="app-sidenav" fullscreen>
-    <div *ngIf="schema">
-       <app-navigator [_schema]="schema" [formSchema]="schema"></app-navigator>
-    </div>
-        </md-sidenav>
-        <md-toolbar color="primary">
-            <button md-icon-button (click)="sidenav.toggle()">
-                <md-icon class="md-24" >menu</md-icon>
-                <span style="font-size:24px; margin-left:30px;">FORM EDITOR</span>
-            </button>
-        </md-toolbar>
-    <div class="app-content" *ngIf="schema">  
-        <div flex class="row">
-            <div class="col-md-4">
-                <app-element-editor></app-element-editor>
-                </div>
-
-            <div class="col-md-4">
-                <app-schema-editor [schema]="strSchema"></app-schema-editor>
-            </div>
-            
-            <div class="col-md-4" *ngIf="schema">
-                <app-form-renderer [schema]="schema"></app-form-renderer>
-            </div>
-        </div> 
-    </div>
-</md-sidenav-container>
+<ul id="slide-out" class="side-nav">
+    <li><div class="user-view">
+      <div class="background">
+        
+      </div>
+      
+      <a href="#!name"><span class="white-text name">John Doe</span></a>
+      <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+    </div></li>
+    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+    <li><a href="#!">Second Link</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Subheader</a></li>
+    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+  </ul>
+  <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>

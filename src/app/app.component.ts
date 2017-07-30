@@ -12,6 +12,8 @@ export class AppComponent implements OnInit{
    schema:any;
    selectedSchema:any;
    strSchema:string;
+   questions:any;
+
   constructor(private fs: FetchFormsService, private ns: NavigatorService){
     
   }
@@ -38,7 +40,13 @@ export class AppComponent implements OnInit{
               this.schema = res;
               this.strSchema = JSON.stringify(this.schema,null,'\t')
           }
+
+       
       )
+
+       this.ns.getNewQuestionSchema().subscribe(
+           propertyModelArray => this.questions = propertyModelArray
+       )
 
   }
 

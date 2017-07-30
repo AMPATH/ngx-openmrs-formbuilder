@@ -1,0 +1,23 @@
+import { Injectable } from '@angular/core';
+import {TextboxProperty} from './textbox-property';
+import {SelectProperty} from './select-property';
+import {SearchboxProperty} from './searchbox-property';
+import {PropertyModel} from './property-model';
+
+@Injectable()
+export class PropertyFactory {
+
+  constructor() {}
+
+  createProperty(type:string, options:{}):PropertyModel<any>{
+
+    if(type.toLowerCase() === 'textbox') return new TextboxProperty(options);
+
+    else if(type.toLowerCase() === 'select') return new SelectProperty(options);
+
+    else if(type.toLowerCase() === 'searchbox') return new SearchboxProperty(options);
+
+    else console.log("No such property exists");
+  }
+
+}

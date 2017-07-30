@@ -16,8 +16,8 @@ export class FormRendererComponent implements OnInit {
 
   @Input()
   set schema(schema:any){
-    //this._schema = schema;
-    //this.form = this.fc.createForm(this._schema,{});
+    this._schema = schema;
+    this.form = this.fc.createForm(this._schema,{});
   }
   
 

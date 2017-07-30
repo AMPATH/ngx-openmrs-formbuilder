@@ -38,4 +38,9 @@ export class SchemaEditorComponent implements OnInit {
           
   }
 
+  //render button
+  onRender(schema){
+    
+  }
+
 }
