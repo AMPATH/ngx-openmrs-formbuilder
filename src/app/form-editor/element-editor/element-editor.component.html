@@ -5,13 +5,23 @@
 </div>
 <md-card>
 
+  <!--breadcrumbs-->
+  <div class="center-block" *ngIf="page">
+        <ol class="breadcrumb">
+               <li>{{page}}</li>
+               <li>{{section}}</li>       
+        </ol>
+  </div>
+
+  <!--breadcrumbs-->
+  
   <!--add property-->
 
   <div class="dropdown pull-right">
   <a class="btn btn-default dropdown-toggle"   type="button" data-toggle="dropdown"><i class="fa fa-plus" aria-hidden="true"></i> Add Property
   <span class="caret"></span></a>
   <ul class="dropdown-menu">
-    <li (click)="addProperty(prop.path)" value="prop.path" *ngFor="let prop of possiblePropertiesAfterChangeEvent" >
+    <li (click)="addProperty(prop.path)" value="prop.path" *ngFor="let prop of allPossibleproperties" >
       <a [class.disabled]="prop.type=='disabled'">{{prop.name}}</a>
     </li>
     
@@ -26,7 +36,7 @@
  <form (ngSubmit)="onSubmit()" [formGroup]="form">
 
   <div *ngFor="let question of questions; let i=index;">
-    <div *ngIf="i>2" class="pull-right">
+    <div *ngIf="i!=0" class="pull-right">
       <button class="btn btn-default btn-sm" (click)="delete(i)" data-toggle="tooltip" title="Delete">
         <i class="fa fa-trash-o" style="font-size:16px;color:red;cursor:pointer"></i>
       </button>

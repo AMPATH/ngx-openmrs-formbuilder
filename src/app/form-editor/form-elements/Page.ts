@@ -5,6 +5,6 @@ export class Page extends FormElement{
 
     constructor(options:{}={}){
             super(options);
-            this.sections = options['sections'] || '';
+            this.sections = options['sections'] || [];
     }
 }

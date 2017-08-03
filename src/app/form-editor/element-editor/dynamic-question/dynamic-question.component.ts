@@ -10,7 +10,7 @@ import { FormGroup } from '@angular/forms';
 export class DynamicQuestionComponent implements OnInit {
   @Input() question: PropertyModel<any>;
   form: FormGroup;
-  @Output() qtype:EventEmitter<string> = new EventEmitter<string>(); 
+  @Output() qtype:EventEmitter<string> = new EventEmitter<string>(); //for questions only
 
   @Input() set _form(form){
   console.log("New form")

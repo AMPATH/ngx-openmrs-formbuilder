@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import {AceEditorComponent} from 'ng2-ace-editor';
+import {NavigatorService} from '../../Services/navigator.service';
 import 'brace/index';
 import 'brace/mode/json';
 import 'brace/theme/chrome';
@@ -16,8 +17,13 @@ import 'brace/theme/chrome';
 export class SchemaEditorComponent implements OnInit {
 
    @ViewChild('editor') editor;
-   private _schema;
- 
+   private _schema:string;
+   private _selectedSchemaObj:any;
+   formSchema:any; //full form schema
+   pageIndex:number;
+   sectionIndex:number;
+   questionIndex:number;
+
    @Input()
    set schema(newSchema:string){
       this._schema = newSchema;
@@ -25,7 +31,18 @@ export class SchemaEditorComponent implements OnInit {
       this.editor.getEditor().scrollToLine(0);
    }
 
-  constructor() { }
+   @Input()
+   set selectedSchema(newSchema:any){
+     this._selectedSchemaObj = newSchema;
+     if(this._selectedSchemaObj.pages) this.formSchema = this._selectedSchemaObj
+     if(this._selectedSchemaObj.hasOwnProperty('selectedSchema')) {
+       this.pageIndex = this._selectedSchemaObj.pageIndex || null;
+       this.sectionIndex = this._selectedSchemaObj.sectionIndex || null;
+       this.questionIndex = this._selectedSchemaObj.questionIndex || null;
+     }
+   }
+
+  constructor(private ns:NavigatorService) { }
 
   ngOnInit() {
 
@@ -39,8 +56,25 @@ export class SchemaEditorComponent implements OnInit {
   }
 
   //render button
-  onRender(schema){
-    
+  render(){
+    let editedSchema=this.editor.getEditor().getValue();
+    editedSchema = JSON.parse(editedSchema)
+    if(editedSchema.pages){
+      this.ns.setSchema(editedSchema)
+      return;
+    }
+
+    else if(editedSchema.sections){
+      this.formSchema.pages[this.pageIndex]= editedSchema
+    }
+
+    else if(editedSchema.questions){
+      this.formSchema.pages[this.pageIndex].sections[this.sectionIndex] = editedSchema
+    }
+    else{
+      this.formSchema.pages[this.pageIndex].sections[this.sectionIndex].questions[this.questionIndex] = editedSchema
+    }
+    this.ns.setSchema(this.formSchema)
   }
 
 }

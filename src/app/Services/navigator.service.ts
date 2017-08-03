@@ -7,7 +7,7 @@ export class NavigatorService {
   schema: {};
   selectedElementSubject:Subject<{}> = new Subject<{}>();
   schemaSubject:Subject<{}> = new Subject<{}>();
-  addQuestionSubject:Subject<any> = new Subject<any>();
+  questionSubject:Subject<any> = new Subject<any>();
   
 
   constructor() {}
@@ -30,13 +30,16 @@ export class NavigatorService {
    return this.schemaSubject.asObservable();
  }
 
- addNewQuestionSchema(schema){
-     this.addQuestionSubject.next(schema);
+ newQuestion(schema:any,pageIndex:number,sectionIndex:number){
+     let question = {}
+     question['schema']=schema
+     question['pageIndex']=pageIndex
+     question['sectionIndex']=sectionIndex
+     this.questionSubject.next(question);
  }
 
- getNewQuestionSchema(){
-   console.log("executing this");
-  return this.addQuestionSubject.asObservable();
+ getNewQuestion(){
+  return this.questionSubject.asObservable();
  }
 
 }

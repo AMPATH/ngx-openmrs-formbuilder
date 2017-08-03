@@ -8,8 +8,9 @@ export class Question extends FormElement{
 
     constructor(options:{}={}){
         super(options)
-        this.id = options['id'] || '';
         this.type = options['type'] || '';
+        this.id = options['id'] || '';
+        
         
     }
 }

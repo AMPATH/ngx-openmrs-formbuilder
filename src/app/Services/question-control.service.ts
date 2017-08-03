@@ -21,22 +21,21 @@ export class QuestionControlService {
   }
 
   
-  toPropertyModelArray(schema:any){
-    
+  toPropertyModelArray(schema:any){  
     this.propertyModels = [];
     let flattenedSchema:any = this.flatten(schema);
     for(var prop in flattenedSchema){
-       this.createFields(prop)
+       this.createFields(prop,flattenedSchema[prop])
       }
       return this.propertyModels;
   }
 
 
-  createFields(prop){
+  createFields(prop,value?){
       let options={
         key: prop,
         label: "",
-        value:"",
+        value: value || "",
         required:false,
         options:[],
         placeholder:""
@@ -48,9 +47,7 @@ export class QuestionControlService {
           case "label":
             options.label = "Label"
             options.required = true;
-            options.placeholder = "Enter question label"
             this.propertyModels.push(this.propertyFactory.createProperty('textbox',options));
-
             break;
 
           case "id":
@@ -58,7 +55,6 @@ export class QuestionControlService {
             options.required = true
             options.placeholder = "Enter unique ID"
             this.propertyModels.push(this.propertyFactory.createProperty('textbox',options));
-
             break;
 
 
@@ -81,17 +77,70 @@ export class QuestionControlService {
             options.label = "Rendering"
             options.required = true
             options.options = [
-                                {key: 'number', value:'Number'},
-                                {key: 'ui-select-extended', value:'UI-select-extended'}
+                                {key: 'number', value:'number'},
+                                {key: 'text', value:'text'},
+                                {key: 'textarea', value: 'textarea'},
+                                {key:'date', value:'date'},
+                                {key:'drug', value:'drug'},
+                                {key:'group', value:'group'},
+                                {key:'select', value:'select'},
+                                {key:'repeating', value:'repeating'},
+                                {key:'multicheckbox', value:'multiCheckbox'},
+                                {key: 'ui-select-extended', value:'ui-select-extended'},
+                                {key:'select-concept-answers', value:'select-concept-answers'}
                               ]
             
             this.propertyModels.push(this.propertyFactory.createProperty('select',options));
 
             break;
+
+          case "isExpanded":
+            options.label = "Is Expanded"
+            options.required = true
+            options.options = [
+                               {key:"true",value:"true"},
+                               {key:"false", value:"false"}
+                              ]
+            
+            this.propertyModels.push(this.propertyFactory.createProperty('select',options));
+            break;
+
+
+          case "questionOptions.concept":
+            options.label = "Concept"
+            this.propertyModels.push(this.propertyFactory.createProperty('searchbox',options));
+            break;
+
+
+          case "default":
+          options.label="Default"
+          this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
+          break;
+
+          case "original":
+          options.label="Original"
+          this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
+          break;
+
+          case "questionOptions.orderSettingUuid":
+            options.label = "Order Setting Uuid"
+            this.propertyModels.push(this.propertyFactory.createProperty('searchbox',options));
+            break;
+
+          case "questionOptions.orderType":
+           options.label="Order Type"
+           options.options = [{key: 'testorder', value:'testorder'}]
+          this.propertyModels.push(this.propertyFactory.createProperty('select', options));
+          break;
+
+          case "required":
+            options.label="Required"
+            options.options = [{key: 'true', value:'true'},{key:'false',value:'false'}]
+            this.propertyModels.push(this.propertyFactory.createProperty('select', options));
+            break;
         }
 
   }
- 
  
 
   getAllPossibleProperties(){
@@ -120,7 +169,7 @@ export class QuestionControlService {
             }
             if (isEmpty && prop)
                 result[prop] = {};
-        }
+          }
     }
     recurse(data, "");
     return result;

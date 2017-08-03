@@ -10,43 +10,47 @@ import {FormElementFactory} from '.././form-elements/form-element-factory';
   styleUrls: ['./element-editor.component.css']
 })
 export class ElementEditorComponent implements OnInit {
-  @Input() questions:PropertyModel<any>[];
+  questions:PropertyModel<any>[];
 
   form: FormGroup;
-  payLoad: '';
+  @Input() page: any;
+  @Input() section: any;
   allPossibleproperties:Array<any>;
-  possiblePropertiesAfterChangeEvent:Array<any>=[{name:"Select type first",type:"disabled"}]
-  
-
   constructor(private qcs: QuestionControlService, private formElementFactory:FormElementFactory) { }
+  
+  @Input() set _questions(questions){
+    this.questions = questions
+    this.form = this.qcs.toFormGroup(this.questions);
+  }
+  
 
   ngOnInit() {
       this.form = this.qcs.toFormGroup(this.questions);
       this.allPossibleproperties = this.qcs.getAllPossibleProperties();
-      
-  }
-
-
-  typeChanged(type){
-    this.possiblePropertiesAfterChangeEvent = this.allPossibleproperties.filter(prop => prop.type == type || prop.type == "any" )
   }
 
 
   addProperty(prop){
-    //check if form already has the control
+
     if(this.form.contains(prop)) {alert("Property already added!"); return;}
-    //pass prop to propertymodel array
-    let newField = this.qcs.toPropertyModelArray({"questionOptions.rendering":""});
+    
+    let obj = {};
+    obj[prop] = "";
+    let newField = this.qcs.toPropertyModelArray(obj);
+
+    if(newField.length > 0){
     this.form.addControl(prop,new FormControl(""))
     this.questions.push(newField[0])
+    }
   }
+
+  
   onSubmit(){
     console.log(this.form.value)
   }
 
 
   delete(i){
-
     this.form.removeControl(this.questions[i].key)
     this.questions.splice(i,1);
   }

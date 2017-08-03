@@ -27,19 +27,19 @@ export class PropertyModel<T>{
 
 
     allOtherPossibleProperties = [
-
-    {name:"Rendering",path:'questionOptions.rendering',type:"any"},
-    {name:"DefaultValue",path:'',type: "any"},
-    {name:"OriginalValue",path:'',type:"any"},
-    {name:"Concept",path:'questionOptions.concept',type:"obs"},
-    {name:"Questions",path:'',type:"obsGroup"},
-    {name:"Answers",path:'',type:"obs"},
-    {name:"Validators",path:'',type:"any"},
-    {name:"Historical Expression",path:'',type:"obs"},
-    {name:"Required",path:'',type:"any"},
-    {name:"Show Date",path:'',type:"any"},
-    {name:"Show Weeks",path:'',type:"any"},
-    {name:"Hide",path:'',type:"any"}
+    {name:"rendering",path:'questionOptions.rendering',type:"any"},
+    {name:"default",path:'default',type: "any"},
+    {name:"original",path:'original',type:"any"},
+    {name:"concept",path:'questionOptions.concept',type:"obs"},
+    {name:"questions",path:'questions',type:"obsGroup"},
+    //{name:"validators",path:'validators',type:"any"},
+    //{name:"historical expression",path:'historical expression',type:"obs"},
+    //{name:"hide",path:'hide',type:"any"},
+    {name:"required",path:'required',type:"any"},
+    //{name:"show Date",path:'show Date',type:"any"},
+    //{name:"show Weeks",path:'show Weeks',type:"any"},
+    {name:"orderSettingUuid", path:'questionOptions.orderSettingUuid', type:'testOrder'},
+    {name:"orderType", path: 'questionOptions.orderType', type: 'testOrder'}
    
   ]
     
