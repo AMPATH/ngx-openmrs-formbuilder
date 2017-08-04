@@ -108,7 +108,7 @@ export class QuestionControlService {
 
           case "questionOptions.concept":
             options.label = "Concept"
-            this.propertyModels.push(this.propertyFactory.createProperty('searchbox',options));
+            this.propertyModels.push(this.propertyFactory.createProperty('textbox',options));
             break;
 
 
@@ -138,6 +138,7 @@ export class QuestionControlService {
             options.options = [{key: 'true', value:'true'},{key:'false',value:'false'}]
             this.propertyModels.push(this.propertyFactory.createProperty('select', options));
             break;
+
         }
 
   }

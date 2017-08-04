@@ -14,6 +14,7 @@ import {NavigatorService} from './Services/navigator.service';
 import {QuestionControlService} from './Services/question-control.service';
 import {PropertyFactory} from './form-editor/models/property-factory';
 import {FormElementFactory} from './form-editor/form-elements/form-element-factory';
+import {QuestionIdService} from './Services/question-id.service';
 
 import { AppComponent } from './app.component';
 import { NavigatorComponent } from './form-editor/navigator/navigator.component';
@@ -47,7 +48,8 @@ import {DynamicQuestionComponent} from './form-editor/element-editor/dynamic-que
               NavigatorService,
               QuestionControlService,
               PropertyFactory,
-              FormElementFactory],
+              FormElementFactory,
+              QuestionIdService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

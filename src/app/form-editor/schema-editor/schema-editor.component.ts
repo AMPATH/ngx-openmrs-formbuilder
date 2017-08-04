@@ -36,9 +36,12 @@ export class SchemaEditorComponent implements OnInit {
      this._selectedSchemaObj = newSchema;
      if(this._selectedSchemaObj.pages) this.formSchema = this._selectedSchemaObj
      if(this._selectedSchemaObj.hasOwnProperty('selectedSchema')) {
-       this.pageIndex = this._selectedSchemaObj.pageIndex || null;
-       this.sectionIndex = this._selectedSchemaObj.sectionIndex || null;
-       this.questionIndex = this._selectedSchemaObj.questionIndex || null;
+       
+       this.pageIndex = this._selectedSchemaObj['pageIndex'];
+       this.sectionIndex = this._selectedSchemaObj['sectionIndex'];
+       this.questionIndex = this._selectedSchemaObj['questionIndex'];
+      
+       
      }
    }
 

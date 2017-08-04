@@ -2,6 +2,7 @@ import { Component, OnInit, Input} from '@angular/core';
 import {PropertyModel} from '.././models/property-model';
 import {FormGroup, FormArray, FormControl} from '@angular/forms';
 import {QuestionControlService} from '../../Services/question-control.service';
+import {QuestionIdService} from '../../Services/question-id.service'
 import {FormElementFactory} from '.././form-elements/form-element-factory';
 
 @Component({
@@ -11,21 +12,31 @@ import {FormElementFactory} from '.././form-elements/form-element-factory';
 })
 export class ElementEditorComponent implements OnInit {
   questions:PropertyModel<any>[];
-
+  _schema:any
   form: FormGroup;
   @Input() page: any;
   @Input() section: any;
   allPossibleproperties:Array<any>;
-  constructor(private qcs: QuestionControlService, private formElementFactory:FormElementFactory) { }
+  addMode:boolean = false;
+  editMode:boolean = false;
+  id:number; //ID to the current edited question
+
+
+  constructor(private qcs: QuestionControlService, private formElementFactory:FormElementFactory, private qis:QuestionIdService) { }
   
   @Input() set _questions(questions){
     this.questions = questions
     this.form = this.qcs.toFormGroup(this.questions);
+    this.setMode(this.form)
   }
   
+  @Input() set schema(schema){
+    this._schema = schema
+  }
 
   ngOnInit() {
       this.form = this.qcs.toFormGroup(this.questions);
+      this.setMode(this.form)
       this.allPossibleproperties = this.qcs.getAllPossibleProperties();
   }
 
@@ -46,13 +57,30 @@ export class ElementEditorComponent implements OnInit {
 
   
   onSubmit(){
-    console.log(this.form.value)
+    if(this.form.contains('id')){
+      let _id = this.form.get('id').value;
+      let ids = this.qis.getIDs(this._schema);
+      let count = 0;
+      for(var id of ids) if(id==_id) count++;
+      if(this.editMode&&this.id!==_id&&count>0) alert("ID exists") 
+      else if(this.addMode&&count>0) alert("ID exists")
+      else {alert("question added successfully!"); console.log(this.form.value);}
+    } 
   }
 
 
   delete(i){
     this.form.removeControl(this.questions[i].key)
     this.questions.splice(i,1);
+  }
+
+  setMode(form:FormGroup){
+    if(this.form.get('label').value=="") {console.log("addMode");this.editMode=false;this.addMode=true;}
+    else {
+      this.editMode=true;
+      this.addMode=false;
+      this.id=this.form.get('id').value
+      console.log("editMode")}
   }
 
 }

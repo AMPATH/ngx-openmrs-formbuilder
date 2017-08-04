@@ -14,16 +14,16 @@
          </md-toolbar>
          <div class="app-content" *ngIf="schema">  
          <div flex class="row">
-             <div class="col-md-4" *ngIf="questions">
-                 <app-element-editor [page]="page" [section]="section" [_questions]="questions"></app-element-editor>
+             <div class="col-md-3" *ngIf="questions">
+                 <app-element-editor [schema]="schema" [page]="page" [section]="section" [_questions]="questions"></app-element-editor>
              </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
 
                  <app-schema-editor [selectedSchema]="selectedSchema" [schema]="strSchema"></app-schema-editor>
              </div>
              
 
-           <div class="col-md-4" *ngIf="schema">
+           <div class="col-md-4" flex *ngIf="schema" >
                  <app-form-renderer [schema]="schema"></app-form-renderer>
              </div>
 

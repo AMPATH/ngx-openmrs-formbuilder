@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FetchFormsService } from './Services/fetch-forms.service'
 import { NavigatorService } from './Services/navigator.service'
-
+import { QuestionIdService } from './Services/question-id.service'
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -16,7 +16,7 @@ export class AppComponent implements OnInit{
    page:any; //to add new question
    section:any; //to add new section
    @ViewChild('sidenav') public myNav;
-  constructor(private fs: FetchFormsService, private ns: NavigatorService){
+  constructor(private fs: FetchFormsService, private ns: NavigatorService, private qs:QuestionIdService){
     
   }
 
@@ -27,14 +27,13 @@ export class AppComponent implements OnInit{
               this.schema = res;
               this.selectedSchema = res;
               this.strSchema = JSON.stringify(this.schema,null,'\t');
-              this.collectUniqueIDs(this.schema)
             }
       )
       //on navigator element clicked for editing
       this.ns.getSelectedElement().subscribe(
           res => {
               this.selectedSchema = res;
-              this.strSchema = JSON.stringify(this.selectedSchema['selectedSchema'],null,'\t');
+              this.strSchema = JSON.stringify(this.selectedSchema.selectedSchema,null,'\t');
           }
       )
 
@@ -58,26 +57,9 @@ export class AppComponent implements OnInit{
        )
 
 
-
+       
   }
-i:number=0;
-    collectUniqueIDs(schema){
-    
-        if(schema.pages!=null) {this.collectUniqueIDs(schema.pages)}
 
-        if(Array.isArray(schema)){
-            schema.forEach(element => {
-                if(element.sections) this.collectUniqueIDs(element.sections)
-                if(element.questions) this.collectUniqueIDs(element.questions)
-                else {
-                if(element.id!=undefined){++this.i;console.log(element.id);}
-            }
-                })
-        }
-
-
-        
-    }
 
 }
 

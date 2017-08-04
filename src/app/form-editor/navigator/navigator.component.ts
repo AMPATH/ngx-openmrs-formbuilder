@@ -133,8 +133,14 @@ export class NavigatorComponent implements OnInit {
     
   }
 
-  editQuestion(question,pageIndex,sectionIndex){
-    this.ns.setSelectedElement(question);
+  editQuestion(question,pageIndex,sectionIndex,questionIndex){
+    let schemaObj={}
+    schemaObj['selectedSchema']=question;
+    schemaObj['pageIndex']=pageIndex;
+    schemaObj['sectionIndex']=sectionIndex;
+    schemaObj['questionIndex']=questionIndex;
+    
+    this.ns.setSelectedElement(schemaObj);
     this.propertyModelArray = this.qcs.toPropertyModelArray(question)
     this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex) 
   }
