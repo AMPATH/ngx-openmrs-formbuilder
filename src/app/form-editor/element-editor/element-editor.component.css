@@ -23,3 +23,8 @@ a{
     background-color:white !important;
     color:red !important;
 }
+
+.mat-card>:first-child {
+    margin-top: -27px;
+    margin-right: -20px;
+}

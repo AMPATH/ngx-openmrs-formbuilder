@@ -50,8 +50,8 @@ export class AppComponent implements OnInit{
        this.ns.getNewQuestion().subscribe(
            res => {
                this.questions = res['schema']
-               this.page = this.schema.pages[res['pageIndex']].label
-               this.section = this.schema.pages[res['pageIndex']].sections[res['sectionIndex']].label
+               this.page = res['pageIndex']
+               this.section = res['sectionIndex']
                this.myNav.close()
            }
        )

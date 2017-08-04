@@ -2,6 +2,7 @@ import { Component, OnInit, Input} from '@angular/core';
 import {PropertyModel} from '.././models/property-model';
 import {FormGroup, FormArray, FormControl} from '@angular/forms';
 import {QuestionControlService} from '../../Services/question-control.service';
+import {NavigatorService} from '../../Services/navigator.service';
 import {QuestionIdService} from '../../Services/question-id.service'
 import {FormElementFactory} from '.././form-elements/form-element-factory';
 
@@ -14,15 +15,18 @@ export class ElementEditorComponent implements OnInit {
   questions:PropertyModel<any>[];
   _schema:any
   form: FormGroup;
-  @Input() page: any;
-  @Input() section: any;
+  @Input() page: number;
+  @Input() section: number;
+
+  @Input() pageStr: string;
+  @Input() sectionStr: string;
   allPossibleproperties:Array<any>;
   addMode:boolean = false;
   editMode:boolean = false;
   id:number; //ID to the current edited question
 
 
-  constructor(private qcs: QuestionControlService, private formElementFactory:FormElementFactory, private qis:QuestionIdService) { }
+  constructor(private qcs: QuestionControlService, private formElementFactory:FormElementFactory, private qis:QuestionIdService,private ns:NavigatorService) { }
   
   @Input() set _questions(questions){
     this.questions = questions
@@ -38,6 +42,7 @@ export class ElementEditorComponent implements OnInit {
       this.form = this.qcs.toFormGroup(this.questions);
       this.setMode(this.form)
       this.allPossibleproperties = this.qcs.getAllPossibleProperties();
+      
   }
 
 
@@ -57,15 +62,12 @@ export class ElementEditorComponent implements OnInit {
 
   
   onSubmit(){
-    if(this.form.contains('id')){
-      let _id = this.form.get('id').value;
-      let ids = this.qis.getIDs(this._schema);
-      let count = 0;
-      for(var id of ids) if(id==_id) count++;
-      if(this.editMode&&this.id!==_id&&count>0) alert("ID exists") 
-      else if(this.addMode&&count>0) alert("ID exists")
-      else {alert("question added successfully!"); console.log(this.form.value);}
-    } 
+    this.checkId(this.form.get('id').value);
+    if(this.addMode){
+     let question = this.qcs.unflatten(this.form.value);
+     this._schema.pages[this.page].sections[this.section].questions.push(question)
+     this.ns.setSchema(this._schema);
+    }
   }
 
 
@@ -75,12 +77,32 @@ export class ElementEditorComponent implements OnInit {
   }
 
   setMode(form:FormGroup){
-    if(this.form.get('label').value=="") {console.log("addMode");this.editMode=false;this.addMode=true;}
+    if(this.form.get('label').value=="") {
+      console.log("addMode");
+      this.editMode=false;
+      this.addMode=true;
+    }
     else {
       this.editMode=true;
       this.addMode=false;
       this.id=this.form.get('id').value
-      console.log("editMode")}
+      console.log("editMode")
+    }
   }
+
+  checkId(id){
+      if(this.form.contains('id')){
+      let _id = this.form.get('id').value;
+      let ids = this.qis.getIDs(this._schema);
+      let count = 0;
+      for(var id of ids) if(id==_id) count++;
+      if(this.editMode&&this.id!==_id&&count>0) alert("ID exists") 
+      else if(this.addMode&&count>0) alert("ID exists")
+      else {console.log(this.form.value);}
+    }
+  }
+
+
+
 
 }

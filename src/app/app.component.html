@@ -14,8 +14,20 @@
          </md-toolbar>
          <div class="app-content" *ngIf="schema">  
          <div flex class="row">
-             <div class="col-md-3" *ngIf="questions">
+             <div class="col-md-3">
+                 <div *ngIf="!questions">
+                     <div class="text-center" style="background:white;" >
+                        <div style="background-color:#ebebeb;">
+                            Element Editor
+                                </div>
+                                </div>
+                                <md-card>
+                                    <h6 class="text-center align-middle">Add or Edit an element to get started.</h6>
+                                </md-card>
+                            </div>
+                            <div *ngIf="questions">
                  <app-element-editor [schema]="schema" [page]="page" [section]="section" [_questions]="questions"></app-element-editor>
+                 </div>
              </div>
             <div class="col-md-5">
 
