@@ -3,7 +3,8 @@ import { NavigatorService } from '../../Services/navigator.service';
 import { QuestionControlService } from '../../Services/question-control.service';
 import { FormControl, FormGroup, FormBuilder,Validators } from '@angular/forms';
 import { FormElementFactory } from '../form-elements/form-element-factory';
-
+import { ConfirmComponent } from '../../modals/confirm.component'
+import { DialogService } from "ng2-bootstrap-modal";
 @Component({
   selector: 'app-navigator',
   templateUrl: './navigator.component.html',
@@ -39,7 +40,7 @@ export class NavigatorComponent implements OnInit {
   }
 
   constructor(private fb: FormBuilder,private ns: NavigatorService,private qcs:QuestionControlService,
-    private formElementFactory:FormElementFactory) {
+    private formElementFactory:FormElementFactory,private dialogService:DialogService) {
     }
 
   ngOnInit() {}
@@ -58,7 +59,7 @@ export class NavigatorComponent implements OnInit {
   createNewQuestion(pageIndex:number,sectionIndex:number){
     let newQuestion = this.formElementFactory.createFormElement("question",{});
     let propertyModelArray = this.qcs.toPropertyModelArray(newQuestion);
-    this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex);
+    this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex,-1);
     
   }
 
@@ -138,11 +139,9 @@ export class NavigatorComponent implements OnInit {
     schemaObj['selectedSchema']=question;
     schemaObj['pageIndex']=pageIndex;
     schemaObj['sectionIndex']=sectionIndex;
-    schemaObj['questionIndex']=questionIndex;
-    
     this.ns.setSelectedElement(schemaObj);
     this.propertyModelArray = this.qcs.toPropertyModelArray(question)
-    this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex) 
+    this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex,questionIndex) 
   }
 
   doesElementExist(label:string){
@@ -150,4 +149,29 @@ export class NavigatorComponent implements OnInit {
         if(page.label === label) return true;
       return false;
   }
+
+  deleteDialog(schema:any, element:string,  pageIndex:number, sectionIndex?:number, questionIndex?:number){
+      this.dialogService.addDialog(ConfirmComponent, {
+                title:'Delete '+element, 
+                message:'Are you sure you want to delete '+schema.label})
+                .subscribe((isConfirmed)=>{
+                    if(isConfirmed) {
+                        this.deleteElement(schema,pageIndex,sectionIndex,questionIndex);
+                    }
+          });
+  }
+
+deleteElement(schema,pageIndex,sectionIndex,questionIndex){
+  if(schema.sections){
+    this._formSchema.pages.splice(pageIndex,1);
+    
+  }
+  else if(schema.questions){
+    this._formSchema.pages[pageIndex].sections.splice(sectionIndex,1)
+  }
+  else{
+    this._formSchema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex,1);
+  }
+  this.ns.setSchema(this._formSchema);
+}
 }

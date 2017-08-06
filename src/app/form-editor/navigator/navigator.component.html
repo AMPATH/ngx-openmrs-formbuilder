@@ -31,7 +31,7 @@
     
       <div style="float:right;" [hidden]="editPageMode">
       <a><i (click)="displayEditElementForm(page)" class="fa fa-pencil" aria-hidden="true"></i></a>
-      <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:red"></i></a>
+      <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:red" (click)="deleteDialog(page,'Page',i)"></i></a>
     </div>
    
     
@@ -70,7 +70,7 @@
 
     <div style="float:right;" [hidden]="editPageMode || editSectionMode">
       <a><i (click)="displayEditElementForm(section)" class="fa fa-pencil" aria-hidden="true"></i></a>
-      <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:red"></i></a>
+      <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:red" (click)="deleteDialog(section,'Section',pageIndex,j)"></i></a>
     </div>
 
     <div [id]="'section'+pageIndex+j" class="collapse">
@@ -89,7 +89,7 @@
 
     <div style="float:right;" [hidden]="editPageMode || editSectionMode">
       <a><i (click)="editQuestion(question,pageIndex,sectionIndex,k)" class="fa fa-pencil" aria-hidden="true"></i></a>
-      <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:red"></i></a>
+      <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:red" (click)="deleteDialog(question,'Question',pageIndex,sectionIndex,k)"></i></a>
     </div>
 
 

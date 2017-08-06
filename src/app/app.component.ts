@@ -15,6 +15,7 @@ export class AppComponent implements OnInit{
    questions:any;
    page:any; //to add new question
    section:any; //to add new section
+   question:any;
    @ViewChild('sidenav') public myNav;
   constructor(private fs: FetchFormsService, private ns: NavigatorService, private qs:QuestionIdService){
     
@@ -52,6 +53,7 @@ export class AppComponent implements OnInit{
                this.questions = res['schema']
                this.page = res['pageIndex']
                this.section = res['sectionIndex']
+               this.question = res['questionIndex'];
                this.myNav.close()
            }
        )

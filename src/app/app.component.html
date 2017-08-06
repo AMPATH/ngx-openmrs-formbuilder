@@ -26,12 +26,13 @@
                                 </md-card>
                             </div>
                             <div *ngIf="questions">
-                 <app-element-editor [schema]="schema" [page]="page" [section]="section" [_questions]="questions"></app-element-editor>
+                 <app-element-editor [schema]="schema" [pageIndex]="page" [sectionIndex]="section" [questionIndex]="question" [_questions]="questions"></app-element-editor>
                  </div>
              </div>
             <div class="col-md-5">
 
                  <app-schema-editor [selectedSchema]="selectedSchema" [schema]="strSchema"></app-schema-editor>
+                 
              </div>
              
 

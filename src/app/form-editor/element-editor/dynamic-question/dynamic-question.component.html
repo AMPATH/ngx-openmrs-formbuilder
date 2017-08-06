@@ -1,5 +1,6 @@
 
   <div [formGroup]="form">
+<a [href]="'#'+question.label" data-toggle="collapse"><i class="fa fa-caret-down"></i></a>
 
   <label [attr.for]="question.key" class="label">{{question.label}}</label>
 
@@ -8,11 +9,11 @@
   </div>
 
   <div [ngSwitch]="question.controlType">
-
+    <div [id]="question.label" class="collapse">
     <div class="form-group">
 
     <input *ngSwitchCase="'textbox'" class="form-control" [formControlName]="question.key" [id]="question.key"
-    [type]="question.type" [placeholder]="question.placeholder">
+    [type]="question.type" [placeholder]="question.placeholder" [value]="question.value">
     
     </div>
 
@@ -29,13 +30,8 @@
 
 
     <div *ngSwitchCase="'searchbox'">
-      <div  class="input-group">
-   <input class="form-control" [formControlName]="question.key" [id]="question.key" [type]="question.type">
-   <span class="input-group-btn">
-        <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
-   </span>
-      </div>
+      <app-concept [question]="question" [form]="form"></app-concept>
   </div>
-
+    </div>
     </div>
 <br/>

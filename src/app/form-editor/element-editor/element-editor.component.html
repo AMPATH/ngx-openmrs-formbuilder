@@ -4,8 +4,7 @@
   </div>
 </div>
 
-
- 
+  
 <div *ngIf="questions">
 <md-card>
 <div class="pull-right"><i class="fa fa-close" style="color:red;"></i></div>
@@ -34,13 +33,13 @@
 
   <!--add property-->
 
-<div *ngIf="form">
+<div *ngIf="form" style="clear:both;">
  <!--form for adding a question-->
  
  <form (ngSubmit)="onSubmit()" [formGroup]="form">
 
   <div *ngFor="let question of questions; let i=index;">
-    <div *ngIf="i!=0" class="pull-right">
+    <div class="pull-right">
       <button class="btn btn-default btn-sm" (click)="delete(i)" data-toggle="tooltip" title="Delete">
         <i class="fa fa-trash-o" style="font-size:16px;color:red;cursor:pointer"></i>
       </button>
@@ -53,7 +52,7 @@
 
     <div class="form-row">
       <br/>
-      <button class="btn btn-primary btn-lg center-block" type="submit" [disabled]="!form.valid">Add question</button>
+      <button class="btn btn-primary btn-lg center-block" type="submit" [disabled]="!form.valid">Save</button>
       </div>
    </form>
      </div>

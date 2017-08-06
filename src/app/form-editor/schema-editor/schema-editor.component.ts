@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import {AceEditorComponent} from 'ng2-ace-editor';
 import {NavigatorService} from '../../Services/navigator.service';
+import {MdSnackBar} from '@angular/material';
 import 'brace/index';
 import 'brace/mode/json';
 import 'brace/theme/chrome';
@@ -23,6 +24,7 @@ export class SchemaEditorComponent implements OnInit {
    pageIndex:number;
    sectionIndex:number;
    questionIndex:number;
+   
 
    @Input()
    set schema(newSchema:string){
@@ -45,7 +47,7 @@ export class SchemaEditorComponent implements OnInit {
      }
    }
 
-  constructor(private ns:NavigatorService) { }
+  constructor(private ns:NavigatorService,public snackbar:MdSnackBar) { }
 
   ngOnInit() {
 
@@ -78,6 +80,10 @@ export class SchemaEditorComponent implements OnInit {
       this.formSchema.pages[this.pageIndex].sections[this.sectionIndex].questions[this.questionIndex] = editedSchema
     }
     this.ns.setSchema(this.formSchema)
+  }
+
+  showSnackbar(){
+      this.snackbar.open("Copied to clipboard","",{duration:1200,});
   }
 
 }
