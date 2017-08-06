@@ -1,15 +1,15 @@
 
   <div [formGroup]="form">
-<a [href]="'#'+question.label" data-toggle="collapse"><i class="fa fa-caret-down"></i></a>
+<!--<a [href]="'#'+question.label" data-toggle="collapse"><i class="fa fa-caret-down"></i></a>-->
 
   <label [attr.for]="question.key" class="label">{{question.label}}</label>
 
-  <div style="display:inline-block; color:red;" >
+  <div style="display:inline-block; color:red;">
    <label [attr.for]="question.key">*</label>
   </div>
 
   <div [ngSwitch]="question.controlType">
-    <div [id]="question.label" class="collapse">
+    <div [id]="question.label" class="">
     <div class="form-group">
 
     <input *ngSwitchCase="'textbox'" class="form-control" [formControlName]="question.key" [id]="question.key"

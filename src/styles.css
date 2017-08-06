@@ -2,3 +2,10 @@
 @import '~https://fonts.googleapis.com/icon?family=Material+Icons';
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
+.mat-sidenav-content {
+    position: relative;
+    transform: translate3d(0,0,0);
+    display: block;
+    height: 100% !important;
+    overflow: hidden !important;
+}

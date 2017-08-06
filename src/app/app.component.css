@@ -17,3 +17,6 @@ h6{
     color: #2196f3;
     
 }
+.menu{
+    flex: 1 1 auto;
+}
