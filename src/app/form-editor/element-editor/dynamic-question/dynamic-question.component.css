@@ -1,5 +1,9 @@
-.label{
+.label {
     font-weight: bold;
     font-size: 14px;
-    color:#2196f3;
+    color: black;
+}
+
+.panel-body {
+    padding: 0px 15px 0px 15px;
 }

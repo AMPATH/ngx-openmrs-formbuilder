@@ -1,13 +1,13 @@
 export class PropertyModel<T>{
 
 
-    //mandatory properties
+
     value:T;
     key:string;
     label:string;
     required:boolean;
     controlType:string;
-
+    parentPath:string;
 
     constructor(options: {
       controlType?:string,
@@ -15,6 +15,7 @@ export class PropertyModel<T>{
       label?: string,
       value?: T,
       required?:boolean
+      parentPath?:string
       
     } = {}){
 
@@ -23,23 +24,22 @@ export class PropertyModel<T>{
         this.label = options.label || '';
         this.controlType = options.controlType || '';
         this.required = options.required || false;
+        this.parentPath = options.parentPath || '';
     }
 
 
     allOtherPossibleProperties = [
-    {name:"rendering",path:'questionOptions.rendering',type:"any"},
-    {name:"default",path:'default',type: "any"},
-    {name:"original",path:'original',type:"any"},
-    {name:"concept",path:'questionOptions.concept',type:"obs"},
-    {name:"questions",path:'questions',type:"obsGroup"},
-    //{name:"validators",path:'validators',type:"any"},
-    //{name:"historical expression",path:'historical expression',type:"obs"},
-    //{name:"hide",path:'hide',type:"any"},
-    {name:"required",path:'required',type:"any"},
+    {name:"concept",parentPath:'questionOptions.concept',type:"obs"},
+    {name:"validators",parentPath:'validators',type:"any"},
+    {name:"default",parentPath:'default',type: "any"},
+    {name:"original",parentPath:'original',type:"any"},
+    {name:"required",parentPath:'required',type:"any"},
+    {name:"historical expression",parentPath:'historicalExpression',type:"obs"},
+    {name:"hide",parentPath:'hide',type:"any"},
     //{name:"show Date",path:'show Date',type:"any"},
     //{name:"show Weeks",path:'show Weeks',type:"any"},
-    {name:"orderSettingUuid", path:'questionOptions.orderSettingUuid', type:'testOrder'},
-    {name:"orderType", path: 'questionOptions.orderType', type: 'testOrder'}
+    {name:"orderSettingUuid", parentPath:'questionOptions.orderSettingUuid', type:'testOrder'},
+    {name:"orderType", parentPath: 'questionOptions.orderSettingUuid', type: 'testOrder'}
    
   ]
     

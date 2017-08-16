@@ -1,12 +1,12 @@
 <div id="label" class="text-center" style="background-color: #ebebeb;">
   Schema
-  </div>
-<md-card>
-<ace-editor #editor style="height:70vh; width:100%; overflow:auto;"></ace-editor><br/>
-<div class="row">
-<div class="col-md-1 col-md-offset-3">
-<button class="btn btn-success btn-lg center-block" (click)="showSnackbar()" ngxClipboard [cbContent]="editor.getEditor().getValue()"><i class="fa fa-copy"></i> Copy</button></div>
-<div class="col-md-1 col-md-offset-2">
-<button (click)="render()" class="btn btn-primary btn-lg center-block">Render</button></div>
 </div>
+<md-card>
+  <ace-editor #editor style="height:70vh; width:100%; overflow:auto;"></ace-editor><br/>
+  <div class="row">
+    <div class="text-center">
+      <button class="btn btn-success" (click)="showSnackbar()" ngxClipboard [cbContent]="editor.getEditor().getValue()"><i class="fa fa-copy"></i> Copy</button>
+      <button (click)="render()" class="btn btn-primary">Render</button>
+    </div>
+  </div>
 </md-card>

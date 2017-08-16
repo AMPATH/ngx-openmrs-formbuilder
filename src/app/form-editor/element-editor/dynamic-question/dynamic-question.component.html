@@ -1,37 +1,34 @@
-
-  <div [formGroup]="form">
-<!--<a [href]="'#'+question.label" data-toggle="collapse"><i class="fa fa-caret-down"></i></a>-->
+<div [formGroup]="form">
+  <!--<a [href]="'#'+question.label" data-toggle="collapse"><i class="fa fa-caret-down"></i></a>-->
 
   <label [attr.for]="question.key" class="label">{{question.label}}</label>
 
-  <div style="display:inline-block; color:red;">
-   <label [attr.for]="question.key">*</label>
-  </div>
-
   <div [ngSwitch]="question.controlType">
     <div [id]="question.label" class="">
-    <div class="form-group">
+      <div class="form-group">
 
-    <input *ngSwitchCase="'textbox'" class="form-control" [formControlName]="question.key" [id]="question.key"
-    [type]="question.type" [placeholder]="question.placeholder" [value]="question.value">
-    
-    </div>
+        <input *ngSwitchCase="'textbox'" class="form-control" [formControlName]="question.key" [id]="question.key" [type]="question.type"
+          [placeholder]="question.placeholder" [value]="question.value">
 
-<div class="form-group">
-    <select *ngSwitchCase="'select'" class="form-control" [formControlName]="question.key" >
+      </div>
+
+      <div class="form-group">
+        <select *ngSwitchCase="'select'" class="form-control" [formControlName]="question.key">
       
       <option *ngFor="let opt of question.options" [value]="opt.key">{{opt.value}}</option>
    </select>
-</div>
+      </div>
 
-<div class="form-group">
-    <textarea *ngSwitchCase="'textarea'" rows=5 class="form-control" [formControlName]="question.key" [id]="question.key" [placeholder]="question.placeholder"></textarea>
+      <div class="form-group">
+        <textarea *ngSwitchCase="'textarea'" [rows]="question.rows" [value]="question.value" class="form-control" [formControlName]="question.key"
+          [id]="question.key" [placeholder]="question.placeholder"></textarea>
+      </div>
+
+      <div class="form-group">
+        <div *ngSwitchCase="'searchbox'">
+          <app-concept [question]="question" [form]="form" (answers)="emitAnswers($event)"></app-concept>
+        </div>
+      </div>
     </div>
-
-
-    <div *ngSwitchCase="'searchbox'">
-      <app-concept [question]="question" [form]="form"></app-concept>
   </div>
-    </div>
-    </div>
-<br/>
+  <br/>

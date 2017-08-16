@@ -1,11 +1,12 @@
 <div *ngIf="question">
-<div  class="input-group">
-   <input class="form-control" [formControlName]="question.key" [id]="question.key" [type]="question.type" [value]="question.value">
-   <span class="input-group-btn">
+    <div [formGroup]="form">
+        <div class="input-group">
+            <input class="form-control" placeholder="Enter concept uuid or label to search" [formControlName]="question.key" [id]="question.key" [type]="question.type" [value]="question.value">
+            <span class="input-group-btn">
         <button class="btn btn-primary" type="button" (click)="searchConcept()"><i class="fa fa-search"></i></button>
    </span>
-      </div>
+        </div>
+        <div *ngIf="allAvailableAnswers">
+<div *ngIf="allAvailableAnswers.length==0"><small style="color:red">Not a coded question</small></div>
 </div>
-    <div *ngIf="answers">
-      <!--for answers make checkboxes-->
-    </div>
+ </div>

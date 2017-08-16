@@ -20,3 +20,10 @@ h6{
 .menu{
     flex: 1 1 auto;
 }
+.mat-toolbar{
+    background:#008daf;
+}
+.mat-sidenav {
+    width:570px;
+    background: #fafafa;
+}

@@ -3,7 +3,8 @@ import { NavigatorService } from '../../Services/navigator.service';
 import { QuestionControlService } from '../../Services/question-control.service';
 import { FormControl, FormGroup, FormBuilder,Validators } from '@angular/forms';
 import { FormElementFactory } from '../form-elements/form-element-factory';
-import { ConfirmComponent } from '../../modals/confirm.component'
+import { ConfirmComponent } from '../../modals/confirm.component';
+import { PromptComponent } from '../../modals/prompt.component';
 import { DialogService } from "ng2-bootstrap-modal";
 @Component({
   selector: 'app-navigator',
@@ -17,6 +18,7 @@ export class NavigatorComponent implements OnInit {
   private _formSchema:any; //represents a FULL form schema
   @Input() pageIndex:number; //aids in collapsing the navigator elements
   @Input() sectionIndex:number; //aids in collapsing the navigator elements
+  @Input() questionIndex:number;
   @Output() closeSidebar:EventEmitter<boolean> = new EventEmitter();
   pageToggle:boolean=false;
   sectionToggle:boolean=false;
@@ -56,92 +58,134 @@ export class NavigatorComponent implements OnInit {
   }
 
  
-  createNewQuestion(pageIndex:number,sectionIndex:number){
+  createNewQuestion(pageIndex:number,sectionIndex:number,questionIndex?:number){
     let newQuestion = this.formElementFactory.createFormElement("question",{});
     let propertyModelArray = this.qcs.toPropertyModelArray(newQuestion);
-    this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex,-1);
+    if(questionIndex) //obsGroup Question
+    this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex,questionIndex);
+    else
+    this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex);
     
   }
 
 
-  displayEditElementForm(schema:any){
+  showElementEditForm(schema:any,pageIndex?:number,sectionIndex?:number){
     this.propertyModelArray = this.qcs.toPropertyModelArray(schema)
     this.editForm = this.qcs.toFormGroup(this.propertyModelArray)
-    if(schema.questions){
-    this.editSectionMode = this.editSectionMode == true ? false : true;
+
+    if(schema.sections){
+      this.dialogService.addDialog(PromptComponent, {
+      title:'Edit Page',
+      questions:this.propertyModelArray,
+      form:this.editForm})
+      .subscribe((formValue)=>{
+        //We get dialog result
+        if(formValue)
+        this.editPage(formValue['label'],pageIndex)
+      });
     }
     else{
-    this.editPageMode = this.editPageMode == true ? false : true;
+      this.dialogService.addDialog(PromptComponent, {
+      title:'Edit Section',
+      questions:this.propertyModelArray,
+      form:this.editForm})
+      .subscribe((formValue)=>{
+        //We get dialog result
+        if(formValue)
+        this.editSection(formValue,pageIndex,sectionIndex)
+      });
+    
     }
-    this.elementLabel = schema.label
+    
   }
 
+  editPage(label,pageIndex){
+    this._formSchema.pages[pageIndex].label = label
+    this.ns.setSchema(this._formSchema)
+  }
 
-  editElement(value,pageIndex,sectionIndex){
-    if(sectionIndex == null){
-      this._formSchema.pages[pageIndex].label = value.label
-    }
-    else{
-    
+  editSection(value,pageIndex,sectionIndex){
       this.schema.sections[sectionIndex].label = value.label
       this.schema.sections[sectionIndex].isExpanded = value.isExpanded
       this._formSchema.pages[pageIndex] =this.schema
-    }
-
-    this.ns.setSchema(this._formSchema);
-    this.editForm.reset();
-    
+       this.ns.setSchema(this._formSchema);
   }
 
 
 
-  showElementAddForm(element:string){
+  showElementAddForm(element:string,pageIndex?:number){
     if(element=="page"){
-      this.pageToggle = this.pageToggle === true ? false : true;
       let newPage = this.formElementFactory.createFormElement("page",{"label":''});
       this.propertyModelArray = this.qcs.toPropertyModelArray(newPage);
       this.addElementForm = this.qcs.toFormGroup(this.propertyModelArray)
+       this.dialogService.addDialog(PromptComponent, {
+      title:'Create Page',
+      questions:this.propertyModelArray,
+      form:this.addElementForm},{backdropColor:'rgba(255, 255, 255, 0.5)'})
+      .subscribe((formValue)=>{
+        //We get dialog result
+        if(formValue)
+        this.addPage(formValue['label'])
+      });
     }
   else{
-    this.sectionToggle = this.sectionToggle === true ? false : true;
+    
     let newSection = this.formElementFactory.createFormElement("section",{})
     this.propertyModelArray = this.qcs.toPropertyModelArray(newSection)
     this.addElementForm = this.qcs.toFormGroup(this.propertyModelArray)
+    this.dialogService.addDialog(PromptComponent, {
+      title:'Create Section',
+      questions:this.propertyModelArray,
+      form:this.addElementForm},{backdropColor:'rgba(255, 255, 255, 0.5)'})
+      .subscribe((formValue)=>{
+        if(formValue!=undefined)
+        this.addSection(formValue,pageIndex)
+      });
+
+
   }
   }
 
-
-  addElement(value,pageIndex:number){
-    if(pageIndex==null){
-      if(!this.doesElementExist(value.label)){
-      let newPage = this.formElementFactory.createFormElement("page",{"label":value.label})
+  addPage(label:string){
+    if(!this.doesElementExist(label)){
+      let newPage = this.formElementFactory.createFormElement("page",{"label":label})
       this._formSchema.pages.push(newPage)
-      this.pageToggle = this.pageToggle === true ? false : true;
-      }
-      else{
-        alert("Page already exists!");
-      }
+      this.ns.setSchema(this._formSchema)
     }
-
     else{
-      let newSection = this.formElementFactory.createFormElement("section",{"label":value.label,"isExpanded":value.isExpanded})
-      this.sectionToggle = this.sectionToggle === true ? false : true;
-      this._formSchema.pages[pageIndex].sections.push(newSection)
+      alert("Page already exists!")
     }
+  }
 
-    this.ns.setSchema(this._formSchema)
-    this.addElementForm.reset()
+  addSection(value,pageIndex:number){
+    
+      let newSection = this.formElementFactory.createFormElement("section",{"label":value.label,"isExpanded":value.isExpanded})
+      this._formSchema.pages[pageIndex].sections.push(newSection)
+      this.ns.setSchema(this._formSchema)
+      this.addElementForm.reset()
     
   }
 
-  editQuestion(question,pageIndex,sectionIndex,questionIndex){
+  editQuestion(question:any,pageIndex:number,sectionIndex:number,questionIndex:number,parentQuestionIndex?:number){
     let schemaObj={}
     schemaObj['selectedSchema']=question;
     schemaObj['pageIndex']=pageIndex;
     schemaObj['sectionIndex']=sectionIndex;
-    this.ns.setSelectedElement(schemaObj);
+    schemaObj['questionIndex']=questionIndex;
+    schemaObj['parentQuestionIndex']=parentQuestionIndex;
+    console.log(schemaObj)
+    this.ns.setSelectedElement(schemaObj); //set the current edited question in the schema editor
+
     this.propertyModelArray = this.qcs.toPropertyModelArray(question)
-    this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex,questionIndex) 
+    if(parentQuestionIndex){ //thy art an obsgroup question!
+      this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex,questionIndex,parentQuestionIndex)
+      
+    }
+    else{
+      
+      this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex,questionIndex)
+    }
+     
   }
 
   doesElementExist(label:string){
@@ -150,24 +194,27 @@ export class NavigatorComponent implements OnInit {
       return false;
   }
 
-  deleteDialog(schema:any, element:string,  pageIndex:number, sectionIndex?:number, questionIndex?:number){
+  deleteDialog(schema:any, element:string,  pageIndex:number, sectionIndex?:number, questionIndex?:number, parentQuestionIndex?:number){
       this.dialogService.addDialog(ConfirmComponent, {
                 title:'Delete '+element, 
-                message:'Are you sure you want to delete '+schema.label})
+                message:'Are you sure you want to delete '+schema.label},{backdropColor:'rgba(255, 255, 255, 0.5)'})
                 .subscribe((isConfirmed)=>{
                     if(isConfirmed) {
-                        this.deleteElement(schema,pageIndex,sectionIndex,questionIndex);
+                        this.deleteElement(schema,pageIndex,sectionIndex,questionIndex,parentQuestionIndex);
                     }
           });
   }
 
-deleteElement(schema,pageIndex,sectionIndex,questionIndex){
+deleteElement(schema,pageIndex,sectionIndex,questionIndex,parentQuestionIndex){
   if(schema.sections){
     this._formSchema.pages.splice(pageIndex,1);
     
   }
-  else if(schema.questions){
+  else if(schema.isExpanded){
     this._formSchema.pages[pageIndex].sections.splice(sectionIndex,1)
+  }
+  else if(parentQuestionIndex){
+    this._formSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1);
   }
   else{
     this._formSchema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex,1);

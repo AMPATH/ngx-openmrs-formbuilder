@@ -28,7 +28,9 @@ import {DynamicQuestionComponent} from './form-editor/element-editor/dynamic-que
 import { ConceptComponent } from './concept/concept.component';
 import { ConfirmComponent } from './modals/confirm.component'
 import { AlertComponent } from './modals/alert.component'
-
+import { PromptComponent } from './modals/prompt.component'
+import { AnswersComponent } from './modals/answers.modal'
+import { ConceptsModalComponent } from './modals/concept.modal'
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,12 +41,16 @@ import { AlertComponent } from './modals/alert.component'
     DynamicQuestionComponent,
     ConceptComponent,
     ConfirmComponent,
-    AlertComponent
+    AlertComponent,
+    PromptComponent,
+    AnswersComponent,
+    ConceptsModalComponent
     
   ],
   imports: [
     BrowserModule,
     AppMaterialModule,
+    FormsModule,
     ReactiveFormsModule,
     FormEntryModule,
     NoopAnimationsModule,
@@ -54,7 +60,7 @@ import { AlertComponent } from './modals/alert.component'
     ClipboardModule
     
   ],
-  entryComponents:[ConfirmComponent,AlertComponent],
+  entryComponents:[ConfirmComponent,AlertComponent,PromptComponent,AnswersComponent,ConceptsModalComponent],
   providers: [FetchFormsService,
               NavigatorService,
               QuestionControlService,

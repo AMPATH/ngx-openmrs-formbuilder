@@ -13,7 +13,7 @@
 }
 
 .element:hover{
-    color:#3f51b5;
+    color:#008cba;
 }
 a{
     font-size: 16px;
@@ -30,3 +30,11 @@ a{
     display:none;
 }
 
+label{
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.myEditors{
+    margin-bottom: 15px;
+}

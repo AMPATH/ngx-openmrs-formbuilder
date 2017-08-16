@@ -1,61 +1,65 @@
-<div class="text-center" style="background:white;" >
-  <div style="background-color:#ebebeb;">
-  Element Editor
-  </div>
+<div class="text-center" style="background:white;">
+    <div style="background-color:#ebebeb;">
+        Element Editor
+    </div>
+   
 </div>
 
-  
+
 <div *ngIf="questions">
-<md-card>
+    <md-card>
 
-  <!--breadcrumbs-->
-  <div class="center-block" *ngIf="page">
-        <ol class="breadcrumb">
-               <li>{{pageStr}}</li>
-               <li>{{sectionStr}}</li>       
-        </ol>
-  </div>
+        <!--breadcrumbs-->
+        <br/>
+        <div class="center-block">
+            <ol class="breadcrumb">
+                <li>{{pageStr}}</li>
+                <li>{{sectionStr}}</li>
+                <li>{{questionStr}}</li>
+            </ol>
+        </div>
 
-  <!--breadcrumbs-->
-  
-  <!--add property-->
+        <!--breadcrumbs-->
 
-  <div class="dropdown pull-right">
-  <a class="btn btn-default dropdown-toggle"   type="button" data-toggle="dropdown"><i class="fa fa-plus" aria-hidden="true"></i> Add Property
+        <!--add property-->
+
+        <div class="dropdown pull-right">
+            <a class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-plus" aria-hidden="true"></i> Add Property
   <span class="caret"></span></a>
-  <ul class="dropdown-menu">
-    <li (click)="addProperty(prop.path)" value="prop.path" *ngFor="let prop of allPossibleproperties" >
-      <a [class.disabled]="prop.type=='disabled'">{{prop.name}}</a>
-    </li>
-    
-  </ul>
-</div>
+            <ul class="dropdown-menu">
+                <li (click)="addProperty(prop.parentPath)" value="prop.path" *ngFor="let prop of allPossibleproperties">
+                    <a [class.disabled]="prop.type=='disabled'">{{prop.name}}</a>
+                </li>
 
-  <!--add property-->
+            </ul>
+        </div>
 
-<div *ngIf="form" style="clear:both;">
- <!--form for adding a question-->
- 
- <form (ngSubmit)="onSubmit()" [formGroup]="form">
+        <!--add property-->
 
-  <div *ngFor="let question of questions; let i=index;">
-    <div class="pull-right">
-      <button class="btn btn-default btn-sm" (click)="delete(i)" data-toggle="tooltip" title="Delete">
-        <i class="fa fa-trash-o" style="font-size:16px;color:red;cursor:pointer"></i>
-      </button>
-    </div>
+        <div *ngIf="form" style="clear:both;">
+            <!--form for adding a question-->
 
-     <app-dynamic-question [question]="question" [_form]="form" (qtype)="typeChanged($event)"></app-dynamic-question>
+            <form (ngSubmit)="onSubmit()" [formGroup]="form">
 
-    </div>
+                <div *ngFor="let question of questions; let i=index;">
+                    
+                    <div class="pull-right" *ngIf="checkQuestion(question)">
+                        <a (click)="delete(i)" data-toggle="tooltip" title="Delete">
+                            <i class="fa fa-times" style="font-size:16px;margin:10px;color:red;cursor:pointer"></i>
+                        </a>
+                    </div>
+
+                    <app-dynamic-question [question]="question" [_form]="form" (answers)="setAnswers($event)"></app-dynamic-question>
+
+                </div>
 
 
-    <div class="form-row">
-      <br/>
-      <button class="btn btn-primary btn-lg center-block" type="submit" [disabled]="!form.valid">Save</button>
-      </div>
-   </form>
-     </div>
+                <div class="form-row">
+                    <br/>
+                    <button class="btn btn-primary btn-lg center-block" type="submit" [disabled]="!form.valid">OK</button>
+                </div>
+            </form>
+        </div>
     </md-card>
- 
+
 </div>

@@ -19,9 +19,11 @@ export class ElementEditorComponent implements OnInit {
   form: FormGroup;
   @Input() pageIndex: number;
   @Input() sectionIndex: number;
-  @Input() pageStr: string;
-  @Input() sectionStr: string;
-  @Input() questionIndex:number;  //if editMode
+  @Input() questionIndex:number;  //if editMode or addMode obsGroup Question
+  @Input() parentQuestionIndex:number; //if edit obsGroup question
+  pageStr: string;
+  sectionStr: string;
+  questionStr: string;
   allPossibleproperties:Array<any>;
   addMode:boolean = false;
   editMode:boolean = false;
@@ -30,30 +32,34 @@ export class ElementEditorComponent implements OnInit {
 
   constructor(private qcs: QuestionControlService, private formElementFactory:FormElementFactory, 
     private qis:QuestionIdService,private ns:NavigatorService,private dialogService:DialogService) { }
-  
-  @Input() set _questions(questions){
-    this.questions = questions
-    this.form = this.qcs.toFormGroup(this.questions);
-    this.setMode(this.form)
-  }
-  
+
+   
   @Input() set schema(schema){
     this._schema = schema
   }
+  
+  @Input() set _questions(questions){
+    console.log(questions)
+    this.questions = questions
+    this.form = this.qcs.toFormGroup(this.questions);
+    this.setMode(this.form)
+    this.breadcrumbsSetup();
+    
+  }
 
+  
   ngOnInit() {
       this.form = this.qcs.toFormGroup(this.questions);
       this.setMode(this.form)
       this.allPossibleproperties = this.qcs.getAllPossibleProperties();
-      //breadcrumbs setup
-      this.pageStr = this._schema.pages[this.pageIndex].label;
-      this.sectionStr = this._schema.pages[this.pageIndex].sections[this.sectionIndex].label;
+      this.breadcrumbsSetup();
+      console.log(this.pageIndex+" "+this.sectionIndex+" "+this.questionIndex+" "+this.parentQuestionIndex)
   }
 
 
   addProperty(prop){
-
-    if(this.form.contains(prop)) {alert("Property already added!"); return;}
+    
+    if(this.form.contains(prop)) {this.showAlert("Property already added!"); return;}
     
     let obj = {};
     obj[prop] = "";
@@ -67,22 +73,53 @@ export class ElementEditorComponent implements OnInit {
 
   
   onSubmit(){
-    
+    if(!this.form.contains('id')||!this.form.contains('label')||!this.form.contains('questionOptions.rendering')||!this.form.contains('type'))
+      { this.showAlert("Some mandatory question properties are missing! \n A question must include: type,label,redering and id") }
+
     if(!this.checkId(this.form.get('id').value)) return;
+
     let question = this.qcs.unflatten(this.form.value);
 
-    if(this.addMode){
-     this._schema.pages[this.pageIndex].sections[this.sectionIndex].questions.push(question);
-     this.ns.setSchema(this._schema);
-     this.form.reset()
+    if(question['type']=="obsGroup"){
+      question['questions']=[]
     }
+
+    if(question['validators']){
+      question['validators']=this.parse(this.form.controls['validators'].value);
+    }
+
+    if(question['hide']){
+      question['hide']=this.parse(this.form.controls['hide'].value);
+    }
+
+    if(question.questionOptions['answers']){
+      question.questionOptions['answers']=this.parse(this.form.controls['questionOptions.answers'].value);
+    }
+
+    console.log(question)
+
+
+    if(this.addMode){ 
+      this.addQuestion(question,this.pageIndex,this.sectionIndex,this.questionIndex)
+    }
+
     if(this.editMode){
-      this._schema.pages[this.pageIndex].sections[this.sectionIndex].questions.splice(this.questionIndex,1,question)
-      this.ns.setSchema(this._schema);
+      this.editQuestion(question,this.pageIndex,this.sectionIndex,this.questionIndex,this.parentQuestionIndex)
     }
 
     
     
+  }
+
+ breadcrumbsSetup(){
+    this.pageStr = this._schema.pages[this.pageIndex].label;
+    this.sectionStr = this._schema.pages[this.pageIndex].sections[this.sectionIndex].label;
+    if(this.editMode&&this.questionIndex!=-1) this.questionStr = this._schema.pages[this.pageIndex].sections[this.sectionIndex].questions[this.questionIndex].label
+    else this.questionStr = '';
+ }
+
+  parse(str){
+    return JSON.parse(str);
   }
 
 
@@ -123,12 +160,75 @@ export class ElementEditorComponent implements OnInit {
   }
 
   showAlert(message:string){
-    
     this.dialogService.addDialog(AlertComponent, {message:message});
-
   }
 
 
+  setAnswers(answers){
+    if(answers.length>0){
+      if(this.form.contains('questionOptions.answers')){
+        this.form.controls['questionOptions.answers'].setValue(JSON.stringify(answers,undefined,"\t"));
+      }
+      else{
+        let field = this.qcs.toPropertyModelArray({"questionOptions.answers":answers})
+        this.form.addControl('questionOptions.answers',new FormControl(""))
+        this.questions.push(field[0])
+      }
+    }
+
+    else{
+      if(this.form.controls['questionOptions.answers']){
+        let i;
+        this.questions.forEach((question,index) => {
+          if(question.key==='questionOptions.answers')
+            i=index;
+        })
+        this.questions.splice(i,1)
+      }
+      else{
+        return;
+      }
+      
+    }
+    
 
 
+  
+  }
+
+  addQuestion(question:any,pageIndex:number,sectionIndex:number,questionIndex?:number){
+
+    if(questionIndex){ //obsGroup question
+      this._schema.pages[pageIndex].sections[sectionIndex].questions[questionIndex].questions.push(question);
+    }
+
+    else{
+      this._schema.pages[pageIndex].sections[sectionIndex].questions.push(question);
+    }
+    this.ns.setSchema(this._schema);
+    this.form.reset()
+    
+  }
+
+
+  editQuestion(question,pageIndex,sectionIndex,questionIndex,parentQuestionIndex?){
+  
+    if(parentQuestionIndex){
+      this._schema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1,question)
+    }
+    else{
+      console.log(questionIndex)
+    console.log(this._schema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex,1,question))
+    
+    }
+    this.ns.setSchema(this._schema);
+  }
+  
+
+  checkQuestion(question){
+    if(question.key=='label'||question.key=='id'||question.key=='type'||question.key=='questionOptions.rendering'){
+      return false;
+    }
+    return true;
+  }
 }

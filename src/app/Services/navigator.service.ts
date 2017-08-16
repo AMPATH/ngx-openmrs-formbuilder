@@ -30,12 +30,14 @@ export class NavigatorService {
    return this.schemaSubject.asObservable();
  }
 
- newQuestion(schema:any,pageIndex:number,sectionIndex:number,questionIndex:number){
+ newQuestion(schema:any,pageIndex:number,sectionIndex:number,questionIndex?:number,parentQuestionIndex?:number){
      let question = {}
      question['schema']=schema
      question['pageIndex']=pageIndex
      question['sectionIndex']=sectionIndex
      question['questionIndex']=questionIndex
+     question['parentQuestionIndex']=parentQuestionIndex || -1 
+     console.log(question)
      this.questionSubject.next(question);
  }
 
