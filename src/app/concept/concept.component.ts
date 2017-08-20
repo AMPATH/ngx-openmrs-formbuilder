@@ -13,6 +13,7 @@ export class ConceptComponent implements OnInit {
 @Input() question:any;
 @Input() form:FormGroup;
 @Output() answers = new EventEmitter<any>();
+searching:boolean=false;
 
 searchResult:any;
 allAvailableAnswers:Array<any> //after search result
@@ -24,12 +25,20 @@ allAvailableAnswers:Array<any> //after search result
 
   searchConcept(){
     let conceptID = this.form.controls[this.question.key].value
+    this.searching = true;
     this.cs.searchConcept(conceptID).subscribe(res => {
       this.searchResult = res;
-      if(this.searchResult.results)
-      this.showConceptsDialog(this.searchResult.results);
-      else
-      this.showConceptsDialog([{"uuid":this.searchResult.uuid, "display":this.searchResult.display}])
+      this.searching = false;
+      
+      if(this.searchResult.results){
+        this.showConceptsDialog(this.searchResult.results);
+        
+      }
+      
+      else{
+       this.showConceptsDialog([{"uuid":this.searchResult.uuid, "display":this.searchResult.display}])
+      }
+     
 
     })
   }

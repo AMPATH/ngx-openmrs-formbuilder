@@ -6,6 +6,6 @@
     position: relative;
     transform: translate3d(0,0,0);
     display: block;
-    height: 100% !important;
-    overflow: hidden !important;
+    height: fill-available !important;
+    overflow-x:hidden !important;
 }

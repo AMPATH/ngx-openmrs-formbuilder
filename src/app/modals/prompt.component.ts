@@ -39,7 +39,7 @@ export interface PromptModel {
                         </div>
                    </div>
                    <div class="modal-footer">
-                     <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Save</button>
+                     <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">OK</button>
                      <button type="button" class="btn btn-default" (click)="close()" >Cancel</button>
                    </div>
                  </div>

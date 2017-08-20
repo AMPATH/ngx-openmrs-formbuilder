@@ -19,54 +19,57 @@ export class AppComponent implements OnInit{
    parentQuestion:any;
    @ViewChild('sidenav') public myNav;
   constructor(private fs: FetchFormsService, private ns: NavigatorService, private qs:QuestionIdService){
-    
   }
 
   closeElementEditor(){
-    this.questions = undefined;
+	this.questions = undefined;
+  }
+ 
+  closeNavigator(event){
+	  this.myNav.close();
   }
 
-  ngOnInit(){
-    //onLoad
-      this.fs.fetchAvailableForms().subscribe(
-          res => {
-              this.schema = res;
-              this.selectedSchema = res;
-              this.strSchema = JSON.stringify(this.schema,null,'\t');
-            }
-      )
-      //on navigator element clicked for editing
-      this.ns.getSelectedElement().subscribe(
-          res => {
-              this.selectedSchema = res;
-              this.strSchema = JSON.stringify(this.selectedSchema.selectedSchema,null,'\t');
-          }
-      )
+  ngOnInit(){ 
+	//onLoad
+	  this.fs.fetchForm("adult.json").subscribe(
+		  res => {
+			  this.schema = res;
+			  this.selectedSchema = res;
+			  this.strSchema = JSON.stringify(this.schema,null,'\t');
+			}
+	  )
+	  //on navigator element clicked for editing
+	  this.ns.getSelectedElement().subscribe(
+		  res => {
+			  this.selectedSchema = res;
+			  this.strSchema = JSON.stringify(this.selectedSchema.selectedSchema,null,'\t');
+		  }
+	  )
 
-      //on element added/deleted/modified
-      this.ns.getSchema().subscribe(
-          res => {
-              this.schema = res;
-              this.strSchema = JSON.stringify(this.schema,null,'\t')
-          }
+	  //on element added/deleted/modified
+	  this.ns.getSchema().subscribe(
+		  res => {
+			  this.schema = res;
+			  this.strSchema = JSON.stringify(this.schema,null,'\t')
+		  }
 
-       
-      )
+	   
+	  )
 
-       this.ns.getNewQuestion().subscribe(
-           res => {
-               this.questions = res['schema']
-               this.page = res['pageIndex']
-               this.section = res['sectionIndex']
-               this.question = res['questionIndex'];
-               this.parentQuestion = res['parentQuestionIndex']
-               this.myNav.close()
-           }
-       )
+	   this.ns.getNewQuestion().subscribe(
+		   res => {
+			   this.questions = res['schema']
+			   this.page = res['pageIndex']
+			   this.section = res['sectionIndex']
+			   this.question = res['questionIndex'];
+			   this.parentQuestion = res['parentQuestionIndex']
+			   this.myNav.close()
+		   }
+	   )
 
-       
-      
-       
+	   
+	  
+	   
   }
 
 

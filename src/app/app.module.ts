@@ -8,6 +8,8 @@ import {AceEditorModule} from 'ng2-ace-editor';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { ClipboardModule } from 'ngx-clipboard';
+import {DragulaModule} from 'ng2-dragula';
+//import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 
 
 import 'hammerjs';
@@ -18,6 +20,8 @@ import {PropertyFactory} from './form-editor/models/property-factory';
 import {FormElementFactory} from './form-editor/form-elements/form-element-factory';
 import {QuestionIdService} from './Services/question-id.service';
 import {ConceptService} from './Services/concept.service';
+
+
 
 import { AppComponent } from './app.component';
 import { NavigatorComponent } from './form-editor/navigator/navigator.component';
@@ -31,6 +35,10 @@ import { AlertComponent } from './modals/alert.component'
 import { PromptComponent } from './modals/prompt.component'
 import { AnswersComponent } from './modals/answers.modal'
 import { ConceptsModalComponent } from './modals/concept.modal'
+import { ReferenceModalComponent } from './modals/reference-form.modal'
+import { NavigatorModalComponent } from './modals/navigator.modal';
+import { ReferenceFormsComponent } from './form-editor/reference-forms/reference-forms.component'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,15 +46,19 @@ import { ConceptsModalComponent } from './modals/concept.modal'
     SchemaEditorComponent,
     ElementEditorComponent,
     FormRendererComponent,
-    DynamicQuestionComponent,
+    DynamicQuestionComponent, 
     ConceptComponent,
     ConfirmComponent,
     AlertComponent,
     PromptComponent,
     AnswersComponent,
-    ConceptsModalComponent
-    
+    ConceptsModalComponent,
+    ReferenceModalComponent,
+    NavigatorModalComponent,
+    ReferenceFormsComponent
   ],
+
+
   imports: [
     BrowserModule,
     AppMaterialModule,
@@ -57,17 +69,19 @@ import { ConceptsModalComponent } from './modals/concept.modal'
     HttpModule,
     AceEditorModule,
     BootstrapModalModule,
-    ClipboardModule
-    
+    ClipboardModule,
+    DragulaModule,
   ],
-  entryComponents:[ConfirmComponent,AlertComponent,PromptComponent,AnswersComponent,ConceptsModalComponent],
+  entryComponents: [ConfirmComponent, AlertComponent, PromptComponent, AnswersComponent, ConceptsModalComponent, ReferenceModalComponent, NavigatorModalComponent],
+
   providers: [FetchFormsService,
               NavigatorService,
               QuestionControlService,
               PropertyFactory,
               FormElementFactory,
               QuestionIdService,
-              ConceptService],
+              ConceptService,
+            ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

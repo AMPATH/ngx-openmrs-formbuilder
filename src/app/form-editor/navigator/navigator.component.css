@@ -1,12 +1,13 @@
 #schema{
     cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: bolder;
     text-decoration:none;
+    display: inline-block;
 }
 .element{
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: 600;
     text-decoration:none;
     display: inline-block;
     cursor: pointer;
@@ -37,4 +38,7 @@ label{
 
 .myEditors{
     margin-bottom: 15px;
+}
+.selectMode{
+    display: inline-block;
 }

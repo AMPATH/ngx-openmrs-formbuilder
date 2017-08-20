@@ -1,0 +1,393 @@
+{
+    "name": "ampath_poc_triage_encounter_form_v0.01",
+    "uuid": "xxxx",
+    "processor": "triageEncounterForm",
+    "pages": [
+        {
+            "label": "Page 1",
+            "sections": [
+                {
+                    "label": "Encounter Details",
+                    "questions": [
+                        {
+                            "label": "Visit Date",
+                            "type": "encounterDatetime",
+                            "required": "true",
+                            "default": "",
+                            "id": "encDate",
+                            "questionOptions": {
+                                "rendering": "date"
+                            },
+                            "validators": [
+                                {
+                                    "type": "date"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "File to upload",
+                            "type": "file",
+                            "required": "",
+                            "default": "",
+                            "id": "fileupload",
+                            "questionOptions": {
+                                "rendering": "file"
+                            },
+                            "validators": []
+                        },
+                        {
+                            "type": "encounterProvider",
+                            "label": "Provider",
+                            "id": "provider",
+                            "required": "true",
+                            "default": "",
+                            "questionOptions": {
+                                "rendering": "ui-select-extended"
+                            }
+                        },
+                        {
+                            "type": "encounterLocation",
+                            "label": "Facility name (site/satellite clinic required):",
+                            "id": "location",
+                            "required": "true",
+                            "questionOptions": {
+                                "rendering": "ui-select-extended"
+                            }
+                        },
+                        {
+                            "label": "Patient covered by NHIF:",
+                            "questionOptions": {
+                                "rendering": "select",
+                                "concept": "a8b02524-1350-11df-a1f1-0026b9348838",
+                                "answers": [
+                                    {
+                                        "concept": "8b715fed-97f6-4e38-8f6a-c167a42f8923",
+                                        "label": "Yes"
+                                    },
+                                    {
+                                        "concept": "a899e0ac-1350-11df-a1f1-0026b9348838",
+                                        "label": "No"
+                                    }
+                                ]
+                            },
+                            "type": "obs",
+                            "validators": []
+                        },
+                        {
+                            "type": "personAttribute",
+                            "label": "Transfer in from other AMPATH clinic (specify):",
+                            "id": "transfered_in_to_ampath",
+                            "required": "false",
+                            "default": "",
+                            "questionOptions": {
+                                "rendering": "ui-select-extended",
+                                "attributeType": "7ef225db-94db-4e40-9dd8-fb121d9dc370"
+                            }
+                        },
+                        {
+                            "label": "Was this visit scheduled?",
+                            "id": "scheduledVisit",
+                            "questionOptions": {
+                                "rendering": "select",
+                                "concept": "a89ff9a6-1350-11df-a1f1-0026b9348838",
+                                "answers": [
+                                    {
+                                        "concept": "a89b6440-1350-11df-a1f1-0026b9348838",
+                                        "label": "Scheduled visit"
+                                    },
+                                    {
+                                        "concept": "a89ff816-1350-11df-a1f1-0026b9348838",
+                                        "label": "Unscheduled Visit Early"
+                                    },
+                                    {
+                                        "concept": "a89ff8de-1350-11df-a1f1-0026b9348838",
+                                        "label": "Unscheduled Visit Late"
+                                    }
+                                ]
+                            },
+                            "type": "obs",
+                            "validators": []
+                        },
+                        {
+                            "label": "If Unscheduled, actual scheduled date",
+                            "id": "q7b",
+                            "type": "obs",
+                            "questionOptions": {
+                                "rendering": "date",
+                                "concept": "dc1942b2-5e50-4adc-949d-ad6c905f054e"
+                            },
+                            "required": {
+                                "type": "conditionalRequired",
+                                "message": "Patient visit marked as unscheduled. Please provide the scheduled date.",
+                                "referenceQuestionId": "scheduledVisit",
+                                "referenceQuestionAnswers": [
+                                    "a89ff816-1350-11df-a1f1-0026b9348838",
+                                    "a89ff8de-1350-11df-a1f1-0026b9348838"
+                                ]
+                            },
+                            "validators": [
+                                {
+                                    "type": "date",
+                                    "allowFutureDates": "true"
+                                },
+                                {
+                                    "type": "js_expression",
+                                    "failsWhenExpression": "!isEmpty(scheduledVisit) && arrayContains(['a89ff816-1350-11df-a1f1-0026b9348838','a89ff8de-1350-11df-a1f1-0026b9348838'], scheduledVisit) && isEmpty(myValue)",
+                                    "message": "Patient visit marked as unscheduled. Please provide the scheduled date."
+                                }
+                            ],
+                            "disable": {
+                                "disableWhenExpression": "!arrayContains(['a89ff816-1350-11df-a1f1-0026b9348838','a89ff8de-1350-11df-a1f1-0026b9348838'], scheduledVisit)"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "label": "PWPs",
+                    "questions": [
+                        {
+                            "label": "Civil Status:",
+                            "type": "obs",
+                            "questionOptions": {
+                                "rendering": "select",
+                                "concept": "a899a9f2-1350-11df-a1f1-0026b9348838",
+                                "answers": [
+                                    {
+                                        "concept": "a899af10-1350-11df-a1f1-0026b9348838",
+                                        "label": "Cohabitating"
+                                    },
+                                    {
+                                        "concept": "a899af10-1350-11df-a1f1-0026b9348838",
+                                        "label": "Divorced"
+                                    },
+                                    {
+                                        "concept": "a8aa76b0-1350-11df-a1f1-0026b9348838",
+                                        "label": "Married monogamous"
+                                    },
+                                    {
+                                        "concept": "a8b03712-1350-11df-a1f1-0026b9348838",
+                                        "label": "Married polygamous"
+                                    },
+                                    {
+                                        "concept": "a899aba0-1350-11df-a1f1-0026b9348838",
+                                        "label": "Separated"
+                                    },
+                                    {
+                                        "concept": "a899ac7c-1350-11df-a1f1-0026b9348838",
+                                        "label": "Single"
+                                    },
+                                    {
+                                        "concept": "a899ae34-1350-11df-a1f1-0026b9348838",
+                                        "label": "Widowed"
+                                    }
+                                ]
+                            },
+                            "validators": []
+                        },
+                        {
+                            "label": "Discordant couple:",
+                            "questionOptions": {
+                                "answers": [
+                                    {
+                                        "concept": "a899b35c-1350-11df-a1f1-0026b9348838",
+                                        "label": "Yes"
+                                    },
+                                    {
+                                        "concept": "a899b42e-1350-11df-a1f1-0026b9348838",
+                                        "label": "NO"
+                                    },
+                                    {
+                                        "concept": "a899b50a-1350-11df-a1f1-0026b9348838",
+                                        "label": "Unknown"
+                                    },
+                                    {
+                                        "concept": "a89ad3a4-1350-11df-a1f1-0026b9348838",
+                                        "label": "N/A"
+                                    }
+                                ],
+                                "concept": "a8af49d8-1350-11df-a1f1-0026b9348838",
+                                "rendering": "select"
+                            },
+                            "type": "obs",
+                            "validators": []
+                        },
+                        {
+                            "label": "Prevention With Positives: At risk population:",
+                            "questionOptions": {
+                                "concept": "93aa3f1d-1c39-4196-b5e6-8adc916cd5d6",
+                                "answers": [
+                                    {
+                                        "concept": "5da55301-e28e-4fdf-8b64-02622dedc8b0",
+                                        "label": "Client of sex worker"
+                                    },
+                                    {
+                                        "concept": "a89ff438-1350-11df-a1f1-0026b9348838",
+                                        "label": "Commercial sex worker"
+                                    },
+                                    {
+                                        "concept": "a8af49d8-1350-11df-a1f1-0026b9348838",
+                                        "label": "Discordant couple"
+                                    },
+                                    {
+                                        "concept": "a890d57a-1350-11df-a1f1-0026b9348838",
+                                        "label": "IV drug use"
+                                    },
+                                    {
+                                        "concept": "e19c35f0-12f0-46c2-94ea-97050f37b811",
+                                        "label": "MSM"
+                                    },
+                                    {
+                                        "concept": "a89ad3a4-1350-11df-a1f1-0026b9348838",
+                                        "label": "N/A"
+                                    }
+                                ],
+                                "rendering": "select"
+                            },
+                            "type": "obs",
+                            "validators": []
+                        },
+                        {
+                            "label": "Prevention With Positives: PWP Services:",
+                            "questionOptions": {
+                                "concept": "9ce5dbf0-a141-4ad8-8c9d-cd2bf84fe72b",
+                                "answers": [
+                                    {
+                                        "concept": "f0a280e8-eb88-41a8-837a-f9949ed1b9cd",
+                                        "label": "Condom promotion/provision"
+                                    },
+                                    {
+                                        "concept": "bf51f71e-937c-4da5-ae07-654acf59f5bb",
+                                        "label": "Couple counseling"
+                                    },
+                                    {
+                                        "concept": "a8af49d8-1350-11df-a1f1-0026b9348838",
+                                        "label": "Needle exchange"
+                                    },
+                                    {
+                                        "concept": "05656545-86be-4605-9527-34fb580534b1",
+                                        "label": "Targeted risk reduction"
+                                    },
+                                    {
+                                        "concept": "a89ad3a4-1350-11df-a1f1-0026b9348838",
+                                        "label": "N/A"
+                                    }
+                                ],
+                                "rendering": "select"
+                            },
+                            "type": "obs",
+                            "validators": []
+                        }
+                    ]
+                },
+                {
+                    "label": "Vital Signs:",
+                    "questions": [
+                        {
+                            "type": "obsGroup",
+                            "label": "test group",
+                            "questionOptions": {
+                                "rendering": "group",
+                                "concept": "a899e6d8-1350-11df-a1f1-0026b9348838"
+                            },
+                            "questions": [
+                                {
+                                    "label": "BP:Systolic:",
+                                    "questionOptions": {
+                                        "rendering": "number",
+                                        "concept": "a8a65d5a-1350-11df-a1f1-0026b9348838",
+                                        "max": "250",
+                                        "min": "0"
+                                    },
+                                    "type": "obs",
+                                    "validators": []
+                                },
+                                {
+                                    "label": "BP:Diastolic:",
+                                    "questionOptions": {
+                                        "rendering": "number",
+                                        "concept": "a8a65e36-1350-11df-a1f1-0026b9348838",
+                                        "max": "150",
+                                        "min": "0"
+                                    },
+                                    "type": "obs",
+                                    "validators": []
+                                },
+                                {
+                                    "label": "Pulse(Rate/Min):",
+                                    "questionOptions": {
+                                        "rendering": "number",
+                                        "concept": "a8a65f12-1350-11df-a1f1-0026b9348838",
+                                        "max": "230",
+                                        "min": "0"
+                                    },
+                                    "type": "obs",
+                                    "validators": []
+                                },
+                                {
+                                    "label": "Temp(C):",
+                                    "questionOptions": {
+                                        "rendering": "number",
+                                        "concept": "a8a65fee-1350-11df-a1f1-0026b9348838",
+                                        "max": "43",
+                                        "min": "25"
+                                    },
+                                    "type": "obs",
+                                    "validators": []
+                                },
+                                {
+                                    "label": "Weight(Kg):",
+                                    "id": "weight",
+                                    "questionOptions": {
+                                        "rendering": "number",
+                                        "concept": "a8a660ca-1350-11df-a1f1-0026b9348838",
+                                        "max": "150",
+                                        "min": "0"
+                                    },
+                                    "type": "obs",
+                                    "validators": []
+                                },
+                                {
+                                    "label": "Height(CM):",
+                                    "id": "height",
+                                    "questionOptions": {
+                                        "rendering": "number",
+                                        "concept": "a8a6619c-1350-11df-a1f1-0026b9348838",
+                                        "max": "350",
+                                        "min": "0"
+                                    },
+                                    "type": "obs",
+                                    "validators": []
+                                },
+                                {
+                                    "label": "Sp02:",
+                                    "questionOptions": {
+                                        "rendering": "number",
+                                        "concept": "a8a66354-1350-11df-a1f1-0026b9348838",
+                                        "max": "100",
+                                        "min": "0"
+                                    },
+                                    "type": "obs",
+                                    "validators": []
+                                },
+                                {
+                                    "label": "BMI:Kg/M2",
+                                    "questionOptions": {
+                                        "rendering": "number",
+                                        "concept": "a89c60c0-1350-11df-a1f1-0026b9348838",
+                                        "max": "100",
+                                        "min": "0",
+                                        "calculate": {
+                                            "calculateExpression": "calcBMI(height,weight)"
+                                        }
+                                    },
+                                    "type": "obs",
+                                    "validators": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
