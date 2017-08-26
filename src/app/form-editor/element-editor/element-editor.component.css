@@ -1,0 +1,30 @@
+.btn-primary{
+    width:100%;
+}
+
+.dropdown{
+    margin:0px 0px 20px 0px;
+}
+.dropdown-menu{
+  
+    font-family: 'Roboto',serif;
+    font-size: 14px;
+}
+a{
+    cursor: pointer;
+}
+
+.dropdown-menu>li>a:hover{
+    color: white;
+    background-color : #2196f3;
+}
+.disabled,.disabled:hover{
+    cursor: text;
+    background-color:white !important;
+    color:red !important;
+}
+
+.mat-card>:first-child {
+    margin-top: -27px;
+    margin-right: -20px;
+}

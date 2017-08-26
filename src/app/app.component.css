@@ -10,3 +10,28 @@
 a{
     margin: auto;
 }
+
+h6{
+    color: #2196f3;
+    
+}
+.menu{
+    flex: 1 1 auto;
+}
+.mat-toolbar{
+    background:#008daf;
+}
+.mat-sidenav {
+    width:570px;
+    background: #fafafa;
+}
+/* .mat-sidenav-content {
+    position: relative;
+    transform: translate3d(0,0,0);
+    display: block;
+    height: fill-available !important;
+    overflow-x:hidden !important;
+} */
+a{
+    cursor: pointer;
+}

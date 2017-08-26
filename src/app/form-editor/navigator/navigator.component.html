@@ -1,70 +1,119 @@
-<div [class.well]="schema.name">
+ <div class="formName" *ngIf="schema.name" >
+    <h4 id="schema" (click)="onClicked(schema)"><i class="fa fa-lg fa-newspaper-o"></i> {{schema.name}}</h4>
 
-<div *ngIf="schema.name">
- <h4 id="schema" (click)="onClicked(schema)"><i class="fa fa-lg fa-newspaper-o"></i> {{schema.name}}</h4>
-</div>
-
-<div  style="margin-left:20px" *ngIf="schema.pages">
-   <a (click)="pageToggler()"> <i class="fa fa-plus-square"></i> Add new page</a>
-   <div [class.display]="pageToggle">
-     <form [formGroup]="addPageForm" noValidate>
-      <div class="form-group">
-        <input class="form-control" type="text" placeholder="Enter new page name" formControlName="pageLabel"><br/>
-        </div>
-       <button (click)="createPage()" class="btn btn-primary btn-sm" [disabled]="!addPageForm.valid">Create</button>
-       <button (click)="pageToggler()" class="btn btn-default btn-sm">Cancel</button>
-     </form>
-      </div>
-</div>
-  <div *ngFor="let page of schema.pages; let i=index;">
-    <a [href]="'#page'+i" data-toggle="collapse"><i class="fa fa-chevron-down"> </i></a>
-    <h6 (click)="onClicked(page)" class="element">{{page.label}}</h6>
-    <div [id]="'page'+ i" class="collapse">
-     <app-navigator [pageIndex]="i" [_schema]="page" [formSchema]="_formSchema"></app-navigator>
-     </div>
-    </div>
-</div>
-
-<div style="margin-left:20px" *ngIf="schema.sections">
-
-  <a (click)="sectionToggler()"><i class="fa fa-plus-square"></i> Add new section</a>
-  <div [class.display]="sectionToggle">
-     <form [formGroup]="addSectionForm" noValidate>
-      <div class="form-group">
-        <input class="form-control" type="text" placeholder="Enter new section name" formControlName="sectionLabel"><br/>
-        </div>
-      <div class="form-group">
-        <select class="form-control" type="text" formControlName="isExpanded">
-          <option value="" disabled selected>Expanded</option>
-          <option [value]="true">True</option>
-          <option [value]="false">False</option>
-          </select><br/>
-        </div>
-       <button (click)="createSection(pageIndex)" class="btn btn-primary btn-sm" [disabled]="!addSectionForm.valid">Create</button>
-       <button (click)="sectionToggler()" class="btn btn-default btn-sm">Cancel</button>
-     </form>
   </div>
 
+
+  <div *ngIf="schema.pages">
+    <div class="myEditors badge sec" *ngIf="editMode">
+      <a (click)="showAddForm('page')" class="create"> <i class="fa fa-plus"></i> Create new page</a>
+      <span style="border-right:1px solid lightgray;"></span>
+      <a style="cursor:pointer" (click)="addReferencePage()" class="ref"><i class="fa fa-reply-all"></i>  Reference Page</a>
+    </div>
+    
+   
+ 
+ 
+  <div *ngFor="let page of schema.pages; let i=index;">
+      <div class="pages">
+    <div *ngIf="selectMode&&_refElement=='page'" class="selectMode">
+      <input type="checkbox" (change)="setCheckedReferenceElement($event,page.label)">
+    </div>
+    
+    <a [href]="'#page'+page.label.slice(0,3)+_formSchema.name.slice(0,-5)+i" data-toggle="collapse"><i class="fa fa-chevron-down"></i></a>
+
+    <label  (click)="onClicked(page,i)" class="element">{{page.label}}</label>
+ 
+  
+    <div *ngIf="editMode" style="float:right;" [hidden]="editPageMode" >
+      <a><i (click)="showEditForm(page,i) " class="material-icons" aria-hidden="true">edit</i></a>
+      <a><i class="material-icons del" aria-hidden="true"  style="color:#8b0000" (click)="showDeleteDialog(page,'page',i)">delete_forever</i></a>
+    </div>
+
+
+    <div [id]="'page'+page.label.slice(0,3)+ _formSchema.name.slice(0,-5)+ i" class="collapse">
+      <app-navigator [pageIndex]="i" [_schema]="page" [formSchema]="_formSchema" [mode]="mode" [count]="_count" [referenceElement]="_refElement" 
+      (nestedCheckedRefElementEmitter)="setCheckedReferenceElement($event)" [_rawSchema]="rawSchema"></app-navigator>
+     
+    </div>
+    </div>
+ </div>
+</div>
+
+
+
+<div style="margin-left:25px" *ngIf="schema.sections">
+  <div class="myEditors badge sec" *ngIf="editMode">
+    <a (click)="showAddForm('section',pageIndex)" class="create"> <i class="fa fa-plus"></i> Create new section</a>
+    <span style="border-right:1px solid lightgray;"></span>
+    <a style="cursor:pointer" data-toggle="tooltip" title="Reference section" (click)="addReferenceSection(pageIndex)" class="ref"><i class="fa fa-reply-all"></i> Reference Section</a>
+  </div>
 
   <div *ngFor="let section of schema.sections; let j= index;">
-    <a [href]="'#section'+pageIndex+j" data-toggle="collapse"><i class="fa fa-chevron-down"> </i></a>
-    <p (click)="onClicked(section)" class="element" >{{section.label}}</p>
-    <div [id]="'section'+pageIndex+j" class="collapse">
-    <app-navigator [sectionIndex]="j" [_schema]="section" [formSchema]="_formSchema"></app-navigator>
-  </div>
-  </div>
 
+      <div *ngIf="selectMode&&_refElement=='section'" class="selectMode">
+          <input type="checkbox" (change)="emitCheckedReferenceElement($event,{'page':_formSchema.pages[pageIndex].label,'section':section.label})">
+        </div>
+   
+
+    <a [href]="'#section'+section.label.slice(0,2)+pageIndex+ _formSchema.name.slice(0,-5)+j" data-toggle="collapse"><i class="fa fa-chevron-down"> </i></a>
+
+    <label (click)="onClicked(section,pageIndex,j)" class="element">{{section.label}}</label>
+
+    <div *ngIf="editMode" style="float:right;" [hidden]="editPageMode || editSectionMode">
+        <a><i (click)="showEditForm(section,pageIndex,j) " class="fa fa-pencil" aria-hidden="true"></i></a>
+        <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:#8b0000" (click)="showDeleteDialog(section,'section',pageIndex,j)"></i></a>
+      </div>
+
+      <!--Exclude Section-->
+      <div *ngIf="selectMode&&_refElement=='page'" style="float:right;">
+          <a ><i class="fa fa-times" aria-hidden="true"  data-toggle="tooltip" title="Exclude section" style="color:red" (click)="excludeSection(pageIndex,j)"></i></a>
+          </div>
+      
+    
+    <div [id]="'section'+section.label.slice(0,2)+pageIndex+ _formSchema.name.slice(0,-5)+j" class="collapse">
+      <app-navigator [sectionIndex]="j" [_schema]="section" [formSchema]="_formSchema" [pageIndex]="pageIndex" [_rawSchema]="rawSchema"
+       [mode]="mode" [count]="_count" [referenceElement]="_refElement" (nestedCheckedRefElementEmitter)="emitCheckedReferenceElement($event.event,$event.element)"></app-navigator>
+    </div>
+  </div> 
 </div>
 
+<div style="margin-left:25px" *ngIf="schema.questions">
+  <div class="myEditors badge sec" *ngIf="editMode">
+    <a (click)="addQuestion(pageIndex,sectionIndex,questionIndex)" class="create">
+      <i class="fa fa-plus"></i> Create new question</a>
+      <!-- <span style="border-right:1px solid lightgray;"></span>
+      <a style="cursor:pointer" data-toggle="tooltip" title="Reference question" (click)="addReferenceQuestion(pageIndex,sectionIndex,questionIndex)" class="ref" ><i class="fa fa-reply-all"></i> Reference Question</a> -->
+  </div>
 
-<div style="margin-left:20px" *ngIf="schema.questions">
-  <a><i class="fa fa-plus-square"></i> Add new question</a>
+
   <div *ngFor="let question of schema.questions; let k=index;">
-    <a [href]="'#question'+sectionIndex+k" data-toggle="collapse"></a>
-      <p class="element" (click)="onClicked(question)">{{question.label}}</p>
-    <div [id]="'question'+sectionIndex+k" class="collapse">
-    <app-navigator [_schema]="question"></app-navigator>
-</div>
-</div>
-</div>
 
+    <!-- <div *ngIf="selectMode&&_refElement=='question'" class="selectMode">
+      <input type="checkbox" 
+      (change)="emitCheckedReferenceElement($event,{'page':_formSchema.pages[pageIndex].label,'section':_formSchema.pages[pageIndex].sections[sectionIndex].label,'question':question.id || question.questions})">
+    </div> -->
+
+    <a *ngIf="question.questions" [href]="'#question'+question.label.slice(0,3)+ _formSchema.name.slice(0,-5)+pageIndex+sectionIndex+k" data-toggle="collapse"><i class="fa fa-toggle-down"> </i></a>
+    <p class="element" (click)="onClicked(question,pageIndex,sectionIndex,k)">{{question.label}}</p>
+
+    <!-- Exclude A Question -->
+    <div *ngIf="selectMode&&_refElement=='section'" style="float:right;">
+    <a ><i class="fa fa-times" aria-hidden="true"  data-toggle="tooltip" title="Exclude question" style="color:red" (click)="excludeQuestion(pageIndex,sectionIndex,k,questionIndex)"></i></a>
+    </div>
+
+    <div *ngIf="editMode" style="float:right;" [hidden]="editPageMode || editSectionMode">
+      <a><i (click)="editQuestion(question,pageIndex,sectionIndex,k,questionIndex)" class="fa fa-pencil" aria-hidden="true"></i></a>
+      <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:#8b0000" (click)="showDeleteDialog(question,'question',pageIndex,sectionIndex,k,questionIndex)"></i></a>
+    </div>
+  
+
+    <div [id]="'question'+question.label.slice(0,3)+ _formSchema.name.slice(0,-5)+pageIndex+sectionIndex+k" class="collapse">
+      <app-navigator [sectionIndex]="sectionIndex" [pageIndex]="pageIndex" [questionIndex]="k" [_schema]="question"
+       [formSchema]="_formSchema" [count]="_count" [mode]="mode" [referenceElement]="_refElement" 
+       (nestedCheckedRefElementEmitter)="emitCheckedReferenceElement($event.event,$event.element)" [_rawSchema]="rawSchema"></app-navigator>
+    </div>
+  </div>
+  <hr/>
+</div>
+ 

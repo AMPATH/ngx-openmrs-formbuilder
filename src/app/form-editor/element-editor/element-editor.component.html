@@ -1,3 +1,65 @@
-<div *ngIf="schema" class="text-center" style="background-color:#ebebeb;">
-  {{schema}}
+<div class="text-center" style="background:white;">
+    <div style="background-color:#ebebeb; padding:5px 0px 10px 0px">
+        Element Editor
+    </div>
+   
+</div>
+
+
+<div *ngIf="questions" >
+    <md-card>
+
+        <!--breadcrumbs-->
+        <br/>
+        <div class="center-block">
+            <ol class="breadcrumb">
+                <li>{{pageStr}}</li>
+                <li>{{sectionStr}}</li>
+                <li>{{questionStr}}</li>
+            </ol>
+        </div>
+
+        <!--breadcrumbs-->
+
+        <!--add property-->
+
+        <div class="dropdown pull-right">
+            <a class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-plus" aria-hidden="true"></i> Add Property
+  <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li (click)="addProperty(prop.parentPath)" value="prop.path" *ngFor="let prop of allPossibleproperties">
+                    <a [class.disabled]="prop.type=='disabled'">{{prop.name}}</a>
+                </li>
+
+            </ul>
+        </div>
+
+        <!--add property-->
+
+        <div *ngIf="form" style="clear:both;">
+            <!--form for adding a question-->
+
+            <form (ngSubmit)="onSubmit()" [formGroup]="form">
+
+                <div *ngFor="let question of questions; let i=index;">
+                    
+                    <div class="pull-right" *ngIf="checkQuestion(question)">
+                        <a (click)="delete(i)" data-toggle="tooltip" title="Delete">
+                            <i class="fa fa-times" style="font-size:16px;margin:10px;color:red;cursor:pointer"></i>
+                        </a>
+                    </div>
+
+                    <app-dynamic-question [question]="question" [_form]="form" (answers)="setAnswers($event)"></app-dynamic-question>
+
+                </div>
+
+
+                <div class="form-row">
+                    <br/>
+                    <button class="btn btn-primary btn-lg center-block" type="submit" [disabled]="!form.valid">OK</button>
+                </div>
+            </form>
+        </div>
+    </md-card>
+
 </div>
