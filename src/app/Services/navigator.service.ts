@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
+<<<<<<< HEAD
 import  { Subject, Observable } from 'rxjs';
+=======
+import {Subject, Observable} from 'rxjs';
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 
 @Injectable()
 export class NavigatorService {
 
+<<<<<<< HEAD
   schema: Object; //stores the state of the current schema and all the changes in memory.
   rawSchema:Object; //stores the raw version of above
   schemaEditorSubject:Subject<Object> = new Subject();
@@ -35,6 +40,26 @@ export class NavigatorService {
 
 
  setSchema(schema:Object){
+=======
+  schema: {};
+  selectedElementSubject:Subject<{}> = new Subject<{}>();
+  schemaSubject:Subject<{}> = new Subject<{}>();
+  questionSubject:Subject<any> = new Subject<any>();
+  
+
+  constructor() {}
+
+  setSelectedElement(schema){
+      this.schema = schema;
+      this.selectedElementSubject.next(schema);
+  }
+
+  getSelectedElement():Observable<{}>{
+    return this.selectedElementSubject.asObservable();
+ }
+
+ setSchema(schema){
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
    this.schema = schema;
    this.schemaSubject.next(schema);
  }
@@ -58,6 +83,7 @@ export class NavigatorService {
   return this.questionSubject.asObservable();
  }
 
+<<<<<<< HEAD
  setRawSchema(rawSchema:{}){
    this.rawSchema = rawSchema;
    this.rawSchemaSubject.next(rawSchema);
@@ -67,4 +93,6 @@ export class NavigatorService {
    return this.rawSchemaSubject.asObservable()
  }
 
+=======
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 }

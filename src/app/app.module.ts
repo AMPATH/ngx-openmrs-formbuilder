@@ -8,6 +8,10 @@ import {AceEditorModule} from 'ng2-ace-editor';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { ClipboardModule } from 'ngx-clipboard';
+<<<<<<< HEAD
+=======
+import {DragulaModule} from 'ng2-dragula';
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 //import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 
 
@@ -19,7 +23,11 @@ import {PropertyFactory} from './form-editor/models/property-factory';
 import {FormElementFactory} from './form-editor/form-elements/form-element-factory';
 import {QuestionIdService} from './Services/question-id.service';
 import {ConceptService} from './Services/concept.service';
+<<<<<<< HEAD
 import {FormFactory} from './form-editor/form-elements/form-factory.service'
+=======
+
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 
 
 import { AppComponent } from './app.component';
@@ -69,6 +77,10 @@ import { ReferenceFormsComponent } from './form-editor/reference-forms/reference
     AceEditorModule,
     BootstrapModalModule,
     ClipboardModule,
+<<<<<<< HEAD
+=======
+    DragulaModule,
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
   ],
   entryComponents: [ConfirmComponent, AlertComponent, PromptComponent, AnswersComponent, ConceptsModalComponent, ReferenceModalComponent, NavigatorModalComponent],
 
@@ -79,7 +91,10 @@ import { ReferenceFormsComponent } from './form-editor/reference-forms/reference
               FormElementFactory,
               QuestionIdService,
               ConceptService,
+<<<<<<< HEAD
               FormFactory
+=======
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
             ],
   bootstrap: [AppComponent]
 })

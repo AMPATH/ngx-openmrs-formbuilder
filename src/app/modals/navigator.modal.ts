@@ -49,6 +49,7 @@ export class NavigatorModalComponent extends DialogComponent<NavigatorModalModel
   schema:any;
   referenceElement:string;
   checkedRefElements:any=[];
+<<<<<<< HEAD
   res:string;
 
   constructor(dialogService: DialogService,private fb:FormBuilder,private fs:FetchFormsService) {
@@ -56,10 +57,17 @@ export class NavigatorModalComponent extends DialogComponent<NavigatorModalModel
     super(dialogService);
     
     
+=======
+
+  constructor(dialogService: DialogService,private fb:FormBuilder,private fs:FetchFormsService) {
+    super(dialogService);
+    
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
   }
 
   rfEmitted(refElements:any[]){
   
+<<<<<<< HEAD
     this.checkedRefElements = refElements;
   }
 
@@ -71,6 +79,16 @@ export class NavigatorModalComponent extends DialogComponent<NavigatorModalModel
   save() {
     this.res = JSON.stringify(this.checkedRefElements);   
     this.result=this.res;
+=======
+    refElements.forEach(element =>{
+      this.checkedRefElements.push(element)
+    })
+   this.result = JSON.stringify(this.checkedRefElements);
+  }
+
+  save() {
+    
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     this.close();
   }
 

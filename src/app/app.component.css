@@ -10,7 +10,13 @@
 a{
     margin: auto;
 }
+<<<<<<< HEAD
 
+=======
+.mat-card{
+    height:450px;
+}
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 h6{
     color: #2196f3;
     
@@ -25,6 +31,7 @@ h6{
     width:570px;
     background: #fafafa;
 }
+<<<<<<< HEAD
 /* .mat-sidenav-content {
     position: relative;
     transform: translate3d(0,0,0);
@@ -35,3 +42,5 @@ h6{
 a{
     cursor: pointer;
 }
+=======
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3

@@ -1,16 +1,26 @@
 import { Component, Input, OnInit,OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ConfirmComponent } from '../../modals/confirm.component';
 import { PromptComponent } from '../../modals/prompt.component';
+<<<<<<< HEAD
 import { AlertComponent } from '../../modals/alert.component';
 import { ReferenceModalComponent } from '../../modals/reference-form.modal';
 import { FormElementFactory } from '../form-elements/form-element-factory';
 import {FormFactory} from '../form-elements/form-factory.service'
 import { DialogService } from "ng2-bootstrap-modal";
+=======
+import { ReferenceModalComponent } from '../../modals/reference-form.modal';
+import { FormElementFactory } from '../form-elements/form-element-factory';
+import { DialogService } from "ng2-bootstrap-modal";
+import { DragulaService } from 'ng2-dragula';
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 import { NavigatorService } from '../../Services/navigator.service';
 import { FetchFormsService } from '../../Services/fetch-forms.service';
 import { QuestionControlService } from '../../Services/question-control.service';
 import { FormControl, FormGroup, FormBuilder,Validators } from '@angular/forms';
+<<<<<<< HEAD
 import { FormSchemaCompiler } from 'ng2-openmrs-formentry';
+=======
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 
 
 @Component({
@@ -21,11 +31,16 @@ import { FormSchemaCompiler } from 'ng2-openmrs-formentry';
 
 export class NavigatorComponent implements OnInit, OnDestroy{
 
+<<<<<<< HEAD
 	private schema:Object; //recursive schema could represent a question,section,page or form
 	private _formSchema:any; //represents a FULL form schema
 	private _count:number=0;
 	private _refElement:string;
 	private rawSchema:any;
+=======
+	private schema:any; //recursive schema could represent a question,section,page or form
+	private _formSchema:any; //represents a FULL form schema
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	addForm:FormGroup;
 	editForm:FormGroup;
 	editPageMode:boolean=false;
@@ -34,11 +49,17 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	editMode:boolean;
 	selectMode:boolean;
 	checkedRefElements:any[]=[] //selected elements to be referenced
+<<<<<<< HEAD
 	referencedForms:any[] //an array of referencedForms
+=======
+
+	@Input() referenceElement; //element to be referenced if select mode
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	@Input() mode:string;      //can be either select or edit
 	@Input() pageIndex:number; //aids in collapsing the navigator elements
 	@Input() sectionIndex:number; //aids in collapsing the navigator elements
 	@Input() questionIndex:number;
+<<<<<<< HEAD
 	@Input() set _rawSchema(schema){this.rawSchema= schema;}
 	@Input() set referenceElement(refElement){this._refElement = refElement}; //element to be referenced if select mode
 	@Input() set count(count){this._count=count;}//keeps count of recursive calls
@@ -57,6 +78,35 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			
 	}
 
+=======
+	@Input() set _schema(schema:any){ this.schema = schema; /**recursive*/ }
+	@Input() set formSchema(schema:any){ this._formSchema = schema; /**maintains the full form*/}
+	@Output() closeSidebar:EventEmitter<boolean> = new EventEmitter();
+	@Output() checkedRefElementsEmitter:EventEmitter<any[]> = new EventEmitter();
+
+
+	constructor(private fb: FormBuilder,private ns: NavigatorService,private qcs:QuestionControlService,
+		private formElementFactory:FormElementFactory,private dialogService:DialogService,dragulaService:DragulaService,private fs:FetchFormsService) 
+		{
+			dragulaService.dropModel.subscribe((value,) => {
+				if(this.schema == this._formSchema.pages[this.pageIndex]) this.onDropModel(value.slice(1))
+			})
+			dragulaService.removeModel.subscribe((value) => {
+				this.onRemoveModel(value.slice(1))
+			})
+			
+	}
+
+	onDropModel(args){
+		let [el, target, source] = args;
+		this.ns.setSchema(this._formSchema)
+	}
+
+	onRemoveModel(args){
+		let [el, source] = args;
+		console.log(this._formSchema)
+	}
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 
 	ngOnInit() {
 		if(this.mode=='edit'){
@@ -68,7 +118,10 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			this.selectMode = true
 			this.editMode=false
 		}
+<<<<<<< HEAD
 		
+=======
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	}
 
 	//when element is clicked in navigator
@@ -79,10 +132,14 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		schemaObj['pageIndex']=pageIndex;
 		schemaObj['sectionIndex']=sectionIndex;
 		schemaObj['questionIndex']=questionIndex;
+<<<<<<< HEAD
 		this.ns.setClickedElementSchema(schemaObj);
 		if(pageIndex!=undefined&&sectionIndex!=undefined) this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex].sections[sectionIndex])
 		else this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex])
 		
+=======
+		this.ns.setSelectedElement(schemaObj);
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	}
 
  
@@ -100,32 +157,53 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 
 	showAddForm(element:string,pageIndex?:number){
+<<<<<<< HEAD
 		if(element=='page'){
 			
 			let newPage = this.formElementFactory.createFormElement(element,{"label":''});
+=======
+		if(!pageIndex){
+			let newPage = this.formElementFactory.createFormElement("page",{"label":''});
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 			this.propertyModelArray = this.qcs.toPropertyModelArray(newPage);
 			this.addForm = this.qcs.toFormGroup(this.propertyModelArray)
 			this.showAddDialog(this.propertyModelArray,this.addForm)
 			
 		}
 		else{
+<<<<<<< HEAD
 		console.log(pageIndex)
 		let newSection = this.formElementFactory.createFormElement(element,{})
 		this.propertyModelArray = this.qcs.toPropertyModelArray(newSection)
 		this.addForm = this.qcs.toFormGroup(this.propertyModelArray)
 		this.showAddDialog(this.propertyModelArray,this.addForm,pageIndex)
 		}
+=======
+		
+		let newSection = this.formElementFactory.createFormElement("section",{})
+		this.propertyModelArray = this.qcs.toPropertyModelArray(newSection)
+		this.addForm = this.qcs.toFormGroup(this.propertyModelArray)
+		this.showAddDialog(this.propertyModelArray,this.addForm,pageIndex)
+	}
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	}
 
 	showDeleteDialog(schema:any, element:string,  pageIndex:number, sectionIndex?:number, questionIndex?:number, parentQuestionIndex?:number){
 			this.dialogService.addDialog(ConfirmComponent, {
 								title:'Delete '+element, 
+<<<<<<< HEAD
 								message:'Are you sure you want to delete '+schema.label},{backdropColor:'rgba(0,0, 0, 0.5)'})
 								.subscribe((isConfirmed)=>{
 										if(isConfirmed) {
 												if(element=='page') this.deletePage(pageIndex)
 												else if(element=='section') this.deleteSection(pageIndex,sectionIndex)
 												else this.deleteQuestion(pageIndex,sectionIndex,questionIndex,parentQuestionIndex)
+=======
+								message:'Are you sure you want to delete '+schema.label},{backdropColor:'rgba(255, 255, 255, 0.5)'})
+								.subscribe((isConfirmed)=>{
+										if(isConfirmed) {
+												this.deleteElement(schema,pageIndex,sectionIndex,questionIndex,parentQuestionIndex);
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 										}
 					});
 	}
@@ -148,16 +226,23 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 
 	showAddDialog(propModelArray,form,pageIndex?){
+<<<<<<< HEAD
 		if(pageIndex!=undefined&&pageIndex>-1){
 			
+=======
+		if(pageIndex)
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 			this.dialogService.addDialog(PromptComponent, {title:'Create Section',questions:propModelArray,form:form},{backdropColor:'rgba(255, 255, 255, 0.5)'})
 				.subscribe((formValue)=>{
 					if(formValue!=undefined) this.addSection(formValue,pageIndex)
 			});
 
+<<<<<<< HEAD
 		}
 			
 
+=======
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 		else
 			this.dialogService.addDialog(PromptComponent, {title:'Create Page', questions:propModelArray,form:form},{backdropColor:'rgba(255, 255, 255, 0.5)'})
 				.subscribe((formValue)=>{
@@ -168,6 +253,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 	editPage(label,pageIndex){
 		this._formSchema.pages[pageIndex].label = label
+<<<<<<< HEAD
 		this.rawSchema.pages[pageIndex].label = label
 		this.setSchema(this._formSchema)
 		this.setRawSchema(this.rawSchema)
@@ -180,6 +266,16 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		this.rawSchema.pages[pageIndex] = this.schema
 		this.setSchema(this._formSchema);
 		this.setRawSchema(this.rawSchema)
+=======
+		this.ns.setSchema(this._formSchema)
+	}
+
+	editSection(value,pageIndex,sectionIndex){
+		this.schema.sections[sectionIndex].label = value.label
+		this.schema.sections[sectionIndex].isExpanded = value.isExpanded
+		this._formSchema.pages[pageIndex] =this.schema
+		this.ns.setSchema(this._formSchema);
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	}
 
 	editQuestion(question:any,pageIndex:number,sectionIndex:number,questionIndex:number,parentQuestionIndex?:number){
@@ -188,11 +284,20 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		schemaObj['pageIndex']=pageIndex;
 		schemaObj['sectionIndex']=sectionIndex;
 		schemaObj['questionIndex']=questionIndex;
+<<<<<<< HEAD
 		schemaObj['parentQuestionIndex']=parentQuestionIndex;                                       
 		this.ns.setClickedElementSchema(schemaObj); //set the current edited question in the schema editor
 
 		this.propertyModelArray = this.qcs.toPropertyModelArray(question)
 		if(parentQuestionIndex!=undefined&&parentQuestionIndex>-1){ //thy art an obsgroup question!
+=======
+		schemaObj['parentQuestionIndex']=parentQuestionIndex;
+		console.log(schemaObj)
+		this.ns.setSelectedElement(schemaObj); //set the current edited question in the schema editor
+
+		this.propertyModelArray = this.qcs.toPropertyModelArray(question)
+		if(parentQuestionIndex){ //thy art an obsgroup question!
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 			this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex,questionIndex,parentQuestionIndex)
 		}
 		else{
@@ -206,21 +311,31 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		if(!this.doesPageExist(label)){
 		let newPage = this.formElementFactory.createFormElement("page",{"label":label})
 		this._formSchema.pages.push(newPage)
+<<<<<<< HEAD
 		console.log(this.rawSchema)
 		this.rawSchema.pages.push(newPage)
 		this.setSchema(this._formSchema)
 		this.setRawSchema(this.rawSchema)
 		}
 		else this.showAlertDialog("Page already exists! \n Try creating one with a different label!")
+=======
+		this.ns.setSchema(this._formSchema)
+		}
+		else alert("Page already exists! Try creating one with a different label!")
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	}
 
 	addSection(value,pageIndex:number){
 	
 		let newSection = this.formElementFactory.createFormElement("section",{"label":value.label,"isExpanded":value.isExpanded})
 		this._formSchema.pages[pageIndex].sections.push(newSection)
+<<<<<<< HEAD
 		this.rawSchema.pages[pageIndex].sections.push(newSection)
 		this.setSchema(this._formSchema)
 		this.setRawSchema(this.rawSchema)
+=======
+		this.ns.setSchema(this._formSchema)
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 		this.addForm.reset()
 	}
 
@@ -232,6 +347,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		else this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex);
 	}
 
+<<<<<<< HEAD
 	
 	deletePage(pageIndex){
 		this._formSchema.pages.splice(pageIndex,1);
@@ -272,20 +388,49 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			}
 		})
 		return result;
+=======
+//Delete any element question,section or page
+	deleteElement(schema,pageIndex,sectionIndex,questionIndex,parentQuestionIndex){
+		if(schema.sections) this._formSchema.pages.splice(pageIndex,1);
+		
+		else if(schema.isExpanded) this._formSchema.pages[pageIndex].sections.splice(sectionIndex,1)
+	
+		else if(parentQuestionIndex) this._formSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1);
+	
+		else this._formSchema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex,1);
+	
+		this.ns.setSchema(this._formSchema);
+	}
+
+	doesPageExist(label:string){
+		for(var page of this._formSchema.pages)
+			if(page.label === label) return true;
+			else return false;
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	}
 
 
 	addReferencePage(){
+<<<<<<< HEAD
 
 		this.dialogService.addDialog(ReferenceModalComponent, {
 			refElement:'Page'},{backdropColor:'rgba(0, 0, 0, 0.5)'})
 		.subscribe((res)=>{
 			if(res!=undefined){
 				this.createRefPages(JSON.parse(res));
+=======
+		this.closeSidebar.emit(true)
+		this.dialogService.addDialog(ReferenceModalComponent, {
+		title:'Select form to reference',refElement:'Page'},{backdropColor:'rgba(0, 0, 0, 0.5)'})
+		.subscribe((form)=>{
+			if(form!=undefined){
+				console.log(form)
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 			}
 				
 		});
  
+<<<<<<< HEAD
 	}
 
 
@@ -344,16 +489,36 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 				else if(typeof element == 'object'&& JSON.stringify(el) === JSON.stringify(element)){
 					this.checkedRefElements.splice(index,1)
 					
+=======
+}
+
+	setCheckedReferencePage(event,page){
+		if(event.target.checked){
+			this.checkedRefElements.push(page)
+		}
+	
+		else{
+			if(this.checkedRefElements.length>0){
+				this.checkedRefElements.forEach((element,index) =>
+				 {
+				if(element==page){
+					this.checkedRefElements.splice(index,1)
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 				}
 			})
 		}
 	 }
 
+<<<<<<< HEAD
 	 if(this.schema['pages']) 
+=======
+	 if(this.schema.pages) 
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 		this.checkedRefElementsEmitter.emit(this.checkedRefElements)
 		
 	}
 
+<<<<<<< HEAD
 
 	emitCheckedReferenceElement(event,element){
 
@@ -522,3 +687,11 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	}
 
 } 
+=======
+ngOnDestroy(){
+	
+
+}
+
+}
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3

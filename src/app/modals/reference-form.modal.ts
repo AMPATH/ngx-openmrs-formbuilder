@@ -27,9 +27,14 @@ export interface ReferenceFormModalModel {
                    <form [formGroup]="form"> 
                    <div class="form-group">
                    <label for="label">Select Form</label>
+<<<<<<< HEAD
                     <select #selectField id="label" class="form-control" formControlName="selectField" >
                       
                       <option *ngFor="let form of refForms" [value]="form.formName">
+=======
+                    <select #formlabel id="label" class="form-control" formControlName="selectField">
+                      <option *ngFor="let form of refForms">
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
                         {{form.formName}}
                       </option>
                     </select>
@@ -37,7 +42,11 @@ export interface ReferenceFormModalModel {
                    </form>
                    </div>
                    <div class="modal-footer">
+<<<<<<< HEAD
                      <button type="button" class="btn btn-primary" (click)="save(selectField.value)" [disabled]="!form.valid">OK</button>
+=======
+                     <button type="button" class="btn btn-primary" (click)="save(formlabel.value)">OK</button>
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
                      <button type="button" class="btn btn-default" (click)="close()">Cancel</button>
                    </div>
                  </div>
@@ -47,7 +56,17 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
   title: string;
   refElement:string; //new element to be refd
   form:FormGroup;
+<<<<<<< HEAD
   refForms=this.fs.fetchReferencedForms();
+=======
+  refForms=[
+  new ReferenceForm("triage.json","trg","xxxx"),
+  new ReferenceForm("component_preclinic-review.json","pcr","xxxx"),
+  new ReferenceForm("component_hospitalization.json","hosp","xxxx"),
+  new ReferenceForm("component_art.json","art","xxxx")
+]
+
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
   formAlias:string; //the form alias selected
 
   selectField: FormControl = new FormControl("",Validators.required)
@@ -58,6 +77,7 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
   }
 
   save(value) {
+<<<<<<< HEAD
 
     this.refForms.forEach(form =>{
       if(form['formName']==value) this.formAlias = form['alias']
@@ -80,6 +100,26 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
        this.close()
         }  
         
+=======
+    this.refForms.forEach(form =>{
+      if(form.formName==value) this.formAlias = form.alias
+    }
+    )
+
+    this.fs.fetchForm(value).subscribe(schema => this.showNavigatorDialog(schema,this.refElement,`Select ${this.refElement} to ref`))
+  }
+
+  showNavigatorDialog(schema,refElement:string,title:string){
+    this.dialogService.addDialog(NavigatorModalComponent,
+       {title:title,schema:schema, referenceElement:refElement.toLowerCase()},{backdropColor:'rgba(0, 0, 0, 0.8)'})
+    .subscribe((formValue)=>{
+      if(formValue!=undefined) {
+       this.result = JSON.stringify({form:this.formAlias,pages:formValue});
+        }
+      
+        
+        this.close()
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
       
   });
   }

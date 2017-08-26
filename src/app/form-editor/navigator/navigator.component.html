@@ -1,3 +1,4 @@
+<<<<<<< HEAD
  <div class="formName" *ngIf="schema.name" >
     <h4 id="schema" (click)="onClicked(schema)"><i class="fa fa-lg fa-newspaper-o"></i> {{schema.name}}</h4>
 
@@ -38,19 +39,67 @@
     </div>
     </div>
  </div>
+=======
+<div [class.well]="schema.name">
+
+  <div *ngIf="schema.name" >
+    <h4 id="schema" (click)="onClicked(schema)"><i class="fa fa-lg fa-newspaper-o"></i> {{schema.name}}</h4>
+   
+  </div>
+
+  <div class="pages" *ngIf="schema.pages">
+    <div class="myEditors" *ngIf="editMode">
+      <a (click)="showAddForm('page')"> <i class="fa fa-plus"></i> <span style="margin:10px; font-size:16px;">Create new page</span></a>
+      <a style="cursor:pointer" data-toggle="tooltip" title="Reference page" (click)="addReferencePage()" class="pull-right"><i class="fa fa-2x fa-file-code-o"></i></a>
+    </div>
+    
+  </div>
+ 
+  <div [dragula]='"bag-one"' [dragulaModel]='schema.pages'>
+  <div *ngFor="let page of schema.pages; let i=index;">
+
+    <div *ngIf="selectMode&&referenceElement=='page'" class="selectMode">
+      <input type=checkbox (change)="setCheckedReferencePage($event,page.label)">
+    </div>
+
+    <a [href]="'#page'+page.label.slice(0,page.label.indexOf(' '))+i" data-toggle="collapse"><i class="fa fa-chevron-down"></i></a>
+
+
+    <label (click)="onClicked(page,i)" class="element">{{page.label}}</label>
+
+
+   
+    <div *ngIf="editMode" style="float:right;" [hidden]="editPageMode">
+      <a><i (click)="showEditForm(page,i) " class="fa fa-pencil" aria-hidden="true"></i></a>
+      <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:red" (click)="showDeleteDialog(page,'Page',i)"></i></a>
+    </div>
+ 
+    <div [id]="'page'+page.label.slice(0,page.label.indexOf(' '))+ i" class="collapse">
+      <app-navigator [pageIndex]="i" [_schema]="page" [formSchema]="_formSchema" [mode]="mode"></app-navigator>
+    </div>
+    
+  </div>
+</div>
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 </div>
 
 
 
 <div style="margin-left:25px" *ngIf="schema.sections">
+<<<<<<< HEAD
   <div class="myEditors badge sec" *ngIf="editMode">
     <a (click)="showAddForm('section',pageIndex)" class="create"> <i class="fa fa-plus"></i> Create new section</a>
     <span style="border-right:1px solid lightgray;"></span>
     <a style="cursor:pointer" data-toggle="tooltip" title="Reference section" (click)="addReferenceSection(pageIndex)" class="ref"><i class="fa fa-reply-all"></i> Reference Section</a>
+=======
+  <div class="myEditors" *ngIf="editMode">
+    <a (click)="showAddForm('section',pageIndex)"> <i class="fa fa-plus"></i> <span style="margin:10px;">Create new section</span></a>
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
   </div>
 
   <div *ngFor="let section of schema.sections; let j= index;">
 
+<<<<<<< HEAD
       <div *ngIf="selectMode&&_refElement=='section'" class="selectMode">
           <input type="checkbox" (change)="emitCheckedReferenceElement($event,{'page':_formSchema.pages[pageIndex].label,'section':section.label})">
         </div>
@@ -112,6 +161,50 @@
       <app-navigator [sectionIndex]="sectionIndex" [pageIndex]="pageIndex" [questionIndex]="k" [_schema]="question"
        [formSchema]="_formSchema" [count]="_count" [mode]="mode" [referenceElement]="_refElement" 
        (nestedCheckedRefElementEmitter)="emitCheckedReferenceElement($event.event,$event.element)" [_rawSchema]="rawSchema"></app-navigator>
+=======
+      <div *ngIf="selectMode" class="selectMode">
+          <input type=checkbox (change)="setCheckedReferencePage($event,page.label)">
+        </div>
+    
+
+    <a [href]="'#section'+section.label.slice(0,section.label.indexOf(' '))+pageIndex+j" data-toggle="collapse"><i class="fa fa-chevron-down"> </i></a>
+
+    <label (click)="onClicked(section,pageIndex,j)" class="element">{{section.label}}</label>
+
+
+    <div *ngIf="editMode" style="float:right;" [hidden]="editPageMode || editSectionMode">
+      <a><i (click)="showEditForm(section,pageIndex,j) " class="fa fa-pencil" aria-hidden="true"></i></a>
+      <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:red" (click)="showDeleteDialog(section,'Section',pageIndex,j)"></i></a>
+    </div>
+    <div [id]="'section'+section.label.slice(0,section.label.indexOf(' '))+pageIndex+j" class="collapse">
+      <app-navigator [sectionIndex]="j" [_schema]="section" [formSchema]="_formSchema" [pageIndex]="pageIndex" [mode]="mode"></app-navigator>
+    </div>
+  </div>
+
+</div>
+
+
+<div style="margin-left:25px" *ngIf="schema.questions">
+  <div class="myEditors" *ngIf="editMode">
+    <a (click)="addQuestion(pageIndex,sectionIndex,questionIndex)"> <i class="fa fa-plus"></i> <span style="margin:10px;">Create new question</span></a>
+  </div>
+
+  <div *ngFor="let question of schema.questions; let k=index;">
+
+
+    <a *ngIf="question.questions" [href]="'#question'+question.label.slice(0,question.label.indexOf(' '))+pageIndex+sectionIndex+k" data-toggle="collapse"><i class="fa fa-toggle-down"> </i></a>
+    <p class="element" (click)="onClicked(question,pageIndex,sectionIndex,k)">{{question.label}}</p>
+
+    
+    <div *ngIf="editMode" style="float:right;" [hidden]="editPageMode || editSectionMode">
+      <a><i (click)="editQuestion(question,pageIndex,sectionIndex,k,questionIndex)" class="fa fa-pencil" aria-hidden="true"></i></a>
+      <a><i class="fa fa-trash-o" aria-hidden="true"  style="color:red" (click)="showDeleteDialog(question,'Question',pageIndex,sectionIndex,k,questionIndex)"></i></a>
+    </div>
+  
+
+    <div [id]="'question'+question.label.slice(0,question.label.indexOf(' '))+pageIndex+sectionIndex+k" class="collapse">
+      <app-navigator [sectionIndex]="sectionIndex" [pageIndex]="pageIndex" [questionIndex]="k" [_schema]="question" [formSchema]="_formSchema" [mode]="mode"></app-navigator>
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     </div>
   </div>
   <hr/>

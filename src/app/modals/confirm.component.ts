@@ -23,7 +23,20 @@ export interface ConfirmModel {
                      <button type="button" class="btn btn-default" (click)="close()" >Cancel</button>
                    </div>
                  </div>
+<<<<<<< HEAD
               </div>`
+=======
+              </div>`,
+              styles:[`
+              .modal-dialog{
+                    overflow-y: initial !important
+                      }
+              .modal-body{
+                    height: 250px;
+                    overflow-y: auto;
+                    }
+            `]
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 })
 export class ConfirmComponent extends DialogComponent<ConfirmModel, boolean> implements ConfirmModel{
   title: string;

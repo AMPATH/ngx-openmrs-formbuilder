@@ -10,6 +10,7 @@ import { QuestionIdService } from './Services/question-id.service'
 export class AppComponent implements OnInit{
 
    schema:any;
+<<<<<<< HEAD
 	 selectedSchema:any;
 	 rawSelectedSchema:any;
 	 strSchema:string;
@@ -20,6 +21,15 @@ export class AppComponent implements OnInit{
    question:any;
 	 parentQuestion:any;
 	 strRawSchema:string;
+=======
+   selectedSchema:any;
+   strSchema:string;
+   questions:any;
+   page:any; //to add new question
+   section:any; //to add new section
+   question:any;
+   parentQuestion:any;
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
    @ViewChild('sidenav') public myNav;
   constructor(private fs: FetchFormsService, private ns: NavigatorService, private qs:QuestionIdService){
   }
@@ -30,6 +40,7 @@ export class AppComponent implements OnInit{
  
   closeNavigator(event){
 	  this.myNav.close();
+<<<<<<< HEAD
 	}
 	
 	openNavigator(){
@@ -61,6 +72,21 @@ export class AppComponent implements OnInit{
 	  )
 	  //on navigator element clicked for editing
 	  this.ns.getClickedElementSchema().subscribe(
+=======
+  }
+
+  ngOnInit(){ 
+	//onLoad
+	  this.fs.fetchForm("adult.json").subscribe(
+		  res => {
+			  this.schema = res;
+			  this.selectedSchema = res;
+			  this.strSchema = JSON.stringify(this.schema,null,'\t');
+			}
+	  )
+	  //on navigator element clicked for editing
+	  this.ns.getSelectedElement().subscribe(
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 		  res => {
 			  this.selectedSchema = res;
 			  this.strSchema = JSON.stringify(this.selectedSchema.selectedSchema,null,'\t');
@@ -86,11 +112,19 @@ export class AppComponent implements OnInit{
 			   this.parentQuestion = res['parentQuestionIndex']
 			   this.myNav.close()
 		   }
+<<<<<<< HEAD
 		 )
 		 
 
 		 
 
+=======
+	   )
+
+	   
+	  
+	   
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
   }
 
 

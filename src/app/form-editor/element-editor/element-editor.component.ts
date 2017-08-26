@@ -14,16 +14,24 @@ import { DialogService } from "ng2-bootstrap-modal";
   styleUrls: ['./element-editor.component.css']
 })
 export class ElementEditorComponent implements OnInit {
+<<<<<<< HEAD
   private questions:PropertyModel<any>[];
   private _rawSchema: any;
+=======
+  questions:PropertyModel<any>[];
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
   _schema:any
   form: FormGroup;
   @Input() pageIndex: number;
   @Input() sectionIndex: number;
   @Input() questionIndex:number;  //if editMode or addMode obsGroup Question
+<<<<<<< HEAD
   @Input() parentQuestionIndex:number;
   @Input() set rawSchema(rawSchema){this._rawSchema=rawSchema}; //if edit obsGroup question
  
+=======
+  @Input() parentQuestionIndex:number; //if edit obsGroup question
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
   pageStr: string;
   sectionStr: string;
   questionStr: string;
@@ -34,10 +42,14 @@ export class ElementEditorComponent implements OnInit {
 
 
   constructor(private qcs: QuestionControlService, private formElementFactory:FormElementFactory, 
+<<<<<<< HEAD
     private qis:QuestionIdService,private ns:NavigatorService,private dialogService:DialogService) { 
   
     
     }
+=======
+    private qis:QuestionIdService,private ns:NavigatorService,private dialogService:DialogService) { }
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 
    
   @Input() set schema(schema){
@@ -59,8 +71,12 @@ export class ElementEditorComponent implements OnInit {
       this.setMode(this.form)
       this.allPossibleproperties = this.qcs.getAllPossibleProperties();
       this.breadcrumbsSetup();
+<<<<<<< HEAD
      
       
+=======
+      console.log(this.pageIndex+" "+this.sectionIndex+" "+this.questionIndex+" "+this.parentQuestionIndex)
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
   }
 
 
@@ -105,6 +121,10 @@ export class ElementEditorComponent implements OnInit {
 
     console.log(question)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     if(this.addMode){ 
       this.addQuestion(question,this.pageIndex,this.sectionIndex,this.questionIndex)
     }
@@ -177,7 +197,11 @@ export class ElementEditorComponent implements OnInit {
       }
       else{
         let field = this.qcs.toPropertyModelArray({"questionOptions.answers":answers})
+<<<<<<< HEAD
         this.form.addControl('questionOptions.answers',new FormControl(JSON.stringify(answers,undefined,"\t")))
+=======
+        this.form.addControl('questionOptions.answers',new FormControl(""))
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
         this.questions.push(field[0])
       }
     }
@@ -206,15 +230,23 @@ export class ElementEditorComponent implements OnInit {
 
     if(questionIndex){ //obsGroup question
       this._schema.pages[pageIndex].sections[sectionIndex].questions[questionIndex].questions.push(question);
+<<<<<<< HEAD
       this._rawSchema.pages[pageIndex].sections[sectionIndex].questions[questionIndex].questions.push(question);
+=======
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     }
 
     else{
       this._schema.pages[pageIndex].sections[sectionIndex].questions.push(question);
+<<<<<<< HEAD
       this._rawSchema.pages[pageIndex].sections[sectionIndex].questions.push(question);
     }
     this.ns.setSchema(this._schema);
     this.ns.setRawSchema(this._rawSchema)
+=======
+    }
+    this.ns.setSchema(this._schema);
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     this.form.reset()
     
   }
@@ -224,6 +256,7 @@ export class ElementEditorComponent implements OnInit {
   
     if(parentQuestionIndex){
       this._schema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1,question)
+<<<<<<< HEAD
       this._rawSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1,question)
     }
     else{
@@ -234,6 +267,15 @@ export class ElementEditorComponent implements OnInit {
     }
     this.ns.setSchema(this._schema);
     this.ns.setRawSchema(this._rawSchema)
+=======
+    }
+    else{
+      console.log(questionIndex)
+    console.log(this._schema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex,1,question))
+    
+    }
+    this.ns.setSchema(this._schema);
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
   }
   
 

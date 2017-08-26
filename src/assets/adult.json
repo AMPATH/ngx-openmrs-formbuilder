@@ -26,8 +26,148 @@
         "uuid": "bd4ff44f-8007-49b0-b468-669fe0125093",
         "display": "Art Component"
       }
+<<<<<<< HEAD
     }
    
+=======
+    },
+    {
+      "formName": "component_pcp-prophy",
+      "alias": "pcp",
+      "ref": {
+        "uuid": "6e8abf10-d91c-4f13-9653-8ac8408c5ec5",
+        "display": "Pcp Prophy Component"
+      }
+    },
+    {
+      "formName": "component_tb-prophy",
+      "alias": "tbp",
+      "ref": {
+        "uuid": "65fae581-b726-493a-82cc-78478e1b4e86",
+        "display": "Tb Prophy Component"
+      }
+    },
+    {
+      "formName": "component_tb-treatment",
+      "alias": "tbt",
+      "ref": {
+        "uuid": "9dc1663d-bcec-48bf-b04d-ad6d7ed33396",
+        "display": "Tb Treatment Component"
+      }
+    },
+    {
+      "formName": "component_other-medication",
+      "alias": "omed",
+      "ref": {
+        "uuid": "46205439-ccbf-4f60-80e1-d765861f6257",
+        "display": "Other Medication Component"
+      }
+    },
+    {
+      "formName": "component_crypto",
+      "alias": "cryp",
+      "ref": {
+        "uuid": "4ff5104b-b2d0-4403-9691-4020061d3a2c",
+        "display": "Crypto Component"
+      }
+    },
+    {
+      "formName": "component_side-effect",
+      "alias": "se",
+      "ref": {
+        "uuid": "bd91cc46-c77b-4529-93e5-1e65883d6551",
+        "display": "Side Effect Component"
+      }
+    },
+    {
+      "formName": "component_vitals",
+      "alias": "vt",
+      "ref": {
+        "uuid": "7f5e06a4-92d1-4fc9-9e05-03b414457d69",
+        "display": "Vitals Component"
+      }
+    },
+    {
+      "formName": "component_hpi",
+      "alias": "hpi",
+      "ref": {
+        "uuid": "b91aef27-cd94-4934-94ac-c168ce539cb3",
+        "display": "Hpi Component"
+      }
+    },
+    {
+      "formName": "component_problem-list",
+      "alias": "pl",
+      "ref": {
+        "uuid": "7505e278-64cb-44af-a8ce-0482f1d4691f",
+        "display": "Problem List Component"
+      }
+    },
+    {
+      "formName": "component_who-staging",
+      "alias": "who",
+      "ref": {
+        "uuid": "fdf950e0-ff0a-4d7d-a52b-33a8d5b98fb7",
+        "display": "Who Staging Component"
+      }
+    },
+    {
+      "formName": "component_lab-results",
+      "alias": "tr",
+      "ref": {
+        "uuid": "759e3a62-9f9e-4f56-9593-24f6cef3a5d4",
+        "display": "Lab Results Component"
+      }
+    },
+    {
+      "formName": "component_assessment",
+      "alias": "ass",
+      "ref": {
+        "uuid": "98e061d2-4a16-4665-b0dc-fc0266ee689c",
+        "display": "Assessment Component"
+      }
+    },
+    {
+      "formName": "component_ob-history-v1.0",
+      "alias": "gynhist1",
+      "ref": {
+        "uuid": "2e54d9af-cdf2-467d-a752-702d6458aa5e",
+        "display": "Ob History v1.0 Component"
+      }
+    },
+    {
+      "formName": "component_lab-orders-v1.0",
+      "alias": "to",
+      "ref": {
+        "uuid": "61a262b6-3238-4187-9740-dea29ea4f7e4",
+        "display": "Lab Orders v1.0 Component"
+      }
+    },
+    {
+      "formName": "component_referral",
+      "alias": "ref",
+      "ref": {
+        "uuid": "f18a6b65-f55b-4d53-afe2-b929bbb66a70",
+        "display": "Referral Component"
+      }
+    },
+    {
+      "formName": "component_vl-justification",
+      "alias": "vljust",
+      "ref": {
+        "uuid": "c47dd152-9996-4ec9-94bb-434f85a6a2b5",
+        "display": "VL Justification Component"
+      }
+    },
+    {
+      "formName": "component_family-planning",
+      "alias": "fp",
+      "ref": {
+        "uuid": "2766658c-1728-4790-9ef2-fe44eb72fa6d",
+        "display": "Family Planning Component"
+      }
+    }
+>>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
   ],
   "pages": [
     {
