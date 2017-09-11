@@ -1,23 +1,13 @@
-<<<<<<< HEAD
 import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
 import {AceEditorComponent} from 'ng2-ace-editor';
 import {NavigatorService} from '../../Services/navigator.service';
 import {MdSnackBar} from '@angular/material';
 import { FormSchemaCompiler } from 'ng2-openmrs-formentry';
-import {FetchFormsService} from '../../Services/fetch-forms.service'
+import {FetchFormDetailService} from '../../Services/fetch-form-detail.service'
 import 'brace/index';
 import 'brace/mode/json';
 import 'brace/theme/chrome';
 import 'brace/theme/cobalt';
-=======
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import {AceEditorComponent} from 'ng2-ace-editor';
-import {NavigatorService} from '../../Services/navigator.service';
-import {MdSnackBar} from '@angular/material';
-import 'brace/index';
-import 'brace/mode/json';
-import 'brace/theme/chrome';
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 
 
 
@@ -28,25 +18,17 @@ import 'brace/theme/chrome';
 })
 
 
-<<<<<<< HEAD
 export class SchemaEditorComponent implements OnInit,OnDestroy {
-=======
-export class SchemaEditorComponent implements OnInit {
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 
    @ViewChild('editor') editor;
    private _schema:string;
    private _selectedSchemaObj:any;
-<<<<<<< HEAD
    private _rawSchema:string;
    private _selectedRawSchema:Object;
-=======
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
    formSchema:any; //full form schema
    pageIndex:number;
    sectionIndex:number;
    questionIndex:number;
-<<<<<<< HEAD
    referencedForms:any[];
    badge:string="Compiled"
    viewingUncompiled:boolean=false;
@@ -69,7 +51,7 @@ export class SchemaEditorComponent implements OnInit {
    set rawSchema(schema){
      this._rawSchema = schema;
    }
-
+ 
    @Input()
    set selectedRawSchema(schema){
       this._selectedRawSchema = schema;
@@ -77,18 +59,6 @@ export class SchemaEditorComponent implements OnInit {
   
 
    @Input()
-=======
-   
-
-   @Input()
-   set schema(newSchema:string){
-      this._schema = newSchema;
-      this.editor.setText(this._schema);
-      this.editor.getEditor().scrollToLine(0);
-   }
-
-   @Input()
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
    set selectedSchema(newSchema:any){
      this._selectedSchemaObj = newSchema;
      if(this._selectedSchemaObj.pages) this.formSchema = this._selectedSchemaObj
@@ -97,23 +67,16 @@ export class SchemaEditorComponent implements OnInit {
        this.pageIndex = this._selectedSchemaObj['pageIndex'];
        this.sectionIndex = this._selectedSchemaObj['sectionIndex'];
        this.questionIndex = this._selectedSchemaObj['questionIndex'];
-<<<<<<< HEAD
      }
    }
 
-  constructor(private ns:NavigatorService,public snackbar:MdSnackBar,private fsc:FormSchemaCompiler,private fs:FetchFormsService) {
-    this.referencedForms=this.fs.referencedformsSchemas;
+  constructor(private ns:NavigatorService,public snackbar:MdSnackBar,private fsc:FormSchemaCompiler,private fs:FetchFormDetailService) {
+    
    }
-=======
-      
-       
-     }
-   }
-
-  constructor(private ns:NavigatorService,public snackbar:MdSnackBar) { }
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 
   ngOnInit() {
+
+    this.fs.getReferencedFormsArray().subscribe(refFormArray => this.referencedForms=refFormArray)
 
     this.editor.getEditor().setOptions({
             printMargin:false
@@ -127,24 +90,16 @@ export class SchemaEditorComponent implements OnInit {
   //render button
   render(){
     let editedSchema=this.editor.getEditor().getValue();
-<<<<<<< HEAD
 
     editedSchema = this.compileSchema(JSON.parse(editedSchema))
     
-=======
-    editedSchema = JSON.parse(editedSchema)
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     if(editedSchema.pages){
       this.ns.setSchema(editedSchema)
       return;
     }
 
     else if(editedSchema.sections){
-<<<<<<< HEAD
       this.formSchema.pages[this.pageIndex]= editedSchema;
-=======
-      this.formSchema.pages[this.pageIndex]= editedSchema
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     }
 
     else if(editedSchema.questions){
@@ -154,7 +109,6 @@ export class SchemaEditorComponent implements OnInit {
       this.formSchema.pages[this.pageIndex].sections[this.sectionIndex].questions[this.questionIndex] = editedSchema
     }
     this.ns.setSchema(this.formSchema)
-<<<<<<< HEAD
     return;
   }
 
@@ -191,12 +145,4 @@ export class SchemaEditorComponent implements OnInit {
     }
     
   }
-=======
-  }
-
-  showSnackbar(){
-      this.snackbar.open("Copied to clipboard","",{duration:1200,});
-  }
-
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 }

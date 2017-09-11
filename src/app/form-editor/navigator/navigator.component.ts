@@ -1,28 +1,18 @@
 import { Component, Input, OnInit,OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ConfirmComponent } from '../../modals/confirm.component';
 import { PromptComponent } from '../../modals/prompt.component';
-<<<<<<< HEAD
 import { AlertComponent } from '../../modals/alert.component';
 import { ReferenceModalComponent } from '../../modals/reference-form.modal';
 import { FormElementFactory } from '../form-elements/form-element-factory';
 import {FormFactory} from '../form-elements/form-factory.service'
 import { DialogService } from "ng2-bootstrap-modal";
-=======
-import { ReferenceModalComponent } from '../../modals/reference-form.modal';
-import { FormElementFactory } from '../form-elements/form-element-factory';
-import { DialogService } from "ng2-bootstrap-modal";
-import { DragulaService } from 'ng2-dragula';
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 import { NavigatorService } from '../../Services/navigator.service';
-import { FetchFormsService } from '../../Services/fetch-forms.service';
+import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
 import { QuestionControlService } from '../../Services/question-control.service';
 import { FormControl, FormGroup, FormBuilder,Validators } from '@angular/forms';
-<<<<<<< HEAD
 import { FormSchemaCompiler } from 'ng2-openmrs-formentry';
-=======
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
-
-
+import * as _ from 'lodash';
+import { Subscription } from 'rxjs';
 @Component({
 	selector: 'app-navigator',
 	templateUrl: './navigator.component.html',
@@ -31,16 +21,13 @@ import { FormSchemaCompiler } from 'ng2-openmrs-formentry';
 
 export class NavigatorComponent implements OnInit, OnDestroy{
 
-<<<<<<< HEAD
-	private schema:Object; //recursive schema could represent a question,section,page or form
+	schema:any; //recursive schema could represent a question,section,page or form
 	private _formSchema:any; //represents a FULL form schema
 	private _count:number=0;
 	private _refElement:string;
 	private rawSchema:any;
-=======
-	private schema:any; //recursive schema could represent a question,section,page or form
-	private _formSchema:any; //represents a FULL form schema
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
+	private formName:string;
+	private subscription:Subscription;
 	addForm:FormGroup;
 	editForm:FormGroup;
 	editPageMode:boolean=false;
@@ -49,66 +36,33 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	editMode:boolean;
 	selectMode:boolean;
 	checkedRefElements:any[]=[] //selected elements to be referenced
-<<<<<<< HEAD
 	referencedForms:any[] //an array of referencedForms
-=======
-
-	@Input() referenceElement; //element to be referenced if select mode
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	@Input() mode:string;      //can be either select or edit
 	@Input() pageIndex:number; //aids in collapsing the navigator elements
 	@Input() sectionIndex:number; //aids in collapsing the navigator elements
 	@Input() questionIndex:number;
-<<<<<<< HEAD
-	@Input() set _rawSchema(schema){this.rawSchema= schema;}
 	@Input() set referenceElement(refElement){this._refElement = refElement}; //element to be referenced if select mode
 	@Input() set count(count){this._count=count;}//keeps count of recursive calls
 	@Input() set _schema(schema:any){ this.schema = schema; }
-	@Input() set formSchema(schema:any){ this._formSchema = schema;}
+	@Input() set formSchema(fschema:any){ this._formSchema = _.clone(fschema);};
 	@Output() closeSidebar:EventEmitter<boolean> = new EventEmitter();
 	@Output() checkedRefElementsEmitter:EventEmitter<any[]> = new EventEmitter();
 	@Output() nestedCheckedRefElementEmitter:EventEmitter<any> = new EventEmitter()
 
 	constructor(private fb: FormBuilder,private ns: NavigatorService,private qcs:QuestionControlService,
 		private formElementFactory:FormElementFactory,private dialogService:DialogService,
-		private fs:FetchFormsService,private fsc:FormSchemaCompiler, private formFactory:FormFactory) 
-		{
-			this._count++;
-			this.referencedForms = this.fs.referencedformsSchemas;
+		private fs:FetchFormDetailService,private fsc:FormSchemaCompiler, private formFactory:FormFactory) 
+		{ 
+			
 			
 	}
 
-=======
-	@Input() set _schema(schema:any){ this.schema = schema; /**recursive*/ }
-	@Input() set formSchema(schema:any){ this._formSchema = schema; /**maintains the full form*/}
-	@Output() closeSidebar:EventEmitter<boolean> = new EventEmitter();
-	@Output() checkedRefElementsEmitter:EventEmitter<any[]> = new EventEmitter();
-
-
-	constructor(private fb: FormBuilder,private ns: NavigatorService,private qcs:QuestionControlService,
-		private formElementFactory:FormElementFactory,private dialogService:DialogService,dragulaService:DragulaService,private fs:FetchFormsService) 
-		{
-			dragulaService.dropModel.subscribe((value,) => {
-				if(this.schema == this._formSchema.pages[this.pageIndex]) this.onDropModel(value.slice(1))
-			})
-			dragulaService.removeModel.subscribe((value) => {
-				this.onRemoveModel(value.slice(1))
-			})
-			
-	}
-
-	onDropModel(args){
-		let [el, target, source] = args;
-		this.ns.setSchema(this._formSchema)
-	}
-
-	onRemoveModel(args){
-		let [el, source] = args;
-		console.log(this._formSchema)
-	}
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
-
+       
 	ngOnInit() {
+
+		this._count++;
+		this.subscription = this.fs.getReferencedFormsArray().subscribe((res) => this.referencedForms = res)
+		this.subscription = this.ns.getRawSchema().subscribe(res => this.rawSchema = _.cloneDeep(res));
 		if(this.mode=='edit'){
 			this.editMode = true
 			this.selectMode = false
@@ -118,28 +72,76 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			this.selectMode = true
 			this.editMode=false
 		}
-<<<<<<< HEAD
 		
-=======
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	}
 
 	//when element is clicked in navigator
-	onClicked(selectedSchema, pageIndex?:number, sectionIndex?:number, questionIndex?:number){
+	onClicked(selectedSchema, pageIndex?:number, sectionIndex?:number, questionIndex?:number, parentQuestionIndex?:number){
 		if(this.selectMode) return;
 		let schemaObj={}
 		schemaObj['selectedSchema']=selectedSchema;
 		schemaObj['pageIndex']=pageIndex;
 		schemaObj['sectionIndex']=sectionIndex;
 		schemaObj['questionIndex']=questionIndex;
-<<<<<<< HEAD
 		this.ns.setClickedElementSchema(schemaObj);
-		if(pageIndex!=undefined&&sectionIndex!=undefined) this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex].sections[sectionIndex])
-		else this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex])
+
+		if(pageIndex!=undefined&&sectionIndex!=undefined&&questionIndex!=undefined&&parentQuestionIndex!=undefined) 
+			{
+				if(this.rawSchema.pages[pageIndex].label){
+					if(this.rawSchema.pages[pageIndex].sections[sectionIndex].label){
+						this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex].sections[sectionIndex].questions[questionIndex].questions[parentQuestionIndex]);
+						return;
+					}
+					else{
+						this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex].sections[sectionIndex]);
+						return;
+					}
+				}
+		else{
+			this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex]);
+		}
+				
+			}
+
+		else if(pageIndex!=undefined&&sectionIndex!=undefined&&questionIndex!=undefined) 
+			{
+				if(this.rawSchema.pages[pageIndex].label){
+					if(this.rawSchema.pages[pageIndex].sections[sectionIndex].label){
+						this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex].sections[sectionIndex].questions[questionIndex]);
+						return;
+					}
+					else{
+						this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex].sections[sectionIndex]);
+						return;
+					}
+				}
+				else{
+					this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex]);
+					return;
+				}
+				
+			}
+
+		else if(pageIndex!=undefined&&sectionIndex!=undefined){
+			if(this.rawSchema.pages[pageIndex].label){
+
+					this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex].sections[sectionIndex]);
+					return;
+			}
+			else{
+				this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex]);
+			}
+			
+		}
+		else if(selectedSchema['name']){
+			console.log("tere",this.rawSchema);
+			this.ns.setClickedElementRawSchema(this.rawSchema);
+		}
+		else{
+			this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex]);
+			return;
+		}
 		
-=======
-		this.ns.setSelectedElement(schemaObj);
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	}
 
  
@@ -157,53 +159,32 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 
 	showAddForm(element:string,pageIndex?:number){
-<<<<<<< HEAD
 		if(element=='page'){
 			
 			let newPage = this.formElementFactory.createFormElement(element,{"label":''});
-=======
-		if(!pageIndex){
-			let newPage = this.formElementFactory.createFormElement("page",{"label":''});
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 			this.propertyModelArray = this.qcs.toPropertyModelArray(newPage);
 			this.addForm = this.qcs.toFormGroup(this.propertyModelArray)
 			this.showAddDialog(this.propertyModelArray,this.addForm)
 			
 		}
 		else{
-<<<<<<< HEAD
 		console.log(pageIndex)
 		let newSection = this.formElementFactory.createFormElement(element,{})
 		this.propertyModelArray = this.qcs.toPropertyModelArray(newSection)
 		this.addForm = this.qcs.toFormGroup(this.propertyModelArray)
 		this.showAddDialog(this.propertyModelArray,this.addForm,pageIndex)
 		}
-=======
-		
-		let newSection = this.formElementFactory.createFormElement("section",{})
-		this.propertyModelArray = this.qcs.toPropertyModelArray(newSection)
-		this.addForm = this.qcs.toFormGroup(this.propertyModelArray)
-		this.showAddDialog(this.propertyModelArray,this.addForm,pageIndex)
-	}
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	}
 
 	showDeleteDialog(schema:any, element:string,  pageIndex:number, sectionIndex?:number, questionIndex?:number, parentQuestionIndex?:number){
-			this.dialogService.addDialog(ConfirmComponent, {
+			this.subscription = this.dialogService.addDialog(ConfirmComponent, {
 								title:'Delete '+element, 
-<<<<<<< HEAD
 								message:'Are you sure you want to delete '+schema.label},{backdropColor:'rgba(0,0, 0, 0.5)'})
 								.subscribe((isConfirmed)=>{
 										if(isConfirmed) {
 												if(element=='page') this.deletePage(pageIndex)
 												else if(element=='section') this.deleteSection(pageIndex,sectionIndex)
 												else this.deleteQuestion(pageIndex,sectionIndex,questionIndex,parentQuestionIndex)
-=======
-								message:'Are you sure you want to delete '+schema.label},{backdropColor:'rgba(255, 255, 255, 0.5)'})
-								.subscribe((isConfirmed)=>{
-										if(isConfirmed) {
-												this.deleteElement(schema,pageIndex,sectionIndex,questionIndex,parentQuestionIndex);
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 										}
 					});
 	}
@@ -211,14 +192,14 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	showEditDialog(propModelArray,form,pageIndex,sectionIndex?){
 	
 		if(sectionIndex>-1)
-			this.dialogService.addDialog(PromptComponent, {title:'Edit Section',questions:propModelArray,form:form})
+			this.subscription = this.dialogService.addDialog(PromptComponent, {title:'Edit Section',questions:propModelArray,form:form})
 				.subscribe((formValue)=>{
 				if(formValue) this.editSection(formValue,pageIndex,sectionIndex)
 			});
 	
 
 		else
-			this.dialogService.addDialog(PromptComponent, {title:"Edit Page",questions:propModelArray,form:form})
+			this.subscription = this.dialogService.addDialog(PromptComponent, {title:"Edit Page",questions:propModelArray,form:form})
 			.subscribe((formValue)=>{
 				if(formValue) this.editPage(formValue['label'],pageIndex)
 			});
@@ -226,25 +207,18 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 
 	showAddDialog(propModelArray,form,pageIndex?){
-<<<<<<< HEAD
 		if(pageIndex!=undefined&&pageIndex>-1){
 			
-=======
-		if(pageIndex)
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
-			this.dialogService.addDialog(PromptComponent, {title:'Create Section',questions:propModelArray,form:form},{backdropColor:'rgba(255, 255, 255, 0.5)'})
+			this.subscription = this.dialogService.addDialog(PromptComponent, {title:'Create Section',questions:propModelArray,form:form},{backdropColor:'rgba(255, 255, 255, 0.5)'})
 				.subscribe((formValue)=>{
 					if(formValue!=undefined) this.addSection(formValue,pageIndex)
 			});
 
-<<<<<<< HEAD
 		}
 			
 
-=======
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 		else
-			this.dialogService.addDialog(PromptComponent, {title:'Create Page', questions:propModelArray,form:form},{backdropColor:'rgba(255, 255, 255, 0.5)'})
+		this.subscription =	this.dialogService.addDialog(PromptComponent, {title:'Create Page', questions:propModelArray,form:form},{backdropColor:'rgba(255, 255, 255, 0.5)'})
 				.subscribe((formValue)=>{
 				if(formValue) this.addPage(formValue['label'])
 				});
@@ -252,30 +226,42 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 
 	editPage(label,pageIndex){
-		this._formSchema.pages[pageIndex].label = label
-<<<<<<< HEAD
-		this.rawSchema.pages[pageIndex].label = label
-		this.setSchema(this._formSchema)
-		this.setRawSchema(this.rawSchema)
+		if(this.rawSchema.pages[pageIndex].label){
+			this._formSchema.pages[pageIndex].label = label
+			this.rawSchema.pages[pageIndex].label = label
+			this.setSchema(this._formSchema)
+			this.setRawSchema(this.rawSchema)
+		}
+
+		else{
+			this.showAlertDialog("You cannot edit a referenced page.");
+			return false;
+		}
+		
 	}
 
 	editSection(value,pageIndex,sectionIndex){
-		this.schema['sections'][sectionIndex].label = value.label
-		this.schema['sections'][sectionIndex].isExpanded = value.isExpanded
-		this._formSchema.pages[pageIndex] =this.schema
-		this.rawSchema.pages[pageIndex] = this.schema
-		this.setSchema(this._formSchema);
-		this.setRawSchema(this.rawSchema)
-=======
-		this.ns.setSchema(this._formSchema)
-	}
+		if(this.rawSchema.pages[pageIndex].label){
+			if(this.rawSchema.pages[pageIndex].sections[sectionIndex].label) {
+				this.schema['sections'][sectionIndex].label = value.label;
+				this.schema['sections'][sectionIndex].isExpanded = value.isExpanded;
+				this._formSchema.pages[pageIndex] =this.schema;
+				this.rawSchema.pages[pageIndex] = this.schema;
+				this.setSchema(this._formSchema);
+				this.setRawSchema(this.rawSchema);
+			}
+			else{
+				this.showAlertDialog("You cannot edit a referenced section.");
+				return false;
+			}
+			
+		}
 
-	editSection(value,pageIndex,sectionIndex){
-		this.schema.sections[sectionIndex].label = value.label
-		this.schema.sections[sectionIndex].isExpanded = value.isExpanded
-		this._formSchema.pages[pageIndex] =this.schema
-		this.ns.setSchema(this._formSchema);
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
+		else{
+			this.showAlertDialog("You cannot edit a referenced page.");
+			return false;
+		}
+	
 	}
 
 	editQuestion(question:any,pageIndex:number,sectionIndex:number,questionIndex:number,parentQuestionIndex?:number){
@@ -284,20 +270,11 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		schemaObj['pageIndex']=pageIndex;
 		schemaObj['sectionIndex']=sectionIndex;
 		schemaObj['questionIndex']=questionIndex;
-<<<<<<< HEAD
 		schemaObj['parentQuestionIndex']=parentQuestionIndex;                                       
 		this.ns.setClickedElementSchema(schemaObj); //set the current edited question in the schema editor
 
 		this.propertyModelArray = this.qcs.toPropertyModelArray(question)
 		if(parentQuestionIndex!=undefined&&parentQuestionIndex>-1){ //thy art an obsgroup question!
-=======
-		schemaObj['parentQuestionIndex']=parentQuestionIndex;
-		console.log(schemaObj)
-		this.ns.setSelectedElement(schemaObj); //set the current edited question in the schema editor
-
-		this.propertyModelArray = this.qcs.toPropertyModelArray(question)
-		if(parentQuestionIndex){ //thy art an obsgroup question!
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 			this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex,questionIndex,parentQuestionIndex)
 		}
 		else{
@@ -308,74 +285,68 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 
 	addPage(label:string){
+		
 		if(!this.doesPageExist(label)){
-		let newPage = this.formElementFactory.createFormElement("page",{"label":label})
-		this._formSchema.pages.push(newPage)
-<<<<<<< HEAD
-		console.log(this.rawSchema)
-		this.rawSchema.pages.push(newPage)
-		this.setSchema(this._formSchema)
-		this.setRawSchema(this.rawSchema)
+		let newPage = this.formElementFactory.createFormElement("page",{"label":label});
+		this.rawSchema.pages.push(newPage);
+		this._formSchema.pages.push(newPage);
+		this.ns.setSchema(this._formSchema);
+		this.ns.setRawSchema(this.rawSchema);
+		console.log(this._formSchema);
 		}
-		else this.showAlertDialog("Page already exists! \n Try creating one with a different label!")
-=======
-		this.ns.setSchema(this._formSchema)
-		}
-		else alert("Page already exists! Try creating one with a different label!")
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
+		else this.showAlertDialog("Page already exists! \n Try creating one with a different label!");
 	}
 
 	addSection(value,pageIndex:number){
-	
-		let newSection = this.formElementFactory.createFormElement("section",{"label":value.label,"isExpanded":value.isExpanded})
-		this._formSchema.pages[pageIndex].sections.push(newSection)
-<<<<<<< HEAD
-		this.rawSchema.pages[pageIndex].sections.push(newSection)
-		this.setSchema(this._formSchema)
-		this.setRawSchema(this.rawSchema)
-=======
-		this.ns.setSchema(this._formSchema)
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
-		this.addForm.reset()
+		let newSection = this.formElementFactory.createFormElement("section",{"label":value.label,"isExpanded":value.isExpanded});
+		this._formSchema.pages[pageIndex].sections.push(newSection);
+		this.rawSchema.pages[pageIndex].sections.push(newSection);
+		this.setSchema(this._formSchema);
+		this.setRawSchema(this.rawSchema);
 	}
 
 
 	addQuestion(pageIndex:number,sectionIndex:number,questionIndex?:number){
+		console.log("Page Index",pageIndex,"Section Index",sectionIndex,"questionIndex",questionIndex)
 		let newQuestion = this.formElementFactory.createFormElement("question",{});
 		let propertyModelArray = this.qcs.toPropertyModelArray(newQuestion);
-		if(questionIndex>-1) this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex,questionIndex);
-		else this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex);
+		if(questionIndex!=undefined){
+			this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex,questionIndex); // obsGroup
+		} 
+		else {
+			this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex);
+		}
 	}
 
-<<<<<<< HEAD
 	
 	deletePage(pageIndex){
 		this._formSchema.pages.splice(pageIndex,1);
 		this.rawSchema.pages.splice(pageIndex,1);
-		this.setSchema(this._formSchema)
-		this.setRawSchema(this.rawSchema)
+		this.setSchema(this._formSchema);
+		this.setRawSchema(this.rawSchema);
 	}
 
 
 	deleteSection(pageIndex,sectionIndex){
-		this._formSchema.pages[pageIndex].sections.splice(sectionIndex,1)
-		this.rawSchema.pages[pageIndex].sections.splice(sectionIndex,1)
+		this._formSchema.pages[pageIndex].sections.splice(sectionIndex,1);
+		this.rawSchema.pages[pageIndex].sections.splice(sectionIndex,1);
 		this.setSchema(this._formSchema);
-		this.setRawSchema(this.rawSchema)
+		this.setRawSchema(this.rawSchema);
 	}
 
 	deleteQuestion(pageIndex,sectionIndex,questionIndex,parentQuestionIndex){
 		 if(parentQuestionIndex!==undefined){
 			this._formSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1);
-			this._formSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1);
+			this.rawSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1);
 		 }
 			 
 		else {
 			this._formSchema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex,1);
+			this.rawSchema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex,1);
 		}
 			
 		this.setSchema(this._formSchema);
-		this.setRawSchema(this._formSchema);
+		this.setRawSchema(this.rawSchema);
 	}
 
 	doesPageExist(label:string):boolean{
@@ -388,66 +359,43 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			}
 		})
 		return result;
-=======
-//Delete any element question,section or page
-	deleteElement(schema,pageIndex,sectionIndex,questionIndex,parentQuestionIndex){
-		if(schema.sections) this._formSchema.pages.splice(pageIndex,1);
-		
-		else if(schema.isExpanded) this._formSchema.pages[pageIndex].sections.splice(sectionIndex,1)
-	
-		else if(parentQuestionIndex) this._formSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1);
-	
-		else this._formSchema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex,1);
-	
-		this.ns.setSchema(this._formSchema);
-	}
-
-	doesPageExist(label:string){
-		for(var page of this._formSchema.pages)
-			if(page.label === label) return true;
-			else return false;
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 	}
 
 
 	addReferencePage(){
-<<<<<<< HEAD
 
-		this.dialogService.addDialog(ReferenceModalComponent, {
+	if(this.referencedForms.length > 0)
+	this.subscription =	this.dialogService.addDialog(ReferenceModalComponent, {
 			refElement:'Page'},{backdropColor:'rgba(0, 0, 0, 0.5)'})
 		.subscribe((res)=>{
 			if(res!=undefined){
 				this.createRefPages(JSON.parse(res));
-=======
-		this.closeSidebar.emit(true)
-		this.dialogService.addDialog(ReferenceModalComponent, {
-		title:'Select form to reference',refElement:'Page'},{backdropColor:'rgba(0, 0, 0, 0.5)'})
-		.subscribe((form)=>{
-			if(form!=undefined){
-				console.log(form)
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 			}
 				
 		});
+		else this.showAlertDialog("Insert reference form first");
  
-<<<<<<< HEAD
 	}
 
 
 	addReferenceSection(pageIndex){
-		this.closeNav();
-		this.dialogService.addDialog(ReferenceModalComponent, {
+		console.log("here")
+		if(this.referencedForms.length > 0)
+	this.subscription =	this.dialogService.addDialog(ReferenceModalComponent, {
 			refElement:'Section'},{backdropColor:'rgba(0, 0, 0, 0.5)'})
 			.subscribe(res => {
 				if(res!=undefined){
+					
 					this.createRefSections(JSON.parse(res),pageIndex)
 				}
 			})
+
+			else this.showAlertDialog("Insert reference form first");
 	}
 	
 	addReferenceQuestion(pageIndex,sectionIndex,questionIndex?){
-		this.closeNav();
-		this.dialogService.addDialog(ReferenceModalComponent,{
+	if(this.referencedForms.length > 0)
+		this.subscription = this.dialogService.addDialog(ReferenceModalComponent,{
 			refElement:'Question'},{backdropColor:'rgba(0,0,0,0.5)'
 		}).subscribe(res =>{
 			if(res!=undefined){
@@ -489,36 +437,16 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 				else if(typeof element == 'object'&& JSON.stringify(el) === JSON.stringify(element)){
 					this.checkedRefElements.splice(index,1)
 					
-=======
-}
-
-	setCheckedReferencePage(event,page){
-		if(event.target.checked){
-			this.checkedRefElements.push(page)
-		}
-	
-		else{
-			if(this.checkedRefElements.length>0){
-				this.checkedRefElements.forEach((element,index) =>
-				 {
-				if(element==page){
-					this.checkedRefElements.splice(index,1)
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 				}
 			})
 		}
 	 }
 
-<<<<<<< HEAD
 	 if(this.schema['pages']) 
-=======
-	 if(this.schema.pages) 
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 		this.checkedRefElementsEmitter.emit(this.checkedRefElements)
 		
 	}
 
-<<<<<<< HEAD
 
 	emitCheckedReferenceElement(event,element){
 
@@ -547,8 +475,13 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			formProps['pages'].push(obj)
 			
 			obj=JSON.stringify(obj)
-			this.rawSchema.pages.push(JSON.parse(obj))
-			this.setRawSchema(this.rawSchema)
+			for(var page in this.rawSchema.pages){
+				if(!_.isEqual(obj,page)){
+					this.rawSchema.pages.push(JSON.parse(obj));
+					break;
+				}
+			}
+			
 		}
 		
 		
@@ -556,12 +489,13 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		let compiledForm = this.fsc.compileFormSchema(mockForm,this.referencedForms)
 		compiledForm['pages'].forEach(page =>{
 			if(this.doesPageExist(page.label)) {
-				this.showAlertDialog(page.label+" already exists! \n Try referencing one with a different label")}
+				this.showAlertDialog(page.label+" already exists! \n Try referencing one with a different label");
+			}
 			else {
 				
 				this._formSchema.pages.push(page)
 				this.setSchema(this._formSchema);
-
+				this.setRawSchema(this.rawSchema);
 				
 				
 			}})
@@ -571,15 +505,23 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	} 
 
 	createRefSections(res,pageIndex){
+		console.log("here")
 		let formProps=this.createBasicFormProps(pageIndex);
 		for(var el of JSON.parse(res['Sections'])){
 			let obj:any = {}
 			obj['reference'] = {"form":res.form, "page":el.page, "section":el.section}
-			formProps['pages'][0]['sections'].push(obj)
+			formProps['pages'][0]['sections'].push(obj);
+			obj = JSON.stringify(obj);
+			
 
-			obj = JSON.stringify(obj)
-			this.rawSchema.pages[pageIndex].sections.push(JSON.parse(obj))
-			this.setRawSchema(this.rawSchema)
+			if(!this.rawSchema.pages){
+				this.showAlertDialog("You cannot reference a section in a referenced page! Please create a new page in order to reference this section.");
+				return false;
+			}
+			else{
+				this.rawSchema.pages[pageIndex].sections.push(JSON.parse(obj));
+			}
+			
 		}
 		let mockForm = this.formFactory.createForm(formProps)
 		let compiledForm = this.fsc.compileFormSchema(mockForm,this.referencedForms)
@@ -587,7 +529,9 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			section => {
 				this._formSchema.pages[pageIndex].sections.push(section)
 		})
-		this.setSchema(this._formSchema)
+		this.setSchema(this._formSchema);
+		this.setRawSchema(this.rawSchema);
+		
 	}
 
 	// createRefQuestions(res,pageIndex,sectionIndex,questionIndex?){
@@ -683,15 +627,18 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		this.ns.setSchema(this._formSchema)
 	}
 	ngOnDestroy(){
+			this.subscription.unsubscribe();
+	}
 
+	editFormName(value:any){
+		
+		this._formSchema.name = value.formName;
+		this.setSchema(this._formSchema);
+	}
+
+	showNameEditForm(name:string){
+		this.formName = name;
+		this.schema['name'] = ''; 
 	}
 
 } 
-=======
-ngOnDestroy(){
-	
-
-}
-
-}
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3

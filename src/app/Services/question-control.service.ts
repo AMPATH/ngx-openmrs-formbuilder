@@ -40,24 +40,26 @@ export class QuestionControlService {
 
   createFields(prop: string, value ? ) {
 
-
+    
     let options = {
       key: prop,
       label: "",
       value: value || "",
       required: false,
       options: [],
+      order: 5,
       placeholder: "",
-      rows: 5
+      rows: 5,
     }
 
 
     switch (prop) {
-
+      
       case "label":
-        options.label = "Label"
+        options.label = "Label";
         options.required = true;
-        options.placeholder = "Enter Label"
+        options.placeholder = "Enter Label";
+        options.order = 1;
         this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
         break;
 
@@ -70,8 +72,9 @@ export class QuestionControlService {
 
 
       case "type":
-        options.label = "Type"
-        options.required = true
+        options.label = "Type";
+        options.required = true;
+        options.order = 2;
         options.options = [{
             key: 'obs',
             value: 'obs'
@@ -109,8 +112,9 @@ export class QuestionControlService {
         break;
 
       case "questionOptions.rendering":
-        options.label = "Rendering"
-        options.required = true
+        options.label = "Rendering";
+        options.required = true;
+        options.order = 3;
         options.options = [{
             key: 'number',
             value: 'number'
@@ -255,6 +259,7 @@ export class QuestionControlService {
 
     }
 
+    return this.propertyModels.sort((a, b) => a.order - b.order);
 
   }
 

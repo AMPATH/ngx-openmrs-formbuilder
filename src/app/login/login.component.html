@@ -1,0 +1,51 @@
+<div class="container">    
+    <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
+        <div class="panel panel-primary" >
+                <div class="panel-heading">
+                    <div class="panel-title">Log In</div>
+                    
+                </div>     
+
+                <div style="padding-top:30px" class="panel-body" >
+
+                    <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+                        
+                    <form #loginForm="ngForm"  (ngSubmit)="login(loginForm.value)" >
+
+                        <div style="margin-bottom: 25px">
+                            <span>Select Server</span>
+                            <select class="form-control"  name="baseUrl" ngModel required>
+                                    <option>https://ngx.ampath.or.ke/amrs</option>
+                              <option>https://test2.ampath.or.ke:8443/amrs</option>
+                            </select>  
+                            
+                        </div>
+                                
+                        <div style="margin-bottom: 25px">
+                                    <span>Username</span>
+                                    <input type="text" class="form-control" name="username" ngModel required>                                        
+                                </div>
+                            
+                        <div style="margin-bottom: 25px">
+                                    <span>Password</span>
+                                    <input type="password" class="form-control" name="password" (keyDown)="authenticated=undefined" ngModel required>
+                                </div>
+                                <div *ngIf="authenticated!=undefined&&!authenticated" class="alert alert-danger">
+                                    <p>
+                                      Incorrect password
+                                    </p>
+                                  </div>
+
+                        <div class="text-center">
+                          <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid">Log In</button>
+                        </div>         
+  
+                        </form>     
+
+                      
+
+
+                    </div>                     
+                </div>  
+    </div>
+</div>

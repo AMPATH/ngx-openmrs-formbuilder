@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { NavigatorService } from './navigator.service';
-import { FetchFormsService } from './fetch-forms.service';
 import {Observable} from 'rxjs';
 
 @Injectable()

@@ -1,20 +1,12 @@
 #schema{
     cursor: pointer;
-<<<<<<< HEAD
     font-size: 18px;
-=======
-    font-size: 16px;
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     font-weight: bolder;
     text-decoration:none;
     display: inline-block;
 }
 .element{
-<<<<<<< HEAD
     font-size: 16px;
-=======
-    font-size: 14px;
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     font-weight: 600;
     text-decoration:none;
     display: inline-block;
@@ -25,28 +17,26 @@
     color:#008cba;
 }
 a{
-<<<<<<< HEAD
     color:white;
     font-size: 14px;
-=======
-    font-size: 16px;
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     font-weight:bold;
     cursor: pointer;
     text-decoration: none;
 }
 
-<<<<<<< HEAD
 .fa-chevron-down,.fa-pencil,.fa-toggle-down{
     color:#008cba !important;  
 }
 
-=======
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 #schema{
-    margin-bottom:20px;
+    
+
+    
 }
 
+.formName{
+    margin-bottom: 20px;
+}
 .display{
     display:none;
 }
@@ -58,7 +48,6 @@ label{
 
 .myEditors{
     margin-bottom: 15px;
-<<<<<<< HEAD
     padding:10px 10px 10px 10px;
 }
 .selectMode{
@@ -108,9 +97,4 @@ label{
 .material-icons{
     color: #008cba;
     font-size:18px;
-=======
-}
-.selectMode{
-    display: inline-block;
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 }

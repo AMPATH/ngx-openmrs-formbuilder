@@ -10,6 +10,8 @@ import { FormGroup,FormControl } from '@angular/forms';
 export class DynamicQuestionComponent implements OnInit {
   @Input() question: PropertyModel<any>;
   @Output() answers = new EventEmitter<any>();
+  @Output() type = new EventEmitter<string>();
+
   form: FormGroup;
  
 
@@ -23,6 +25,13 @@ export class DynamicQuestionComponent implements OnInit {
     
   }
 
+
+  typeSelected(selectBox:string){
+    if(selectBox=='type'){
+      let value = this.form.controls['type'].value;
+      this.type.emit(value);
+    }
+  }
 
 
  isValid(){

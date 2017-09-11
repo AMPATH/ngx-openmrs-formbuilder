@@ -13,8 +13,7 @@
       </div>
 
       <div class="form-group">
-        <select *ngSwitchCase="'select'" class="form-control" [formControlName]="question.key">
-      
+        <select *ngSwitchCase="'select'" class="form-control" [formControlName]="question.key" (change)="typeSelected(question.key)">
       <option *ngFor="let opt of question.options" [value]="opt.key">{{opt.value}}</option>
    </select>
       </div>

@@ -1,0 +1,77 @@
+<md-sidenav-container>
+    
+     <md-toolbar color="primary">
+       
+       <span style="font-size:22px">Form Editor</span>
+       
+     </md-toolbar>
+<div class="app-content">
+    
+    <div>
+        <div class="row">
+        
+            <div class="col-md-10 col-md-offset-1">
+    
+                <div class="panel panel-default panel-table">
+                  <div class="panel-heading">
+                    <div class="row">
+                      <div class="col col-xs-2">
+                        <h3 class="panel-title">Forms</h3>
+  
+                      </div>
+
+                      <div class="pull-right">
+                          <button type="button" class="btn btn-sm btn-success btn-create" (click)="createNew()">Create New</button>
+                      </div>
+                   
+                      <!-- <div class="col col-xs-7 pull-right">
+                          <div id="imaginary_container"> 
+                              <div class="input-group stylish-input-group">
+                                  <input type="text" class="form-control"  placeholder="Search form using uuid or name"  #searchBox id="search-box" (keyup)="search(searchBox.value)">
+                                  <span class="input-group-addon">
+                                      <button type="submit">
+                                          <span class="glyphicon glyphicon-search"></span>
+                                      </button>  
+                                  </span>
+                              </div>
+                          </div>
+                      </div> -->
+                    </div>
+                  </div>
+                  <div class="panel-body">
+
+                    
+                    
+                    <table class="table table-striped table-bordered table-list">
+                      <thead>
+                        <tr>
+                            <th width="40%">Name</th>
+                            <th width="20%">Version</th>
+                            <th width="20%">Published</th>
+                            <th width="20%">Edit</th>
+                        </tr> 
+                      </thead>
+                      <tbody *ngIf="forms">
+                              <tr *ngFor="let form of forms | paginate: { itemsPerPage: 13, currentPage: page }">
+                            
+                                <td class="formName"><b>{{form.name}}</b></td>
+                                <td>{{form.version}}</td>
+                                <td>{{form.published}}</td>
+                                <td><a (click)="editForm(form.uuid)" style="cursor: pointer;"><i class="material-icons">edit</i></a></td>
+                              </tr>
+                            </tbody>
+
+
+                    </table>
+                
+                  </div>
+                  <div class="panel-footer">
+                    <div class="row">
+                        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+                    </div>
+                  </div>
+                </div>
+    
+    </div></div></div>
+</div>
+</md-sidenav-container>

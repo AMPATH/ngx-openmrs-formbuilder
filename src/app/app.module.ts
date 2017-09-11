@@ -8,27 +8,20 @@ import {AceEditorModule} from 'ng2-ace-editor';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { ClipboardModule } from 'ngx-clipboard';
-<<<<<<< HEAD
-=======
-import {DragulaModule} from 'ng2-dragula';
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
-//import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-
+import { NgxPaginationModule } from 'ngx-pagination';
+import { AppRoutingModule } from './app-routing.module';
 
 import 'hammerjs';
-import { FetchFormsService } from './Services/fetch-forms.service';
+import { FetchFormDetailService } from './Services/fetch-form-detail.service';
 import {NavigatorService} from './Services/navigator.service';
 import {QuestionControlService} from './Services/question-control.service';
 import {PropertyFactory} from './form-editor/models/property-factory';
 import {FormElementFactory} from './form-editor/form-elements/form-element-factory';
 import {QuestionIdService} from './Services/question-id.service';
 import {ConceptService} from './Services/concept.service';
-<<<<<<< HEAD
-import {FormFactory} from './form-editor/form-elements/form-factory.service'
-=======
-
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
-
+import {FormFactory} from './form-editor/form-elements/form-factory.service';
+import {FetchAllFormsService} from './Services/fetch-all-forms.service';
+import {AuthenticationModule} from './authentication/authentication.module';
 
 import { AppComponent } from './app.component';
 import { NavigatorComponent } from './form-editor/navigator/navigator.component';
@@ -36,15 +29,20 @@ import { SchemaEditorComponent } from './form-editor/schema-editor/schema-editor
 import { ElementEditorComponent } from './form-editor/element-editor/element-editor.component';
 import { FormRendererComponent } from './form-editor/form-renderer/form-renderer.component';
 import {DynamicQuestionComponent} from './form-editor/element-editor/dynamic-question/dynamic-question.component';
-import { ConceptComponent } from './concept/concept.component';
-import { ConfirmComponent } from './modals/confirm.component'
-import { AlertComponent } from './modals/alert.component'
-import { PromptComponent } from './modals/prompt.component'
-import { AnswersComponent } from './modals/answers.modal'
-import { ConceptsModalComponent } from './modals/concept.modal'
-import { ReferenceModalComponent } from './modals/reference-form.modal'
+import { ConceptComponent } from './form-editor/concept/concept.component';
+import { ConfirmComponent } from './modals/confirm.component';
+import { AlertComponent } from './modals/alert.component';
+import {  InsertReferenceComponent }  from './modals/insert-reference-forms.modal';
+import { SchemaModalComponent  } from './modals/schema-editor.modal';
+import { PromptComponent } from './modals/prompt.component';
+import { AnswersComponent } from './modals/answers.modal';
+import { ConceptsModalComponent } from './modals/concept.modal';
+import { ReferenceModalComponent } from './modals/reference-form.modal';
 import { NavigatorModalComponent } from './modals/navigator.modal';
-import { ReferenceFormsComponent } from './form-editor/reference-forms/reference-forms.component'
+import { ReferenceFormsComponent } from './form-editor/reference-forms/reference-forms.component';
+import { FormEditorComponent } from './form-editor/form-editor.component';
+import { ViewFormsComponent } from './view-forms/view-forms.component';
+import { LoginComponent } from './login/login.component'
 
 @NgModule({
   declarations: [
@@ -62,7 +60,12 @@ import { ReferenceFormsComponent } from './form-editor/reference-forms/reference
     ConceptsModalComponent,
     ReferenceModalComponent,
     NavigatorModalComponent,
-    ReferenceFormsComponent
+    ReferenceFormsComponent,
+    FormEditorComponent,
+    ViewFormsComponent,
+    InsertReferenceComponent,
+    SchemaModalComponent,
+    LoginComponent 
   ],
 
 
@@ -77,24 +80,30 @@ import { ReferenceFormsComponent } from './form-editor/reference-forms/reference
     AceEditorModule,
     BootstrapModalModule,
     ClipboardModule,
-<<<<<<< HEAD
-=======
-    DragulaModule,
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
+    NgxPaginationModule,
+    AppRoutingModule,
+    AuthenticationModule
   ],
-  entryComponents: [ConfirmComponent, AlertComponent, PromptComponent, AnswersComponent, ConceptsModalComponent, ReferenceModalComponent, NavigatorModalComponent],
+  entryComponents: [ConfirmComponent,
+     AlertComponent,
+     PromptComponent,
+     AnswersComponent,
+     ConceptsModalComponent,
+     ReferenceModalComponent, 
+     NavigatorModalComponent,
+     InsertReferenceComponent,
+     SchemaModalComponent ],
 
-  providers: [FetchFormsService,
+  providers: [FetchFormDetailService,
               NavigatorService,
               QuestionControlService,
               PropertyFactory,
               FormElementFactory,
               QuestionIdService,
               ConceptService,
-<<<<<<< HEAD
-              FormFactory
-=======
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
+              FormFactory,
+              FetchAllFormsService,
+              
             ],
   bootstrap: [AppComponent]
 })

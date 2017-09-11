@@ -1,20 +1,12 @@
 <div class="text-center" style="background:white;">
-<<<<<<< HEAD
     <div style="background-color:#ebebeb; padding:5px 0px 10px 0px">
-=======
-    <div style="background-color:#ebebeb;">
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
         Element Editor
     </div>
    
 </div>
 
 
-<<<<<<< HEAD
 <div *ngIf="questions" >
-=======
-<div *ngIf="questions">
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
     <md-card>
 
         <!--breadcrumbs-->
@@ -57,7 +49,7 @@
                         </a>
                     </div>
 
-                    <app-dynamic-question [question]="question" [_form]="form" (answers)="setAnswers($event)"></app-dynamic-question>
+                    <app-dynamic-question [question]="question" [_form]="form" (answers)="setAnswers($event)"  (type)="typeSelected($event)"></app-dynamic-question>
 
                 </div>
 

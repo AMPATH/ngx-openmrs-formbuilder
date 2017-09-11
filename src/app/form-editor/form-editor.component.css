@@ -1,0 +1,37 @@
+.container{
+    margin: auto;
+    margin-top: 100px;
+}
+
+#create-form{
+    height: 500px;
+    border-right: 1px solid lightgray;
+}
+a{
+    margin: auto;
+}
+
+h6{
+    color: #2196f3;
+    
+}
+.menu{
+    flex: 1 1 auto;
+}
+.mat-toolbar{
+    background:#008daf;
+}
+.mat-sidenav {
+    width:650px;
+    background: #fafafa;
+}
+/* .mat-sidenav-content {
+    position: relative;
+    transform: translate3d(0,0,0);
+    display: block;
+    height: fill-available !important;
+    overflow-x:hidden !important;
+} */
+a{
+    cursor: pointer;
+}

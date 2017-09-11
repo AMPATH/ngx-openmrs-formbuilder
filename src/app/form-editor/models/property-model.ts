@@ -8,6 +8,7 @@ export class PropertyModel<T>{
     required:boolean;
     controlType:string;
     parentPath:string;
+    order:number;
 
     constructor(options: {
       controlType?:string,
@@ -15,7 +16,8 @@ export class PropertyModel<T>{
       label?: string,
       value?: T,
       required?:boolean
-      parentPath?:string
+      parentPath?:string,
+      order?:number
       
     } = {}){
 
@@ -25,10 +27,12 @@ export class PropertyModel<T>{
         this.controlType = options.controlType || '';
         this.required = options.required || false;
         this.parentPath = options.parentPath || '';
+        this.order = options.order || 0;
     }
 
 
     allOtherPossibleProperties = [
+    {name:"id", parentPath:"id",type:"any"},
     {name:"concept",parentPath:'questionOptions.concept',type:"obs"},
     {name:"validators",parentPath:'validators',type:"any"},
     {name:"default",parentPath:'default',type: "any"},

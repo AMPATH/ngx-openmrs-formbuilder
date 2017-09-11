@@ -1,17 +1,17 @@
 
 <div *ngIf="_schema">
-<div mdTooltip="Reference Forms" [mdTooltipPosition]="'below'">
+
 <button class="btn btn-success" [mdMenuTriggerFor]="menu" >
  Referenced Forms
 </button>
 <md-menu #menu="mdMenu">
   <div style="padding:20px;">
-  <button md-menu-item><a><i class="fa fa-plus"></i> Insert reference form</a></button>
+  <button md-menu-item  (click)="insertRefForm()"><a (click)="insertRefForm()"><i class="fa fa-plus"></i> Insert reference form</a></button>
   <hr/>
   <h5 class="badge badge-primary">Referenced Forms</h5>
-  <button md-menu-item *ngFor="let form of _schema.referencedForms">{{form.formName}}</button>
+  <button (click)="display(form)" md-menu-item *ngFor="let form of refFormsArray">{{form.name}}</button>
 </div>
 
 </md-menu>
-</div>
+
 </div>

@@ -3,6 +3,7 @@ import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
 export interface ConfirmModel {
   title:string;
   message:string;
+  buttonText:string
 }
 
 @Component({  
@@ -19,33 +20,30 @@ export interface ConfirmModel {
                      <h5>{{message || 'Are you sure you want to delete?'}}</h5>
                    </div>
                    <div class="modal-footer">
-                     <button type="button" class="btn btn-danger" (click)="confirm()">Delete</button>
+                     <button type="button" class="btn btn-danger" (click)="confirm()">{{buttonText}}</button>
                      <button type="button" class="btn btn-default" (click)="close()" >Cancel</button>
                    </div>
                  </div>
-<<<<<<< HEAD
               </div>`
-=======
-              </div>`,
-              styles:[`
-              .modal-dialog{
-                    overflow-y: initial !important
-                      }
-              .modal-body{
-                    height: 250px;
-                    overflow-y: auto;
-                    }
-            `]
->>>>>>> d3c973f238b8f5ed1a2c51a345e79d19df3292e3
 })
 export class ConfirmComponent extends DialogComponent<ConfirmModel, boolean> implements ConfirmModel{
   title: string;
   message: string;
+  buttonText:string='Delete'
+
   constructor(dialogService: DialogService) {
     super(dialogService);
   }
+
+  close(){
+    super.close();
+    if(!this.result)
+      this.result = false;
+  }
+
   confirm() {
     this.result = true;
     this.close();
+    return this.result;
   }
 }
