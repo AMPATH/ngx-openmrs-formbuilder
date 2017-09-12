@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate, ActivatedRouteSnapshot,RouterStateSnapshot } from '@angular/router';
-import { FormEditorComponent } from '../form-editor/form-editor.component';
+import { FormEditorComponent } from '../form-editor/form-editor/form-editor.component';
 import {ConfirmComponent} from '../modals/confirm.component';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';

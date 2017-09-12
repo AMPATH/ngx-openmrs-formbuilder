@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { FetchFormDetailService } from '../Services/fetch-form-detail.service';
-import { NavigatorService } from '../Services/navigator.service';
-import { QuestionIdService } from '../Services/question-id.service';
+import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
+import { NavigatorService } from '../../Services/navigator.service';
+import { QuestionIdService } from '../../Services/question-id.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { DialogService } from 'ng2-bootstrap-modal';
-import {Form} from './form-elements/Form';
+import {Form} from '../form-elements/Form';
 @Component({
   selector: 'app-form-editor',
   templateUrl: './form-editor.component.html',

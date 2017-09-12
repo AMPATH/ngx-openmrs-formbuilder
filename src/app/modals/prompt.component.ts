@@ -16,8 +16,9 @@ export interface PromptModel {
                      <h4 class="modal-title">{{title || 'Prompt'}}</h4>
                    </div>
                    <div class="modal-body">
+                   <form [formGroup]="form" (keydown)="keyDownFunction($event)">
                    <div *ngFor="let question of questions">
- <div [formGroup]="form">
+ 
 
   <div [ngSwitch]="question.controlType">
 
@@ -36,10 +37,11 @@ export interface PromptModel {
 </div>
 </div>
 </div>
-                        </div>
+</form>
+                        
                    </div>
                    <div class="modal-footer">
-                     <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">OK</button>
+                     <button type="submit" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">OK</button>
                      <button type="button" class="btn btn-default" (click)="close()" >Cancel</button>
                    </div>
                  </div>
@@ -57,5 +59,10 @@ export class PromptComponent extends DialogComponent<PromptModel, string> implem
   save() {
     this.result = this.form.value;
     this.close();
+  }
+
+  keyDownFunction($event){
+    if($event.keyCode==13&&this.form.valid)
+        this.save();
   }
 }

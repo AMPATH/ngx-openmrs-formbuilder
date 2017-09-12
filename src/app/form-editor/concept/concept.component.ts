@@ -23,8 +23,9 @@ allAvailableAnswers:Array<any> //after search result
   ngOnInit() {
   }
 
+  
   searchConcept(){
-    let conceptID = this.form.controls[this.question.key].value
+    let conceptID = this.form.controls[this.question.key].value;
     this.searching = true;
     this.cs.searchConcept(conceptID).subscribe(res => {
       this.searchResult = res;
@@ -101,4 +102,8 @@ allAvailableAnswers:Array<any> //after search result
     this.form.controls['questionOptions.concept'].setValue(formValue.concept)
   }
 
+  keyDownFunction($event){
+    if($event.keyCode==13&&this.form.controls[this.question.key].value!='')
+        this.searchConcept();
+  }
 }

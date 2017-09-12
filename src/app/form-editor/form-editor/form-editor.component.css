@@ -35,3 +35,11 @@ h6{
 a{
     cursor: pointer;
 }
+
+.row{
+    display: flex;
+}
+
+.editor{
+    flex-grow: 1;
+}

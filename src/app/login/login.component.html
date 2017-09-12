@@ -8,15 +8,21 @@
 
                 <div style="padding-top:30px" class="panel-body" >
 
+                    <div *ngIf="message">
                     <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
-                        
+                    <div class="alert" [class.alert-warning]="!authenticated" [class.alert-success]="authenticated">
+                            {{message}}
+                            <i class="fa fa-spinner fa-spin"></i>
+                          </div>
+                    </div>
+                          
                     <form #loginForm="ngForm"  (ngSubmit)="login(loginForm.value)" >
 
                         <div style="margin-bottom: 25px">
                             <span>Select Server</span>
                             <select class="form-control"  name="baseUrl" ngModel required>
                                     <option>https://ngx.ampath.or.ke/amrs</option>
-                              <option>https://test2.ampath.or.ke:8443/amrs</option>
+                                    <option>https://test2.ampath.or.ke:8443/amrs</option>
                             </select>  
                             
                         </div>
