@@ -3,18 +3,31 @@ import { Http, Response, Headers } from '@angular/http';
 import { SessionService } from './session.service';
 import { SessionStorageService } from './session-storage.service';
 import { Constants } from './constants';
-import { Observable } from 'rxjs/Observable';
-
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class AuthenticationService {
 
+  isLoggedIn = false;
+  redirectUrl:string='';
+  baseUrl:BehaviorSubject<string> = new BehaviorSubject('');
+  credentials:BehaviorSubject<string> = new BehaviorSubject('');
+
+
   constructor(
     private sessionStorageService: SessionStorageService,
-    private sessionService: SessionService) { }
+    private sessionService: SessionService) {
+
+      if(this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY)!=null&&this.sessionStorageService.getItem(Constants.BASE_URL)!=null){
+        this.setCredentialsSubjectEncrypted(this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY));
+        this.setBaseUrl(this.sessionStorageService.getItem(Constants.BASE_URL));
+        this.isLoggedIn = true;
+      }
+      
+    }
 
   public authenticate(username: string, password: string, baseUrl: string) {
-
+   
     let credentials = {
       username: username,
       password: password
@@ -25,10 +38,15 @@ export class AuthenticationService {
     request.subscribe((response: Response) => {
         let data = response.json();
         if (data.authenticated) {
+          this.isLoggedIn = true;
           this.setCredentials(username, password,baseUrl);
           // store logged in user details in session storage
           let user = data.user;
           this.storeUser(user);
+        }
+
+        else{
+          this.isLoggedIn = false;
         }
       });
 
@@ -36,7 +54,7 @@ export class AuthenticationService {
   }
 
   public logOut() {
-
+    this.isLoggedIn = false;
     let response = this.sessionService.deleteSession();
 
     response
@@ -76,5 +94,26 @@ export class AuthenticationService {
 
   private clearUserDetails() {
     this.sessionStorageService.remove(Constants.USER_KEY);
+  }
+
+  setBaseUrl(baseUrl:string){
+    this.baseUrl.next(baseUrl);
+  }
+
+  getBaseUrl(){
+    return this.baseUrl.asObservable();
+  }
+
+  setCredentialsSubject(username:string,password:string){
+    let base64 = btoa(username + ':' + password);
+    this.credentials.next(base64);
+  }
+
+  setCredentialsSubjectEncrypted(base64:string){
+    this.credentials.next(base64);
+  }
+
+  getCredentialsSubject(){
+    return this.credentials.asObservable();
   }
 }

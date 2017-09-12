@@ -26,12 +26,16 @@ export class ConceptService {
     if(conceptID.length==36&&conceptID.indexOf(' ')==-1){ //searching with concept uuid
         return this.http.get(`${this.baseUrl}/ws/rest/v1/concept/${conceptID}`, {headers:this.headers}).map(
             data => this.data = data.json()
-        );
+        )
+        .catch((error) => {alert(error.message);
+        return error});
  }
     else{ //searching with concept display
         return this.http.get(`https://test2.ampath.or.ke:8443/amrs/ws/rest/v1/concept?q=${conceptID}`,{headers:this.headers}).map(
             data => this.data = data.json()
-        );
+        )
+        .catch((error) => {alert(error.message);
+            return error});;
     }
   
  }

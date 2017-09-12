@@ -1,18 +1,20 @@
-<md-sidenav-container>
+<nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Form Editor</a>
+          </div>
+          
+          <div class="nav navbar-nav navbar-right">
+            <li><button class="btn btn-danger navbar-btn" (click)="logout()">Logout <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i></button></li>
+          </div>
+        </div>
+      </nav>
+
     
-     <md-toolbar color="primary">
-       
-       <span style="font-size:22px">Form Editor</span>
-       
-     </md-toolbar>
-<div class="app-content">
-    
-    <div>
+    <div class="container-f">
         <div class="row">
-        
             <div class="col-md-10 col-md-offset-1">
-    
-                <div class="panel panel-default panel-table">
+                <div class="panel panel-primary panel-table">
                   <div class="panel-heading">
                     <div class="row">
                       <div class="col col-xs-2">
@@ -22,6 +24,7 @@
 
                       <div class="pull-right">
                           <button type="button" class="btn btn-sm btn-success btn-create" (click)="createNew()">Create New</button>
+                         
                       </div>
                    
                       <!-- <div class="col col-xs-7 pull-right">
@@ -73,5 +76,4 @@
                 </div>
     
     </div></div></div>
-</div>
-</md-sidenav-container>
+

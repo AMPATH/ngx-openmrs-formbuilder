@@ -24,7 +24,7 @@ export interface ReferenceFormModalModel {
                      <h4 class="modal-title">Search form to ref</h4>
                    </div>
                    <div class="modal-body">
-                   <form [formGroup]="form"> 
+                   <form [formGroup]="form" (keydown)="keyDownFunction($event)"> 
                    <div class="form-group">
                    <label for="label">Select Form</label>
                     <select #selectField id="label" class="form-control" formControlName="selectField" >
@@ -95,5 +95,9 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
   });
   }
   
+  keyDownFunction($event){
+    if($event.keyCode==13&&this.form.valid)
+        this.save(this.selectField.value);
+  }
   
 }

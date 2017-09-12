@@ -91,10 +91,10 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
   render(){
     let editedSchema=this.editor.getEditor().getValue();
 
-    editedSchema = this.compileSchema(JSON.parse(editedSchema))
+    editedSchema = this.compileSchema(JSON.parse(editedSchema));
     
     if(editedSchema.pages){
-      this.ns.setSchema(editedSchema)
+      this.ns.setSchema(editedSchema);
       return;
     }
 
