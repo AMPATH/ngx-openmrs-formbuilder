@@ -10,7 +10,8 @@ export class NavigatorService {
   rawSchemaEditorSubject:Subject<Object> = new Subject();
   schemaSubject:Subject<Object> = new Subject();
   questionSubject:Subject<Object> = new Subject();
-  rawSchemaSubject:BehaviorSubject<Object> = new BehaviorSubject({})
+  rawSchemaSubject:BehaviorSubject<Object> = new BehaviorSubject({});
+  excludedQuestionsSubject:BehaviorSubject<string> = new BehaviorSubject("");
   
 
   constructor() {
@@ -72,19 +73,24 @@ export class NavigatorService {
  }
 
 
- addToRawSchema(options:{},pageIndex?:number){
-  let obj = this.rawSchemaSubject.getValue();
-   if(pageIndex==undefined){
-    obj['pages'].push(options);
-    this.setRawSchema(obj);
-   }
+//  addToRawSchema(options:{},pageIndex?:number){
+//   let obj = this.rawSchemaSubject.getValue();
+//    if(pageIndex==undefined){
+//     obj['pages'].push(options);
+//     this.setRawSchema(obj);
+//    }
 
-   else{
-    obj['pages'][pageIndex].sections.push(options)
-    this.setRawSchema(obj)
-   }
+//    else{
+//     obj['pages'][pageIndex].sections.push(options)
+//     this.setRawSchema(obj)
+//    }}
     
+setExcludedQuestions(questionIDs:string){
+  this.excludedQuestionsSubject.next(questionIDs)
+}
    
- }
+getExcludedQuestions(){
+  return this.excludedQuestionsSubject.asObservable();
+}
 
 }

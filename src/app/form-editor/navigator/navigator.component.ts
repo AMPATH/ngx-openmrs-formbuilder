@@ -37,6 +37,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	selectMode:boolean;
 	checkedRefElements:any[]=[] //selected elements to be referenced
 	referencedForms:any[] //an array of referencedForms
+	excludedQuestions:string[]=[];
 	@Input() mode:string;      //can be either select or edit
 	@Input() pageIndex:number; //aids in collapsing the navigator elements
 	@Input() sectionIndex:number; //aids in collapsing the navigator elements
@@ -72,7 +73,10 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			this.selectMode = true
 			this.editMode=false
 		}
-		
+		this.subscription=this.ns.getExcludedQuestions().subscribe((res) =>{
+			if(res!="") this.excludedQuestions.push(res);
+			else this.excludedQuestions = [];
+		})
 	}
 
 	//when element is clicked in navigator
@@ -273,12 +277,12 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		schemaObj['parentQuestionIndex']=parentQuestionIndex;                                       
 		this.ns.setClickedElementSchema(schemaObj); //set the current edited question in the schema editor
 
-		this.propertyModelArray = this.qcs.toPropertyModelArray(question)
+		this.propertyModelArray = this.qcs.toPropertyModelArray(question);
 		if(parentQuestionIndex!=undefined&&parentQuestionIndex>-1){ //thy art an obsgroup question!
-			this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex,questionIndex,parentQuestionIndex)
+			this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex,questionIndex,parentQuestionIndex);
 		}
 		else{
-		this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex,questionIndex)
+		this.ns.newQuestion(this.propertyModelArray,pageIndex,sectionIndex,questionIndex);
 		}
 	 
 	}
@@ -363,7 +367,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 
 	addReferencePage(){
-
+	
 	if(this.referencedForms.length > 0)
 	this.subscription =	this.dialogService.addDialog(ReferenceModalComponent, {
 			refElement:'Page'},{backdropColor:'rgba(0, 0, 0, 0.5)'})
@@ -379,7 +383,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 
 	addReferenceSection(pageIndex){
-		console.log("here")
+	this.ns.setExcludedQuestions("");
 		if(this.referencedForms.length > 0)
 	this.subscription =	this.dialogService.addDialog(ReferenceModalComponent, {
 			refElement:'Section'},{backdropColor:'rgba(0, 0, 0, 0.5)'})
@@ -505,11 +509,20 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	} 
 
 	createRefSections(res,pageIndex){
-		console.log("here")
+
 		let formProps=this.createBasicFormProps(pageIndex);
+		let formAlias = res.form;
 		for(var el of JSON.parse(res['Sections'])){
 			let obj:any = {}
-			obj['reference'] = {"form":res.form, "page":el.page, "section":el.section}
+			if(this.excludedQuestions.length>0){
+				obj['reference'] = {"form":res.form, "page":el.page, "section":el.section, "excludeQuestions":this.addExcludedQuestions(res.form,el)}
+			
+			}
+			else{
+				obj['reference'] = {"form":res.form, "page":el.page, "section":el.section};
+			
+			}
+			
 			formProps['pages'][0]['sections'].push(obj);
 			obj = JSON.stringify(obj);
 			
@@ -528,7 +541,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		compiledForm['pages'][0]['sections'].forEach(
 			section => {
 				this._formSchema.pages[pageIndex].sections.push(section)
-		})
+		});
 		this.setSchema(this._formSchema);
 		this.setRawSchema(this.rawSchema);
 		
@@ -588,24 +601,67 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		
 	}
 
+	addExcludedQuestions(res,el){
+		let exQ = this.excludedQuestions;
+		let formAlias = res;
+		let final = [];
+		let acceptedQuestionIds = [];
+		let referencedFormDits = [];
 
-	excludeQuestion(pageIndex,sectionIndex,questionIndex,parentQuestionIndex){
+
+		this.fs.fetchReferencedForms().subscribe((dits)=>{
+			referencedFormDits = _.cloneDeep(dits);
+			referencedFormDits.forEach((form) =>{
+				if(form.alias=formAlias){
+					this.referencedForms.forEach((form$,index) => {
+						if(form$.name == form.formName){
+							form$.pages.forEach((page,pageIndex) =>{
+								if(page.label == el.page){
+									form$.pages[pageIndex].sections.forEach((section,sectionIndex)=>{
+										if(section.label==el.section){
+											form$.pages[pageIndex].sections[sectionIndex].questions.forEach((question)=> {
+												if(question.id){
+													acceptedQuestionIds.push(question.id);
+												}
+											})
+										}
+									})
+								}
+							})
+						}
+					})
+				}
+			})
+		})
+		
+		acceptedQuestionIds.forEach((questionID)=>{
+			exQ.forEach((excludedQuestionId)=>{
+				if(excludedQuestionId==questionID){
+					final.push(excludedQuestionId);
+				}
+			})
+			
+		})
+		return	final;
+	}
+
+	excludeQuestion(pageIndex,sectionIndex,questionIndex,parentQuestionIndex,questionID){
 
 		if(parentQuestionIndex!=undefined){
 			this._formSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1)
 		}
 		else{
-			this._formSchema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex,1)
+			this._formSchema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex,1);
 		}
-		this.findAndReplaceReferenceFormByName(this._formSchema.name,this._formSchema)
+		// this.findAndReplaceReferenceFormByName(this._formSchema.name,this._formSchema);
 		
-		
+		this.ns.setExcludedQuestions(questionID);
 	}
 
-	excludeSection(pageIndex,sectionIndex){
-		this._formSchema.pages[pageIndex].sections.splice(sectionIndex,1);
-		this.findAndReplaceReferenceFormByName(this._formSchema.name,this._formSchema)
-	}
+	// excludeSection(pageIndex,sectionIndex){
+	// 	this._formSchema.pages[pageIndex].sections.splice(sectionIndex,1);
+	// 	this.findAndReplaceReferenceFormByName(this._formSchema.name,this._formSchema)
+	// }
 
 	findAndReplaceReferenceFormByName(name:string,schema:Object){
 		this.referencedForms.forEach((form,index) =>{

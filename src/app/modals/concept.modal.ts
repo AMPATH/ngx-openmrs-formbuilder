@@ -21,7 +21,7 @@ export interface ConceptsModel {
                    <div class="form-group">
                    <label for="concepts">Select a concept</label>
                     <select class = "form-control" id="concepts" name="concept" [(ngModel)]="pconcept" required>
-                      <option *ngFor="let concept of concepts" [value]="concept.uuid">{{concept.display}}</option>
+                      <option *ngFor="let concept of concepts" [value]="concept.uuid">{{concept.name.display}}</option>
                     </select>
                     <br/>
                     <h6><b> UUID : {{pconcept}} </b></h6>

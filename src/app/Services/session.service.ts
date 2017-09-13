@@ -26,6 +26,10 @@ export class SessionService {
     
     return this.http.get(this.url, {
       headers: headers
+    })
+    .catch((error) =>{
+      console.log(error);
+      return error;
     });
   }
 

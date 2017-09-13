@@ -23,25 +23,26 @@ allAvailableAnswers:Array<any> //after search result
   ngOnInit() {
   }
 
-  
+
   searchConcept(){
     let conceptID = this.form.controls[this.question.key].value;
     this.searching = true;
-    this.cs.searchConcept(conceptID).subscribe(res => {
-      this.searchResult = res;
-      this.searching = false;
-      
-      if(this.searchResult.results){
-        this.showConceptsDialog(this.searchResult.results);
-        
-      }
-      
-      else{
-       this.showConceptsDialog([{"uuid":this.searchResult.uuid, "display":this.searchResult.display}])
-      }
-     
+    if(conceptID!=''){
 
-    })
+      this.cs.searchConcept(conceptID).subscribe(res => {
+        this.searchResult = res;
+        this.searching = false;
+        console.log(this.searchResult,"res");
+        if(this.searchResult.results){
+          this.showConceptsDialog(res.results);
+        }
+        else{
+         this.showConceptsDialog([{"uuid":this.searchResult.uuid, "display":this.searchResult.display}])
+        }
+      });
+
+    }
+   
   }
 
 

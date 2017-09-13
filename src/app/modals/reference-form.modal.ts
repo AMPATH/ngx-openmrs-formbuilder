@@ -69,6 +69,7 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
       if(form['formName']==value) {
         selectedForm = form
         this.formAlias = form['alias']
+        console.log(this.formAlias);
       }
     })
     this.fs.fetchFormMetadata(selectedForm.ref.uuid)
@@ -83,10 +84,11 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
        {title:title,schema:schema, referenceElement:refElement.toLowerCase()},{backdropColor:'rgba(0, 0, 0, 0.8)'})
     .subscribe((formValue)=>{
       let i = {}
-      i['form']=this.formAlias
-      i[refElement+'s']=formValue
-
+      i['form']=this.formAlias;
+      i[refElement+'s']=formValue;
+    
       if(formValue!=undefined) {
+        
        this.result = JSON.stringify(i);
        this.close()
         }  
