@@ -24,7 +24,7 @@ import { ViewFormsComponent } from './view-forms/view-forms.component';
 import { LoginComponent } from './login/login.component';
 
 import {AuthGuardService} from './Services/auth-guard.service';
-
+import {SearchFormFilterPipe} from './pipes/search-form-filter.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +38,8 @@ import {AuthGuardService} from './Services/auth-guard.service';
     ViewFormsComponent,
     InsertReferenceComponent,
     SchemaModalComponent,
-    LoginComponent 
+    LoginComponent,
+    SearchFormFilterPipe
   ],
 
 

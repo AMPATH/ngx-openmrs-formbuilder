@@ -37,7 +37,7 @@ export class FetchAllFormsService {
 
 
   fetchAllComponentForms(){
-    return this.http.get(`https://test2.ampath.or.ke:8443/amrs/ws/rest/v1/form?q=Component&v=custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference))`,{headers:this.headers}).map(
+    return this.http.get(`${this.baseUrl}/ws/rest/v1/form?q=Component&v=custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference))`,{headers:this.headers}).map(
       data => this.forms = data.json())
       .catch(e => {alert("Error found: "+e.message); return e;})
   }

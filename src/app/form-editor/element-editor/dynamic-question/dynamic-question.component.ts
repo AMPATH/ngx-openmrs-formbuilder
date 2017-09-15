@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { PropertyModel } from '../../models/property-model';
-import { FormGroup,FormControl } from '@angular/forms';
+import { FormGroup,FormControl} from '@angular/forms';
+import {ConceptComponent} from '../../concept/concept.component';
 
 @Component({
   selector: 'app-dynamic-question',
@@ -11,6 +12,9 @@ export class DynamicQuestionComponent implements OnInit {
   @Input() question: PropertyModel<any>;
   @Output() answers = new EventEmitter<any>();
   @Output() type = new EventEmitter<string>();
+  
+ 
+ 
 
   form: FormGroup;
  
@@ -39,7 +43,7 @@ export class DynamicQuestionComponent implements OnInit {
   }
 
 emitAnswers(answers:any){
-  this.answers.emit(answers)
+  this.answers.emit(answers);
 }
 
 

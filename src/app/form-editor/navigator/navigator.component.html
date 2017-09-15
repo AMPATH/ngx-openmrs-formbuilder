@@ -85,14 +85,14 @@
       </div>
 
       <!--Exclude Section-->
-      <div *ngIf="selectMode&&_refElement=='page'" style="float:right;">
+      <!-- <div *ngIf="selectMode&&_refElement=='page'" style="float:right;">
           <a ><i class="fa fa-times" aria-hidden="true"  data-toggle="tooltip" title="Exclude section" style="color:red" (click)="excludeSection(pageIndex,j)"></i></a>
-          </div>
+          </div> -->
       
     
     <div [id]="'section'+section.label.slice(0,2)+pageIndex+ _formSchema.name.slice(0,2)+j" class="collapse">
-      <app-navigator [sectionIndex]="j" [_schema]="section" [formSchema]="_formSchema" [pageIndex]="pageIndex"
-       [mode]="mode" [count]="_count" [referenceElement]="_refElement" (nestedCheckedRefElementEmitter)="emitCheckedReferenceElement($event.event,$event.element)"></app-navigator>
+      <app-navigator [sectionIndex]="j" [_schema]="section" [formSchema]="_formSchema" [pageIndex]="pageIndex" 
+       [mode]="mode" [referenceElement]="_refElement" (nestedCheckedRefElementEmitter)="emitCheckedReferenceElement($event.event,$event.element)"></app-navigator>
     </div>
   </div> 
 </div>
@@ -117,8 +117,8 @@
     <p class="element" (click)="onClicked(question,pageIndex,sectionIndex,k, questionIndex)">{{question.label}}</p>
 
     <!-- Exclude A Question -->
-    <div *ngIf="selectMode&&_refElement=='section'" style="float:right;">
-    <a ><i class="fa fa-times" aria-hidden="true"  data-toggle="tooltip" title="Exclude question" style="color:red" (click)="excludeQuestion(pageIndex,sectionIndex,k,questionIndex)"></i></a>
+    <div *ngIf="selectMode&&_refElement=='section'&&question.id" style="float:right;">
+    <a ><i class="fa fa-times" aria-hidden="true"  data-toggle="tooltip" title="Exclude question" style="color:red" (click)="excludeQuestion(pageIndex,sectionIndex,k,questionIndex,question.id)"></i></a>
     </div>
 
     <div *ngIf="editMode" style="float:right;" [hidden]="editPageMode || editSectionMode">
@@ -129,7 +129,7 @@
 
     <div [id]="'question'+question.label.slice(0,3)+ _formSchema.name.slice(0,2)+pageIndex+sectionIndex+k" class="collapse">
       <app-navigator [sectionIndex]="sectionIndex" [pageIndex]="pageIndex" [questionIndex]="k" [_schema]="question"
-       [formSchema]="_formSchema" [count]="_count" [mode]="mode" [referenceElement]="_refElement"
+       [formSchema]="_formSchema" [count]="_count" [mode]="mode" [referenceElement]="_refElement" 
        (nestedCheckedRefElementEmitter)="emitCheckedReferenceElement($event.event,$event.element)"></app-navigator>
     </div>
   </div>

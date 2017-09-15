@@ -112,7 +112,7 @@ export class FetchFormDetailService {
       getReferencedFormsArray(){
         return this.referencedFormsSubject.asObservable();
       }
-
+      
   public fetchReferencedForms(){
     return this.referencedFormsDetailsSubject.asObservable();
     

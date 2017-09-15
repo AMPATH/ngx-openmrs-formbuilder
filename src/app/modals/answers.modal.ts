@@ -18,7 +18,7 @@ export interface AnswersModel {
                    <div *ngFor="let answer of answers;let i=index;">
                       <div class="checkbox" style="margin-left:20px;">
                         <h6><input type="checkbox" name="'choice'+i" [value]="label.value+','+answer.uuid"
-                        (change)="setCheckboxes($event,i)">
+                        (change)="setCheckboxes($event,i)" >
                         Answer {{i+1}}</h6>
                          <div class="form-group">
                       <input type="text" class="form-control" #label [value]="answer.display">
@@ -48,6 +48,8 @@ export interface AnswersModel {
 export class AnswersComponent extends DialogComponent<AnswersModel, string> implements AnswersModel,OnInit,AfterViewChecked {
   answers:any;
   checkboxes={};
+
+
   constructor(dialogService: DialogService,private fb:FormBuilder,private cdRef:ChangeDetectorRef) {
     super(dialogService);
   }

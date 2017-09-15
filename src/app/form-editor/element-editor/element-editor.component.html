@@ -39,7 +39,7 @@
         <div *ngIf="form" style="clear:both;">
             <!--form for adding a question-->
 
-            <form (ngSubmit)="onSubmit()" [formGroup]="form">
+            <form [formGroup]="form">
 
                 <div *ngFor="let question of questions; let i=index;">
                     
@@ -49,14 +49,20 @@
                         </a>
                     </div>
 
-                    <app-dynamic-question [question]="question" [_form]="form" (answers)="setAnswers($event)"  (type)="typeSelected($event)"></app-dynamic-question>
+                    <div class="pull-right" *ngIf="question.key=='questionOptions.answers'">
+                        <a (click)="reselectAnswers()" data-toggle="tooltip" title="Reselect Answers">
+                            <i class="fa fa-undo" style="font-size:16px;margin:5px;color:green;cursor:pointer"></i>
+                        </a>
+                          </div>
+
+                    <app-dynamic-question [question]="question" [_form]="form" (answers)="setAnswers($event)"  (type)="typeSelected($event)" ></app-dynamic-question>
 
                 </div>
 
 
                 <div class="form-row">
                     <br/>
-                    <button class="btn btn-primary btn-lg center-block" type="submit" [disabled]="!form.valid">OK</button>
+                    <button class="btn btn-primary btn-lg center-block" (click)="onSubmit()" [disabled]="!form.valid">OK</button>
                 </div>
             </form>
         </div>
