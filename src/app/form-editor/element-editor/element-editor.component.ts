@@ -7,6 +7,7 @@ import {QuestionIdService} from '../../Services/question-id.service'
 import {FormElementFactory} from '.././form-elements/form-element-factory';
 import {AlertComponent} from '../../modals/alert.component'
 import { DialogService } from "ng2-bootstrap-modal";
+import {ElementEditorService} from '../../Services/element-editor.service';
 import * as _ from "lodash";
 
 @Component({
@@ -16,7 +17,7 @@ import * as _ from "lodash";
 })
 export class ElementEditorComponent implements OnInit {
   questions:PropertyModel<any>[];
-  private _rawSchema: any;
+  _rawSchema: any;
   _schema:any
   form: FormGroup;
   @Input() pageIndex: number;
@@ -33,9 +34,11 @@ export class ElementEditorComponent implements OnInit {
   editMode:boolean = false;
   id:number; //ID to the current edited question
 
+  answers:Object;
+
 
   constructor(private qcs: QuestionControlService, private formElementFactory:FormElementFactory, 
-    private qis:QuestionIdService,private ns:NavigatorService,private dialogService:DialogService) { 
+    private qis:QuestionIdService,private ns:NavigatorService,private dialogService:DialogService, private el:ElementEditorService) { 
       
     
     }
@@ -175,6 +178,7 @@ export class ElementEditorComponent implements OnInit {
 
 
   setAnswers(answers){
+    this.answers = answers; //selectedAnswers
     if(answers.length>0){
       if(this.form.contains('questionOptions.answers')){
         this.form.controls['questionOptions.answers'].setValue(JSON.stringify(answers,undefined,"\t"));
@@ -314,5 +318,10 @@ export class ElementEditorComponent implements OnInit {
     if(type=='obs'){
       if(!this.form.contains('questionOptions.concept')) this.addProperty('questionOptions.concept');
     }
+  }
+
+  reselectAnswers(){
+    if(this.answers!=undefined) this.el.reShowAnswersDialog(this.answers);
+    else this.el.reShowAnswersDialog(JSON.parse(this.form.controls['questionOptions.answers'].value));
   }
 }

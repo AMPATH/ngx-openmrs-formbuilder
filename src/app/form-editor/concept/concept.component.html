@@ -3,16 +3,10 @@
         <div class="input-group">
             <input class="form-control" placeholder="Enter concept id, uuid or label to search" [formControlName]="question.key" [id]="question.key" [type]="question.type" [value]="question.value">
             <span class="input-group-btn">
-        <button class="btn btn-primary" type="button" (click)="searchConcept()"><i class="fa fa-search"></i></button>
+        <button class="btn btn-primary" type="button" (click)="searchConcept()"><i class="fa"  [class.fa-search]=!searching [ngClass]="{'fa-spinner fa-spin fa-fw':searching}"></i></button>
    </span>
-   <div *ngIf="searching">
-        <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
-        <span class="sr-only">Searching...</span>
-</div>
         </div>
-        <div *ngIf="allAvailableAnswers">
-<div *ngIf="allAvailableAnswers.length==0"><small style="color:red">Not a coded question</small></div>
-</div>
+       
 
 
  </div>

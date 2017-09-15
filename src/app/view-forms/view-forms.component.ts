@@ -13,7 +13,7 @@ export class ViewFormsComponent implements OnInit {
   forms:Array<any> = [];
   page: number = 1; //pagination
   loggingOut:boolean=false;
-
+  searchValue:string="";
 
 
   constructor(private fetchAllFormsService:FetchAllFormsService,private router:Router,
@@ -45,10 +45,14 @@ export class ViewFormsComponent implements OnInit {
 
   logout(){
     this.loggingOut = true;
-    this.auth.logOut().subscribe(res => {
-      console.log(res);
+    try{
+      this.auth.logOut().subscribe(res => {
+        this.router.navigate(['/login']);
+      });
+    }
+    catch(e){
       this.router.navigate(['/login']);
-    });
+    }
     
   }
 }

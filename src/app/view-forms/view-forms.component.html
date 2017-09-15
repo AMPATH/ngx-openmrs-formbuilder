@@ -27,18 +27,18 @@
                          
                       </div>
                    
-                      <!-- <div class="col col-xs-7 pull-right">
+                     <div class="col col-xs-5 pull-right">
                           <div id="imaginary_container"> 
                               <div class="input-group stylish-input-group">
-                                  <input type="text" class="form-control"  placeholder="Search form using uuid or name"  #searchBox id="search-box" (keyup)="search(searchBox.value)">
+                                  <input type="text" class="form-control" [(ngModel)]="searchValue" placeholder="Search"  id="search-box">
                                   <span class="input-group-addon">
-                                      <button type="submit">
-                                          <span class="glyphicon glyphicon-search"></span>
+                                      <button>
+                                          <i class="fa fa-search"></i>
                                       </button>  
                                   </span>
                               </div>
                           </div>
-                      </div> -->
+                      </div> 
                     </div>
                   </div>
                   <div class="panel-body">
@@ -55,7 +55,7 @@
                         </tr> 
                       </thead>
                       <tbody *ngIf="forms">
-                              <tr *ngFor="let form of forms | paginate: { itemsPerPage: 13, currentPage: page }">
+                              <tr *ngFor="let form of forms | formfilter: searchValue | paginate: { itemsPerPage: 13, currentPage: page }">
                             
                                 <td class="formName"><b>{{form.name}}</b></td>
                                 <td>{{form.version}}</td>

@@ -17,6 +17,7 @@ import {QuestionIdService} from '../../Services/question-id.service';
 import {ConceptService} from '../../Services/concept.service';
 import {FormFactory} from '../form-elements/form-factory.service';
 import {FetchAllFormsService} from '../../Services/fetch-all-forms.service';
+import {ElementEditorService} from '../../Services/element-editor.service';
 
 //Components
 import { ReferenceFormsComponent } from '../reference-forms/reference-forms.component';
@@ -60,6 +61,7 @@ import { FormEditorComponent } from './form-editor.component';
     ConceptService,
     FormFactory,
     FetchAllFormsService,
+    ElementEditorService
     
   ],
 
