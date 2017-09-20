@@ -1,13 +1,14 @@
-
+<div *ngIf="loading" id="loadingDiv">
+  <img class="loader" src="../../../assets/loader.gif">
+  
+</div>
 <div *ngIf="schema">
   
     <md-sidenav-container>
       <md-sidenav #sidenav mode="over" class="app-sidenav">
         
         <!---Navigator-->
-        <app-navigator [_schema]="schema" [formSchema]="schema" (closeSidebar)="closeNavigator($event)" [mode]="'edit'">
-        Loading..
-        </app-navigator>
+        <app-navigator [_schema]="schema" [formSchema]="schema"  [mode]="'edit'" (closeSidebar)="closeNavigator($event)"></app-navigator>
   
       </md-sidenav>
       <md-toolbar color="primary">

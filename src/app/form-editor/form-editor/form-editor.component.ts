@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy,AfterViewInit, AfterContentInit } from '@angular/core';
 import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
 import { NavigatorService } from '../../Services/navigator.service';
 import { QuestionIdService } from '../../Services/question-id.service';
@@ -11,7 +11,7 @@ import {Form} from '../form-elements/Form';
   templateUrl: './form-editor.component.html',
   styleUrls: ['./form-editor.component.css']
 })
-export class FormEditorComponent implements OnInit,OnDestroy{
+export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,AfterContentInit{
 
   	  schema:any;
 	  selectedSchema:any;
@@ -28,7 +28,16 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	  uuid:string
 	  resource:any[];
 	  disableCanDeactivate:boolean=false;
+	  loading:boolean = true;
 
+	  ngAfterViewInit(){
+		  console.log("After view init.");
+	  }
+
+
+	  ngAfterContentInit(){
+		  console.log("After content init. ")
+	  }
    @ViewChild('sidenav') public myNav;
   constructor( private fs: FetchFormDetailService, private  ns: NavigatorService, private router:Router, private route:ActivatedRoute,public dialogService:DialogService){
   }
@@ -45,7 +54,12 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		this.myNav.open();
 	}
 
+
   ngOnInit(){
+
+	this.subscription = this.fs.loaded().subscribe((isLoaded) =>{
+		if(isLoaded) this.loading = false;
+	})
 
 	this.subscription = this.route.params.subscribe(params => {
 		this.uuid = params['uuid'];
@@ -186,6 +200,8 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	  this.disableCanDeactivate = true;
 	  this.router.navigate(['/forms']);
   }
+
+
 
 
 }

@@ -7,48 +7,50 @@ export interface AnswersModel {
 
 @Component({
   selector: 'prompt',
-  template: `<div class="modal-dialog">
-                <div class="modal-content">
-                   <div class="modal-header">
-                     <button type="button" class="close" (click)="close()">&times;</button>
-                     <h4 class="modal-title">Answers</h4>
-                   </div>
-                   <div class="modal-body">
-                   <form #answersForm="ngForm" (ngSubmit)="save(answersForm)">
-                   <div *ngFor="let answer of answers;let i=index;">
-                      <div class="checkbox" style="margin-left:20px;">
-                        <h6><input type="checkbox" name="'choice'+i" [value]="label.value+','+answer.uuid"
-                        (change)="setCheckboxes($event,i)" >
-                        Answer {{i+1}}</h6>
-                         <div class="form-group">
-                      <input type="text" class="form-control" #label [value]="answer.display">
-                        </div>
-                        <br/>
-                      </div>
-                   </div>
-                   <div class="modal-footer">
-                   <button type="submit" class="btn btn-primary" [disabled]="!answersForm.valid">OK</button>
-                   <button type="button" class="btn btn-default" (click)="close()" >Cancel</button>
-                 </div>
-                 
-                   </form>
-                   </div>
-                 </div>
-                </div>`,
+  templateUrl: './answers-modal.html',
     styles:[`
 .modal-dialog{
     overflow-y: initial !important
 }
-.modal-body{
-    height: 650px;
+.modal-content{
+    height: 550px;
     overflow-y: auto;
+}
+/* Hiding the checkbox, but allowing it to be focused */
+.badgebox
+{
+    opacity: 0;
+}
+
+.badgebox + .badge
+{
+    /* Move the check mark away when unchecked */
+    text-indent: -999999px;
+    /* Makes the badge's width stay the same checked and unchecked */
+	width: 27px;
+}
+
+.badgebox:focus + .badge
+{
+    /* Set something to make the badge looks focused */
+    /* This really depends on the application, in my case it was: */
+    
+    /* Adding a light border */
+    box-shadow: inset 0px 0px 5px;
+    /* Taking the difference out of the padding */
+}
+
+.badgebox:checked + .badge
+{
+    /* Move the check mark back when checked */
+	text-indent: 0;
 }`]
 
 })
 export class AnswersComponent extends DialogComponent<AnswersModel, string> implements AnswersModel,OnInit,AfterViewChecked {
   answers:any;
   checkboxes={};
-
+  checked:boolean=false;
 
   constructor(dialogService: DialogService,private fb:FormBuilder,private cdRef:ChangeDetectorRef) {
     super(dialogService);
@@ -69,9 +71,8 @@ export class AnswersComponent extends DialogComponent<AnswersModel, string> impl
   }
 
   setCheckboxes(event,i){
-  if(event.target.checked){
+    if(event.target.checked){
     this.checkboxes['answer'+i]=event.target.getAttribute('value');
-  
   }
   
   else{
@@ -80,6 +81,22 @@ export class AnswersComponent extends DialogComponent<AnswersModel, string> impl
     
    
 
+  }
+
+  selectAll(event){
+    if(event.target.checked){
+         this.answers.forEach((answer,index) => {
+            this.checked = event.target.checked;
+            this.checkboxes['answer'+index]=answer.display+","+answer.uuid;
+    });
+    }
+   else{
+       this.answers.forEach((answer,index) => {
+            this.checked = false;
+    });
+      this.checkboxes = {};
+  }
+    
   }
  
 }

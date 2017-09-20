@@ -1,0 +1,31 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+         <div class="modal-header">
+            <button class="close" type="button" (click)="close()">&times;</button>
+                <div class="pull-right">
+                        <label for="primary" class="btn btn-primary">Select All<input (change)="selectAll($event)" type="checkbox" id="primary" class="badgebox"><span class="badge"><i class="fa fa-check"></i></span></label>
+                    </div>
+                <h4 class="modal-title">Answers</h4>
+            </div>
+            <div class="modal-body">
+                <form #answersForm="ngForm" (ngSubmit)="save(answersForm.value)">   
+                   <div *ngFor="let answer of answers;let i=index;">
+                      <div class="checkbox" style="margin-left:20px;">
+                        <h6><input type="checkbox" name="'choice'+i" [value]="label.value+','+answer.uuid"
+                        (change)="setCheckboxes($event,i)" [checked]="checked">
+                        Answer {{i+1}}</h6>
+                         <div class="form-group">
+                      <input type="text" class="form-control" #label [value]="answer.display">
+                        </div>
+                        <br/>
+                      </div>
+                   </div>
+                   <div class="modal-footer">
+                   <button type="submit" class="btn btn-primary" [disabled]="!answersForm.valid">OK</button>
+                   <button type="button" class="btn btn-default" (click)="close()" >Cancel</button>
+                 </div>
+                 
+                   </form>
+                   </div>
+                 </div>
+                </div>

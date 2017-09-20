@@ -43,11 +43,13 @@
                         </form>     
 
                       
-                        <div *ngIf="message">
+                        <div class="message" *ngIf="message">
                                 <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
                                 <div class="alert" [class.alert-warning]="!authenticated" [class.alert-success]="authenticated">
                                         <small>{{message}}</small>
+                                        <div *ngIf="message.indexOf('Logging')!=-1" class="spinner">
                                         <i class="fa fa-spinner fa-spin"></i>
+                                        </div>
                                       </div>
                                 </div>
 

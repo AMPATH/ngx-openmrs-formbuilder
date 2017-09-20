@@ -48,7 +48,8 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	@Input() set formSchema(fschema:any){ this._formSchema = _.clone(fschema);};
 	@Output() closeSidebar:EventEmitter<boolean> = new EventEmitter();
 	@Output() checkedRefElementsEmitter:EventEmitter<any[]> = new EventEmitter();
-	@Output() nestedCheckedRefElementEmitter:EventEmitter<any> = new EventEmitter()
+	@Output() nestedCheckedRefElementEmitter:EventEmitter<any> = new EventEmitter();
+
 
 	constructor(private fb: FormBuilder,private ns: NavigatorService,private qcs:QuestionControlService,
 		private formElementFactory:FormElementFactory,private dialogService:DialogService,
@@ -60,7 +61,19 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
        
 	ngOnInit() {
-
+		try{
+			let lastPageIndex:number = this._formSchema.pages.length-1;
+			let lastSectionIndex:number = this._formSchema.pages[lastPageIndex].sections.indexOf(this._formSchema.pages[lastPageIndex].sections[this._formSchema.pages[lastPageIndex].sections.length-1]);
+			let lastQuestionIndex:number = this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.indexOf(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.length-1]);
+			if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[lastQuestionIndex]==this.schema){
+				this.fs.setLoaded(true);
+			}
+		}
+	catch(e){
+		console.log(e);
+	}
+		
+		
 		this._count++;
 		this.subscription = this.fs.getReferencedFormsArray().subscribe((res) => this.referencedForms = res)
 		this.subscription = this.ns.getRawSchema().subscribe(res => this.rawSchema = _.cloneDeep(res));

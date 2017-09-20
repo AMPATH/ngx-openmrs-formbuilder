@@ -43,3 +43,17 @@ a{
 .editor{
     flex-grow: 1;
 }
+#loadingDiv{
+    
+  height: 400px;
+  position: relative;
+}
+
+.loader {
+  position: absolute;
+  left: 25%;
+  top: 20%;
+  margin-left: -32px; /* -1 * image width / 2 */
+  margin-top: -32px; /* -1 * image height / 2 */
+  
+}
