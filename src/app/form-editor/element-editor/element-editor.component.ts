@@ -178,6 +178,7 @@ export class ElementEditorComponent implements OnInit {
 
 
   setAnswers(answers){
+    console.log(answers,"Element Editor!");
     this.answers = answers; //selectedAnswers
     if(answers.length>0){
       if(this.form.contains('questionOptions.answers')){

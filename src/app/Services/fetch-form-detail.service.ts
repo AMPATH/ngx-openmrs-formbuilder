@@ -19,6 +19,7 @@ export class FetchFormDetailService {
   private referencedFormsDetailsSubject:BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]) //formName,alias,uuid
   private headers:Headers=new Headers();
   private baseUrl:string=''
+  private formEditorLoaded:BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(private http: Http,private fsc:FormSchemaCompiler,private ns:NavigatorService,private sessionStorageService:SessionStorageService)
    { 
@@ -120,5 +121,13 @@ export class FetchFormDetailService {
 
   setReferencedForms(formDits){ //formName,alias,uuid
     this.referencedFormsDetailsSubject.next(formDits)
+  }
+
+  setLoaded(bool:boolean){
+    this.formEditorLoaded.next(true);
+  }
+
+  loaded(){
+    return this.formEditorLoaded.asObservable();
   }
 }
