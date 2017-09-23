@@ -9,44 +9,7 @@ export interface ReferenceModel {
 
 @Component({
   selector: 'prompt',
-  template: `<div class="modal-dialog">
-                <div class="modal-content">
-                   <div class="modal-header">
-                     <button type="button" class="close" (click)="close()">&times;</button>
-                     <h4 class="modal-title">Components</h4>
-      
-                   </div>
-                   <div class="modal-body">
-                   <form #form="ngForm"  (ngSubmit)="save(form.value)">
-                   <div class="form-group">
-                   <label>Select forms</label>
-                   
-                    <select class = "form-control" id="forms" name="form" ngModel required>
-                      <option (change)="optionSelected($event)" *ngFor="let form of forms" [value]="form.uuid+' '+form.name">{{form.name}}</option>
-                    </select>
-
-                   
-                    <div class="form-group" >
-                      <label>Alias</label>
-                      <input type="text" class="form-control" placeholder="Enter alias" name="alias" ngModel required>
-                    </div>
-              
-
-
-                    <div class="form-group" >
-                    <label>Display</label>
-                    <input type="text" class="form-control" placeholder="Display" name="display" ngModel required>
-                  </div>
-                  </div>
-                
-                  <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary" [disabled]="!form.valid">OK</button>
-                  <button type="button" class="btn btn-default" (click)="close()">Cancel</button>
-                </div>
-                  </form>
-                   </div>
-                 </div>
-                </div>`,
+  templateUrl:'./insert-reference-forms.modal.html' ,
     styles:[`
 .modal-dialog{
     overflow-y: initial !important
@@ -80,12 +43,22 @@ export class  InsertReferenceComponent extends DialogComponent<ReferenceModel, s
   }
 
   save(value) {
+    let uuid = this.findFormUUID(value.form);
+    value.form = uuid+" "+value.form;
     this.result = value;
     this.close();
   }
 
   optionSelected($event){
     this.selected = true;
+  }
+
+  findFormUUID(formName){
+    let uuid;
+    this.forms.forEach(form => {
+      if(form.name==formName) uuid = form.uuid;
+    });
+    return uuid;
   }
  
 }

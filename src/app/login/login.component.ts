@@ -11,7 +11,7 @@ export class LoginComponent implements OnInit {
   authenticated:boolean;
   selectedValue:string;
   message:string;
-
+  baseUrls:string[]=['https://test2.ampath.or.ke:8443/amrs','https://ngx.ampath.or.ke/amrs']
   constructor(private auth:AuthenticationService,private router:Router) { 
     this.setMessage();
   }
@@ -51,4 +51,6 @@ export class LoginComponent implements OnInit {
     if(str)
     this.message = "Already Logged " + str;
   }
+
+  
 }

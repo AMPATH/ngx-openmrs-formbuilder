@@ -21,6 +21,8 @@ export class ViewFormsComponent implements OnInit {
 
  
   ngOnInit(){
+    console.log(this.forms.length);
+    if(this.forms.length==0)
 	  this.fetchAllFormsService.fetchAllPOCForms().subscribe(forms =>{
     let f = forms.results;
     f.forEach((form,index) =>{
@@ -29,7 +31,7 @@ export class ViewFormsComponent implements OnInit {
       })
     })
     this.forms = f;
-    })
+    });
 
   
   }

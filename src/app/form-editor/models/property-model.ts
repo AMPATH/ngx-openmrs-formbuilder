@@ -43,7 +43,8 @@ export class PropertyModel<T>{
     //{name:"show Date",path:'show Date',type:"any"},
     //{name:"show Weeks",path:'show Weeks',type:"any"},
     {name:"orderSettingUuid", parentPath:'questionOptions.orderSettingUuid', type:'testOrder'},
-    {name:"orderType", parentPath: 'questionOptions.orderSettingUuid', type: 'testOrder'}
+    {name:"orderType", parentPath: 'questionOptions.orderSettingUuid', type: 'testOrder'},
+    {name:"calculatedExpressions", parentPath:"calculatedExpressions", type:'testOrder'}
    
   ]
     

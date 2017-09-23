@@ -147,7 +147,7 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 
 
   createNewForm(){
-	console.log("creating new form")
+	this.loading = false;
 	this.schema = new Form({"name":"","processor":"EncounterFormProcessor","uuid":"xxxx","referencedForms":[],"pages":[]});
 	this.selectedSchema = this.schema;
 	this.strSchema = JSON.stringify(this.schema,null,"\t");

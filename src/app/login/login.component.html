@@ -13,12 +13,8 @@
                     <form #loginForm="ngForm"  (ngSubmit)="login(loginForm.value)" >
 
                         <div style="margin-bottom: 25px">
-                            <span>Select Server</span>
-                            <select class="form-control"  name="baseUrl" ngModel required>
-                                    <option>https://ngx.ampath.or.ke/amrs</option>
-                                    <option>https://test2.ampath.or.ke:8443/amrs</option>
-                            </select>  
-                            
+                            <span>Enter Server URL</span>
+                            <input [typeahead]="baseUrls" class="form-control"  name="baseUrl" ngModel required autocomplete="off"> 
                         </div>
                                 
                         <div style="margin-bottom: 25px">
