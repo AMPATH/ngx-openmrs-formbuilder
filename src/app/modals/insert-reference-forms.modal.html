@@ -11,7 +11,7 @@
           <label>Select forms</label>
 
         <input  [typeahead]="forms" (typeaheadOnSelect)="optionSelected($event)" typeaheadOptionField="name"
-         typeaheadOptionsLimit="15" typeaheadMinLength="0"  class="form-control" id="forms" name="form" ngModel required>
+         typeaheadOptionsLimit="15" typeaheadMinLength="0"  class="form-control" id="forms" name="form" ngModel required autocomplete="off">
 
             </div>
 
