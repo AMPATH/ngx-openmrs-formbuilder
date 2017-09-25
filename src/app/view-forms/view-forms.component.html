@@ -1,12 +1,15 @@
 <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">Form Editor</a>
+            <a class="navbar-brand" href="#">Form Builder</a>
           </div>
           
-          <div class="nav navbar-nav navbar-right">
-            <li><button class="btn btn-danger navbar-btn" (click)="logout()">Logout <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i></button></li>
-          </div>
+          <ul class="nav navbar-nav navbar-right">
+          
+            <li><button type="button" class="btn btn-success btn-create navbar-btn" (click)="createNew()"><i class="fa fa-plus"></i> Create New</button></li>
+            <li><button type="button" class="btn btn-danger navbar-btn" (click)="logout()">Logout <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i></button></li>
+            
+          </ul>
         </div>
       </nav>
 
@@ -21,11 +24,6 @@
                         <h3 class="panel-title">Forms</h3>
                       </div>
 
-                      <div class="pull-right">
-                          <button type="button" class="btn btn-sm btn-success btn-create" (click)="createNew()">Create New</button>
-                         
-                      </div>
-                   
                      <div class="col col-xs-5 pull-right">
                           <div id="imaginary_container"> 
                               <div class="input-group stylish-input-group">
@@ -53,8 +51,8 @@
                             <th width="20%">Edit</th>
                         </tr> 
                       </thead>
-                      <tbody *ngIf="forms">
-                              <tr *ngFor="let form of forms | formfilter: searchValue | paginate: { itemsPerPage: 13, currentPage: page }">
+                      <tbody *ngIf="forms.length>0">
+                              <tr *ngFor="let form of forms | formfilter: searchValue  | paginate: { itemsPerPage: 13, currentPage: page }">
                             
                                 <td class="formName"><b>{{form.name}}</b></td>
                                 <td>{{form.version}}</td>
@@ -63,7 +61,9 @@
                               </tr>
                             </tbody>
 
-
+                      <tbody *ngIf="!forms">
+                        <td>No forms to display</td>
+                      </tbody>
                     </table>
                 
                   </div>

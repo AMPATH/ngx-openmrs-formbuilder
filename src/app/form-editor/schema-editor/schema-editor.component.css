@@ -8,3 +8,7 @@ a{
  a>i.material-icons.yellow{
      color:#FFA500 !important;
  }
+
+.material-icons:hover{
+    color:#5cb85c;
+}

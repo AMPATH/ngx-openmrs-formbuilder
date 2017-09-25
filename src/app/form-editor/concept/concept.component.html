@@ -1,5 +1,5 @@
 <div *ngIf="question">
-    <div [formGroup]="form" (keydown)="keyDownFunction($event)">
+    <div [formGroup]="form">
         <div class="input-group">
             <input class="form-control" placeholder="Enter concept id, uuid or label to search" [formControlName]="question.key" [id]="question.key" [type]="question.type" [value]="question.value">
             <span class="input-group-btn">

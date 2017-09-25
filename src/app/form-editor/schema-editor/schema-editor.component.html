@@ -1,22 +1,21 @@
 <div style="background:#ebebeb; padding-top:5px;">
 <div style="clear:both;" id="label" class="text-center" >
-  Schema
  
 <div style="display:inline-block; float:right; ">
   <label class="badge"><b>{{badge}}</b></label>
+  <a data-toggle="tooltip" title="Render" (click)="render()"><i class="material-icons">check</i></a>
   <a data-toggle="tooltip" [title]="tooltip"><i class="material-icons" (click)="toggleEditor()" [class.yellow]="viewingUncompiled">visibility</i></a>
   <a data-toggle="tooltip" title="Copy" (click)="showSnackbar()" ngxClipboard [cbContent]="editor.getEditor().getValue()"><i class="material-icons">content_copy</i></a>
-  </div>
+</div>
 </div>
 
 <div style="clear:both;">
-<md-card>
+
   <ace-editor #editor style="height:70vh; width:100%; overflow:auto;"></ace-editor><br/>
   <div class="row">
     <div class="text-center" *ngIf="!viewingUncompiled">
       <button (click)="render()" class="btn btn-primary">Render</button>
     </div>
   </div>
-</md-card>
 </div>
 </div>

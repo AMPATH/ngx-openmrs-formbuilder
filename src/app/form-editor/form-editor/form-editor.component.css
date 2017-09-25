@@ -1,7 +1,7 @@
-.container{
+/* .container{
     margin: auto;
     margin-top: 100px;
-}
+} */
 
 #create-form{
     height: 500px;
@@ -18,9 +18,13 @@ h6{
 .menu{
     flex: 1 1 auto;
 }
-.mat-toolbar{
-    background:#008daf;
+/* .mat-toolbar{
+    background:#337ab7;
 }
+.mat-tab-labels{
+     background-color:#337ab7 !important;
+     
+} */
 .mat-sidenav {
     width:650px;
     background: #fafafa;

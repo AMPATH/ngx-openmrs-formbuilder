@@ -28,7 +28,7 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 	  uuid:string
 	  resource:any[];
 	  disableCanDeactivate:boolean=false;
-	  loading:boolean = true;
+	  loading:boolean;
 
 	  ngAfterViewInit(){
 		  console.log("After view init.");
@@ -56,7 +56,8 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 
 
   ngOnInit(){
-
+	this.loading = true;
+	this.fs.setReferencedFormsArray([]);
 	this.subscription = this.fs.loaded().subscribe((isLoaded) =>{
 		if(isLoaded) this.loading = false;
 	})
@@ -196,7 +197,7 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
   }
 
   alertUser(page){
-	  alert("This form cannot be edited because the following reference element was not properly compiled. \n \n"+ JSON.stringify(page,null,"\t"));
+	  alert("This form cannot be edited because the following reference element was not found. \n \n"+ JSON.stringify(page,null,"\t"));
 	  this.disableCanDeactivate = true;
 	  this.router.navigate(['/forms']);
   }

@@ -63,12 +63,12 @@ export class QuestionControlService {
         this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
         break;
 
-      case "id":
-        options.label = "ID"
-        options.required = true
-        options.placeholder = "Enter unique ID"
-        this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
-        break;
+      // case "id":
+      //   options.label = "ID"
+      //   options.required = true
+      //   options.placeholder = "Enter unique ID"
+      //   this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
+      //   break;
 
 
       case "type":

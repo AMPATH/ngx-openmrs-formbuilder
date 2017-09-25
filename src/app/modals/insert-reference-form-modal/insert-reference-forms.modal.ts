@@ -10,20 +10,7 @@ export interface ReferenceModel {
 @Component({
   selector: 'prompt',
   templateUrl:'./insert-reference-forms.modal.html' ,
-    styles:[`
-.modal-dialog{
-    overflow-y: initial !important
-}
-.modal-body{
-    
-    overflow-y: auto;
-}
-option{
-  padding:10px;
-  border-bottom: 1px solid lightgray;
-}`
-]
-
+  styleUrls:['./insert-reference-forms.modal.css']
 })
 export class  InsertReferenceComponent extends DialogComponent<ReferenceModel, string> implements ReferenceModel,OnInit,AfterViewChecked {
   title: string;
