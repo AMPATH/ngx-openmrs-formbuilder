@@ -2,7 +2,7 @@ import { Component, Input, OnInit,OnDestroy, Output, EventEmitter } from '@angul
 import { ConfirmComponent } from '../../modals/confirm.component';
 import { PromptComponent } from '../../modals/prompt.component';
 import { AlertComponent } from '../../modals/alert.component';
-import { ReferenceModalComponent } from '../../modals/reference-form.modal';
+import { ReferenceModalComponent } from '../../modals/reference-form-modal/reference-form.modal';
 import { FormElementFactory } from '../form-elements/form-element-factory';
 import {FormFactory} from '../form-elements/form-factory.service'
 import { DialogService } from "ng2-bootstrap-modal";
@@ -61,20 +61,8 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
        
 	ngOnInit() {
-		try{
-			let lastPageIndex:number = this._formSchema.pages.length-1;
-			let lastSectionIndex:number = this._formSchema.pages[lastPageIndex].sections.indexOf(this._formSchema.pages[lastPageIndex].sections[this._formSchema.pages[lastPageIndex].sections.length-1]);
-			let lastQuestionIndex:number = this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.indexOf(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.length-1]);
-			if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[lastQuestionIndex]==this.schema){
-				this.fs.setLoaded(true);
-			}
-		}
-	catch(e){
-		console.log(e);
-	}
-		
-		
-		this._count++;
+		this.showSpinner();
+
 		this.subscription = this.fs.getReferencedFormsArray().subscribe((res) => this.referencedForms = res)
 		this.subscription = this.ns.getRawSchema().subscribe(res => this.rawSchema = _.cloneDeep(res));
 		if(this.mode=='edit'){
@@ -708,6 +696,38 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	showNameEditForm(name:string){
 		this.formName = name;
 		this.schema['name'] = ''; 
+	}
+
+	showSpinner(){
+		try{
+			if(!_.isEmpty(this._formSchema.pages)){
+				let lastPageIndex:number = this._formSchema.pages.length-1;
+			if(this._formSchema.pages[lastPageIndex].sections){
+				let lastSectionIndex:number = this._formSchema.pages[lastPageIndex].sections.indexOf(this._formSchema.pages[lastPageIndex].sections[this._formSchema.pages[lastPageIndex].sections.length-1]);
+				if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions){
+					let lastQuestionIndex:number = this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.indexOf(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.length-1]);
+					if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[lastQuestionIndex]==this.schema){
+					this.fs.setLoaded(true);
+			}
+				}
+			else{
+				this.fs.setLoaded(true);
+			}
+			}
+			else{
+				this.fs.setLoaded(true);
+			}
+
+			}
+			else{
+				this.fs.setLoaded(true);
+			}
+			
+			
+		}
+	catch(e){
+		console.error(e);
+	}
 	}
 
 } 

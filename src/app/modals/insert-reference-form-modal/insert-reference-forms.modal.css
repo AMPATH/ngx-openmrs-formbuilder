@@ -1,0 +1,11 @@
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    
+    overflow-y: auto;
+}
+option{
+  padding:10px;
+  border-bottom: 1px solid lightgray;
+}

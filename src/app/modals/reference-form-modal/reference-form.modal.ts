@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
 import { FormGroup,FormControl,FormBuilder,Validators } from '@angular/forms'
-import { FetchFormDetailService } from '../Services/fetch-form-detail.service'
-import { NavigatorModalComponent } from './navigator.modal';
-import {ReferenceForm} from '../form-editor/reference-forms/reference-form-model'
-import {Observable} from 'rxjs'
+import { FetchFormDetailService } from '../../Services/fetch-form-detail.service'
+import { NavigatorModalComponent } from './../navigator.modal';
+import {ReferenceForm} from '../../form-editor/reference-forms/reference-form-model'
+import {Observable} from 'rxjs';
+
 // Observable class extensions
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
@@ -17,31 +18,8 @@ export interface ReferenceFormModalModel {
 
 @Component({
   selector: 'prompt',
-  template: `<div class="modal-dialog">
-                <div class="modal-content">
-                   <div class="modal-header">
-                     <button type="button" class="close" (click)="close()">&times;</button>
-                     <h4 class="modal-title">Search form to ref</h4>
-                   </div>
-                   <div class="modal-body">
-                   <form [formGroup]="form" (keydown)="keyDownFunction($event)"> 
-                   <div class="form-group">
-                   <label for="label">Select Form</label>
-                    <select #selectField id="label" class="form-control" formControlName="selectField" >
-                      
-                      <option *ngFor="let form of refForms" [value]="form.formName">
-                        {{form.formName}}
-                      </option>
-                    </select>
-                    </div>
-                   </form>
-                   </div>
-                   <div class="modal-footer">
-                     <button type="button" class="btn btn-primary" (click)="save(selectField.value)" [disabled]="!form.valid">OK</button>
-                     <button type="button" class="btn btn-default" (click)="close()">Cancel</button>
-                   </div>
-                 </div>
-                </div>`
+  templateUrl:'./reference-form.modal.html',
+  styleUrls:['./reference-form.madal.css']
 })
 export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalModel, string> implements ReferenceFormModalModel,OnInit {
   title: string;
@@ -49,7 +27,8 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
   form:FormGroup;
   formAlias:string; //the form alias selected
   refForms:any[];
-
+  searchValue:string="";
+  filteredForms:Observable<any[]>;
   selectField: FormControl = new FormControl("",Validators.required)
 
   constructor(dialogService: DialogService,private fb:FormBuilder,private fs:FetchFormDetailService) {
@@ -60,7 +39,16 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
   ngOnInit(){
     this.fs.fetchReferencedForms().subscribe((res) =>{
       this.refForms = res;
+    });
+
+    this.filteredForms = this.selectField.valueChanges.map((ref) => {
+      return ref ? this.filter(ref) : [];
     })
+  }
+
+  filter(ref){
+    return this.refForms.filter(form =>
+        form.formName.toLowerCase().indexOf(ref.toLowerCase()) != -1);
   }
 
   save(value) {
@@ -69,12 +57,15 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
       if(form['formName']==value) {
         selectedForm = form
         this.formAlias = form['alias']
-        console.log(this.formAlias);
       }
-    })
+    });
+    if(selectedForm.ref.uuid)
     this.fs.fetchFormMetadata(selectedForm.ref.uuid)
     .then(res => this.fs.fetchForm(res.resources[0].valueReference,true)
     .then(schema => this.showNavigatorDialog(schema,this.refElement,`Select ${this.refElement} to reference`)))
+
+    else
+    console.error("formName is undefined!");
     
   }
 
@@ -98,8 +89,21 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
   }
   
   keyDownFunction($event){
+    //validate!
     if($event.keyCode==13&&this.form.valid)
-        this.save(this.selectField.value);
+       this.save(this.selectField.value);
+  }
+
+  filterForms(searchString:string){
+    searchString = searchString.toLowerCase();
+    return this.refForms.filter((form) => {
+       form.name.toLowerCase().indexOf(searchString) != -1
+         
+    });
   }
   
+  typeaheadOnSelect(e){
+    this.save(e.value);
+  }
+
 }

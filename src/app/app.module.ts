@@ -7,18 +7,20 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { AppRoutingModule } from './app-routing.module';
 import { FormEditorModule } from './form-editor/form-editor/form-editor.module';
 import {AuthenticationModule} from './authentication/authentication.module';
+import { TypeaheadModule } from 'ngx-bootstrap';
 import 'hammerjs';
+
 
 
 import { AppComponent } from './app.component';
 import { ConfirmComponent } from './modals/confirm.component';
 import { AlertComponent } from './modals/alert.component';
-import {  InsertReferenceComponent }  from './modals/insert-reference-forms.modal';
+import {  InsertReferenceComponent }  from './modals//insert-reference-form-modal/insert-reference-forms.modal';
 import { SchemaModalComponent  } from './modals/schema-editor.modal';
 import { PromptComponent } from './modals/prompt.component';
-import { AnswersComponent } from './modals/answers.modal';
+import { AnswersComponent } from './modals/answers-modal/answers.modal';
 import { ConceptsModalComponent } from './modals/concept.modal';
-import { ReferenceModalComponent } from './modals/reference-form.modal';
+import { ReferenceModalComponent } from './modals/reference-form-modal/reference-form.modal';
 import { NavigatorModalComponent } from './modals/navigator.modal';
 import { ViewFormsComponent } from './view-forms/view-forms.component';
 import { LoginComponent } from './login/login.component';
@@ -52,6 +54,7 @@ import {SearchFormFilterPipe} from './pipes/search-form-filter.pipe';
     FormEditorModule,
     AppRoutingModule,
     AuthenticationModule,
+    TypeaheadModule.forRoot()
   ],
   entryComponents: [ConfirmComponent,
      AlertComponent,

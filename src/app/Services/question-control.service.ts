@@ -63,12 +63,12 @@ export class QuestionControlService {
         this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
         break;
 
-      case "id":
-        options.label = "ID"
-        options.required = true
-        options.placeholder = "Enter unique ID"
-        this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
-        break;
+      // case "id":
+      //   options.label = "ID"
+      //   options.required = true
+      //   options.placeholder = "Enter unique ID"
+      //   this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
+      //   break;
 
 
       case "type":
@@ -187,11 +187,16 @@ export class QuestionControlService {
 
 
       case "questionOptions.concept":
-        options.label = "Concept"
+        options.label = "Concept";
         this.propertyModels.push(this.propertyFactory.createProperty('searchbox', options));
         break;
 
-
+      case "calculatedExpressions":
+        options.label = "Calculated Expressions";
+        options.rows = 3;
+        this.propertyModels.push(this.propertyFactory.createProperty('textarea', options));
+        break;
+        
       case "default":
         options.label = "Default"
         this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));

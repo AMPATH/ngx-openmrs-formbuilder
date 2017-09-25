@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {ConceptService} from '../../Services/concept.service';
 import {DialogService} from "ng2-bootstrap-modal";
-import {AnswersComponent} from "../../modals/answers.modal";
+import {AnswersComponent} from "../../modals/answers-modal/answers.modal";
 import { FormGroup,FormBuilder,FormControl } from '@angular/forms';
 import {ConceptsModalComponent} from '../../modals/concept.modal';
 import {ElementEditorService} from '../../Services/element-editor.service';

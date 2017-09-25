@@ -10,7 +10,7 @@ import { AuthenticationService } from '../Services/authentication.service';
 })
 export class ViewFormsComponent implements OnInit {
 
-  forms:Array<any> = [];
+  forms:Array<any>=[];
   page: number = 1; //pagination
   loggingOut:boolean=false;
   searchValue:string="";
@@ -21,15 +21,17 @@ export class ViewFormsComponent implements OnInit {
 
  
   ngOnInit(){
+
 	  this.fetchAllFormsService.fetchAllPOCForms().subscribe(forms =>{
     let f = forms.results;
+
     f.forEach((form,index) =>{
       this.fetchFormDetailService.fetchFormMetadata(form.uuid).then(res =>{
         if(!form.resources[0]) {f.splice(index,1)}
       })
     })
     this.forms = f;
-    })
+    });
 
   
   }

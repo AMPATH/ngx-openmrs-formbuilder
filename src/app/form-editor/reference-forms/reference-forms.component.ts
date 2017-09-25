@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { InsertReferenceComponent } from '../../modals/insert-reference-forms.modal';
+import { InsertReferenceComponent } from '../../modals/insert-reference-form-modal/insert-reference-forms.modal';
 import { FetchAllFormsService } from '../../Services/fetch-all-forms.service';
 import { DialogService } from 'ng2-bootstrap-modal';
 import {NavigatorService} from '../../Services/navigator.service';
