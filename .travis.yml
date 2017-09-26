@@ -11,7 +11,7 @@ before_install:
 - npm i -g npm@^3
 - npm i -g brfs
 script:
-- npm run build:docker
+- npm run build
 sudo: required
 addons:
   apt:
