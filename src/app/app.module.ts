@@ -24,9 +24,11 @@ import { ReferenceModalComponent } from './modals/reference-form-modal/reference
 import { NavigatorModalComponent } from './modals/navigator.modal';
 import { ViewFormsComponent } from './view-forms/view-forms.component';
 import { LoginComponent } from './login/login.component';
+import {SnackbarComponent} from './form-editor/snackbar/snackbar.component'
 
 import {AuthGuardService} from './Services/auth-guard.service';
 import {SearchFormFilterPipe} from './pipes/search-form-filter.pipe';
+import { SetMembersModalComponent } from './modals/set-members-modal/set-members-modal.component'; 
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +43,9 @@ import {SearchFormFilterPipe} from './pipes/search-form-filter.pipe';
     InsertReferenceComponent,
     SchemaModalComponent,
     LoginComponent,
-    SearchFormFilterPipe
+    SearchFormFilterPipe,
+    SetMembersModalComponent,
+    SnackbarComponent
   ],
 
 
@@ -64,7 +68,9 @@ import {SearchFormFilterPipe} from './pipes/search-form-filter.pipe';
      ReferenceModalComponent, 
      NavigatorModalComponent,
      InsertReferenceComponent,
-     SchemaModalComponent ],
+     SchemaModalComponent,
+     SetMembersModalComponent,
+     SnackbarComponent],
 
   providers:[AuthGuardService],
   

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input,Output, EventEmitter} from '@angular/core';
 import {PropertyModel} from '.././models/property-model';
 import {FormGroup, FormArray, FormControl} from '@angular/forms';
 import {QuestionControlService} from '../../Services/question-control.service';
@@ -8,6 +8,8 @@ import {FormElementFactory} from '.././form-elements/form-element-factory';
 import {AlertComponent} from '../../modals/alert.component'
 import { DialogService } from "ng2-bootstrap-modal";
 import {ElementEditorService} from '../../Services/element-editor.service';
+import {Question} from '../form-elements/Question';
+import {SchemaModalComponent} from '../../modals/schema-editor.modal';
 import * as _ from "lodash";
 
 @Component({
@@ -20,12 +22,13 @@ export class ElementEditorComponent implements OnInit {
   _rawSchema: any;
   _schema:any
   form: FormGroup;
+  setMembers:any[] = [];
   @Input() pageIndex: number;
   @Input() sectionIndex: number;
   @Input() questionIndex:number;  //if editMode or addMode obsGroup Question
   @Input() parentQuestionIndex:number;
   @Input() set rawSchema(rawSchema){this._rawSchema=_.cloneDeep(rawSchema)}; //if edit obsGroup question
- 
+  @Output() closeComponent:EventEmitter<boolean>=new EventEmitter(); 
   pageStr: string;
   sectionStr: string;
   questionStr: string;
@@ -49,7 +52,6 @@ export class ElementEditorComponent implements OnInit {
   }
   
   @Input() set _questions(questions){
-    console.log(questions)
     this.questions = questions
     this.form = this.qcs.toFormGroup(this.questions);
     this.setMode(this.form)
@@ -60,11 +62,32 @@ export class ElementEditorComponent implements OnInit {
   
   ngOnInit() {
       this.form = this.qcs.toFormGroup(this.questions);
-      this.setMode(this.form)
+      this.setMode(this.form);
       this.allPossibleproperties = this.qcs.getAllPossibleProperties();
       this.breadcrumbsSetup();
      
-      console.log(this.pageIndex,this.sectionIndex,this.questionIndex)
+      this.el.getSetMembers().subscribe((setMembers) => {
+        this.setMembers=[];
+        setMembers.forEach((setMember) =>{
+          let rendering="text";
+          if(setMember.answers.length>0) {rendering="select"}
+          let question:Question = {
+            label: setMember.label,
+            type:'obs',
+            id:'',
+            questionOptions:{
+              rendering:rendering,
+            }
+
+          }
+          question.questionOptions['concept']=setMember.concept;
+          if(!_.isEmpty(setMember.answers)) question.questionOptions['answers']=setMember.answers;
+          this.form.controls['type'].setValue('obsGroup');
+          this.setMembers.push(question);
+        });
+       
+
+      });
   }
 
 
@@ -95,7 +118,7 @@ export class ElementEditorComponent implements OnInit {
     let question = this.qcs.unflatten(this.form.value);
 
     if(question['type']=="obsGroup"){
-      question['questions']=[]
+      question['questions']=this.setMembers;
     }
 
     if(question['validators']){
@@ -255,8 +278,8 @@ export class ElementEditorComponent implements OnInit {
     }
     this.ns.setSchema(this._schema);
     this.ns.setRawSchema(this._rawSchema)
-    this.form.reset()
-    
+    this.form.reset();
+    this.closeElementEditor();
   }
 
 
@@ -325,4 +348,17 @@ export class ElementEditorComponent implements OnInit {
     if(this.answers!=undefined) this.el.reShowAnswersDialog(this.answers);
     else this.el.reShowAnswersDialog(JSON.parse(this.form.controls['questionOptions.answers'].value));
   }
+
+  closeElementEditor(){
+    this.closeComponent.emit(true);
+  }
+
+  viewSetMembers(){
+    this.dialogService.addDialog(SchemaModalComponent,{schema:JSON.stringify(this.setMembers,null,4),title:"Set Members Schema"});
+  }
+
+  reselectSetMembers(){
+    this.el.reShowSetMembersDialog(this.setMembers);
+  }
 }
+    

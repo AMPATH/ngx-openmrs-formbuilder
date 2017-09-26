@@ -55,9 +55,20 @@ a{
 
 .loader {
   position: absolute;
-  left: 25%;
-  top: 20%;
+  left: 30%;
+  top: 25%;
   margin-left: -32px; /* -1 * image width / 2 */
   margin-top: -32px; /* -1 * image height / 2 */
   
+}
+
+.element-editor{
+    margin:auto;
+    width:750px;
+    height:95vh;
+}
+
+.schema-editor{
+    margin:auto;
+    /* width:1600px; */
 }

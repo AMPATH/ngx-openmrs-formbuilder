@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, OnDestroy,AfterViewInit, AfterContentInit } from '@angular/core';
+import {SnackbarComponent} from '../snackbar/snackbar.component';
 import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
 import { NavigatorService } from '../../Services/navigator.service';
 import { QuestionIdService } from '../../Services/question-id.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
+import { MdSnackBar} from '@angular/material';
 import { DialogService } from 'ng2-bootstrap-modal';
 import {Form} from '../form-elements/Form';
 @Component({
@@ -39,7 +41,7 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 		  console.log("After content init. ")
 	  }
    @ViewChild('sidenav') public myNav;
-  constructor( private fs: FetchFormDetailService, private  ns: NavigatorService, private router:Router, private route:ActivatedRoute,public dialogService:DialogService){
+  constructor( private fs: FetchFormDetailService, private  ns: NavigatorService,public snackbar:MdSnackBar, private router:Router, private route:ActivatedRoute,public dialogService:DialogService){
   }
 
   closeElementEditor(){
@@ -69,8 +71,12 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 				console.log(metadata.resources)
 				this.fetchForm(metadata.resources[0].valueReference)
 			})
-			.catch(e => alert("Form not found!"))
-		}
+			.catch(e => {
+				this.loading = false;
+				alert("Check your internet connection then refresh.");
+			}
+				
+			)}
 
 		else{
 			this.createNewForm();
@@ -107,6 +113,7 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 		  
 		  this.schema = res;
 		  this.strSchema = JSON.stringify(this.schema,null,'\t');
+		  this.showSnackbar();
 	  }
 
    
@@ -143,6 +150,9 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 
 		
 		}) 
+		.catch((error)=>{
+			this.loading=false;
+		})
 		
   }
 
@@ -203,6 +213,9 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
   }
 
 
+  showSnackbar(){
+	this.snackbar.openFromComponent(SnackbarComponent,{duration:1500,});
+}
 
 
 }

@@ -1,5 +1,5 @@
 <div *ngIf="loading" id="loadingDiv">
-  <img class="loader" src="../../../assets/loader.gif">
+  <img class="loader" src="./assets/loader.gif">
   
 </div>
 <div *ngIf="schema">
@@ -21,22 +21,25 @@
       <div class="app-content" *ngIf="schema">
 
         
-<md-tab-group md-stretch-tabs>
+<md-tab-group md-stretch-tabs class="schema-editor">
  
  <!--Element Editor-->
-           <md-tab *ngIf="questions" label="Element Editor">
-             
-            <md-card>
-<a (click)="closeElementEditor()" data-toggle="tooltip" title="close" class="pull-right" style="margin-right:5px; padding-top:5px; cursor:pointer;"><i class="material-icons">close</i></a>
+           <md-tab *ngIf="questions" label="Element Editor" >
+              <ng-template md-tab-label>
+                  Question Editor
+<a (click)="closeElementEditor()" data-toggle="tooltip" title="close tab" class="pull-right" style="margin-right:25px; padding-top:5px; cursor:pointer;"><i class="material-icons" >highlight_off</i></a>
+                </ng-template>
+                
+            <md-card class="element-editor">
               <app-element-editor [schema]="schema" [pageIndex]="page" [sectionIndex]="section" [questionIndex]="question" [parentQuestionIndex]="parentQuestionIndex"
-                [_questions]="questions" [rawSchema]="rawSchema"></app-element-editor>
+                [_questions]="questions" [rawSchema]="rawSchema" (closeComponent)="closeElementEditor()"></app-element-editor>
             </md-card>
   </md-tab>
             
   
           <!--Schema editor-->
            <md-tab label="Schema Editor">
-             <md-card>
+             <md-card class="schema-editor">
                <app-schema-editor [selectedSchema]="selectedSchema" [selectedRawSchema]="selectedRawSchema" [schema]="strSchema" [rawSchema]="strRawSchema"></app-schema-editor>
              </md-card>
 
@@ -45,7 +48,7 @@
   
           <!--Form-renderer-->
           <md-tab label="Form Viewer">
-            <md-card>
+            <md-card class="schema-editor">
             <app-form-renderer [schema]="schema"></app-form-renderer>
             </md-card>
           </md-tab>

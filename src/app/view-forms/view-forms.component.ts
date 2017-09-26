@@ -14,7 +14,7 @@ export class ViewFormsComponent implements OnInit {
   page: number = 1; //pagination
   loggingOut:boolean=false;
   searchValue:string="";
-
+  loadingMessage:string="Loading Forms...";
 
   constructor(private fetchAllFormsService:FetchAllFormsService,private router:Router,
     private fetchFormDetailService:FetchFormDetailService,private auth:AuthenticationService) { }
@@ -24,13 +24,13 @@ export class ViewFormsComponent implements OnInit {
 
 	  this.fetchAllFormsService.fetchAllPOCForms().subscribe(forms =>{
     let f = forms.results;
-
     f.forEach((form,index) =>{
       this.fetchFormDetailService.fetchFormMetadata(form.uuid).then(res =>{
         if(!form.resources[0]) {f.splice(index,1)}
       })
     })
     this.forms = f;
+    if(this.forms.length==0) this.loadingMessage ="No forms to display"
     });
 
   
