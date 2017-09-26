@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 export class ElementEditorService {
 
   private previouslySelectAnswers:Subject<Object> = new Subject();
+  private setMembersSubject:Subject<any[]> = new Subject();
+  private reshowSetMembers:Subject<any[]>=new Subject();
   constructor() { }
 
   reShowAnswersDialog(previouslySelected:any){
@@ -15,5 +17,20 @@ export class ElementEditorService {
     return this.previouslySelectAnswers.asObservable();
   }
   
+  setMembers(setMembers:any[]){
+    this.setMembersSubject.next(setMembers);
+  }
+
+  getSetMembers(){
+    return this.setMembersSubject.asObservable();
+  }
+
+  reShowSetMembersDialog(setMembers:any[]){
+    this.reshowSetMembers.next(setMembers);
+  }
+
+  reselectSetMembers(){
+    return this.reshowSetMembers.asObservable();
+  }
 
 }

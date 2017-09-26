@@ -5,6 +5,7 @@ import {FormSchemaCompiler} from 'ng2-openmrs-formentry';
 import {NavigatorService} from './navigator.service';
 import {SessionStorageService} from './session-storage.service';
 import {Constants} from './constants';
+import {Router} from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';
@@ -20,19 +21,23 @@ export class FetchFormDetailService {
   private headers:Headers=new Headers();
   private baseUrl:string=''
   private formEditorLoaded:BehaviorSubject<boolean> = new BehaviorSubject(false);
+  private credentials:string;
 
-  constructor(private http: Http,private fsc:FormSchemaCompiler,private ns:NavigatorService,private sessionStorageService:SessionStorageService)
+  constructor(private http: Http,private fsc:FormSchemaCompiler,private router:Router,private ns:NavigatorService,private sessionStorageService:SessionStorageService)
    { 
-     let credentials = sessionStorageService.getItem(Constants.CREDENTIALS_KEY);
+     this.credentials = sessionStorageService.getItem(Constants.CREDENTIALS_KEY);
      this.baseUrl = sessionStorage.getItem(Constants.BASE_URL)
-     this.headers.append("Authorization", "Basic " + credentials);
+     this.headers.append("Authorization", "Basic " + this.credentials);
      this.headers.append("Content-Type", "application/json");
    }
 
 
 
   public fetchFormMetadata(uuid:string){
-   return this.http.get(`${this.baseUrl}/ws/rest/v1/form/${uuid}?v=full`)
+  if(this.baseUrl==null||this.credentials==null){
+    this.router.navigate(['/login']);
+  }
+  else return this.http.get(`${this.baseUrl}/ws/rest/v1/form/${uuid}?v=full`)
    .map(metadata => metadata.json())
    .catch(error => {
      console.log("Error:"+error)

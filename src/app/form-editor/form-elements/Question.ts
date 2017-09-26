@@ -1,9 +1,15 @@
-import {FormElement} from './FormElement'
+import {FormElement} from './FormElement';
+interface QuestionOptions{
+    rendering:string;
+    
+}
 export class Question extends FormElement{
 
-        
+        id:string='';
         type: string;
-        questionOptions={rendering:''};
+        questionOptions:QuestionOptions=
+        {rendering:''
+        };
        
 
     constructor(options:{}={}){

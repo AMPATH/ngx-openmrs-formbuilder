@@ -61,8 +61,11 @@
                               </tr>
                             </tbody>
 
-                      <tbody *ngIf="!forms">
-                        <td>No forms to display</td>
+                      <tbody *ngIf="forms.length==0">
+                        <td>{{loadingMessage}}</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
                       </tbody>
                     </table>
                 

@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { FetchFormsService } from './fetch-form-detail.service';
+import { FetchFormDetailService } from './fetch-form-detail.service';
 
 describe('FetchFormsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [FetchFormsService]
+      providers: [FetchFormDetailService]
     });
   });
 
-  it('should be created', inject([FetchFormsService], (service: FetchFormsService) => {
+  it('should be created', inject([FetchFormDetailService], (service: FetchFormDetailService) => {
     expect(service).toBeTruthy();
   }));
 });

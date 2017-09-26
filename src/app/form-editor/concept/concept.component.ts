@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
 import {ConceptService} from '../../Services/concept.service';
 import {DialogService} from "ng2-bootstrap-modal";
 import {AnswersComponent} from "../../modals/answers-modal/answers.modal";
 import { FormGroup,FormBuilder,FormControl } from '@angular/forms';
-import {ConceptsModalComponent} from '../../modals/concept.modal';
+import { ConceptsModalComponent } from '../../modals/concept.modal';
+import { SetMembersModalComponent } from '../../modals/set-members-modal/set-members-modal.component'
 import {ElementEditorService} from '../../Services/element-editor.service';
 import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
@@ -12,7 +13,7 @@ import {Subscription} from 'rxjs/Subscription';
   templateUrl: './concept.component.html',
   styleUrls: ['./concept.component.css']
 })
-export class ConceptComponent implements OnInit{
+export class ConceptComponent implements OnInit,OnDestroy{
 private subscription:Subscription;
 @Input() question:any; 
 @Input() form:FormGroup;
@@ -21,13 +22,14 @@ searching:boolean=false;
 
 searchResult:any;
 allAvailableAnswers:Array<any>; //after search result
+allAvailableSetMembers:Array<any>;
 previousSelectedAnswersIndexes:number[] = [];
 
 
   constructor(private cs:ConceptService,private dialogService:DialogService,private fb:FormBuilder,private el:ElementEditorService) { }
 
   ngOnInit() {
-    this.el.reselectAnswers().subscribe((res) => {
+   this.subscription = this.el.reselectAnswers().subscribe((res) => {
       
       if(this.allAvailableAnswers!=undefined) {
         
@@ -39,6 +41,12 @@ previousSelectedAnswersIndexes:number[] = [];
       }
       
     });
+
+
+    this.subscription = this.el.reselectSetMembers().subscribe((res) =>{
+      //set res to be checked
+      this.showSetMembersDialog(this.allAvailableSetMembers);
+    })
   }
 
 
@@ -71,7 +79,7 @@ else{
 
 getAnswers(conceptID){
 
-  this.cs.searchConceptByUUID(conceptID).subscribe(
+ this.subscription = this.cs.searchConceptByUUID(conceptID).subscribe(
     res => {
      
     if(res.answers&&res.answers.length > 0) {
@@ -85,29 +93,53 @@ this.setSelectedAnswers([]);
 
 }
 
-showConceptsDialog(searchResults){
+showConceptsDialog(searchResults:any[]){
+  console.log(searchResults);
    this.dialogService.addDialog(ConceptsModalComponent, {
-     concepts:searchResults
+     concepts:searchResults,title:"Concepts"
     }, { backdropColor: 'rgba(255, 255, 255, 0.5)' })
      .subscribe((formValue)=>{
        if(formValue){
          this.setFormControlValue(formValue);
-         this.getAnswers(formValue['concept']);
+         searchResults.forEach((concept) =>{
+
+          if(formValue['concept']==concept.uuid){
+            if(concept.answers.length>0){
+              this.emitSetMembers([]);
+              this.allAvailableAnswers = concept.answers;
+              this.showAnswersDialog(this.allAvailableAnswers);
+            }
+
+            if(concept.setMembers.length>0){
+              this.allAvailableSetMembers = concept.setMembers;
+              this.showSetMembersDialog(this.allAvailableSetMembers);
+            }
+
+          }
+         });
    }});
   }
 
 
 
   showAnswersDialog(results){
-     this.dialogService.addDialog(AnswersComponent, {
+    this.subscription = this.dialogService.addDialog(AnswersComponent, {
       answers:results
      }, { backdropColor: 'rgba(255, 255, 255, 0.5)' })
       .subscribe((formValue)=>{
-        if(formValue)
-          this.setSelectedAnswers(formValue)
+        if(formValue) this.setSelectedAnswers(formValue);
       });
   }
 
+  showSetMembersDialog(setMembers){
+   this.subscription = this.dialogService.addDialog(SetMembersModalComponent, {
+      setMembers:setMembers
+     }, { backdropColor: 'rgba(255, 255, 255, 0.5)' })
+      .subscribe((formValue)=>{
+        if(formValue)
+          this.emitSetMembers(JSON.parse(formValue));
+      });
+  }
   setSelectedAnswers(obj){
    let answers = []
    
@@ -145,4 +177,11 @@ showConceptsDialog(searchResults){
       return indexes;
   }
 
+  emitSetMembers(setMembers:any[]){
+    this.el.setMembers(setMembers);
+  }
+
+  ngOnDestroy(){
+    this.subscription.unsubscribe();
+  }
 }

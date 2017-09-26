@@ -2,10 +2,13 @@
     <div class="modal-content">
          <div class="modal-header">
             <button class="close" type="button" (click)="close()">&times;</button>
-                <div class="pull-right">
-                        <label for="primary" class="btn btn-primary">Select All<input (change)="selectAll($event)" type="checkbox" id="primary" class="badgebox"><span class="badge"><i class="fa fa-check"></i></span></label>
+                
+                <div style="display:inline-block;">
+                    <h4 class="modal-title">Answers</h4>
                     </div>
-                <h4 class="modal-title">Answers</h4>
+                    <div style="display:inline-block; margin-left:10px;">
+                  <label for="primary" class="btn btn-primary">Select All<input (change)="selectAll($event)" type="checkbox" id="primary" class="badgebox"><span class="badge"><i class="fa fa-check"></i></span></label>
+              </div>
             </div>
             <div class="modal-body">
                 <form #answersForm="ngForm" (ngSubmit)="save(answersForm.value)">   

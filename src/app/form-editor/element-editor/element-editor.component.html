@@ -1,6 +1,10 @@
 <div class="text-center" style="background:white;">
-    <div style="background-color:#ebebeb; padding:5px 0px 10px 0px">
-        Element Editor
+    <div style="background-color:#ebebeb;">
+            <ol class="breadcrumb">
+                    <li>{{pageStr}}</li>
+                    <li>{{sectionStr}}</li>
+                    <li>{{questionStr}}</li>
+                </ol>
     </div>
    
 </div>
@@ -9,22 +13,11 @@
 <div *ngIf="questions" >
     <md-card>
 
-        <!--breadcrumbs-->
-        <br/>
-        <div class="center-block">
-            <ol class="breadcrumb">
-                <li>{{pageStr}}</li>
-                <li>{{sectionStr}}</li>
-                <li>{{questionStr}}</li>
-            </ol>
-        </div>
-
-        <!--breadcrumbs-->
-
         <!--add property-->
 
-        <div class="dropdown pull-right">
-            <a class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-plus" aria-hidden="true"></i> Add Property
+        <div class="pull-right">
+        <div class="dropdown" style="display:inline-block">
+            <a class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add Property
   <span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li (click)="addProperty(prop.parentPath)" value="prop.path" *ngFor="let prop of allPossibleproperties">
@@ -33,8 +26,25 @@
 
             </ul>
         </div>
+            <div *ngIf="setMembers.length>0" class="dropdown" style="display:inline-block">
+            <a class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown"> Set Members
+                <span class="caret"></span></a>
+                          <ul class="dropdown-menu">
+                              <li>
+                                  <a (click)="viewSetMembers()"><i class="fa fa-eye" aria-hidden="true"></i> View Set Members</a>
+                              </li>
 
-        <!--add property-->
+                              <li>
+                                  <a (click)="reselectSetMembers()"><i class="fa fa-refresh"></i> Reselect Set Members</a>
+                              </li>
+              
+                          </ul>
+                          </div>
+
+        </div>
+
+          
+      
 
         <div *ngIf="form" style="clear:both;">
             <!--form for adding a question-->
