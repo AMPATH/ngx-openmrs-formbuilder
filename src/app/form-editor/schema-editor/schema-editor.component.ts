@@ -25,7 +25,7 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
    private _selectedSchemaObj:any;
    private _rawSchema:string;
    private _selectedRawSchema:Object;
-   formSchema:any; //full form schema
+   private _formSchema:any; //full form schema
    pageIndex:number;
    sectionIndex:number;
    questionIndex:number;
@@ -61,7 +61,7 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
    @Input()
    set selectedSchema(newSchema:any){
      this._selectedSchemaObj = newSchema;
-     if(this._selectedSchemaObj.pages) this.formSchema = this._selectedSchemaObj
+     if(this._selectedSchemaObj.pages) this._formSchema = this._selectedSchemaObj
      if(this._selectedSchemaObj.hasOwnProperty('selectedSchema')) {
        
        this.pageIndex = this._selectedSchemaObj['pageIndex'];
@@ -70,6 +70,9 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
      }
    }
 
+   @Input() set $formSchema(schema:any){
+     this._formSchema = schema;
+   }
   constructor(private ns:NavigatorService,public snackbar:MdSnackBar,private fsc:FormSchemaCompiler,private fs:FetchFormDetailService) {
     
    }
@@ -99,16 +102,16 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
     }
 
     else if(editedSchema.sections){
-      this.formSchema.pages[this.pageIndex]= editedSchema;
+      this._formSchema.pages[this.pageIndex]= editedSchema;
     }
 
     else if(editedSchema.questions){
-      this.formSchema.pages[this.pageIndex].sections[this.sectionIndex] = editedSchema
+      this._formSchema.pages[this.pageIndex].sections[this.sectionIndex] = editedSchema
     }
     else{
-      this.formSchema.pages[this.pageIndex].sections[this.sectionIndex].questions[this.questionIndex] = editedSchema
+      this._formSchema.pages[this.pageIndex].sections[this.sectionIndex].questions[this.questionIndex] = editedSchema
     }
-    this.ns.setSchema(this.formSchema)
+    this.ns.setSchema(this._formSchema)
     return;
   }
 
@@ -143,6 +146,13 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
      this.editor.getEditor().setOptions({readOnly:false})
      this.editor.getEditor().scrollToLine(0);
     }
+    
+  }
+
+
+  viewFullSchema(){
+    this.editor.setText(JSON.stringify(this._formSchema,null,"\t"));
+    this._schema = JSON.stringify(this._formSchema,null,"\t");
     
   }
 }

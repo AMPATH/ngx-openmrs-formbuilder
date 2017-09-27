@@ -12,7 +12,8 @@ export class DynamicQuestionComponent implements OnInit {
   @Input() question: PropertyModel<any>;
   @Output() answers = new EventEmitter<any>();
   @Output() type = new EventEmitter<string>();
-  
+  @Output() rendering = new EventEmitter<string>();
+  @Output() showDate = new EventEmitter<boolean>();
  
  
 
@@ -34,6 +35,16 @@ export class DynamicQuestionComponent implements OnInit {
     if(selectBox=='type'){
       let value = this.form.controls['type'].value;
       this.type.emit(value);
+    }
+
+    if(selectBox=='questionOptions.rendering'){
+      let value = this.form.controls['questionOptions.rendering'].value;
+      this.rendering.emit(value);
+    }
+
+    if(selectBox=='questionOptions.showDate'){
+      let value = this.form.controls['questionOptions.showDate'].value;
+      this.showDate.emit(value);
     }
   }
 

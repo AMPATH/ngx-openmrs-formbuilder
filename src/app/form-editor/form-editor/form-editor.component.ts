@@ -135,7 +135,6 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
   fetchForm(value){
 
    this.fs.fetchForm(value,false).then(res => {
-	console.log("fetching form")
 		//	this.fs.getReferencedFormsArray().subscribe(res => console.log("REFERENCE FORM",res));
 
 			if(this.checkIfSchemaProperlyCompiled(res.pages)){
@@ -143,7 +142,6 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 				this.schema = res;
 				this.strSchema = JSON.stringify(this.schema,null,'\t');
 				this.rawSchema = this.fs.rawSchema;
-				console.log(this.rawSchema);
 				this.ns.setRawSchema(this.rawSchema)
 				this.strRawSchema = JSON.stringify(this.rawSchema,null,"\t");
 			}
@@ -185,11 +183,12 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
   checkIfSchemaProperlyCompiled(elements):boolean{
 	
 	let bool = true;
-
+	let ets = [];
 	elements.forEach((element)=>{
 
 		if(!element.label){
-			this.alertUser(element);
+			this.loading = false;
+			ets.push(element);
 			bool = false;
 			return bool;
 		}
@@ -201,13 +200,17 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 				this.checkIfSchemaProperlyCompiled(element.questions);
 			}
 		}
-	})
+	});
 
+	if(ets.length>0){
+		
+		this.alertUser(ets);
+	}
 	return bool;
   }
 
-  alertUser(page){
-	  alert("This form cannot be edited because the following reference element was not found. \n \n"+ JSON.stringify(page,null,"\t"));
+  alertUser(elements){
+	  alert("This form cannot be edited because the some referenced elements was not found. Please check the respective components if these elements exist then retry \n \n"+ JSON.stringify(elements,null,2));
 	  this.disableCanDeactivate = true;
 	  this.router.navigate(['/forms']);
   }

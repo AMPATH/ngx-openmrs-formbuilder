@@ -4,7 +4,8 @@
 <div style="display:inline-block; float:right; ">
   <label class="badge"><b>{{badge}}</b></label>
   <a data-toggle="tooltip" title="Render" (click)="render()"><i class="material-icons">check</i></a>
-  <a data-toggle="tooltip" [title]="tooltip"><i class="material-icons" (click)="toggleEditor()" [class.yellow]="viewingUncompiled">visibility</i></a>
+  <a data-toggle="tooltip" title="View Full Schema" (click)="viewFullSchema()"><i class="material-icons">code</i></a> 
+  <a data-toggle="tooltip" [title]="tooltip"><i class="material-icons" (click)="toggleEditor()" [class.yellow]="viewingUncompiled">visibility</i></a> 
   <a data-toggle="tooltip" title="Copy" (click)="showSnackbar()" ngxClipboard [cbContent]="editor.getEditor().getValue()"><i class="material-icons">content_copy</i></a>
 </div>
 </div>

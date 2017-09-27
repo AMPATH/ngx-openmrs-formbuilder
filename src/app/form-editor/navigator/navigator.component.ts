@@ -297,7 +297,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		this._formSchema.pages.push(newPage);
 		this.ns.setSchema(this._formSchema);
 		this.ns.setRawSchema(this.rawSchema);
-		console.log(this._formSchema);
+		this.onClicked(newPage);
 		}
 		else this.showAlertDialog("Page already exists! \n Try creating one with a different label!");
 	}
@@ -308,6 +308,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		this.rawSchema.pages[pageIndex].sections.push(newSection);
 		this.setSchema(this._formSchema);
 		this.setRawSchema(this.rawSchema);
+		this.onClicked(newSection,pageIndex);
 	}
 
 
@@ -480,12 +481,12 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			formProps['pages'].push(obj)
 			
 			obj=JSON.stringify(obj)
-			for(var page in this.rawSchema.pages){
-				if(!_.isEqual(obj,page)){
+		
+				
 					this.rawSchema.pages.push(JSON.parse(obj));
-					break;
-				}
-			}
+					
+				
+			
 			
 		}
 		
@@ -503,7 +504,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 				this.setRawSchema(this.rawSchema);
 				
 				
-			}})
+			}});
 		
 		
 		

@@ -40,8 +40,6 @@ export class PropertyModel<T>{
     {name:"required",parentPath:'required',type:"any"},
     {name:"historical expression",parentPath:'historicalExpression',type:"obs"},
     {name:"hide",parentPath:'hide',type:"any"},
-    //{name:"show Date",path:'show Date',type:"any"},
-    //{name:"show Weeks",path:'show Weeks',type:"any"},
     {name:"orderSettingUuid", parentPath:'questionOptions.orderSettingUuid', type:'testOrder'},
     {name:"orderType", parentPath: 'questionOptions.orderSettingUuid', type: 'testOrder'},
     {name:"calculatedExpressions", parentPath:"calculatedExpressions", type:'testOrder'}

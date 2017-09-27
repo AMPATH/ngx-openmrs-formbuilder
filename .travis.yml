@@ -19,8 +19,8 @@ addons:
     - sshpass
     - google-chrome-stable
 after_success:
-- mv dist $TRAVIS_BRANCH
-- tar -czf build.tgz $TRAVIS_BRANCH
+- mv dist "fb-${TRAVIS_BRANCH}"
+- tar -czf build.tgz "fb-${TRAVIS_BRANCH}"
 - export SSHPASS=$DEPLOY_PASS
 - sshpass -e scp -o stricthostkeychecking=no build.tgz $DEPLOY_USER@$DEPLOY_HOST:./
 - sshpass -e ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST ./deploy-build.sh

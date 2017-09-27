@@ -76,3 +76,11 @@
 .navbar-btn{
   margin: 5px 5px 0px 5px;
 }
+
+.btn.btn-circle { border-radius: 5px; }
+.btn-create{ color: #1AC91A}
+/* .navbar-nav.navbar-right .btn:not(.collapsed) {
+    background-color: rgb(111, 84, 153);
+    border-color: rgb(111, 84, 153);
+    color: rgb(255, 255, 255);
+} */
