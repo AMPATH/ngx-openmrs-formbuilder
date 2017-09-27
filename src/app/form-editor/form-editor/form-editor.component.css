@@ -51,6 +51,7 @@ a{
     
   height: 400px;
   position: relative;
+  background: transparent;
 }
 
 .loader {
@@ -64,8 +65,8 @@ a{
 
 .element-editor{
     margin:auto;
-    width:750px;
-    height:95vh;
+    min-width:750px;
+    min-height:95vh;
 }
 
 .schema-editor{

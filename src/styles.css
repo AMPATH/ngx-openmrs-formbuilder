@@ -9,3 +9,6 @@
     /* height: fill-available !important; */
     overflow-x:hidden !important;
 } 
+body{
+    background: #f9fafc;
+}

@@ -133,6 +133,10 @@ export class ElementEditorComponent implements OnInit {
       question.questionOptions['answers']=this.parse(this.form.controls['questionOptions.answers'].value);
     }
 
+    // if(question.questionOptions['answers']&&question['type']=="testOrder"){
+    //   question.questionOptions['selectableOrders'] = _.cloneDeep(question.questionOptions['answers']);
+    //   delete question.questionOptions['answers'];
+    // }
     console.log(question)
 
     if(this.addMode){ 
@@ -289,8 +293,8 @@ export class ElementEditorComponent implements OnInit {
 
       if(this._rawSchema.pages[pageIndex].label){
         if(this._rawSchema.pages[pageIndex].sections[sectionIndex].label ){
-          this._schema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1,question)
-          this._rawSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1,question)
+          this._schema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1,question);
+          this._rawSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex,1,question);
         }
         else{
           this.showAlert("You cannot edit a question of a referenced section");
@@ -344,6 +348,38 @@ export class ElementEditorComponent implements OnInit {
     }
   }
 
+
+  renderingSelected(rendering:string){
+    switch(rendering){
+      case 'number':
+        this.removePreviousFields(rendering);
+        if(!this.form.contains('questionOptions.max')&&!this.form.contains('questionOptions.min')){
+          this.addProperty('questionOptions.max');
+          this.addProperty('questionOptions.min');
+          this.addProperty('questionOptions.showDate');
+        }
+        break;
+
+      case 'textarea':
+        this.removePreviousFields(rendering);
+        if(!this.form.contains('questionOptions.rows')){
+          this.addProperty('questionOptions.rows');
+         }
+        break;
+      
+      case 'date':
+         this.removePreviousFields(rendering);
+         if(!this.form.contains('questionOptions.showWeeks')){
+          this.addProperty('questionOptions.showWeeks');
+         }
+        break;
+
+      default:
+         this.removePreviousFields(rendering);
+        
+    }
+  }
+
   reselectAnswers(){
     if(this.answers!=undefined) this.el.reShowAnswersDialog(this.answers);
     else this.el.reShowAnswersDialog(JSON.parse(this.form.controls['questionOptions.answers'].value));
@@ -359,6 +395,84 @@ export class ElementEditorComponent implements OnInit {
 
   reselectSetMembers(){
     this.el.reShowSetMembersDialog(this.setMembers);
+  }
+
+  removePreviousFields(rendering:string){
+    switch(rendering){
+      case 'number':
+      this.removeDateRelatedFields();
+      this.removeTextAreaRelatedFields();
+      break;
+
+      case 'textarea':
+      this.removeNumberRelatedFields();
+      this.removeDateRelatedFields();
+      break;
+       
+  
+      case 'date':
+        this.removeNumberRelatedFields();
+        this.removeTextAreaRelatedFields();
+        break;
+
+      default:
+        this.removeDateRelatedFields();
+        this.removeNumberRelatedFields();
+        this.removeTextAreaRelatedFields();
+        break;
+
+
+    }
+  }
+
+  removeQuestion(qn){
+      let i;
+      this.questions.forEach((question,index) => {
+        if(question['key']==qn)
+          i=index;
+      })
+      this.questions.splice(i,1)
+    
+  }
+
+  showDate($event){
+    if($event==true){
+      if(!this.form.contains('questionOptions.showDateOptions')) this.addProperty('questionOptions.showDateOptions');
+    }
+    else{
+      this.form.removeControl('questionOptions.showDate');
+      this.removeQuestion('questionOptions.showDate');
+    }
+  }
+
+  removeTextAreaRelatedFields(){
+    if(this.form.contains("questionOptions.rows")) {
+      this.form.removeControl('questionOptions.rows');
+      this.removeQuestion('questionOptions.rows');
+    } 
+  }
+
+  removeNumberRelatedFields(){
+    if(this.form.contains('questionOptions.max')){
+      this.removeQuestion('questionOptions.max');
+      this.form.removeControl('questionOptions.max');
+    } 
+    if(this.form.contains('questionOptions.min')) {
+      this.form.removeControl('questionOptions.min');
+      this.removeQuestion('questionOptions.min');
+    } 
+
+    if(this.form.contains('questionOptions.showDate')){
+      this.form.removeControl('questionOptions.showDate');
+      this.removeQuestion('questionOptions.showDate');
+    }
+  }
+
+  removeDateRelatedFields(){
+    if(this.form.contains("questionOptions.showWeeks")) {
+      this.form.removeControl('questionOptions.showWeeks');
+      this.removeQuestion('questionOptions.showWeeks');
+    } 
   }
 }
     

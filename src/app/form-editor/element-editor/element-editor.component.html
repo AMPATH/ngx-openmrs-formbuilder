@@ -65,7 +65,8 @@
                         </a>
                           </div>
 
-                    <app-dynamic-question [question]="question" [_form]="form" (answers)="setAnswers($event)"  (type)="typeSelected($event)" ></app-dynamic-question>
+                    <app-dynamic-question [question]="question" [_form]="form" (answers)="setAnswers($event)"  
+                    (type)="typeSelected($event)" (rendering)="renderingSelected($event)" (showDate)="showDate($event)"></app-dynamic-question>
 
                 </div>
 

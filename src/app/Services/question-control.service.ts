@@ -50,6 +50,7 @@ export class QuestionControlService {
       order: 5,
       placeholder: "",
       rows: 5,
+      type:'text'
     }
 
 
@@ -162,6 +163,10 @@ export class QuestionControlService {
           {
             key: 'file',
             value: 'file'
+          },
+          {
+            key: 'problem',
+            value: 'problem'
           }
         ]
 
@@ -257,11 +262,49 @@ export class QuestionControlService {
         break;
 
       case "historicalExpression":
-        options.label = "Historical Expression"
-        options.rows = 4
-        this.propertyModels.push(this.propertyFactory.createProperty('textarea', options))
+        options.label = "Historical Expression";
+        options.rows = 4;
+        this.propertyModels.push(this.propertyFactory.createProperty('textarea', options));
+        break;
+      
+      
+      case "questionOptions.max":
+        options.label="Max";
+        options.type = "number";
+        this.propertyModels.push(this.propertyFactory.createProperty('textbox',options));
+        break;
+      
+      case "questionOptions.min":
+        options.label = "Min";
+        options.type = "number";
+        this.propertyModels.push(this.propertyFactory.createProperty('textbox',options));
         break;
 
+      case "questionOptions.rows":
+        options.label = "Rows";
+        options.type = "number"
+        this.propertyModels.push(this.propertyFactory.createProperty('textbox',options));
+        break;
+
+      case "questionOptions.showDate":
+        options.label = "Show Date";
+        options.options = [{key:'true', value:'true'}, {key:'false',value:'false'}];
+        this.propertyModels.push(this.propertyFactory.createProperty('select',options));
+        break;
+
+      case "questionOptions.showDateOptions":
+        options.label = "Show Date Options";
+        options.rows = 5;
+        options.placeholder = '"validators":[] \n "hide":{}';
+        this.propertyModels.push(this.propertyFactory.createProperty('textarea',options));
+        break;
+
+      case "questionOptions.showWeeks":
+      options.label = "Show Weeks List";
+      options.rows = 3;
+      options.placeholder = "[2,12,16,18...]";
+      this.propertyModels.push(this.propertyFactory.createProperty('textarea',options));
+      break;
     }
 
     return this.propertyModels.sort((a, b) => a.order - b.order);

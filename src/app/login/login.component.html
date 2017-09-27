@@ -1,30 +1,33 @@
 <div class="container">    
     <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
-        <div class="panel panel-primary" >
-                <div class="panel-heading">
+        <md-card class="card" >
+                <!-- <div class="panel-heading">
                     <div class="panel-title">Log In</div>
                     
-                </div>     
+                </div>      -->
 
-                <div style="padding-top:30px" class="panel-body" >
+                <div style="padding-top:30px" class="" >
 
+                    <div class="logo">
+                            <img class="img-responsive" src="./assets/ampath-logo.png">
+                    </div>
                    
                           
-                    <form #loginForm="ngForm"  (ngSubmit)="login(loginForm.value)" >
+                    <form #loginForm="ngForm"  (ngSubmit)="login(loginForm.value)" class="form-signin">
 
                         <div style="margin-bottom: 25px">
-                            <span>Enter Server URL</span>
-                            <input [typeahead]="baseUrls" class="form-control"  name="baseUrl" ngModel required autocomplete="off"> 
+                            
+                            <input [typeahead]="baseUrls" class="form-control" id="inputEmail" placeholder="Server URL" name="baseUrl" ngModel required autocomplete="off" autofocus> 
                         </div>
                                 
                         <div style="margin-bottom: 25px">
-                                    <span>Username</span>
-                                    <input type="text" class="form-control" name="username" ngModel required>                                        
+                                    
+                                    <input type="text" class="form-control" name="username" id="inputEmail" placeholder="Username" ngModel required>                                        
                                 </div>
                             
                         <div style="margin-bottom: 25px">
-                                    <span>Password</span>
-                                    <input type="password" class="form-control" name="password" (keyDown)="authenticated=undefined" ngModel required>
+                                    
+                                    <input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password" (keyDown)="authenticated=undefined" ngModel required>
                                 </div>
                                 <div *ngIf="authenticated!=undefined&&!authenticated" class="alert alert-danger">
                                     <p>
@@ -33,7 +36,7 @@
                                   </div>
 
                         <div class="text-center">
-                          <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid">Log In</button>
+                          <button type="submit" class="btn btn-lg btn-primary btn-block btn-signin" [disabled]="!loginForm.valid">Log In</button>
                         </div>         
   
                         </form>     
@@ -48,8 +51,9 @@
                                         </div>
                                       </div>
                                 </div>
+</div>
 
-                    </div>                     
+                            </md-card>                     
                 </div>  
     </div>
-</div>
+
