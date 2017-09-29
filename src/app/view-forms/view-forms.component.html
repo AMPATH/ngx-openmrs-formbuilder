@@ -35,7 +35,10 @@
                   <div class="panel-heading">
                     <div class="row">
                       <div class="col col-xs-2">
-                        <h3 class="panel-title">Forms</h3>
+                        <select class="form-control panel-title" (change)="onChange($event.target.value)">
+                          <option>POC Forms</option>
+                          <option>Component Forms</option>
+                        </select>
                       </div>
 
                      <div class="col col-xs-5 pull-right">
@@ -70,7 +73,8 @@
                             
                                 <td class="formName"><b>{{form.name}}</b></td>
                                 <td>{{form.version}}</td>
-                                <td>{{form.published}}</td>
+                                <td *ngIf="form.published"><label class="label label-success">Yes</label></td>
+                                <td *ngIf="!form.published"><label class="label label-danger">No</label></td>
                                 <td><a (click)="editForm(form.uuid)" style="cursor: pointer;"><i class="material-icons">edit</i></a></td>
                               </tr>
                             </tbody>

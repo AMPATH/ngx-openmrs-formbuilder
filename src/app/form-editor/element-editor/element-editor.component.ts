@@ -220,12 +220,8 @@ export class ElementEditorComponent implements OnInit {
 
     else{
       if(this.form.controls['questionOptions.answers']){
-        let i;
-        this.questions.forEach((question,index) => {
-          if(question.key==='questionOptions.answers')
-            i=index;
-        })
-        this.questions.splice(i,1)
+        this.form.removeControl('questionOptions.answers');
+        this.removeQuestion('questionOptions.answers');
       }
       else{
         return;
