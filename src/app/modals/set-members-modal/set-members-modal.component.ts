@@ -59,7 +59,12 @@ export class SetMembersModalComponent extends DialogComponent<SetMembersModel, s
     }
 
     else{
-      this.questionsChecked.splice(i,1)
+      this.questionsChecked.forEach((question,index) =>{
+        if(question.concept==this.setMembers[i].uuid){
+          this.questionsChecked.splice(index,1);
+          return;
+        }
+      })
     }
 
   }
@@ -72,25 +77,48 @@ export class SetMembersModalComponent extends DialogComponent<SetMembersModel, s
         label: this.setMembers[i].answers[j].display,
         concept: this.setMembers[i].answers[j].uuid
       }
-      this.questionsChecked[i]['answers'].push(answer);
-      
-        
+
+   
+      this.questionsChecked.forEach((question,index)=>{
+
+        if(question.concept==this.setMembers[i].uuid&&question.answers.indexOf(answer)==-1)
+               {this.questionsChecked[index]['answers'].push(answer);
+                console.log(this.questionsChecked[index].answers);
+                return;
+              }
+      });
       
     }
+
+
     else{
-      this.questionsChecked[i].answers.splice(j,1);
+      this.questionsChecked.forEach((question,qIndex)=>{
+       question.answers.forEach((answer,aIndex) =>{
+         if(answer.concept==this.setMembers[i].answers[j].uuid)
+          {
+            this.questionsChecked[qIndex].answers.splice(aIndex,1);
+            console.log(this.questionsChecked[qIndex].answers);
+            return;
+            }
+       })
+      });
+      
+      
     }
   }
 
 
   isQuestionChecked(index){
     let isChecked:boolean = false;
+    
     this.questionsChecked.forEach((question) =>{
       if(this.setMembers[index].display==question.label){
-        isChecked = true
+        isChecked = true;
       }
     });
       return isChecked;
   }
+
+  
 
 }
