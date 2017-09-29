@@ -7,14 +7,16 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { MdSnackBar} from '@angular/material';
 import { DialogService } from 'ng2-bootstrap-modal';
-import {Form} from '../form-elements/Form';
+import { Form } from '../form-elements/Form';
+import { LocalStorageService } from '../../Services/local-storage.service';
+import { Constants } from '../../Services/constants';
+
 @Component({
   selector: 'app-form-editor',
   templateUrl: './form-editor.component.html',
   styleUrls: ['./form-editor.component.css']
 })
-export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,AfterContentInit{
-
+export class FormEditorComponent implements OnInit,OnDestroy{
   	  schema:any;
 	  selectedSchema:any;
 	  rawSelectedSchema:any;
@@ -32,16 +34,9 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 	  disableCanDeactivate:boolean=false;
 	  loading:boolean;
 
-	  ngAfterViewInit(){
-		  console.log("After view init.");
-	  }
-
-
-	  ngAfterContentInit(){
-		  console.log("After content init. ")
-	  }
    @ViewChild('sidenav') public myNav;
-  constructor( private fs: FetchFormDetailService, private  ns: NavigatorService,public snackbar:MdSnackBar, private router:Router, private route:ActivatedRoute,public dialogService:DialogService){
+  constructor( private fs: FetchFormDetailService, private  ns: NavigatorService,public snackbar:MdSnackBar, private router:Router, 
+	private route:ActivatedRoute,public dialogService:DialogService, private ls:LocalStorageService){
   }
 
   closeElementEditor(){
@@ -66,23 +61,24 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 
 	this.subscription = this.route.params.subscribe(params => {
 		this.uuid = params['uuid'];
-		if(this.uuid!='new'){
-			this.fs.fetchFormMetadata(this.uuid).then((metadata) => {
-				console.log(metadata.resources)
-				this.fetchForm(metadata.resources[0].valueReference)
-			})
+
+		if(this.uuid=='new'){
+			this.createNewForm();
+			}
+
+		else if(this.uuid=='restoredForm'){
+			this.setFormEditor(this.ls.getObject(Constants.SCHEMA),this.ls.getObject(Constants.RAW_SCHEMA));
+		}
+
+		else{
+			this.fs.fetchFormMetadata(this.uuid).then((metadata) => this.fetchForm(metadata.resources[0].valueReference))
 			.catch(e => {
 				this.loading = false;
 				alert("Check your internet connection then refresh.");
-			}
-				
-			)}
-
-		else{
-			this.createNewForm();
+			});
 		}
 		
-	})
+	});
 	
 	this.subscription = this.ns.getRawSchema().subscribe(res =>{
 		this.rawSchema = res;
@@ -121,12 +117,12 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 
   this.subscription = this.ns.getNewQuestion().subscribe(
 	res => {
-		this.questions = res['schema']
-		this.page = res['pageIndex']
-		this.section = res['sectionIndex']
+		this.questions = res['schema'];
+		this.page = res['pageIndex'];
+		this.section = res['sectionIndex'];
 		this.question = res['questionIndex'];
-		this.parentQuestion = res['parentQuestionIndex']
-		this.myNav.close()
+		this.parentQuestion = res['parentQuestionIndex'];
+		this.myNav.close();
 	}
   )
 		
@@ -138,12 +134,7 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 		//	this.fs.getReferencedFormsArray().subscribe(res => console.log("REFERENCE FORM",res));
 
 			if(this.checkIfSchemaProperlyCompiled(res.pages)){
-				this.selectedSchema = res;
-				this.schema = res;
-				this.strSchema = JSON.stringify(this.schema,null,'\t');
-				this.rawSchema = this.fs.rawSchema;
-				this.ns.setRawSchema(this.rawSchema)
-				this.strRawSchema = JSON.stringify(this.rawSchema,null,"\t");
+				this.setFormEditor(res,this.fs.rawSchema);
 			}
 
 		
@@ -157,14 +148,8 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 
   createNewForm(){
 	this.loading = false;
-	this.schema = new Form({"name":"","processor":"EncounterFormProcessor","uuid":"xxxx","referencedForms":[],"pages":[]});
-	this.selectedSchema = this.schema;
-	this.strSchema = JSON.stringify(this.schema,null,"\t");
-
-	this.rawSchema = new Form({"name":"","processor":"EncounterFormProcessor","uuid":"xxxx","referencedForms":[],"pages":[]});
-	this.ns.setRawSchema(this.rawSchema);
-	this.strRawSchema = JSON.stringify(this.rawSchema,null,'\t');
-	
+	let schema=new Form({"name":"","processor":"EncounterFormProcessor","uuid":"xxxx","referencedForms":[],"pages":[]});
+	this.setFormEditor(schema,schema);	
   }
 
   ngOnDestroy(){
@@ -218,6 +203,15 @@ export class FormEditorComponent implements OnInit,OnDestroy,AfterViewInit,After
 
   showSnackbar(){
 	this.snackbar.openFromComponent(SnackbarComponent,{duration:1500,});
+}
+
+setFormEditor(schema,rawSchema){
+	this.selectedSchema = schema;
+	this.schema = schema;
+	this.strSchema = JSON.stringify(schema,null,'\t');
+	this.rawSchema = rawSchema;
+	this.ns.setRawSchema(this.rawSchema)
+	this.strRawSchema = JSON.stringify(this.rawSchema,null,"\t");
 }
 
 
