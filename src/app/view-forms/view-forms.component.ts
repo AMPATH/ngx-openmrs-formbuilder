@@ -14,6 +14,8 @@ import { Constants } from '../Services/constants';
 export class ViewFormsComponent implements OnInit {
 
   forms:Array<any>=[];
+  componentForms:any;
+  POCForms:any[];
   page: number = 1; //pagination
   loggingOut:boolean=false;
   searchValue:string="";
@@ -35,10 +37,16 @@ export class ViewFormsComponent implements OnInit {
       this.fetchFormDetailService.fetchFormMetadata(form.uuid).then(res =>{
         if(!form.resources[0]) {f.splice(index,1)}
       })
-    })
+    });
+    this.POCForms = f;
     this.forms = f;
     if(this.forms.length==0) this.loadingMessage ="No forms to display"
     });
+
+
+    this.fetchAllFormsService.fetchAllComponentForms().subscribe(forms =>{
+      this.componentForms = forms.results;
+    })
 
   if(this.ls.storageLength==2){
     this.draftAvailable = true;
@@ -78,5 +86,15 @@ export class ViewFormsComponent implements OnInit {
   restore(){
     this.draft = this.ls.getObject(Constants.SCHEMA);
     this.router.navigate(['/edit','restoredForm']);
+  }
+
+  onChange($event){
+    if($event=='Component Forms'){
+      this.forms = this.componentForms;
+    }
+
+    else{
+      this.forms = this.POCForms;
+    }
   }
 }

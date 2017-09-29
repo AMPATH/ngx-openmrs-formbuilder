@@ -8,11 +8,20 @@ import { SetMembersModalComponent } from '../../modals/set-members-modal/set-mem
 import {ElementEditorService} from '../../Services/element-editor.service';
 import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
+
+interface Answer{
+  label:string;
+  concept:string;
+}
+
+
 @Component({
   selector: 'app-concept',
   templateUrl: './concept.component.html',
   styleUrls: ['./concept.component.css']
 })
+
+
 export class ConceptComponent implements OnInit,OnDestroy{
 private subscription:Subscription;
 @Input() question:any; 
@@ -24,13 +33,13 @@ searchResult:any;
 allAvailableAnswers:Array<any>; //after search result
 allAvailableSetMembers:Array<any>;
 previousSelectedAnswersIndexes:number[] = [];
-
+yesUUID:string;
+noUUID:string;
 
   constructor(private cs:ConceptService,private dialogService:DialogService,private fb:FormBuilder,private el:ElementEditorService) { }
 
   ngOnInit() {
    this.subscription = this.el.reselectAnswers().subscribe((res) => {
-      
       if(this.allAvailableAnswers!=undefined) {
         
         this.findIndexesOfPreviouslySelectedAnswers(res,this.allAvailableAnswers);
@@ -46,7 +55,11 @@ previousSelectedAnswersIndexes:number[] = [];
     this.subscription = this.el.reselectSetMembers().subscribe((res) =>{
       //set res to be checked
       this.showSetMembersDialog(this.allAvailableSetMembers);
-    })
+    });
+
+
+    this.getYesAndNoConceptUUID();
+    
   }
 
 
@@ -59,8 +72,9 @@ previousSelectedAnswersIndexes:number[] = [];
       this.subscription = this.cs.searchConceptByUUID(conceptID).subscribe((res) =>{
         this.searching = false;
         let arr = [];
-        arr.push(res);
-        this.showConceptsDialog(arr);
+        if(res!=[]) arr.push(res);
+        if(arr!=[]) this.showConceptsDialog(arr);
+        else alert("No concept found!");
       });
       
 }
@@ -70,8 +84,12 @@ else{
   this.subscription = this.cs.searchConcept(conceptID).subscribe(res => {
     this.searchResult = res;
     this.searching = false;
-    if(this.searchResult.results){
+    if(this.searchResult.results.length>0){
       this.showConceptsDialog(res.results);
+    }
+
+    else{
+      alert("No concept found!");
     }
   });
 }
@@ -104,6 +122,7 @@ showConceptsDialog(searchResults:any[]){
          searchResults.forEach((concept) =>{
 
           if(formValue['concept']==concept.uuid){
+
             if(concept.answers.length>0){
               this.emitSetMembers([]);
               this.allAvailableAnswers = concept.answers;
@@ -115,12 +134,43 @@ showConceptsDialog(searchResults:any[]){
               this.showSetMembersDialog(this.allAvailableSetMembers);
             }
 
+            if(concept.datatype.name == "Boolean"){
+              
+              let answers:Answer[]=[{label:"yes",concept:this.yesUUID},{label:"no",concept:this.noUUID}]
+              this.answers.emit(answers);
+            }
+
           }
          });
    }});
   }
 
 
+  getYesAndNoConceptUUID(){
+    let exactUUID="";
+    this.subscription = this.cs.searchConcept('yes').subscribe((res) =>{
+      if(res.results){
+        res.results.forEach((concept) => {
+          
+          if(concept.name.display.toLowerCase()==='yes'){
+            this.yesUUID = concept.uuid;
+          }
+        });
+      }
+    });
+
+    this.subscription = this.cs.searchConcept('no').subscribe((res) =>{
+      if(res.results){
+        res.results.forEach((concept) => {
+          
+          if(concept.name.display.toLowerCase()==='no'){
+            this.noUUID = concept.uuid;
+          }
+        });
+      }
+    });
+    
+  }
 
   showAnswersDialog(results){
     this.subscription = this.dialogService.addDialog(AnswersComponent, {
@@ -141,14 +191,14 @@ showConceptsDialog(searchResults:any[]){
       });
   }
   setSelectedAnswers(obj){
-   let answers = []
+   let answers:Answer[] = []
    
    if(obj.length>0){
     let jsobj = JSON.parse(obj);
     for(var answer in jsobj ){
      let label = jsobj[answer].slice(0,jsobj[answer].indexOf(','))
      let concept = jsobj[answer].slice(jsobj[answer].indexOf(',')+1)
-     let temp = {"label":label,"concept":concept}
+     let temp:Answer= {"label":label,"concept":concept}
      answers.push(temp)
  }
    }

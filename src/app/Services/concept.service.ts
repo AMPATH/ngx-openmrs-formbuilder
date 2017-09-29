@@ -24,7 +24,7 @@ export class ConceptService {
  searchConcept(conceptID:string):Observable<any>{
 
 //searching with concept display
-        return this.http.get(`${this.baseUrl}/ws/rest/v1/concept?q=${conceptID}&v=custom:(uuid,name,conceptClass,setMembers,answers)`,{headers:this.headers}).map(
+        return this.http.get(`${this.baseUrl}/ws/rest/v1/concept?q=${conceptID}&v=custom:(uuid,name,conceptClass,setMembers,answers,datatype)`,{headers:this.headers}).map(
             data => this.data = data.json()
         )
         .catch((error) => {alert(error.message);
@@ -35,7 +35,7 @@ export class ConceptService {
 
 
  searchConceptByUUID(conceptUUID:string):Observable<any>{
-    return this.http.get(`${this.baseUrl}/ws/rest/v1/concept/${conceptUUID}?v=custom:(uuid,name,conceptClass,setMembers,answers)`, {headers:this.headers}).map(
+    return this.http.get(`${this.baseUrl}/ws/rest/v1/concept/${conceptUUID}?v=custom:(uuid,name,conceptClass,setMembers,answers,datatype)`, {headers:this.headers}).map(
         data => this.data = data.json()
     )
     .catch((error) => {alert(error.message);

@@ -36,6 +36,7 @@ export class SessionService {
 
   public deleteSession() {
     let url = this.getUrl();
+    console.log(url);
     return this.http.delete(url, {});
   }
 }

@@ -30,7 +30,7 @@
               <input type="text" class="form-control" #questionLabel [value]="setMember.display">
             </div>
             <br/>
-            <div class="answers" [id]='"answer"+i' class="collapse" *ngIf="setMember.answers" style="margin-left:30px;">
+            <div class="answers" [id]='"answer"+i' class="collapse" *ngIf="setMember.answers&&isQuestionChecked(i)" style="margin-left:30px;">
                 <div *ngFor="let answer of setMember.answers; let j=index">
                   <div class="checkbox">
                     <h6><input type="checkbox" (change)="setAnswers($event,i,j)"> Answer {{j+1}}</h6>
