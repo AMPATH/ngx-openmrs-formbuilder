@@ -83,7 +83,6 @@ export class SetMembersModalComponent extends DialogComponent<SetMembersModel, s
 
         if(question.concept==this.setMembers[i].uuid&&question.answers.indexOf(answer)==-1)
                {this.questionsChecked[index]['answers'].push(answer);
-                console.log(this.questionsChecked[index].answers);
                 return;
               }
       });
@@ -97,7 +96,6 @@ export class SetMembersModalComponent extends DialogComponent<SetMembersModel, s
          if(answer.concept==this.setMembers[i].answers[j].uuid)
           {
             this.questionsChecked[qIndex].answers.splice(aIndex,1);
-            console.log(this.questionsChecked[qIndex].answers);
             return;
             }
        })
