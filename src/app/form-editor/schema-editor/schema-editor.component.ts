@@ -8,7 +8,7 @@ import 'brace/index';
 import 'brace/mode/json';
 import 'brace/theme/chrome';
 import 'brace/theme/cobalt';
-
+import 'brace/ext/searchbox';
 
 
 @Component({
@@ -30,9 +30,9 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
    sectionIndex:number;
    questionIndex:number;
    referencedForms:any[];
-   badge:string="Compiled"
+   badge:string="Compiled";
    viewingUncompiled:boolean=false;
-   tooltip:string="View Raw"
+   tooltip:string="View Raw";
  
    @Input()
    set schema(newSchema:string){
@@ -87,7 +87,9 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
           this.editor.setTheme('chrome');
           this.editor.setMode('json');
           this.editor.getEditor().setFontSize(16);
-          
+         
+    
+           
   }
 
   //render button

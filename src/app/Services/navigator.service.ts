@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import  { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { LocalStorageService } from './local-storage.service';
+import { Constants } from './constants';
 
 @Injectable()
 export class NavigatorService {
@@ -14,7 +16,7 @@ export class NavigatorService {
   excludedQuestionsSubject:BehaviorSubject<string> = new BehaviorSubject("");
   
 
-  constructor() {
+  constructor(private ls:LocalStorageService) {
   }
 
   setClickedElementSchema(schema){
@@ -39,6 +41,8 @@ export class NavigatorService {
  
    this.schema = schema;
    this.schemaSubject.next(schema);
+   this.ls.setObject(Constants.SCHEMA,schema);
+
  }
 
  getSchema(){
@@ -64,7 +68,8 @@ export class NavigatorService {
 
  setRawSchema(rawSchema:Object){
    this.rawSchema = rawSchema;
-   this.rawSchemaSubject.next(rawSchema)
+   this.rawSchemaSubject.next(rawSchema);
+   this.ls.setObject(Constants.RAW_SCHEMA,rawSchema);
 
  }
 
