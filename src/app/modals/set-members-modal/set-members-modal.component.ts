@@ -108,7 +108,6 @@ export class SetMembersModalComponent extends DialogComponent<SetMembersModel, s
 
   isQuestionChecked(index){
     let isChecked:boolean = false;
-    
     this.questionsChecked.forEach((question) =>{
       if(this.setMembers[index].display==question.label){
         isChecked = true;
