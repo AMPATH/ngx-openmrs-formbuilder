@@ -48,7 +48,7 @@ export class ViewFormsComponent implements OnInit {
       this.componentForms = forms.results;
     })
 
-  if(this.ls.storageLength==2){
+  if(this.ls.getObject(Constants.RAW_SCHEMA)&&this.ls.getObject(Constants.SCHEMA)){
     this.draftAvailable = true;
     this.restoreMessage="There is an unsaved form! Would you like to continue to editing it?";
   }
