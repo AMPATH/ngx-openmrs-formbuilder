@@ -123,9 +123,9 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		this.question = res['questionIndex'];
 		this.parentQuestion = res['parentQuestionIndex'];
 		this.myNav.close();
-	}
-  )
-		
+	});
+
+	
   }
 
   fetchForm(value){

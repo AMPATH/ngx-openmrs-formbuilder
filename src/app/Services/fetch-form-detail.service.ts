@@ -135,4 +135,8 @@ export class FetchFormDetailService {
   loaded(){
     return this.formEditorLoaded.asObservable();
   }
+
+
+  
+
 }
