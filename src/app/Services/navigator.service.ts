@@ -41,7 +41,8 @@ export class NavigatorService {
  
    this.schema = schema;
    this.schemaSubject.next(schema);
-   this.ls.setObject(Constants.SCHEMA,schema);
+   
+   this.saveDraft(schema);
 
  }
 
@@ -69,7 +70,7 @@ export class NavigatorService {
  setRawSchema(rawSchema:Object){
    this.rawSchema = rawSchema;
    this.rawSchemaSubject.next(rawSchema);
-   this.ls.setObject(Constants.RAW_SCHEMA,rawSchema);
+   this.saveRawDraft(rawSchema);
 
  }
 
@@ -96,6 +97,17 @@ setExcludedQuestions(questionIDs:string){
    
 getExcludedQuestions(){
   return this.excludedQuestionsSubject.asObservable();
+}
+
+
+saveDraft(schema:any){
+  this.ls.remove(Constants.SCHEMA);
+  this.ls.setObject(Constants.SCHEMA,schema);
+}
+
+saveRawDraft(rawSchema:any){
+  this.ls.remove(Constants.RAW_SCHEMA);
+  this.ls.setObject(Constants.RAW_SCHEMA,rawSchema);
 }
 
 }
