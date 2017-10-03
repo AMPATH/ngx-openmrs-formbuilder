@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { PropertyModel } from '../form-editor/models/property-model'
 import { PropertyFactory } from '../form-editor/models/property-factory';
-import {FormGroup, FormControl, FormBuilder, FormArray, Validators} from '@angular/forms'
+import {FormGroup, FormControl, FormBuilder, FormArray, Validators} from '@angular/forms';
+import { ALL_PROPERTIES } from '../form-editor/models/properties';
+
 @Injectable()
 export class QuestionControlService {
 
@@ -44,7 +46,7 @@ export class QuestionControlService {
     let options = {
       key: prop,
       label: "",
-      value: value || "",
+      value: value || null,
       required: false,
       options: [],
       order: 5,
@@ -241,7 +243,7 @@ export class QuestionControlService {
       case "validators":
         options.label = "Validators"
         options.rows = 5
-        options.value = JSON.stringify(value, undefined, "\t");
+        if(value) options.value = JSON.stringify(value, undefined, "\t");
         this.propertyModels.push(this.propertyFactory.createProperty('textarea', options))
         break;
 
@@ -256,14 +258,14 @@ export class QuestionControlService {
       case "questionOptions.answers":
         options.label = "Answers"
         options.rows = 5
-        options.value = JSON.stringify(value, undefined, "\t");
-        console.log(options.value)
+        if(value) options.value = JSON.stringify(value, undefined, "\t");
         this.propertyModels.push(this.propertyFactory.createProperty('textarea', options))
         break;
 
       case "historicalExpression":
         options.label = "Historical Expression";
         options.rows = 4;
+        if(value) options.value = JSON.stringify(value, undefined, "\t");
         this.propertyModels.push(this.propertyFactory.createProperty('textarea', options));
         break;
       
@@ -295,7 +297,7 @@ export class QuestionControlService {
       case "questionOptions.showDateOptions":
         options.label = "Show Date Options";
         options.rows = 5;
-        options.placeholder = '"validators":[] \n "hide":{}';
+        if(value) options.value = JSON.stringify(value, undefined, "\t");
         this.propertyModels.push(this.propertyFactory.createProperty('textarea',options));
         break;
 
@@ -303,17 +305,34 @@ export class QuestionControlService {
       options.label = "Show Weeks List";
       options.rows = 3;
       options.placeholder = "[2,12,16,18...]";
+      if(value) options.value = JSON.stringify(value, undefined, "\t");
       this.propertyModels.push(this.propertyFactory.createProperty('textarea',options));
       break;
+
+
+      case "alert":
+      options.label = "Alert"
+      options.rows = 5
+      if(value) options.value = JSON.stringify(value, undefined, "\t");
+      this.propertyModels.push(this.propertyFactory.createProperty('textarea', options))
+      break;
+
+      case "questionInfo":
+        options.label = "Question Info";
+        this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
+        break;
+
     }
+
+
 
     return this.propertyModels.sort((a, b) => a.order - b.order);
 
   }
 
 
-  getAllPossibleProperties() {
-    return new PropertyModel().AllOtherPossibleProperties;
+  getAllQuestionProperties() {
+    return ALL_PROPERTIES;
   }
 
 

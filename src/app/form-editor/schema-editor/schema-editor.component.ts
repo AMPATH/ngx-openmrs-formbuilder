@@ -87,7 +87,7 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
           this.editor.setTheme('chrome');
           this.editor.setMode('json');
           this.editor.getEditor().setFontSize(16);
-         
+          this.editor.getEditor().setOptions({readOnly:true});
     
            
   }
@@ -137,15 +137,15 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
      this.editor.setTheme('cobalt')
      this.editor.setText(this._rawSchema,null,"\t");
      this.tooltip="View Compiled";
+     this.editor.getEditor().setOptions({readOnly:true});
      this.editor.getEditor().scrollToLine(0);
    }
    else {
      this.badge="Compiled";
      this.editor.setTheme('chrome')
      this.editor.setText(this._schema);
-     this.editor.getEditor().setOptions({readOnly:true})
-     this.tooltip="View Raw"
-     this.editor.getEditor().setOptions({readOnly:false})
+     this.editor.getEditor().setOptions({readOnly:true});
+     this.tooltip="View Raw";
      this.editor.getEditor().scrollToLine(0);
     }
     
@@ -153,8 +153,29 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
 
 
   viewFullSchema(){
+    let schema = JSON.parse(this._schema);
     this.editor.setText(JSON.stringify(this._formSchema,null,"\t"));
-    this._schema = JSON.stringify(this._formSchema,null,"\t");
+    let line = this.findCurrentLineNumbers(this.editor.getEditor(),schema.label);
+    this.editor.getEditor().scrollToLine(line[0]);
+    this._schema=JSON.stringify(this._formSchema);
+    this.editor.getEditor().setOptions({readOnly:true});    this.ns.getRawSchema().subscribe(schema => {
+      this._rawSchema = JSON.stringify(schema,null,"\t");
+    });
     
   }
+
+
+ findCurrentLineNumbers(editor, foo) {
+    var lines = editor.session.doc.getAllLines();
+    var fooLineNumbers=[];
+    for (var i = 0;i < lines.length; i++) {
+        if (lines[i].indexOf(foo) != -1){
+          fooLineNumbers.push(i);
+          console.log(lines[i],foo,fooLineNumbers);
+        }
+        
+    }
+    
+    return fooLineNumbers;
+}
 }

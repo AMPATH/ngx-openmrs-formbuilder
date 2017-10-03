@@ -10,6 +10,7 @@ import { DialogService } from "ng2-bootstrap-modal";
 import {ElementEditorService} from '../../Services/element-editor.service';
 import {Question} from '../form-elements/Question';
 import {SchemaModalComponent} from '../../modals/schema-editor.modal';
+import { ALL_PROPERTIES } from '../models/properties';
 import * as _ from "lodash";
 
 @Component({
@@ -63,9 +64,8 @@ export class ElementEditorComponent implements OnInit {
   ngOnInit() {
       this.form = this.qcs.toFormGroup(this.questions);
       this.setMode(this.form);
-      this.allPossibleproperties = this.qcs.getAllPossibleProperties();
+      this.allPossibleproperties = ALL_PROPERTIES;
       this.breadcrumbsSetup();
-     
       this.el.getSetMembers().subscribe((setMembers) => {
         this.setMembers=[];
         setMembers.forEach((setMember) =>{
@@ -97,7 +97,7 @@ export class ElementEditorComponent implements OnInit {
     
     let obj = {};
     obj[prop] = "";
-    let newField = this.qcs.toPropertyModelArray(obj);
+    let newField = this.qcs.toPropertyModelArray(obj); //TODO: do not depend on qcs to create new property model. fix this! prop is already a propertymodel.
 
     if(newField.length > 0){
     this.form.addControl(prop,new FormControl(""))
@@ -123,6 +123,10 @@ export class ElementEditorComponent implements OnInit {
 
     if(question['validators']){
       question['validators']=this.parse(this.form.controls['validators'].value);
+    }
+
+    if(question['alert']){
+      question['alert']=this.parse(this.form.controls['alert'].value);
     }
 
     if(question['hide']){

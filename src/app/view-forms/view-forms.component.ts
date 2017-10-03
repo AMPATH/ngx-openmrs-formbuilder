@@ -50,7 +50,8 @@ export class ViewFormsComponent implements OnInit {
 
   if(this.ls.getObject(Constants.RAW_SCHEMA)&&this.ls.getObject(Constants.SCHEMA)){
     this.draftAvailable = true;
-    this.restoreMessage="There is an unsaved form! Would you like to continue to editing it?";
+    let schema = this.ls.getObject(Constants.SCHEMA);
+    this.restoreMessage=`Form ${schema.name} was last worked on from this browser. Would you like to continue working on this?`;
   }
     
   }
@@ -79,7 +80,8 @@ export class ViewFormsComponent implements OnInit {
 
   discard(){
     this.draftAvailable = false;
-    this.ls.clear();
+    this.ls.remove(Constants.SCHEMA);
+    this.ls.remove(Constants.RAW_SCHEMA);
 
   }
 
