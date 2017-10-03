@@ -109,7 +109,7 @@ export class FetchFormDetailService {
      }
 
 
-      setReferencedFormsArray(array:any[]){
+    setReferencedFormsArray(array:any[]){
         this.referencedForms = array;
         this.referencedFormsSubject.next(array)
       }
@@ -135,6 +135,9 @@ export class FetchFormDetailService {
   loaded(){
     return this.formEditorLoaded.asObservable();
   }
+
+
+  
 
 
   

@@ -57,5 +57,8 @@ emitAnswers(answers:any){
   this.answers.emit(answers);
 }
 
+onTextAreaChanged($event,question){
+  this.form.controls[question].setValue($event);
+}
 
 }

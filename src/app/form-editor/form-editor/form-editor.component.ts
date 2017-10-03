@@ -125,6 +125,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		this.myNav.close();
 	});
 
+
 	
   }
 
@@ -210,7 +211,7 @@ setFormEditor(schema,rawSchema){
 	this.schema = schema;
 	this.strSchema = JSON.stringify(schema,null,'\t');
 	this.rawSchema = rawSchema;
-	this.ns.setRawSchema(this.rawSchema)
+	this.ns.setRawSchema(this.rawSchema);
 	this.strRawSchema = JSON.stringify(this.rawSchema,null,"\t");
 }
 

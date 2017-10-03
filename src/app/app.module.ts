@@ -28,7 +28,8 @@ import {SnackbarComponent} from './form-editor/snackbar/snackbar.component'
 
 import {AuthGuardService} from './Services/auth-guard.service';
 import {SearchFormFilterPipe} from './pipes/search-form-filter.pipe';
-import { SetMembersModalComponent } from './modals/set-members-modal/set-members-modal.component'; 
+import { SetMembersModalComponent } from './modals/set-members-modal/set-members-modal.component';
+import { BuildVersionFooterComponent } from './build-version-footer/build-version-footer.component'; 
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +46,8 @@ import { SetMembersModalComponent } from './modals/set-members-modal/set-members
     LoginComponent,
     SearchFormFilterPipe,
     SetMembersModalComponent,
-    SnackbarComponent
+    SnackbarComponent,
+    BuildVersionFooterComponent
   ],
 
 
