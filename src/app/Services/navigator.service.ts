@@ -16,7 +16,7 @@ export class NavigatorService {
   excludedQuestionsSubject:BehaviorSubject<string> = new BehaviorSubject("");
   
 
-  constructor(private ls:LocalStorageService) {
+  constructor() {
   }
 
   setClickedElementSchema(schema){
@@ -41,9 +41,6 @@ export class NavigatorService {
  
    this.schema = schema;
    this.schemaSubject.next(schema);
-   
-   this.saveDraft(schema);
-
  }
 
  getSchema(){
@@ -70,7 +67,7 @@ export class NavigatorService {
  setRawSchema(rawSchema:Object){
    this.rawSchema = rawSchema;
    this.rawSchemaSubject.next(rawSchema);
-   this.saveRawDraft(rawSchema);
+   
 
  }
 
@@ -100,14 +97,6 @@ getExcludedQuestions(){
 }
 
 
-saveDraft(schema:any){
-  this.ls.remove(Constants.SCHEMA);
-  this.ls.setObject(Constants.SCHEMA,schema);
-}
 
-saveRawDraft(rawSchema:any){
-  this.ls.remove(Constants.RAW_SCHEMA);
-  this.ls.setObject(Constants.RAW_SCHEMA,rawSchema);
-}
 
 }

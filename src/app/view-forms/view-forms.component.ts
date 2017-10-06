@@ -5,7 +5,8 @@ import { AuthenticationService } from '../Services/authentication.service';
 import { LocalStorageService } from '../Services/local-storage.service';
 import { Router } from '@angular/router';
 import { Constants } from '../Services/constants';
-
+import { FormListService } from '../Services/form-list.service';
+import * as _ from 'lodash';
 @Component({
   selector: 'app-view-forms',
   templateUrl: './view-forms.component.html',
@@ -24,9 +25,11 @@ export class ViewFormsComponent implements OnInit {
   draftAvailable:boolean=false;
   draft:any;
   rawDraft:any;
+  formsWithoutSchemas:any[] = [];
 
   constructor(private fetchAllFormsService:FetchAllFormsService,private router:Router,
-    private fetchFormDetailService:FetchFormDetailService,private auth:AuthenticationService,private ls:LocalStorageService) { }
+    private fetchFormDetailService:FetchFormDetailService,private auth:AuthenticationService,private ls:LocalStorageService,
+  private formListService:FormListService) { }
 
  
   ngOnInit(){
@@ -34,8 +37,8 @@ export class ViewFormsComponent implements OnInit {
 	  this.fetchAllFormsService.fetchAllPOCForms().subscribe(forms =>{
     let f = forms.results;
     f.forEach((form,index) =>{
-      this.fetchFormDetailService.fetchFormMetadata(form.uuid).then(res =>{
-        if(!form.resources[0]) {f.splice(index,1)}
+      this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res =>{
+         if(!form.resources[0]) {this.formsWithoutSchemas.push(index);}
       })
     });
     this.POCForms = f;
@@ -82,6 +85,7 @@ export class ViewFormsComponent implements OnInit {
     this.draftAvailable = false;
     this.ls.remove(Constants.SCHEMA);
     this.ls.remove(Constants.RAW_SCHEMA);
+    this.ls.remove(Constants.FORM_METADATA);
 
   }
 
@@ -98,5 +102,23 @@ export class ViewFormsComponent implements OnInit {
     else{
       this.forms = this.POCForms;
     }
+  }
+
+  publish(form,index){
+    let forms = _.cloneDeep(this.POCForms);
+    let formName = this.formListService.removeVersionInformation(form.name);
+    forms.splice(index,1);
+    let formsWithoutVersionedNames = this.formListService.removeVersionInformationFromForms(forms);
+    let sameFormsDifferentVersion=[]
+    formsWithoutVersionedNames.forEach((form) =>{
+     if(form.name==formName){
+        sameFormsDifferentVersion.push(form);
+     }
+   });
+   sameFormsDifferentVersion.forEach((form)=>{
+     if(form.published) this.POCForms.forEach((pocform) =>{
+       if(pocform.uuid == form.uuid) console.log(pocform);
+     })
+   })
   }
 }

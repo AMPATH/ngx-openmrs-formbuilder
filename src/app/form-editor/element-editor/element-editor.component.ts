@@ -62,6 +62,7 @@ export class ElementEditorComponent implements OnInit {
 
   
   ngOnInit() {
+    console.log(this.qis.getIDs(this._schema));
       this.form = this.qcs.toFormGroup(this.questions);
       this.setMode(this.form);
       this.allPossibleproperties = ALL_PROPERTIES;
@@ -190,7 +191,7 @@ export class ElementEditorComponent implements OnInit {
   checkId(id):boolean{
       if(this.form.contains('id')){
       let _id = this.form.get('id').value;
-      let ids = this.qis.getIDs(this._schema);
+      let ids = this.qis.getIDs(this._rawSchema);
       let count = 0;
       for(var id of ids) if(id==_id) count++;
       if(this.editMode&&this.id!==_id&&count>0) {

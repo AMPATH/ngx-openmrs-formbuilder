@@ -1,58 +1,116 @@
 <div *ngIf="loading" id="loadingDiv">
   <img class="loader" src="./assets/loader.gif">
-  
+
 </div>
 <div *ngIf="schema">
-  
-    <md-sidenav-container>
-      <md-sidenav #sidenav mode="over" class="app-sidenav">
-        
-        <!---Navigator-->
-        <app-navigator [_schema]="schema" [formSchema]="schema"  [mode]="'edit'" (closeSidebar)="closeNavigator($event)"></app-navigator>
-  
-      </md-sidenav>
-      <md-toolbar color="primary">
-        <button md-icon-button (click)="sidenav.toggle()"><md-icon class="md-24" >menu</md-icon></button>
-        <span style="font-size:22px">Form Builder</span>
-        <span class="menu"></span>
-        <span flex></span>
-        <app-reference-forms [schema]="schema"></app-reference-forms>
-      </md-toolbar>
-      <div class="app-content" *ngIf="schema">
 
+  <md-sidenav-container>
+    <md-sidenav #sidenav mode="over" class="app-sidenav">
+
+      <!---Navigator-->
+      <app-navigator [_schema]="schema" [formSchema]="schema" [mode]="'edit'" (closeSidebar)="closeNavigator($event)"></app-navigator>
+
+    </md-sidenav>
+    <md-toolbar color="primary">
+      <button md-icon-button (click)="sidenav.toggle()"><md-icon class="md-24" >menu</md-icon></button>
+      <span style="font-size:18px; font-family:'Roboto'">Form Builder</span>
+      <span class="menu">
+          <button md-button [mdMenuTriggerFor]="fileMenu"><span style="font-size:14px;font-weight:600">File</span></button>
+      <md-menu #fileMenu="mdMenu" [overlapTrigger]="false">
+        <button (click)="saveLocally()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Locally</span></button>
+        <button (click)="saveRemotely()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-server" aria-hidden="true"></i> Save to Server</span></button>
+      <div class="hr"></div>
+        <button (click)="exit()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-arrow-left" aria-hidden="true"></i> Exit</span></button>
         
-<md-tab-group md-stretch-tabs class="schema-editor">
- 
- <!--Element Editor-->
-           <md-tab *ngIf="questions" label="Element Editor" >
-              <ng-template md-tab-label>
-                  Question Editor
-<a (click)="closeElementEditor()" data-toggle="tooltip" title="close tab" class="pull-right" style="margin-right:25px; padding-top:5px; cursor:pointer;"><i class="material-icons" >highlight_off</i></a>
-                </ng-template>
-                
+      </md-menu>
+
+      <button md-button [mdMenuTriggerFor]="viewMenu"><span style="font-size:14px;font-weight:600">View</span></button>
+      <md-menu #viewMenu="mdMenu" [overlapTrigger]="false">
+        <button (click)="toggleView()" md-menu-item><span  style="font-size:14px;font-weight:500"><i class="fa fa-square-o" aria-hidden="true"></i> Single View</span> <i class="fa" [class.fa-check]="viewMode=='singleView'" style="color:green"></i></button>
+        <button (click)="toggleView()" md-menu-item><span  style="font-size:15px;font-weight:500"><i class="fa fa-columns" aria-hidden="true"></i> Split View</span> <i class="fa" [class.fa-check]="viewMode=='multiView'" style="color:green"></i></button>
+      </md-menu>
+
+      <!-- <button md-button [mdMenuTriggerFor]="auditMenu"><span style="font-size:14px;font-weight:600">Audit</span></button>
+      <md-menu #auditMenu="mdMenu" [overlapTrigger]="false">
+        <button (click)="viewAuditInfo()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-info-circle"></i> View Audit Info</span></button>
+
+      </md-menu>  -->
+
+      </span>
+      <span flex></span>
+      <app-reference-forms [schema]="schema"></app-reference-forms>
+    </md-toolbar>
+    <div class="app-content" *ngIf="schema">
+
+  <div *ngIf="viewMode=='singleView'">
+      <md-tab-group md-stretch-tabs class="schema-editor">
+
+        <!--Element Editor-->
+        <md-tab *ngIf="questions" label="Element Editor">
+          <ng-template md-tab-label>
+            Question Editor
+            <a (click)="closeElementEditor()" data-toggle="tooltip" title="close tab" class="pull-right" style="margin-right:25px; padding-top:5px; cursor:pointer;"><i class="material-icons" >highlight_off</i></a>
+          </ng-template>
+
+          <md-card class="element-editor">
+            <app-element-editor [schema]="schema" [pageIndex]="page" [sectionIndex]="section" [questionIndex]="question" [parentQuestionIndex]="parentQuestionIndex"
+              [_questions]="questions" [rawSchema]="rawSchema" (closeComponent)="closeElementEditor()"></app-element-editor>
+          </md-card>
+        </md-tab>
+
+        <!--Schema editor-->
+        <md-tab label="Schema Editor">
+          <md-card class="schema-editor">
+            <app-schema-editor [selectedSchema]="selectedSchema" [selectedRawSchema]="selectedRawSchema" [schema]="strSchema" [rawSchema]="strRawSchema"
+              [$formSchema]="schema"></app-schema-editor>
+          </md-card>
+
+        </md-tab>
+
+        <!--Form-renderer-->
+        <md-tab label="Form Viewer">
+          <md-card class="schema-editor">
+            <app-form-renderer [schema]="schema"></app-form-renderer>
+          </md-card>
+        </md-tab>
+      </md-tab-group>
+    </div>
+
+    <div *ngIf="viewMode=='multiView'">
+      <div class="row">
+        <!--Element Editor-->
+        <div *ngIf="questions" class="col-md-4">
+          <div>
+              <h4 class="text-cente" style="display:inline-block;">Question Editor</h4> 
+              <a (click)="closeElementEditor()" data-toggle="tooltip" title="close tab" class="pull-right" style=" padding-top:5px; cursor:pointer; display:inline-block"><i class="material-icons" >highlight_off</i></a>
+          </div>
+             
+           
+  
             <md-card class="element-editor">
               <app-element-editor [schema]="schema" [pageIndex]="page" [sectionIndex]="section" [questionIndex]="question" [parentQuestionIndex]="parentQuestionIndex"
                 [_questions]="questions" [rawSchema]="rawSchema" (closeComponent)="closeElementEditor()"></app-element-editor>
             </md-card>
-  </md-tab>
-            
+          </div>
   
           <!--Schema editor-->
-           <md-tab label="Schema Editor">
-             <md-card class="schema-editor">
-               <app-schema-editor [selectedSchema]="selectedSchema" [selectedRawSchema]="selectedRawSchema" [schema]="strSchema" [rawSchema]="strRawSchema" [$formSchema]="schema"></app-schema-editor>
-             </md-card>
-
-  </md-tab>
-          
+          <div [class.col-md-4]="questions" [class.col-md-6]="!questions">
+            <h4 class="text-center">Schema Editor</h4>
+            <md-card class="schema-editor">
+              <app-schema-editor [selectedSchema]="selectedSchema" [selectedRawSchema]="selectedRawSchema" [schema]="strSchema" [rawSchema]="strRawSchema"
+                [$formSchema]="schema"></app-schema-editor>
+            </md-card>
+          </div>
   
           <!--Form-renderer-->
-          <md-tab label="Form Viewer">
+          <div [class.col-md-4]="questions" [class.col-md-6]="!questions">
+              <h4 class="text-center">Form Viewer</h4>
             <md-card class="schema-editor">
-            <app-form-renderer [schema]="schema"></app-form-renderer>
+              <app-form-renderer [schema]="schema"></app-form-renderer>
             </md-card>
-          </md-tab>
-        </md-tab-group> 
+          </div>
       </div>
-    </md-sidenav-container>
+    </div>
+    </div>
+  </md-sidenav-container>
 </div>

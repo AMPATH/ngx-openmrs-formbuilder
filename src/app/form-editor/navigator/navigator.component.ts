@@ -77,7 +77,9 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		this.subscription=this.ns.getExcludedQuestions().subscribe((res) =>{
 			if(res!="") this.excludedQuestions.push(res);
 			else this.excludedQuestions = [];
-		})
+		});
+
+		
 	}
 
 	//when element is clicked in navigator
@@ -691,7 +693,9 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	editFormName(value:any){
 		
 		this._formSchema.name = value.formName;
+		this.rawSchema.name = value.formName;
 		this.setSchema(this._formSchema);
+		this.setRawSchema(this.rawSchema);
 	}
 
 	showNameEditForm(name:string){
@@ -705,12 +709,12 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 				let lastPageIndex:number = this._formSchema.pages.length-1;
 			if(this._formSchema.pages[lastPageIndex].sections){
 				let lastSectionIndex:number = this._formSchema.pages[lastPageIndex].sections.indexOf(this._formSchema.pages[lastPageIndex].sections[this._formSchema.pages[lastPageIndex].sections.length-1]);
-				if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions){
-					let lastQuestionIndex:number = this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.indexOf(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.length-1]);
-					if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[lastQuestionIndex]==this.schema){
-					this.fs.setLoaded(true);
-			}
-				}
+				if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex]){
+					if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions){
+						let lastQuestionIndex:number = this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.indexOf(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.length-1]);
+						if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[lastQuestionIndex]==this.schema){
+						this.fs.setLoaded(true);
+					}}}
 			else{
 				this.fs.setLoaded(true);
 			}

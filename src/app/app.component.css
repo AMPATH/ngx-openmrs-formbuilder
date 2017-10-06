@@ -1,75 +1,13 @@
-.panel-table .panel-body{
-    padding:0;
-  }
-  
-  .panel-table .panel-body .table-bordered{
-    border-style: none;
-    margin:0;
-  }
-  
-  .panel-table .panel-body .table-bordered > thead > tr > th:first-of-type {
-      text-align:center;
-      width: 100px;
-  }
-  
-  .panel-table .panel-body .table-bordered > thead > tr > th:last-of-type,
-  .panel-table .panel-body .table-bordered > tbody > tr > td:last-of-type {
-    border-right: 0px;
-  }
-  
-  .panel-table .panel-body .table-bordered > thead > tr > th:first-of-type,
-  .panel-table .panel-body .table-bordered > tbody > tr > td:first-of-type {
-    border-left: 0px;
-  }
-  
-  .panel-table .panel-body .table-bordered > tbody > tr:first-of-type > td{
-    border-bottom: 0px;
-  }
-  
-  .panel-table .panel-body .table-bordered > thead > tr:first-of-type > th{
-    border-top: 0px;
-  }
-  
-  .panel-table .panel-footer .pagination{
-    margin:0; 
-  }
-  
-  /*
-  used to vertically center elements, may need modification if you're not using default sizes.
-  */
-  .panel-table .panel-footer .col{
-   line-height: 34px;
-   height: 34px;
-  }
-  
-  .panel-table .panel-heading .col h3{
-   line-height: 30px;
-   height: 30px;
-  }
-  
-  .panel-table .panel-body .table-bordered > tbody > tr > td{
-    line-height: 34px;
-  }
-  
-  .formName{
-      font-size:14px;
-  }
+.app {
+  width: 100%;
+}
 
-  .mat-toolbar{
-    background:#008daf;
-}
-.stylish-input-group .input-group-addon{
-    background: white !important; 
-}
-.stylish-input-group .form-control{
-	border-right:0; 
-	box-shadow:0 0 0; 
-	border-color:#ccc;
-}
-.stylish-input-group button{
-    border:0;
-    background:transparent;
-}
-.material-icons{
-  color:green;
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
 }

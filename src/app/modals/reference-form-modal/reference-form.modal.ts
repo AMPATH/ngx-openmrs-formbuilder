@@ -60,7 +60,7 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
       }
     });
     if(selectedForm.ref.uuid)
-    this.fs.fetchFormMetadata(selectedForm.ref.uuid)
+    this.fs.fetchFormMetadata(selectedForm.ref.uuid,true)
     .then(res => this.fs.fetchForm(res.resources[0].valueReference,true)
     .then(schema => this.showNavigatorDialog(schema,this.refElement,`Select ${this.refElement} to reference`)))
 

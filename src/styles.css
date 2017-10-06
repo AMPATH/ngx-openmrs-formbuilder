@@ -9,6 +9,23 @@
     /* height: fill-available !important; */
     overflow-x:hidden !important;
 } 
-body{
+
+
+html {
+    height: 100%;
+    box-sizing: border-box;
+  }
+  
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
+  
+  body {
+    position: relative;
+    margin: 0;
+    padding-bottom: 6rem;
+    min-height: 100%;
     background: #f9fafc;
-}
+  }

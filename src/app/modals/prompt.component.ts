@@ -17,15 +17,15 @@ export interface PromptModel {
                    </div>
                    <div class="modal-body">
                    <form [formGroup]="form" (keydown)="keyDownFunction($event)">
+
                    <div *ngFor="let question of questions">
- 
+ <label [attr.for]="question.key">{{question.label}}</label>
 
   <div [ngSwitch]="question.controlType">
 
                           <div class="form-group">
-
     <input *ngSwitchCase="'textbox'" class="form-control" [formControlName]="question.key" [id]="question.key"
-    [type]="question.type" [placeholder]="question.placeholder" [value]="question.value">
+    [type]="question.type" [value]="question.value">
     
     </div>
 

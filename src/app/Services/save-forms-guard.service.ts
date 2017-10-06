@@ -12,12 +12,12 @@ export class SaveFormsGuardService implements CanDeactivate<FormEditorComponent>
   canDeactivate(component: FormEditorComponent,route:ActivatedRouteSnapshot, state:RouterStateSnapshot):boolean|Observable<boolean>|Promise<boolean>{
    
     let can = component.canDeactivate();
-    console.log('DeactivateGuard#canDeactivate called, can: ', can);
+    // console.log('DeactivateGuard#canDeactivate called, can: ', can);
     if (!can) {
       this.router.navigate([this.router.url]);
       return false;
     }
 
-    return true;
+    return can;
   }
 }

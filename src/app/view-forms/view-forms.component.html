@@ -63,19 +63,24 @@
                       <thead>
                         <tr>
                             <th width="40%">Name</th>
-                            <th width="20%">Version</th>
-                            <th width="20%">Published</th>
+                            <th width="10%">Version</th>
+                            <th width="10%">Published</th>
                             <th width="20%">Edit</th>
+                            <th width="20%">Publish</th>
                         </tr> 
                       </thead>
                       <tbody *ngIf="forms.length>0">
-                              <tr *ngFor="let form of forms | formfilter: searchValue  | paginate: { itemsPerPage: 13, currentPage: page }">
+                              <tr *ngFor="let form of forms | formfilter: searchValue  | paginate: { itemsPerPage: 13, currentPage: page }; let i = index;">
                             
                                 <td class="formName"><b>{{form.name}}</b></td>
                                 <td>{{form.version}}</td>
                                 <td *ngIf="form.published"><label class="label label-success">Yes</label></td>
                                 <td *ngIf="!form.published"><label class="label label-danger">No</label></td>
-                                <td><a (click)="editForm(form.uuid)" style="cursor: pointer;"><i class="material-icons">edit</i></a></td>
+                                <td *ngIf="formsWithoutSchemas.indexOf(i)>-1"><a  style="cursor: pointer;" data-toggle="tooltip" title="No schema associated with this form"><i class="fa fa-ban" style="color:red;"></i></a></td>
+                                <td *ngIf="formsWithoutSchemas.indexOf(i)==-1"><a (click)="editForm(form.uuid)" style="cursor: pointer;" ><button class="btn btn-success">Edit</button></a></td>
+                                <td>
+                                  <button (click)="publish(form,i)" class="btn btn-primary" [disabled]="form.published||formsWithoutSchemas.indexOf(i)>-1">Publish</button>
+                                </td>
                               </tr>
                             </tbody>
 

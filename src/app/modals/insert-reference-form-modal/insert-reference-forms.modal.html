@@ -10,8 +10,11 @@
         <div class="form-group">
           <label>Select forms</label>
 
-        <input  [typeahead]="forms" (typeaheadOnSelect)="optionSelected($event)" typeaheadOptionField="name"
+        <input list="forms" [typeahead]="forms" (typeaheadOnSelect)="optionSelected($event)" typeaheadOptionField="name"
          typeaheadOptionsLimit="15" typeaheadMinLength="0"  class="form-control" id="forms" name="form" ngModel required autocomplete="off">
+         <datalist id="forms">
+            <option *ngFor="let form of forms">{{form.name}}
+        </datalist>
 
             </div>
 
