@@ -5,7 +5,7 @@ import {FormEntryModule} from 'ng2-openmrs-formentry';
 import {AceEditorModule} from 'ng2-ace-editor';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
-import {AppMaterialModule} from '../../app-material-module';
+
 
 //Services
 import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
@@ -36,8 +36,7 @@ import { FormEditorComponent } from './form-editor.component';
     AceEditorModule,
     FormsModule,
     ReactiveFormsModule,
-    ClipboardModule,
-    AppMaterialModule
+    ClipboardModule
   ],
 
   declarations: [
@@ -71,7 +70,6 @@ import { FormEditorComponent } from './form-editor.component';
     FormsModule,
     ReactiveFormsModule,
     ClipboardModule,
-    AppMaterialModule,
     NavigatorComponent
 
   ]
