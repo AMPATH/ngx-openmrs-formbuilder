@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormEditorModule } from './form-editor/form-editor/form-editor.module';
 import {AuthenticationModule} from './authentication/authentication.module';
 import { TypeaheadModule } from 'ngx-bootstrap';
+import {AppMaterialModule} from './app-material-module';
 import 'hammerjs';
 import { AppComponent } from './app.component';
 import { ConfirmComponent } from './modals/confirm.component';
@@ -64,7 +65,8 @@ import { SaveSnackbarComponent } from './form-editor/snackbar/saved-snackbar';
     FormEditorModule,
     AppRoutingModule,
     AuthenticationModule,
-    TypeaheadModule.forRoot()
+    TypeaheadModule.forRoot(),
+    AppMaterialModule
   ],
   entryComponents: [ConfirmComponent,
      AlertComponent,
