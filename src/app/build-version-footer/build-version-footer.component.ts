@@ -12,7 +12,7 @@ export class BuildVersionFooterComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.date = new Date().getMonth() +"/"+new Date().getDate() +"/"+new Date().getFullYear()+"/" + " "+new Date().toLocaleTimeString();
+    // this.date = new Date().getMonth() +"/"+new Date().getDate() +"/"+new Date().getFullYear()+"/" + " "+new Date().toLocaleTimeString();
   }
 
 }
