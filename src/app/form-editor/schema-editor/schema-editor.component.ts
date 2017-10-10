@@ -106,15 +106,10 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
     let editedSchema=this.editor.getEditor().getValue();
     let rawSchema = _.cloneDeep(editedSchema);
     let compiledSchema = this.compileSchema(JSON.parse(editedSchema));
-    if(_.isEqual(compiledSchema,JSON.parse(rawSchema))){
-        this.errorMessage = "Invalid form schema, unable to render.Fview"
-    }
-
-    else{
-      this.errorMessage = undefined;
-      this.ns.setSchema(compiledSchema);
-      this.ns.setRawSchema(JSON.parse(rawSchema));
-    }
+  
+    this.ns.setSchema(compiledSchema);
+    this.ns.setRawSchema(JSON.parse(rawSchema));
+    
   }
 
   compileSchema(schema:Object){

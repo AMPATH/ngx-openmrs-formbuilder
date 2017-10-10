@@ -43,6 +43,11 @@ a{
 .row{
     display: flex;
 }
+.btn-default {
+    color: #fff;
+    background: rgba(0, 0, 0, 0);
+    border:none;
+}
 
 .editor{
     flex-grow: 1;
@@ -85,4 +90,19 @@ a{
 
 .hr{
     border-bottom:1px solid lightgray;
+}
+.audit-content{
+    margin-top:20px;
+    margin-bottom: 10px;
+}
+
+.form-control{
+    display:inline-block !important;
+}
+.app-content{
+    border-top:1px solid #3f51b5;
+}
+
+.row{
+    margin-top:10px;
 }

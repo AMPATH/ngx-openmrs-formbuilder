@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
-
+import { SessionStorageService } from './session-storage.service';
 // TODO inject service
 
 @Injectable()
@@ -8,7 +8,7 @@ export class SessionService {
 
   private url;
   
-  constructor(private http: Http) {
+  constructor(private http: Http, private sessionStorageService:SessionStorageService) {
   }
 
   public getUrl(): string {
@@ -36,7 +36,7 @@ export class SessionService {
 
   public deleteSession() {
     let url = this.getUrl();
-    console.log(url);
+    this.sessionStorageService.clear();
     return this.http.delete(url, {});
   }
 }

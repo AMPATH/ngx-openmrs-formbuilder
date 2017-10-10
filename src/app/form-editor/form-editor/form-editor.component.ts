@@ -18,6 +18,7 @@ import * as _ from 'lodash';
 
 
 interface FormMetadata{
+	name:string;
 	uuid:string;
 	valueReference:string;
 	resourceUUID:string;
@@ -53,7 +54,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	  viewMode:string;
 	  formMetadata:FormMetadata;
       @ViewChild('sidenav') public myNav;
-	  loading:boolean;
+	  loading:boolean=true;
 
   constructor( private fs: FetchFormDetailService, private  ns: NavigatorService,public snackbar:MdSnackBar, private router:Router, 
 	private route:ActivatedRoute,public dialogService:DialogService, private ls:LocalStorageService,
@@ -74,10 +75,10 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 
 
   ngOnInit(){
-	this.loading = true;
 	this.viewMode = 'singleView'; //default view mode
 	
 	this.formMetadata = {
+		name:"",
 		uuid:"",
 		valueReference: "",
 		resourceUUID: "",
@@ -110,6 +111,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 			this.fs.fetchFormMetadata(this.formMetadata.uuid,false).then((metadata) => {
 				console.log(metadata);
 				this.formMetadata.version = metadata.version;
+				this.formMetadata.name = metadata.name;
 				if(metadata.encounterType) this.formMetadata.encounterType = metadata.encounterType.display;
 				if(metadata.description) this.formMetadata.description = metadata.description;
 				this.formMetadata.valueReference = metadata.resources[0].valueReference || '';
@@ -181,6 +183,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	this.subscription = this.saveFormService.getNewValueReference().subscribe(value => this.formMetadata.valueReference = value);
 	this.subscription = this.saveFormService.getNewFormUUID().subscribe(uuid => {
 		this.formMetadata.uuid = uuid;
+		this.disableCanDeactivate = true;
 		this.router.navigate(['/edit',uuid]);
 	});
   }
@@ -334,9 +337,7 @@ toggleView(){
 	this.viewMode = this.viewMode == 'singleView' ? 'multiView' : 'singleView';
 }
 
-viewAuditInfo(){
-	
-}
+
 showSaveSnackbar(){
 	this.snackbar.open("Saved Locally!","",{duration:1200});
   }

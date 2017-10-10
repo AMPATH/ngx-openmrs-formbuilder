@@ -71,7 +71,6 @@ export class ViewFormsComponent implements OnInit {
 
   logout(){
     this.loggingOut = true;
-  
       this.auth.logOut().catch(e => this.router.navigate(['/login']))
       .subscribe(res => {
         this.router.navigate(['/login']);
