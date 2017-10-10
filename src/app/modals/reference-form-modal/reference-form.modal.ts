@@ -41,15 +41,15 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
       this.refForms = res;
     });
 
-    this.filteredForms = this.selectField.valueChanges.map((ref) => {
-      return ref ? this.filter(ref) : [];
-    })
+    // this.filteredForms = this.selectField.valueChanges.map((ref) => {
+    //   return ref ? this.filter(ref) : [];
+    // })
   }
 
-  filter(ref){
-    return this.refForms.filter(form =>
-        form.formName.toLowerCase().indexOf(ref.toLowerCase()) != -1);
-  }
+  // filter(ref){
+  //   return this.refForms.filter(form =>
+  //       form.formName.toLowerCase().indexOf(ref.toLowerCase()) != -1);
+  // }
 
   save(value) {
     let selectedForm;

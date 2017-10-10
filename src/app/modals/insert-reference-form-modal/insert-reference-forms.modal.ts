@@ -30,8 +30,8 @@ export class  InsertReferenceComponent extends DialogComponent<ReferenceModel, s
   }
 
   save(value) {
-    let uuid = this.findFormUUID(value.form);
-    value.form = uuid+" "+value.form;
+    let uuid = this.findFormUUID(value.refForm);
+    value.form = uuid+" "+value.refForm;
     this.result = value;
     this.close();
   }

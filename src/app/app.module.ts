@@ -33,6 +33,7 @@ import { SearchFormFilterPipe } from './pipes/search-form-filter.pipe';
 import { SetMembersModalComponent } from './modals/set-members-modal/set-members-modal.component';
 import { BuildVersionFooterComponent } from './build-version-footer/build-version-footer.component'; 
 import { SaveSnackbarComponent } from './form-editor/snackbar/saved-snackbar';
+import { FormBuilderComponent } from './form-builder/form-builder.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,7 +53,7 @@ import { SaveSnackbarComponent } from './form-editor/snackbar/saved-snackbar';
     SetMembersModalComponent,
     SnackbarComponent,
     BuildVersionFooterComponent, 
-    SaveSnackbarComponent
+    SaveSnackbarComponent, FormBuilderComponent
   ],
 
 

@@ -3,7 +3,8 @@ import {AceEditorComponent} from 'ng2-ace-editor';
 import {NavigatorService} from '../../Services/navigator.service';
 import {MdSnackBar} from '@angular/material';
 import { FormSchemaCompiler } from 'ng2-openmrs-formentry';
-import {FetchFormDetailService} from '../../Services/fetch-form-detail.service'
+import {FetchFormDetailService} from '../../Services/fetch-form-detail.service';
+import  * as _ from "lodash";
 import 'brace/index';
 import 'brace/mode/json';
 import 'brace/theme/chrome';
@@ -24,7 +25,7 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
    private _schema:string;
    private _selectedSchemaObj:any;
    private _rawSchema:string;
-   private _selectedRawSchema:Object;
+   private _fullRawSchema:string;
    private _formSchema:any; //full form schema
    pageIndex:number;
    sectionIndex:number;
@@ -33,6 +34,7 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
    badge:string="Compiled";
    viewingUncompiled:boolean=false;
    tooltip:string="View Raw";
+   errorMessage:string;
  
    @Input()
    set schema(newSchema:string){
@@ -45,12 +47,15 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
 
    @Input()
    set rawSchema(schema){
-     
+     console.log(schema);
+    this._rawSchema = schema;
+    this.editor.setText(this._rawSchema);
+    this.editor.getEditor().scrollToLine(0);
    }
  
    @Input()
    set selectedRawSchema(schema){
-      this._selectedRawSchema = schema;
+      
    }
   
 
@@ -70,10 +75,13 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
      this._formSchema = schema;
    }
   constructor(private ns:NavigatorService,public snackbar:MdSnackBar,private fsc:FormSchemaCompiler,private fs:FetchFormDetailService) {
-    
+    	
+
+
    }
 
   ngOnInit() {
+   
 
     this.fs.getReferencedFormsArray().subscribe(refFormArray => this.referencedForms=refFormArray)
 
@@ -88,7 +96,6 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
       this._rawSchema = JSON.stringify(schema,null,"\t");
       this.editor.setText(this._rawSchema);
       this.editor.getEditor().scrollToLine(0);
-      this.editor.getEditor().setOptions({readOnly:true});
       this.editor.setTheme('chrome');
     });
            
@@ -97,22 +104,17 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
   //render button
   render(){
     let editedSchema=this.editor.getEditor().getValue();
-    editedSchema = this.compileSchema(JSON.parse(editedSchema));
-    // if(editedSchema.pages){
-    //   this.ns.setSchema(editedSchema);
-    //   return;
-    // }
-    // else if(editedSchema.sections){
-    //   this._formSchema.pages[this.pageIndex]= editedSchema;
-    // }
-    // else if(editedSchema.questions){
-    //   this._formSchema.pages[this.pageIndex].sections[this.sectionIndex] = editedSchema
-    // }
-    // else{
-    //   this._formSchema.pages[this.pageIndex].sections[this.sectionIndex].questions[this.questionIndex] = editedSchema
-    // }
-    // this.ns.setSchema(this._formSchema)
-    // return;
+    let rawSchema = _.cloneDeep(editedSchema);
+    let compiledSchema = this.compileSchema(JSON.parse(editedSchema));
+    if(_.isEqual(compiledSchema,JSON.parse(rawSchema))){
+        this.errorMessage = "Invalid form schema, unable to render.Fview"
+    }
+
+    else{
+      this.errorMessage = undefined;
+      this.ns.setSchema(compiledSchema);
+      this.ns.setRawSchema(JSON.parse(rawSchema));
+    }
   }
 
   compileSchema(schema:Object){
@@ -131,24 +133,32 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
 
    this.viewingUncompiled==false ? this.viewingUncompiled=true : this.viewingUncompiled=false;
    if(this.viewingUncompiled) {
-     this.badge="Raw";
-     this.editor.setTheme('chrome');
-     this.editor.setText(this._rawSchema,null,"\t");
-     this.editor.getEditor().setOptions({readOnly:true});
-     this.tooltip="View Compiled";
+     this.setRawTheme();
+     this.editor.setText(this._rawSchema);
      this.editor.getEditor().scrollToLine(0);
    }
    else {
-     this.badge="Compiled";
-     this.editor.setTheme('cobalt');
-     this.editor.setText(this._schema,null,"\t");
-     this.editor.getEditor().setOptions({readOnly:true});
-     this.tooltip="View Raw";
+     this.setCompiledTheme();
+     this.editor.setText(this._schema);
      this.editor.getEditor().scrollToLine(0);
     }
     
   }
 
+  setRawTheme(){
+    this.badge="Raw";
+    this.editor.setTheme('chrome');
+    this.tooltip="View Compiled";
+    this.editor.getEditor().setOptions({readOnly:false});
+  }
+
+  setCompiledTheme(){
+    this.badge="Compiled";
+    this.editor.setTheme('cobalt');
+    this.editor.getEditor().setOptions({readOnly:true});
+    this.tooltip="View Raw";
+    
+  }
 
   viewFullSchema(){
     let schema = JSON.parse(this._schema);
@@ -156,10 +166,13 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
     this.editor.getEditor().scrollToLine(line[0]);
     this._schema=JSON.stringify(this._formSchema,null,"\t");
     this.ns.getRawSchema().subscribe(rawSchema => {
-    this.editor.setText(JSON.stringify(rawSchema,null,"\t"));
-    this.editor.getEditor().setOptions({readOnly:true});
-    
+      this._rawSchema = JSON.stringify(rawSchema,null,"\t");
+      this.editor.getEditor().setOptions({readOnly:true});
     });
+
+    if(this.viewingUncompiled){this.setRawTheme();  this.editor.setText(this._rawSchema); this.editor.getEditor().scrollToLine(0);}
+    else{this.setCompiledTheme(); this.editor.setText(this._schema); this.editor.getEditor().scrollToLine(0);
+    }
     
   }
 

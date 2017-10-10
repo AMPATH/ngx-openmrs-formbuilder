@@ -14,6 +14,8 @@ import { SaveFormsComponent } from '../../modals/save-form-modal/save-form-modal
 import { ConfirmComponent } from '../../modals/confirm.component';
 import { FormListService } from '../../Services/form-list.service';
 import { SaveFormService } from '../../Services/save-form.service';
+import * as _ from 'lodash';
+
 
 interface FormMetadata{
 	uuid:string;
@@ -96,7 +98,6 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 
 		if(uuid=='new'){
 			this.createNewForm();
-			console.log(this.formMetadata);
 			}
 
 		else if(uuid=='restoredForm'){
@@ -104,6 +105,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		}
 
 		else{
+			console.log("uuid",uuid)
 			this.formMetadata.uuid = uuid;
 			this.fs.fetchFormMetadata(this.formMetadata.uuid,false).then((metadata) => {
 				console.log(metadata);
@@ -114,7 +116,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 				this.formMetadata.resourceUUID = metadata.resources[0].uuid;
 				this.formMetadata.auditInfo = metadata.auditInfo;
 				this.formMetadata.published = metadata.published;
-				this.saveFormMetadata(this.formMetadata); //save form metadata to local storage for retrieval later on
+				// this.saveFormMetadata(this.formMetadata); //save form metadata to local storage for retrieval later on
 				this.fetchForm(metadata.resources[0].valueReference);
 			})
 			.catch(e => {
@@ -129,8 +131,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	this.subscription = this.ns.getRawSchema().subscribe(res =>{
 		this.rawSchema = res;
 		this.strRawSchema = JSON.stringify(this.rawSchema,null,"\t");
-		this.saveRawDraft(this.rawSchema);
-
+		if(this.ls.getObject(Constants.SCHEMA)) if(this.rawSchema.name==this.ls.getObject(Constants.SCHEMA).name) this.saveRawDraft(this.rawSchema); //only save when compiled version exists in memory.
 	});
 	
 	
@@ -141,7 +142,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		
 		}
 	);
- 
+ //prevent from saving form metadata.
   //on navigator element clicked for editing
   this.subscription= this.ns.getClickedElementSchema().subscribe(
 	  res => {
@@ -157,6 +158,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		  this.schema = res;
 		  this.strSchema = JSON.stringify(this.schema,null,'\t');
 		  this.saveDraft(this.schema);
+		  this.saveFormMetadata(this.formMetadata);
 		  this.showSnackbar();
 	  }
 
@@ -177,7 +179,10 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	//getting new form metadata after saving remotely
 	this.subscription = this.saveFormService.getNewResourceUUID().subscribe(uuid => this.formMetadata.resourceUUID = uuid);
 	this.subscription = this.saveFormService.getNewValueReference().subscribe(value => this.formMetadata.valueReference = value);
-	this.subscription = this.saveFormService.getNewFormUUID().subscribe(uuid => this.formMetadata.uuid = uuid);
+	this.subscription = this.saveFormService.getNewFormUUID().subscribe(uuid => {
+		this.formMetadata.uuid = uuid;
+		this.router.navigate(['/edit',uuid]);
+	});
   }
 
   fetchForm(value){
@@ -200,6 +205,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 
   createNewForm(){
 	this.loading = false;
+	this.ls.clear(); //clear local storage
 	let schema=new Form({"name":"","processor":"EncounterFormProcessor","uuid":"xxxx","referencedForms":[],"pages":[]});
 	this.setFormEditor(schema,schema);	
   }
@@ -275,9 +281,17 @@ saveLocally(silently?:boolean){
 }
 
 saveRemotely(){
-	this.saveLocally();
-	if(this.formMetadata.published){
-		this.dialogService.addDialog(ConfirmComponent,{title:"Confirm Save", message:"This form has been published. Would you want to overwrite the existing form?", buttonText:"Yes, I understand the consequences"},{backdropColor:'rgba(0,0, 0, 0.5)'})
+	this.saveLocally(true);
+	if(this.formMetadata.published||!_.isEmpty(this.formMetadata.uuid)){
+		let message="";
+		if(this.formMetadata.published){
+			message = "This form has been published. Would you want to overwrite the existing form?";
+		}
+
+		if(!_.isEmpty(this.formMetadata.uuid)){
+			message = "Would you want to update the form or save as a new version?"
+		}
+		this.dialogService.addDialog(ConfirmComponent,{title:"Confirm Save", message:message, buttonText:"Update current version"},{backdropColor:'rgba(0,0, 0, 0.5)'})
 		.subscribe((decision)=>{
 				if(decision==1) { 
 						//overwrite existing form
@@ -287,7 +301,7 @@ saveRemotely(){
 				if(decision==2){
 					//save as a new version
 					let newVersion = +this.formMetadata.version+0.1;
-					let schemaName = this.formListService.removeVersionInformation(this.schema.name)+"v"+newVersion;
+					let schemaName = this.formListService.removeVersionInformation(this.schema.name)+"_v"+newVersion;
 					this.showSaveDialog("new",schemaName,newVersion);
 				}
 			});

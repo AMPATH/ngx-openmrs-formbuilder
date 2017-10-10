@@ -38,8 +38,8 @@ export class ViewFormsComponent implements OnInit {
     let f = forms.results;
     f.forEach((form,index) =>{
       this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res =>{
-         if(!form.resources[0]) {this.formsWithoutSchemas.push(index);}
-      })
+         if(!form.resources[0]||form.resources.length==0) {this.formsWithoutSchemas.push(form.name);}
+      });
     });
     this.POCForms = f;
     this.forms = f;
@@ -53,7 +53,7 @@ export class ViewFormsComponent implements OnInit {
 
   if(this.ls.getObject(Constants.RAW_SCHEMA)&&this.ls.getObject(Constants.SCHEMA)){
     this.draftAvailable = true;
-    let schema = this.ls.getObject(Constants.SCHEMA);
+    let schema = this.ls.getObject(Constants.RAW_SCHEMA);
     this.restoreMessage=`Form ${schema.name} was last worked on from this browser. Would you like to continue working on this?`;
   }
     

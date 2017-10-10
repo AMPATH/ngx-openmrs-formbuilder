@@ -43,18 +43,18 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
   constructor(dialogService: DialogService,private encounterTypeService:EncounterTypeService, private saveFormService:SaveFormService,
     private fb:FormBuilder,private snackbar:MdSnackBar) {
     super(dialogService);
-    this.form = this.fb.group({
-      name:new FormControl(this.name || '', Validators.required),
-      version:new FormControl(this.version || '', Validators.required),
-      encounterType:new FormControl(this.encounterType || ''),
-      description:new FormControl(this.description || '')
-    });
+   
     
   }
 
   ngOnInit(){
       this.encounterTypeService.getEncounterTypes().subscribe((res) => this.encounterTypes=res.results);
-     
+      this.form = this.fb.group({
+        name:new FormControl(this.name || '', Validators.required),
+        version:new FormControl(this.version || '', Validators.required),
+        encounterType:new FormControl(this.encounterType || ''),
+        description:new FormControl(this.description || '')
+      });
   }
   save(formValue) {
   

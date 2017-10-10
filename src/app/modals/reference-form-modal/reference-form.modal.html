@@ -9,7 +9,10 @@
       <form [formGroup]="form" (keydown)="keyDownFunction($event)">
         <div class="form-group">
           <label for="label">Enter Form Name</label>
-          <input [typeahead]="refForms" typeaheadOptionField="formName" typeaheadOptionsLimit="10" typeaheadMinLength="0" id="label" class="form-control" formControlName="selectField" autocomplete="off">
+          <input list="refForms" name="form" class="form-control" formControlName="selectField">
+          <datalist id="refForms">
+             <option *ngFor="let form of refForms">{{form.formName}}
+         </datalist>
         </div>
       </form>
     </div>

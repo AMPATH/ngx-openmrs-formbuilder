@@ -25,7 +25,8 @@ export class FetchFormDetailService {
 
   constructor(private http: Http, private fsc: FormSchemaCompiler, private router: Router, private ns: NavigatorService, private sessionStorageService: SessionStorageService) {
     this.credentials = sessionStorageService.getItem(Constants.CREDENTIALS_KEY);
-    this.baseUrl = sessionStorage.getItem(Constants.BASE_URL)
+    this.baseUrl = sessionStorage.getItem(Constants.BASE_URL);
+    console.warn(this.baseUrl,"BASE URL");
     this.headers.append("Authorization", "Basic " + this.credentials);
     // this.headers.append( 'Content-Type', 'application/json');
   }
@@ -33,6 +34,7 @@ export class FetchFormDetailService {
 
 
   public fetchFormMetadata(uuid: string, isComponent: boolean) {
+    console.warn(this.baseUrl,"BASE URL");
     if (this.baseUrl == null || this.credentials == null) {
       this.router.navigate(['/login']);
     } else return this.http.get(`${this.baseUrl}/ws/rest/v1/form/${uuid}?v=full`, {

@@ -84,6 +84,8 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 	//when element is clicked in navigator
 	onClicked(selectedSchema, pageIndex?:number, sectionIndex?:number, questionIndex?:number, parentQuestionIndex?:number){
+		console.log(selectedSchema,"Selected Schema", this.rawSchema, "RawSchema");
+
 		if(this.selectMode) return;
 		let schemaObj={}
 		schemaObj['selectedSchema']=selectedSchema;
@@ -145,6 +147,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			this.ns.setClickedElementRawSchema(this.rawSchema);
 		}
 		else{
+			console.log(JSON.stringify(this.rawSchema.pages),pageIndex);
 			this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex]);
 			return;
 		}
@@ -299,7 +302,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		this._formSchema.pages.push(newPage);
 		this.ns.setSchema(this._formSchema);
 		this.ns.setRawSchema(this.rawSchema);
-		this.onClicked(newPage);
+		this.onClicked(newPage,this.rawSchema.pages.length-1);
 		}
 		else this.showAlertDialog("Page already exists! \n Try creating one with a different label!");
 	}
@@ -310,7 +313,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		this.rawSchema.pages[pageIndex].sections.push(newSection);
 		this.setSchema(this._formSchema);
 		this.setRawSchema(this.rawSchema);
-		this.onClicked(newSection,pageIndex);
+		this.onClicked(newSection,pageIndex,this.rawSchema.pages[pageIndex].sections.length-1);
 	}
 
 
@@ -320,9 +323,11 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		let propertyModelArray = this.qcs.toPropertyModelArray(newQuestion);
 		if(questionIndex!=undefined){
 			this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex,questionIndex); // obsGroup
+			this.onClicked(newQuestion,pageIndex,sectionIndex,questionIndex,this.rawSchema.pages[pageIndex].sections[sectionIndex].questions[questionIndex].questions.length-1);
 		} 
 		else {
 			this.ns.newQuestion(propertyModelArray,pageIndex,sectionIndex);
+			this.onClicked(newQuestion,pageIndex,sectionIndex,this.rawSchema.pages[pageIndex].sections[sectionIndex].questions.length-1);
 		}
 	}
 
