@@ -18,8 +18,8 @@
    </select>
       </div>
 
-      <div class="form-group" >
-        <textarea *ngSwitchCase="'textarea'"  [formControlName]="question.key" style="display:none;" [value]="question.value"></textarea>
+      <div class="form-group ace-input" >
+        <textarea  *ngSwitchCase="'textarea'"  [formControlName]="question.key" style="display:none;" [value]="question.value"></textarea>
           <div *ngSwitchCase="'textarea'" ace-editor
           [(text)]="question.value" 
           [mode]="'javascript'" 
@@ -28,7 +28,8 @@
           [autoUpdateContent]="true" 
           [durationBeforeCallback]="1000" 
           (textChanged)="onTextAreaChanged($event,question.key)"
-          style="min-height: 200px; width:100%; overflow: auto;"></div>
+          style="min-height: 200px; width:100%;"></div>
+        
       </div>
 
       <div class="form-group">

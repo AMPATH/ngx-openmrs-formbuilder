@@ -9,3 +9,6 @@ option{
   padding:10px;
   border-bottom: 1px solid lightgray;
 }
+.data-list{
+    max-height:50px;
+}

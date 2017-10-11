@@ -7,11 +7,13 @@
     </div>
     <div class="modal-body">
       <form #form="ngForm" (ngSubmit)="save(form.value)">
-        <div class="form-group">
+        <div class="form-group data-list">
           <label>Select forms</label>
-
-        <input  [typeahead]="forms" (typeaheadOnSelect)="optionSelected($event)" typeaheadOptionField="name"
-         typeaheadOptionsLimit="15" typeaheadMinLength="0"  class="form-control" id="forms" name="form" ngModel required autocomplete="off">
+          
+        <input list="forms" name="refForm" class="form-control" ngModel required>
+         <datalist id="forms">
+            <option *ngFor="let form of forms"  [value]="form.name">{{form.name}}
+        </datalist>
 
             </div>
 

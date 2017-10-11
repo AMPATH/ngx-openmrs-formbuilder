@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BuildVersionFooterComponent implements OnInit {
 
+  date:string;
+
   constructor() { }
 
   ngOnInit() {
+    // this.date = new Date().getMonth() +"/"+new Date().getDate() +"/"+new Date().getFullYear()+"/" + " "+new Date().toLocaleTimeString();
   }
 
 }

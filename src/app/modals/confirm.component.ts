@@ -20,16 +20,17 @@ export interface ConfirmModel {
                      <h5>{{message || 'Are you sure you want to delete?'}}</h5>
                    </div>
                    <div class="modal-footer">
-                     <button type="button" class="btn btn-danger" (click)="confirm()">{{buttonText}}</button>
+                     <button type="button" class="btn btn-danger" (click)="confirm()">{{buttonText || 'Delete'}}</button>
+                     <div style="display:inline-block" *ngIf="buttonText"><button type="button" class="btn btn-success" (click)="confirmNewVersion()">Save as a new version</button></div>
                      <button type="button" class="btn btn-default" (click)="close()" >Cancel</button>
                    </div>
                  </div>
               </div>`
 })
-export class ConfirmComponent extends DialogComponent<ConfirmModel, boolean> implements ConfirmModel{
+export class ConfirmComponent extends DialogComponent<ConfirmModel, number> implements ConfirmModel{
   title: string;
   message: string;
-  buttonText:string='Delete'
+  buttonText:string;
 
   constructor(dialogService: DialogService) {
     super(dialogService);
@@ -38,11 +39,17 @@ export class ConfirmComponent extends DialogComponent<ConfirmModel, boolean> imp
   close(){
     super.close();
     if(!this.result)
-      this.result = false;
+      this.result = 0;
   }
 
   confirm() {
-    this.result = true;
+    this.result = 1;
+    this.close();
+    return this.result;
+  }
+
+  confirmNewVersion(){
+    this.result = 2;
     this.close();
     return this.result;
   }

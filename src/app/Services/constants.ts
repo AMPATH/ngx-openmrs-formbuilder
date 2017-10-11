@@ -9,4 +9,6 @@ export class Constants {
       public static readonly SCHEMA = "schema";
 
       public static readonly RAW_SCHEMA = "rawSchema";
+
+      public static readonly FORM_METADATA = "formMetadata";
     }

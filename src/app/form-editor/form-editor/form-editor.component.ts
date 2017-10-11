@@ -10,12 +10,33 @@ import { DialogService } from 'ng2-bootstrap-modal';
 import { Form } from '../form-elements/Form';
 import { LocalStorageService } from '../../Services/local-storage.service';
 import { Constants } from '../../Services/constants';
+import { SaveFormsComponent } from '../../modals/save-form-modal/save-form-modal';
+import { ConfirmComponent } from '../../modals/confirm.component';
+import { FormListService } from '../../Services/form-list.service';
+import { SaveFormService } from '../../Services/save-form.service';
+import * as _ from 'lodash';
+
+
+interface FormMetadata{
+	name:string;
+	uuid:string;
+	valueReference:string;
+	resourceUUID:string;
+	version:number;
+	description:string;
+	encounterType:string;
+	auditInfo:any;
+	published:boolean;
+}
 
 @Component({
   selector: 'app-form-editor',
   templateUrl: './form-editor.component.html',
   styleUrls: ['./form-editor.component.css']
 })
+
+
+
 export class FormEditorComponent implements OnInit,OnDestroy{
   	  schema:any;
 	  selectedSchema:any;
@@ -29,14 +50,15 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	  parentQuestion:any;
 	  strRawSchema:string;
 	  subscription:Subscription;
-	  uuid:string
-	  resource:any[];
 	  disableCanDeactivate:boolean=false;
-	  loading:boolean;
+	  viewMode:string;
+	  formMetadata:FormMetadata;
+      @ViewChild('sidenav') public myNav;
+	  loading:boolean=true;
 
-   @ViewChild('sidenav') public myNav;
   constructor( private fs: FetchFormDetailService, private  ns: NavigatorService,public snackbar:MdSnackBar, private router:Router, 
-	private route:ActivatedRoute,public dialogService:DialogService, private ls:LocalStorageService){
+	private route:ActivatedRoute,public dialogService:DialogService, private ls:LocalStorageService,
+	private formListService:FormListService,private saveFormService:SaveFormService){
   }
 
   closeElementEditor(){
@@ -53,27 +75,55 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 
 
   ngOnInit(){
-	this.loading = true;
+	this.viewMode = 'singleView'; //default view mode
+	
+	this.formMetadata = {
+		name:"",
+		uuid:"",
+		valueReference: "",
+		resourceUUID: "",
+		version: null,
+		encounterType : "",
+		description : "",
+		auditInfo: {},
+		published : false,
+	}
+
 	this.fs.setReferencedFormsArray([]);
 	this.subscription = this.fs.loaded().subscribe((isLoaded) =>{
 		if(isLoaded) this.loading = false;
-	})
+	});
 
 	this.subscription = this.route.params.subscribe(params => {
-		this.uuid = params['uuid'];
+		let uuid = params['uuid'];
 
-		if(this.uuid=='new'){
+		if(uuid=='new'){
 			this.createNewForm();
 			}
 
-		else if(this.uuid=='restoredForm'){
-			this.setFormEditor(this.ls.getObject(Constants.SCHEMA),this.ls.getObject(Constants.RAW_SCHEMA));
+		else if(uuid=='restoredForm'){
+			this.setFormEditor(this.ls.getObject(Constants.SCHEMA),this.ls.getObject(Constants.RAW_SCHEMA),this.ls.getObject(Constants.FORM_METADATA));
 		}
 
 		else{
-			this.fs.fetchFormMetadata(this.uuid).then((metadata) => this.fetchForm(metadata.resources[0].valueReference))
+			console.log("uuid",uuid)
+			this.formMetadata.uuid = uuid;
+			this.fs.fetchFormMetadata(this.formMetadata.uuid,false).then((metadata) => {
+				console.log(metadata);
+				this.formMetadata.version = metadata.version;
+				this.formMetadata.name = metadata.name;
+				if(metadata.encounterType) this.formMetadata.encounterType = metadata.encounterType.display;
+				if(metadata.description) this.formMetadata.description = metadata.description;
+				this.formMetadata.valueReference = metadata.resources[0].valueReference || '';
+				this.formMetadata.resourceUUID = metadata.resources[0].uuid;
+				this.formMetadata.auditInfo = metadata.auditInfo;
+				this.formMetadata.published = metadata.published;
+				// this.saveFormMetadata(this.formMetadata); //save form metadata to local storage for retrieval later on
+				this.fetchForm(metadata.resources[0].valueReference);
+			})
 			.catch(e => {
 				this.loading = false;
+				console.error(e);
 				alert("Check your internet connection then refresh.");
 			});
 		}
@@ -82,19 +132,19 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	
 	this.subscription = this.ns.getRawSchema().subscribe(res =>{
 		this.rawSchema = res;
-		this.strRawSchema = JSON.stringify(this.rawSchema,null,"\t")
-	})
+		this.strRawSchema = JSON.stringify(this.rawSchema,null,"\t");
+		if(this.ls.getObject(Constants.SCHEMA)) if(this.rawSchema.name==this.ls.getObject(Constants.SCHEMA).name) this.saveRawDraft(this.rawSchema); //only save when compiled version exists in memory.
+	});
 	
 	
 	this.subscription = this.ns.getClickedElementRawSchema().subscribe(res => 
 		{
-			console.log("received raw",res)
 			this.rawSelectedSchema = res
 			this.strRawSchema = JSON.stringify(this.rawSelectedSchema,null,"\t")
 		
 		}
-	)
- 
+	);
+ //prevent from saving form metadata.
   //on navigator element clicked for editing
   this.subscription= this.ns.getClickedElementSchema().subscribe(
 	  res => {
@@ -109,6 +159,8 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		  
 		  this.schema = res;
 		  this.strSchema = JSON.stringify(this.schema,null,'\t');
+		  this.saveDraft(this.schema);
+		  this.saveFormMetadata(this.formMetadata);
 		  this.showSnackbar();
 	  }
 
@@ -123,10 +175,17 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		this.question = res['questionIndex'];
 		this.parentQuestion = res['parentQuestionIndex'];
 		this.myNav.close();
+});
+
+
+	//getting new form metadata after saving remotely
+	this.subscription = this.saveFormService.getNewResourceUUID().subscribe(uuid => this.formMetadata.resourceUUID = uuid);
+	this.subscription = this.saveFormService.getNewValueReference().subscribe(value => this.formMetadata.valueReference = value);
+	this.subscription = this.saveFormService.getNewFormUUID().subscribe(uuid => {
+		this.formMetadata.uuid = uuid;
+		this.disableCanDeactivate = true;
+		this.router.navigate(['/edit',uuid]);
 	});
-
-
-	
   }
 
   fetchForm(value){
@@ -149,6 +208,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 
   createNewForm(){
 	this.loading = false;
+	this.ls.clear(); //clear local storage
 	let schema=new Form({"name":"","processor":"EncounterFormProcessor","uuid":"xxxx","referencedForms":[],"pages":[]});
 	this.setFormEditor(schema,schema);	
   }
@@ -167,11 +227,9 @@ export class FormEditorComponent implements OnInit,OnDestroy{
   }
 
   checkIfSchemaProperlyCompiled(elements):boolean{
-	
 	let bool = true;
 	let ets = [];
 	elements.forEach((element)=>{
-
 		if(!element.label){
 			this.loading = false;
 			ets.push(element);
@@ -206,15 +264,104 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	this.snackbar.openFromComponent(SnackbarComponent,{duration:1500,});
 }
 
-setFormEditor(schema,rawSchema){
+setFormEditor(schema,rawSchema,formMetadata?){
 	this.selectedSchema = schema;
 	this.schema = schema;
 	this.strSchema = JSON.stringify(schema,null,'\t');
 	this.rawSchema = rawSchema;
 	this.ns.setRawSchema(this.rawSchema);
 	this.strRawSchema = JSON.stringify(this.rawSchema,null,"\t");
+	if(formMetadata) this.formMetadata = formMetadata; // if form is being restored from local storage, retrieve metadata.
+}
+
+saveLocally(silently?:boolean){
+	
+	this.saveDraft(this.schema);
+	this.saveRawDraft(this.rawSchema);
+	this.saveFormMetadata(this.formMetadata);
+	if(!silently) this.showSaveSnackbar();
+	
+}
+
+saveRemotely(){
+	this.saveLocally(true);
+	if(this.formMetadata.published||!_.isEmpty(this.formMetadata.uuid)){
+		let message="";
+		if(this.formMetadata.published){
+			message = "This form has been published. Would you want to overwrite the existing form?";
+		}
+
+		if(!_.isEmpty(this.formMetadata.uuid)){
+			message = "Would you want to update the form or save as a new version?"
+		}
+		this.dialogService.addDialog(ConfirmComponent,{title:"Confirm Save", message:message, buttonText:"Update current version"},{backdropColor:'rgba(0,0, 0, 0.5)'})
+		.subscribe((decision)=>{
+				if(decision==1) { 
+						//overwrite existing form
+						this.showSaveDialog("overwrite");
+				}
+
+				if(decision==2){
+					//save as a new version
+					let newVersion = +this.formMetadata.version+0.1;
+					let schemaName = this.formListService.removeVersionInformation(this.schema.name)+"_v"+newVersion;
+					this.showSaveDialog("new",schemaName,newVersion);
+				}
+			});
+			
+	}
+
+	else{
+		this.showSaveDialog("new");
+	}
+	this.saveLocally(true);
+	
+}
+
+showSaveDialog(operation:string,newSchemaName?,newVersion?){
+	this.dialogService.addDialog(SaveFormsComponent, {
+		title:"Save Form",
+		operation:operation,
+		name: newSchemaName || this.schema.name,
+		uuid:this.formMetadata.uuid,
+		version: +newVersion || +this.formMetadata.version,
+		encounterType:this.formMetadata.encounterType,
+		description:this.formMetadata.description,
+		rawSchema:this.rawSchema,
+		valueReference:this.formMetadata.valueReference,
+		resourceUUID:this.formMetadata.resourceUUID
+		   }, { backdropColor: 'rgba(255, 255, 255, 0.5)' });
+}
+
+toggleView(){
+	this.viewMode = this.viewMode == 'singleView' ? 'multiView' : 'singleView';
 }
 
 
+showSaveSnackbar(){
+	this.snackbar.open("Saved Locally!","",{duration:1200});
+  }
+
+  saveDraft(schema:any){
+
+	this.ls.setObject(Constants.SCHEMA,schema);
+   
+  }
+  
+  saveRawDraft(rawSchema:any){
+
+	this.ls.setObject(Constants.RAW_SCHEMA,rawSchema);
+	
+	
+  }
+
+  saveFormMetadata(formMetadata){
+	this.ls.setObject(Constants.FORM_METADATA,formMetadata);
+  }
+  exit(){
+	  this.router.navigate(['/forms']);
+  }
+  
+  
 }
 

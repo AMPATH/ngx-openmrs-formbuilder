@@ -8,10 +8,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormEditorModule } from './form-editor/form-editor/form-editor.module';
 import {AuthenticationModule} from './authentication/authentication.module';
 import { TypeaheadModule } from 'ngx-bootstrap';
+import {AppMaterialModule} from './app-material-module';
 import 'hammerjs';
-
-
-
 import { AppComponent } from './app.component';
 import { ConfirmComponent } from './modals/confirm.component';
 import { AlertComponent } from './modals/alert.component';
@@ -24,12 +22,18 @@ import { ReferenceModalComponent } from './modals/reference-form-modal/reference
 import { NavigatorModalComponent } from './modals/navigator.modal';
 import { ViewFormsComponent } from './view-forms/view-forms.component';
 import { LoginComponent } from './login/login.component';
-import {SnackbarComponent} from './form-editor/snackbar/snackbar.component'
+import { SnackbarComponent } from './form-editor/snackbar/snackbar.component';
+import { SaveFormsComponent } from './modals/save-form-modal/save-form-modal';
 
 import {AuthGuardService} from './Services/auth-guard.service';
-import {SearchFormFilterPipe} from './pipes/search-form-filter.pipe';
+import { SaveFormService } from './Services/save-form.service';
+import {  EncounterTypeService } from './Services/encounter-type.service';
+import { FormListService } from './Services/form-list.service';
+import { SearchFormFilterPipe } from './pipes/search-form-filter.pipe';
 import { SetMembersModalComponent } from './modals/set-members-modal/set-members-modal.component';
 import { BuildVersionFooterComponent } from './build-version-footer/build-version-footer.component'; 
+import { SaveSnackbarComponent } from './form-editor/snackbar/saved-snackbar';
+import { FormBuilderComponent } from './app-entry-point/form-builder.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +41,7 @@ import { BuildVersionFooterComponent } from './build-version-footer/build-versio
     AlertComponent,
     PromptComponent,
     AnswersComponent,
+    SaveFormsComponent,
     ConceptsModalComponent,
     ReferenceModalComponent,
     NavigatorModalComponent,
@@ -47,7 +52,8 @@ import { BuildVersionFooterComponent } from './build-version-footer/build-versio
     SearchFormFilterPipe,
     SetMembersModalComponent,
     SnackbarComponent,
-    BuildVersionFooterComponent
+    BuildVersionFooterComponent, 
+    SaveSnackbarComponent, FormBuilderComponent
   ],
 
 
@@ -60,7 +66,8 @@ import { BuildVersionFooterComponent } from './build-version-footer/build-versio
     FormEditorModule,
     AppRoutingModule,
     AuthenticationModule,
-    TypeaheadModule.forRoot()
+    TypeaheadModule.forRoot(),
+    AppMaterialModule
   ],
   entryComponents: [ConfirmComponent,
      AlertComponent,
@@ -72,9 +79,11 @@ import { BuildVersionFooterComponent } from './build-version-footer/build-versio
      InsertReferenceComponent,
      SchemaModalComponent,
      SetMembersModalComponent,
-     SnackbarComponent],
+     SnackbarComponent,
+     SaveFormsComponent,
+    SaveSnackbarComponent],
 
-  providers:[AuthGuardService],
+  providers:[AuthGuardService,EncounterTypeService,FormListService,SaveFormService],
   
   bootstrap: [AppComponent]
 })

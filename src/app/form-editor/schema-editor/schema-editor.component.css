@@ -12,3 +12,8 @@ a{
 .material-icons:hover{
     color:#5cb85c;
 }
+
+.btn-primary{
+    padding:10px;
+    margin-bottom:10px;
+}

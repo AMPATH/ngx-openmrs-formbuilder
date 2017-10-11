@@ -28,10 +28,9 @@ a{
     color:#008cba !important;  
 }
 
-#schema{
-    
-
-    
+.well{
+   border: none;
+   background: none;    
 }
 
 .formName{

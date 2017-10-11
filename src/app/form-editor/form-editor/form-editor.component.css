@@ -43,6 +43,11 @@ a{
 .row{
     display: flex;
 }
+.btn-default {
+    color: #fff;
+    background: rgba(0, 0, 0, 0);
+    border:none;
+}
 
 .editor{
     flex-grow: 1;
@@ -58,6 +63,8 @@ a{
   position: absolute;
   left: 30%;
   top: 25%;
+  right: 50%;
+  bottom: 50%;
   margin-left: -32px; /* -1 * image width / 2 */
   margin-top: -32px; /* -1 * image height / 2 */
   
@@ -65,12 +72,37 @@ a{
 
 .element-editor{
     margin:auto;
-    min-width:750px;
-    /* min-height:95vh; */
+    
+}
+.bold{
+    font-weight:700;
+    color:black;
 }
 
 .schema-editor{
     margin:auto;
     height: auto;
     /* width:1600px; */
+}
+.menu{
+    margin-left:10px;
+}
+
+.hr{
+    border-bottom:1px solid lightgray;
+}
+.audit-content{
+    margin-top:20px;
+    margin-bottom: 10px;
+}
+
+.form-control{
+    display:inline-block !important;
+}
+.app-content{
+    border-top:1px solid #3f51b5;
+}
+
+.row{
+    margin-top:10px;
 }
