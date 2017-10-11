@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
 import {AceEditorComponent} from 'ng2-ace-editor';
 import {NavigatorService} from '../../Services/navigator.service';
 import {MdSnackBar} from '@angular/material';
-import { FormSchemaCompiler } from 'ng2-openmrs-formentry';
+import { FormSchemaCompiler } from '../../Services/schema-compiler.service';
 import {FetchFormDetailService} from '../../Services/fetch-form-detail.service';
 import  * as _ from "lodash";
 import 'brace/index';
@@ -15,7 +15,8 @@ import 'brace/ext/searchbox';
 @Component({
   selector: 'app-schema-editor',
   templateUrl: './schema-editor.component.html',
-  styleUrls: ['./schema-editor.component.css']
+  styleUrls: ['./schema-editor.component.css'],
+  providers:[FormSchemaCompiler]
 })
 
 
@@ -47,7 +48,6 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
 
    @Input()
    set rawSchema(schema){
-     console.log(schema);
     this._rawSchema = schema;
     this.editor.setText(this._rawSchema);
     this.editor.getEditor().scrollToLine(0);
@@ -98,6 +98,10 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
       this.editor.getEditor().scrollToLine(0);
       this.editor.setTheme('chrome');
     });
+
+    setTimeout(() =>{
+      this.render();
+    },1000*120); //save schema every 2 minutes
            
   }
 
@@ -105,33 +109,24 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
   render(){
     let editedSchema=this.editor.getEditor().getValue();
     let rawSchema = _.cloneDeep(editedSchema);
+    let compiledSchema;
     try{
-      let compiledSchema = this.compileSchema(JSON.parse(editedSchema));
-      console.log(compiledSchema);
-        // this.ns.setSchema(compiledSchema);
-        // this.ns.setRawSchema(JSON.parse(rawSchema));
-    }
-
+          compiledSchema=this.fsc.compileFormSchema(JSON.parse(editedSchema),this.referencedForms)
+        }
     catch(e){
-      console.error(e);
+      compiledSchema = e;
+      this.errorMessage = "Invalid JSON schema. " + e;
     }
     
-    
+    let schema = JSON.parse(JSON.stringify(compiledSchema));
+    if(!_.isEmpty(schema)){
+      this.errorMessage = undefined;
+      this.ns.setSchema(compiledSchema);
+      this.ns.setRawSchema(JSON.parse(rawSchema));
+    }
   }
 
-  compileSchema(schema:Object){
-    let comp;
-    try{
-      comp=this.fsc.compileFormSchema(schema,this.referencedForms)
-    }
 
-    catch(e){
-      comp = e;
-    }
-
-    return comp;
-    
-  }
 
   showSnackbar(){
       this.snackbar.open("Copied to clipboard","",{duration:1200});

@@ -11,12 +11,12 @@
 </div>
 
 <div style="clear:both;">
-  <div class="alert alert-danger" *ngIf="errorMessage">
-    <small>{{errorMessage}}</small>
-  </div>
   <ace-editor #editor style="height:70vh; width:100%; overflow:auto;"></ace-editor><br/>
   <div class="row">
     <div class="text-center" *ngIf="viewingUncompiled">
+        <div class="alert alert-danger" *ngIf="errorMessage">
+            <small><b>{{errorMessage}}</b></small>
+          </div>
       <button (click)="render()" class="btn btn-primary">Render</button>
     </div>
   </div>
