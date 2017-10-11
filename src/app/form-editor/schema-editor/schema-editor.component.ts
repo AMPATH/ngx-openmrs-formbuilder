@@ -82,7 +82,7 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
    
-
+    
     this.fs.getReferencedFormsArray().subscribe(refFormArray => this.referencedForms=refFormArray)
 
     this.editor.getEditor().setOptions({
@@ -105,15 +105,32 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
   render(){
     let editedSchema=this.editor.getEditor().getValue();
     let rawSchema = _.cloneDeep(editedSchema);
-    let compiledSchema = this.compileSchema(JSON.parse(editedSchema));
-  
-    this.ns.setSchema(compiledSchema);
-    this.ns.setRawSchema(JSON.parse(rawSchema));
+    try{
+      let compiledSchema = this.compileSchema(JSON.parse(editedSchema));
+      console.log(compiledSchema);
+        // this.ns.setSchema(compiledSchema);
+        // this.ns.setRawSchema(JSON.parse(rawSchema));
+    }
+
+    catch(e){
+      console.error(e);
+    }
+    
     
   }
 
   compileSchema(schema:Object){
-    return this.fsc.compileFormSchema(schema,this.referencedForms)
+    let comp;
+    try{
+      comp=this.fsc.compileFormSchema(schema,this.referencedForms)
+    }
+
+    catch(e){
+      comp = e;
+    }
+
+    return comp;
+    
   }
 
   showSnackbar(){
