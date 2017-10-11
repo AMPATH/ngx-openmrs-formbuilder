@@ -24,8 +24,8 @@
 
                    <div class="form-group" *ngIf="encounterTypes">
                         <label for="encounter-type">Encounter Type</label>
-                        <select class="form-control" formControlName="encounterType">
-                            <option *ngFor="let encounter of encounterTypes" [value]="encounter.uuid">{{encounter.display}}</option>
+                        <select class="form-control" formControlName="encounter">
+                            <option *ngFor="let e of encounterTypes"  [value]="e.uuid">{{e.display}}</option>
                         </select>
                       </div> 
                       

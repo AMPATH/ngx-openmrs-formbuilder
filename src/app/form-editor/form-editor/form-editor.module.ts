@@ -28,6 +28,7 @@ import { FormRendererComponent } from '../form-renderer/form-renderer.component'
 import {DynamicQuestionComponent} from '../element-editor/dynamic-question/dynamic-question.component';
 import { ConceptComponent } from '../concept/concept.component';
 import { FormEditorComponent } from './form-editor.component';
+import { AuditInfoComponent } from '../audit-info/audit-info.component';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { FormEditorComponent } from './form-editor.component';
     ConceptComponent,
     FormEditorComponent,
     ReferenceFormsComponent,
+    AuditInfoComponent
   ],
 
   providers: [

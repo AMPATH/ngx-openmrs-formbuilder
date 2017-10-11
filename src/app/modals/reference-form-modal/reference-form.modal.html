@@ -9,10 +9,14 @@
       <form [formGroup]="form" (keydown)="keyDownFunction($event)">
         <div class="form-group">
           <label for="label">Enter Form Name</label>
-          <input list="refForms" name="form" class="form-control" formControlName="selectField">
+          <input list="refForms" name="form" class="form-control" formControlName="selectField" autocomplete="off">
           <datalist id="refForms">
              <option *ngFor="let form of refForms">{{form.formName}}
          </datalist>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          <small><b>{{errorMessage}}</b></small>
         </div>
       </form>
     </div>

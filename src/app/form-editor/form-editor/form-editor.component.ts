@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild, OnDestroy,AfterViewInit, AfterContentInit } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy,ChangeDetectorRef } from '@angular/core';
 import {SnackbarComponent} from '../snackbar/snackbar.component';
 import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
+import { FetchAllFormsService } from '../../Services/fetch-all-forms.service';
 import { NavigatorService } from '../../Services/navigator.service';
 import { QuestionIdService } from '../../Services/question-id.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
@@ -14,6 +15,7 @@ import { SaveFormsComponent } from '../../modals/save-form-modal/save-form-modal
 import { ConfirmComponent } from '../../modals/confirm.component';
 import { FormListService } from '../../Services/form-list.service';
 import { SaveFormService } from '../../Services/save-form.service';
+import { EncounterTypeService } from '../../Services/encounter-type.service';
 import * as _ from 'lodash';
 
 
@@ -35,8 +37,6 @@ interface FormMetadata{
   styleUrls: ['./form-editor.component.css']
 })
 
-
-
 export class FormEditorComponent implements OnInit,OnDestroy{
   	  schema:any;
 	  selectedSchema:any;
@@ -53,12 +53,13 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	  disableCanDeactivate:boolean=false;
 	  viewMode:string;
 	  formMetadata:FormMetadata;
+	  encounterTypes:any[];
       @ViewChild('sidenav') public myNav;
 	  loading:boolean=true;
 
   constructor( private fs: FetchFormDetailService, private  ns: NavigatorService,public snackbar:MdSnackBar, private router:Router, 
-	private route:ActivatedRoute,public dialogService:DialogService, private ls:LocalStorageService,
-	private formListService:FormListService,private saveFormService:SaveFormService){
+	private route:ActivatedRoute,public dialogService:DialogService, private ls:LocalStorageService,private cdRef:ChangeDetectorRef,private fectAllFormsService:FetchAllFormsService,
+	private formListService:FormListService,private saveFormService:SaveFormService,private encounterTypeService:EncounterTypeService){
   }
 
   closeElementEditor(){
@@ -76,7 +77,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 
   ngOnInit(){
 	this.viewMode = 'singleView'; //default view mode
-	
+	this.cdRef.detectChanges();
 	this.formMetadata = {
 		name:"",
 		uuid:"",
@@ -186,6 +187,10 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		this.disableCanDeactivate = true;
 		this.router.navigate(['/edit',uuid]);
 	});
+
+	this.subscription = this.encounterTypeService.getEncounterTypes().subscribe(res => this.encounterTypes = res.results);
+
+	
   }
 
   fetchForm(value){
@@ -247,7 +252,6 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	});
 
 	if(ets.length>0){
-		
 		this.alertUser(ets);
 	}
 	return bool;
@@ -303,33 +307,33 @@ saveRemotely(){
 
 				if(decision==2){
 					//save as a new version
-					let newVersion = +this.formMetadata.version+0.1;
-					let schemaName = this.formListService.removeVersionInformation(this.schema.name)+"_v"+newVersion;
-					this.showSaveDialog("new",schemaName,newVersion);
+					
+					this.showSaveDialog("new",0);
 				}
 			});
 			
 	}
 
 	else{
-		this.showSaveDialog("new");
+		this.showSaveDialog("new",0);
 	}
 	this.saveLocally(true);
 	
 }
 
-showSaveDialog(operation:string,newSchemaName?,newVersion?){
+showSaveDialog(operation:string,newVersion?:any){
 	this.dialogService.addDialog(SaveFormsComponent, {
 		title:"Save Form",
 		operation:operation,
-		name: newSchemaName || this.schema.name,
+		name:  this.schema.name,
 		uuid:this.formMetadata.uuid,
 		version: +newVersion || +this.formMetadata.version,
 		encounterType:this.formMetadata.encounterType,
 		description:this.formMetadata.description,
 		rawSchema:this.rawSchema,
 		valueReference:this.formMetadata.valueReference,
-		resourceUUID:this.formMetadata.resourceUUID
+		resourceUUID:this.formMetadata.resourceUUID,
+		encounterTypes:this.encounterTypes
 		   }, { backdropColor: 'rgba(255, 255, 255, 0.5)' });
 }
 
@@ -345,6 +349,7 @@ showSaveSnackbar(){
   saveDraft(schema:any){
 
 	this.ls.setObject(Constants.SCHEMA,schema);
+	this.ls.setObject(Constants.TIME_STAMP,Date.now());
    
   }
   
@@ -358,6 +363,46 @@ showSaveSnackbar(){
   saveFormMetadata(formMetadata){
 	this.ls.setObject(Constants.FORM_METADATA,formMetadata);
   }
+
+  publish(form,index){
+	  let forms=[];
+	  let sameFormsDifferentVersion=[];
+	  this.subscription =	this.fectAllFormsService.fetchAllPOCForms().subscribe((POCForms:any) =>{
+		forms = _.cloneDeep(POCForms.results); //currently only poc forms version 1
+		let formName = this.formListService.removeVersionInformation(this.formMetadata.name);
+		forms.splice(index,1);
+		let formsWithoutVersionedNames = this.formListService.removeVersionInformationFromForms(forms);
+		
+		
+		formsWithoutVersionedNames.forEach((form) =>{
+		 if(form.name==formName){
+			sameFormsDifferentVersion.push(form);
+		 }
+	   });
+	
+	   if(!_.isEmpty(sameFormsDifferentVersion))
+	   sameFormsDifferentVersion.forEach((form)=>{
+		 if(form.published) POCForms.results.forEach((pocform) =>{
+		   if(pocform.uuid == form.uuid){
+				this.dialogService.addDialog(ConfirmComponent,
+				{title:"Confirm publish","message":"There is already a version of this form published. Would you like to unpublish that version and publish this one?","buttonText":"Publish"},
+				{backdropColor:"rgba(0,0,0,0.5)"})
+				.subscribe((isConfirmed) => {
+						if(isConfirmed){
+							this.saveFormService.unpublish(pocform.uuid).subscribe((res) => console.log(res));
+						}})}})});
+			console.log("here");
+			this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => this.formMetadata.published = true);
+		
+		});		
+	  }
+
+	  unpublish(){
+		this.saveFormService.unpublish(this.formMetadata.uuid).subscribe((res) => this.formMetadata.published= false);
+		
+	  }
+
+
   exit(){
 	  this.router.navigate(['/forms']);
   }

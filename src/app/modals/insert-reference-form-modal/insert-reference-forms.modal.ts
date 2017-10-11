@@ -16,6 +16,7 @@ export class  InsertReferenceComponent extends DialogComponent<ReferenceModel, s
   title: string;
   forms:any;
   selected:boolean = false;
+  errorMessage:string;
 
   constructor(dialogService: DialogService,private fb:FormBuilder,private cdRef:ChangeDetectorRef) {
     super(dialogService);
@@ -31,9 +32,16 @@ export class  InsertReferenceComponent extends DialogComponent<ReferenceModel, s
 
   save(value) {
     let uuid = this.findFormUUID(value.refForm);
-    value.form = uuid+" "+value.refForm;
-    this.result = value;
-    this.close();
+    if(uuid==undefined){
+      this.errorMessage = "Invalid form."
+    }
+    else{
+      this.errorMessage = undefined;
+      value.form = uuid+" "+value.refForm;
+      this.result = value;
+      this.close();
+    }
+    
   }
 
   optionSelected($event){

@@ -712,8 +712,10 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 		try{
 			if(!_.isEmpty(this._formSchema.pages)){
 				let lastPageIndex:number = this._formSchema.pages.length-1;
-			if(this._formSchema.pages[lastPageIndex].sections){
+
+			if(!_.isEmpty(this._formSchema.pages[lastPageIndex].sections)){
 				let lastSectionIndex:number = this._formSchema.pages[lastPageIndex].sections.indexOf(this._formSchema.pages[lastPageIndex].sections[this._formSchema.pages[lastPageIndex].sections.length-1]);
+				
 				if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex]){
 					if(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions){
 						let lastQuestionIndex:number = this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.indexOf(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.length-1]);

@@ -19,6 +19,7 @@ export class FormRendererComponent implements OnInit {
     this._schema = schema;
     console.log("Got new schema");
     this.form = this.fc.createForm(this._schema,{});
+    
   }
   
 

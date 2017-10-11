@@ -63,10 +63,10 @@
                       <thead>
                         <tr>
                             <th width="40%">Name</th>
-                            <th width="10%">Version</th>
-                            <th width="10%">Published</th>
+                            <th width="20%">Version</th>
+                            <th width="20%">Published</th>
                             <th width="20%">Edit</th>
-                            <th width="20%">Publish</th>
+                            
                         </tr> 
                       </thead>
                       <tbody *ngIf="forms.length>0">
@@ -78,11 +78,6 @@
                                 <td *ngIf="!form.published"><label class="label label-danger">No</label></td>
                                 <td *ngIf="formsWithoutSchemas.indexOf(form.name)>-1"><a  style="cursor: pointer;" data-toggle="tooltip" title="No schema associated with this form"><i class="fa fa-ban" style="color:red;"></i></a></td>
                                 <td *ngIf="formsWithoutSchemas.indexOf(form.name)==-1"><a (click)="editForm(form.uuid)" style="cursor: pointer;" ><button class="btn btn-success">Edit</button></a></td>
-                                <td *ngIf="formsWithoutSchemas.indexOf(form.name)==-1">
-                                  <button (click)="publish(form,i)" class="btn btn-primary">Publish</button>
-                                </td>
-                            
-                                <td *ngIf="formsWithoutSchemas.indexOf(form.name)>-1"><a  style="cursor: pointer;" data-toggle="tooltip" title="No schema associated with this form"><i class="fa fa-ban" style="color:red;"></i></a></td>
                                 
                               </tr>
                             </tbody>

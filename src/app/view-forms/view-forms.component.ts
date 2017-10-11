@@ -54,7 +54,9 @@ export class ViewFormsComponent implements OnInit {
   if(this.ls.getObject(Constants.RAW_SCHEMA)&&this.ls.getObject(Constants.SCHEMA)){
     this.draftAvailable = true;
     let schema = this.ls.getObject(Constants.RAW_SCHEMA);
-    this.restoreMessage=`Form ${schema.name} was last worked on from this browser. Would you like to continue working on this?`;
+    let timestamp;
+    if(this.ls.getObject(Constants.TIME_STAMP)) timestamp = this.ls.getObject(Constants.TIME_STAMP);
+    this.restoreMessage=`Form ${schema.name} was last worked on at ${new Date(parseInt(timestamp))}. Would you like to continue working on this?`;
   }
     
   }
@@ -103,21 +105,5 @@ export class ViewFormsComponent implements OnInit {
     }
   }
 
-  publish(form,index){
-    let forms = _.cloneDeep(this.POCForms);
-    let formName = this.formListService.removeVersionInformation(form.name);
-    forms.splice(index,1);
-    let formsWithoutVersionedNames = this.formListService.removeVersionInformationFromForms(forms);
-    let sameFormsDifferentVersion=[]
-    formsWithoutVersionedNames.forEach((form) =>{
-     if(form.name==formName){
-        sameFormsDifferentVersion.push(form);
-     }
-   });
-   sameFormsDifferentVersion.forEach((form)=>{
-     if(form.published) this.POCForms.forEach((pocform) =>{
-       if(pocform.uuid == form.uuid) console.log(pocform);
-     })
-   })
-  }
+  
 }

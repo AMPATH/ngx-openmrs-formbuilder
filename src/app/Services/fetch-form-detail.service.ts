@@ -34,7 +34,6 @@ export class FetchFormDetailService {
 
 
   public fetchFormMetadata(uuid: string, isComponent: boolean) {
-    console.warn(this.baseUrl,"BASE URL");
     if (this.baseUrl == null || this.credentials == null) {
       this.router.navigate(['/login']);
     } else return this.http.get(`${this.baseUrl}/ws/rest/v1/form/${uuid}?v=full`, {
