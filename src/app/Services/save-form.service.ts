@@ -97,4 +97,14 @@ export class SaveFormService {
   
     ///////////////////////////////////////////////////////////////////////
 
+    publish(uuid){
+        let body = { published : true };
+        return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
+    }
+
+    unpublish(uuid){
+        let body = { published : false};
+        return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json())
+    }
+
 }

@@ -34,6 +34,7 @@ import { SetMembersModalComponent } from './modals/set-members-modal/set-members
 import { BuildVersionFooterComponent } from './build-version-footer/build-version-footer.component'; 
 import { SaveSnackbarComponent } from './form-editor/snackbar/saved-snackbar';
 import { FormBuilderComponent } from './app-entry-point/form-builder.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +54,9 @@ import { FormBuilderComponent } from './app-entry-point/form-builder.component';
     SetMembersModalComponent,
     SnackbarComponent,
     BuildVersionFooterComponent, 
-    SaveSnackbarComponent, FormBuilderComponent
+    SaveSnackbarComponent, 
+    FormBuilderComponent, 
+    
   ],
 
 

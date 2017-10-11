@@ -11,4 +11,6 @@ export class Constants {
       public static readonly RAW_SCHEMA = "rawSchema";
 
       public static readonly FORM_METADATA = "formMetadata";
+
+      public static readonly TIME_STAMP = "timestamp"; //for saving locally
     }

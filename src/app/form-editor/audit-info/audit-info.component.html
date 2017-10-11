@@ -1,0 +1,95 @@
+<div class="row">
+    <div class="col-md-2">
+       <p>Form Name </p> 
+    </div>
+    <div class="col-md-9">
+        <input class="form-control" type="text" [value]="formMetadata.name" disabled>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="col-md-2">
+         <p>UUID </p> 
+      </div>
+      <div class="col-md-9">
+          <input class="form-control" type="text" [value]="formMetadata.uuid" disabled>
+      </div>
+    </div>
+
+
+  <div class="row">
+      <div class="col-md-2">
+         <p> Version </p> 
+      </div>
+      <div class="col-md-9">
+          <input type="text" class="form-control" [value]="formMetadata.version" disabled>
+      </div>
+    </div>
+ 
+ 
+      <div class="row" *ngIf="formMetadata.encounterType">
+          <div class="col-md-2">
+             <p> Encounter Type </p> 
+          </div>
+          <div class="col-md-9">
+              <input type="text" class="form-control" [value]="formMetadata.encounterType" disabled> 
+          </div>
+        </div>
+
+        <div class="row" *ngIf="formMetadata.encounterType">
+            <div class="col-md-2">
+               <p> Published </p> 
+            </div>
+            <div class="col-md-9">
+                <input type="text" class="form-control" [value]="formMetadata.published" disabled> 
+            </div>
+          </div>
+
+        <div class="row" *ngIf="formMetadata.description">
+            <div class="col-md-2">
+               <p> Description </p> 
+            </div>
+            <div class="col-md-9">
+                <textarea class="form-control" [value]="formMetadata.description" disabled></textarea>
+            </div>
+          </div>
+ 
+          <div class="row" *ngIf="formMetadata.auditInfo.creator">
+              <div class="col-md-2">
+                  <p> Created by </p> 
+               </div>
+               <div class="col-md-4">
+                  <input type="text" class="form-control" [value]="formMetadata.auditInfo.creator.display" disabled>
+              </div>
+              <div class="col-md-2">
+                 <p> Date </p> 
+              </div>
+              <div class="col-md-3">
+                  <input type="text" class="form-control" [value]="formMetadata.auditInfo.dateCreated.substring(0,formMetadata.auditInfo.dateCreated.indexOf('T'))" disabled>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="formMetadata.auditInfo.changedBy">
+                <div class="col-md-2">
+                    <p> Changed by </p> 
+                 </div>
+                 <div class="col-md-4">
+                    <input type="text" class="form-control" [value]="formMetadata.auditInfo.changedBy.display" disabled>
+                </div>
+                <div class="col-md-2">
+                   <p> Date </p> 
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" [value]="formMetadata.auditInfo.dateChanged.substring(0,formMetadata.auditInfo.dateChanged.indexOf('T'))" disabled>
+                </div>
+              </div>
+         
+            <div class="row" *ngIf="formMetadata.published">
+                <div class="col-md-2">
+                   <p> Published </p> 
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" [value]="formMetadata.published" disabled>
+                </div>
+              </div>
+           

@@ -29,7 +29,8 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
   refForms:any[];
   searchValue:string="";
   filteredForms:Observable<any[]>;
-  selectField: FormControl = new FormControl("",Validators.required)
+  selectField: FormControl = new FormControl("",Validators.required);
+  errorMessage:string;
 
   constructor(dialogService: DialogService,private fb:FormBuilder,private fs:FetchFormDetailService) {
     super(dialogService);
@@ -59,10 +60,18 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
         this.formAlias = form['alias']
       }
     });
-    if(selectedForm.ref.uuid)
-    this.fs.fetchFormMetadata(selectedForm.ref.uuid,true)
-    .then(res => this.fs.fetchForm(res.resources[0].valueReference,true)
-    .then(schema => this.showNavigatorDialog(schema,this.refElement,`Select ${this.refElement} to reference`)))
+
+    if(selectedForm==undefined){
+      this.errorMessage = "Please select a valid form";
+      return;
+    }
+    if(selectedForm.ref.uuid){
+      this.errorMessage = undefined;
+      this.fs.fetchFormMetadata(selectedForm.ref.uuid,true)
+      .then(res => this.fs.fetchForm(res.resources[0].valueReference,true)
+      .then(schema => this.showNavigatorDialog(schema,this.refElement,`Select ${this.refElement} to reference`)))
+    }
+    
 
     else
     console.error("formName is undefined!");

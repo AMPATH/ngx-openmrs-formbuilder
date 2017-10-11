@@ -29,6 +29,9 @@
             <input type="text" class="form-control" placeholder="Display" name="display" ngModel required>
           </div>
         
+          <div *ngIf="errorMessage" class="alert alert-danger">
+              <small><b>{{errorMessage}}</b></small>
+            </div>
 
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary" [disabled]="!form.valid">OK</button>

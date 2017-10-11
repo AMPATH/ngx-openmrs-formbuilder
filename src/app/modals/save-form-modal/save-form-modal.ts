@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
 import{ FormGroup,FormControl,FormBuilder, Validators } from "@angular/forms";
-import { EncounterTypeService } from '../../Services/encounter-type.service';
+import * as _ from 'lodash';
 import { SaveFormService } from '../../Services/save-form.service';
 import { MdSnackBar } from '@angular/material';
 import { SaveSnackbarComponent } from '../../form-editor/snackbar/saved-snackbar';
@@ -16,6 +16,7 @@ export interface SaveFormModel {
   valueReference:any;
   resourceUUID:any;
   operation:string;
+  encounterTypes:any;
 }
 
 
@@ -33,28 +34,32 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
     version:number;
     encounterType:string;
     description:string;
-    encounterTypes:any;
+    encounterTypes:any[];
     rawSchema:any;
     valueReference:any;
     resourceUUID:any;
     operation:string;
-
+    encounterTypeUUID:string;
     
-  constructor(dialogService: DialogService,private encounterTypeService:EncounterTypeService, private saveFormService:SaveFormService,
+  constructor(dialogService: DialogService, private saveFormService:SaveFormService,
     private fb:FormBuilder,private snackbar:MdSnackBar) {
     super(dialogService);
-   
-    
   }
 
   ngOnInit(){
-      this.encounterTypeService.getEncounterTypes().subscribe((res) => this.encounterTypes=res.results);
+      this.encounterTypes.forEach(encounterType =>{
+        if(encounterType.display == this.encounterType){
+          this.encounterTypeUUID = encounterType.uuid;
+        }
+      });
       this.form = this.fb.group({
         name:new FormControl(this.name || '', Validators.required),
         version:new FormControl(this.version || '', Validators.required),
-        encounterType:new FormControl(this.encounterType || ''),
+        encounter:new FormControl(this.encounterType || ''),
         description:new FormControl(this.description || '')
       });
+
+      
   }
   save(formValue) {
   
@@ -99,8 +104,9 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
 
   // create new form/ update form version
   createForm(form){
+
     this.saveFormService.uploadSchema(this.rawSchema).subscribe(valueReference => {
-      this.saveFormService.saveNewForm(form.name,form.version,false,form.description,form.encounterType).subscribe(createdForm =>{
+      this.saveFormService.saveNewForm(form.name,form.version,false,form.description,form.encounter).subscribe(createdForm =>{
         
         let parsedRes = JSON.parse(createdForm._body);
         console.log(parsedRes);

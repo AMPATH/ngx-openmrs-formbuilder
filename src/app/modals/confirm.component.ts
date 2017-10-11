@@ -21,7 +21,7 @@ export interface ConfirmModel {
                    </div>
                    <div class="modal-footer">
                      <button type="button" class="btn btn-danger" (click)="confirm()">{{buttonText || 'Delete'}}</button>
-                     <div style="display:inline-block" *ngIf="buttonText"><button type="button" class="btn btn-success" (click)="confirmNewVersion()">Save as a new version</button></div>
+                     <div style="display:inline-block" *ngIf="buttonText.indexOf('consequences')>-1"><button type="button" class="btn btn-success" (click)="confirmNewVersion()">Save as a new version</button></div>
                      <button type="button" class="btn btn-default" (click)="close()" >Cancel</button>
                    </div>
                  </div>

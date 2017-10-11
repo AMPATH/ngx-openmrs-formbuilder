@@ -43,7 +43,7 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
       this.viewingUncompiled = true;
       this.editor.viewingCompiled = false;
       this.tooltip="View Compiled";
-      this.badge="Raw"
+      this.badge="Raw";
    }
 
    @Input()
@@ -100,8 +100,9 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
     });
 
     setTimeout(() =>{
-      this.render();
-    },1000*120); //save schema every 2 minutes
+      let editedSchema=JSON.parse(this.editor.getEditor().getValue());
+      if(!_.isEqual(editedSchema,this._rawSchema)) this.render();
+    },1000*180); //save schema every 3 minutes
            
   }
 
