@@ -17,6 +17,8 @@ export class SaveFormService {
  private newResourceUUID:Subject<string> = new Subject();
  private newUUID:Subject<string> = new Subject();
  private formName:Subject<string> = new Subject();
+ private newVersion:Subject<string> = new Subject();
+ private newDescription:Subject<string> = new Subject();
  constructor(private http:Http, private sessionStorageService:SessionStorageService){
      
     let credentials = sessionStorageService.getItem(Constants.CREDENTIALS_KEY);
@@ -102,6 +104,25 @@ export class SaveFormService {
     getNewFormName(){
         return this.formName.asObservable();
     }
+
+    setNewVersion(version:string){
+        return this.newVersion.next(version)
+    }
+
+    getNewVersion(){
+        return this.newVersion.asObservable();
+    }
+
+
+    setNewDescription(description:string){
+        return this.newDescription.next(description);
+    }
+
+    getNewDescription(){
+        return this.newDescription.asObservable();
+    }
+
+
     ///////////////////////////////////////////////////////////////////////
 
     publish(uuid){
@@ -117,6 +138,18 @@ export class SaveFormService {
     updateName(name:string,uuid){
         let body = { name : name };
         this.setNewFormName(name);
+        return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
+    }
+
+    updateVersion(version:string,uuid){
+        let body = { version : version };
+        this.setNewVersion(version);
+        return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
+    }
+
+    updateDescription(description:string,uuid){
+        let body = { description : description };
+        this.setNewDescription(description);
         return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
     }
 
