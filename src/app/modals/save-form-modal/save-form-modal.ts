@@ -9,7 +9,7 @@ export interface SaveFormModel {
   title:string;
   name:any;
   uuid:string;
-  version:number;
+  version:string;
   encounterType:string;
   description:string;
   rawSchema:any;
@@ -17,6 +17,7 @@ export interface SaveFormModel {
   resourceUUID:any;
   operation:string;
   encounterTypes:any;
+  published:boolean;
 }
 
 
@@ -31,7 +32,7 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
     title:string;
     name:any;
     uuid:string;
-    version:number;
+    version:string;
     encounterType:string;
     description:string;
     encounterTypes:any[];
@@ -40,6 +41,7 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
     resourceUUID:any;
     operation:string;
     encounterTypeUUID:string;
+    published:boolean;
     
   constructor(dialogService: DialogService, private saveFormService:SaveFormService,
     private fb:FormBuilder,private snackbar:MdSnackBar) {
@@ -70,6 +72,12 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
         this.updateName(formValue.name,this.uuid).subscribe((res) =>{
           this.updateForm();
         });
+
+      else if(this.version!=formValue.version){
+          this.saveFormService.updateVersion(formValue.version,this.uuid).subscribe((res) =>{
+            this.updateForm();
+          });
+      }
 
       else{
         this.updateForm();

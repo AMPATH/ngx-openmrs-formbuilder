@@ -24,7 +24,7 @@ interface FormMetadata{
 	uuid:string;
 	valueReference:string;
 	resourceUUID:string;
-	version:number;
+	version:string;
 	description:string;
 	encounterType:string;
 	auditInfo:any;
@@ -196,9 +196,16 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	this.subscription = this.saveFormService.getNewFormName().subscribe((res) => {
 		this.formMetadata.name = res;
 		this.saveFormMetadata(this.formMetadata);
-	})
+	});
+
+	this.subscription = this.saveFormService.getNewVersion().subscribe((res) => {
+		this.formMetadata.version = res;
+		this.saveFormMetadata(this.formMetadata);
+	});
+
 
 	this.subscription = this.encounterTypeService.getEncounterTypes().subscribe(res => this.encounterTypes = res.results);
+
 
 	
   }
@@ -317,33 +324,34 @@ saveRemotely(){
 				if(decision==2){
 					//save as a new version
 					
-					this.showSaveDialog("new",0);
+					this.showSaveDialog("new",'0');
 				}
 			});
 			
 	}
 
 	else{
-		this.showSaveDialog("new",0);
+		this.showSaveDialog("new",'0');
 	}
 	this.saveLocally(true);
 	
 }
 
-showSaveDialog(operation:string,newVersion?:any){
+showSaveDialog(operation:string,newVersion?:string){
 	console.log(this.formMetadata.name);
 	this.dialogService.addDialog(SaveFormsComponent, {
 		title:"Save Form",
 		operation:operation,
 		name:  this.formMetadata.name,
 		uuid:this.formMetadata.uuid,
-		version: +newVersion || +this.formMetadata.version,
+		version: newVersion || this.formMetadata.version,
 		encounterType:this.formMetadata.encounterType,
 		description:this.formMetadata.description,
 		rawSchema:this.rawSchema,
 		valueReference:this.formMetadata.valueReference,
 		resourceUUID:this.formMetadata.resourceUUID,
-		encounterTypes:this.encounterTypes
+		encounterTypes:this.encounterTypes,
+		published:this.formMetadata.published
 		   }, { backdropColor: 'rgba(255, 255, 255, 0.5)' });
 }
 
