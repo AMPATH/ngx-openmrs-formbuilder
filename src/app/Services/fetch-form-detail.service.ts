@@ -134,6 +134,15 @@ export class FetchFormDetailService {
     return this.formEditorLoaded.asObservable();
   }
 
+  restoreReferencedForms(schema){
+    if (schema.referencedForms) {
+                  this.setReferencedForms(schema.referencedForms);
+                  return this.fetchReferencedFormSchemas(schema.referencedForms).then(referencedForms => {
+                    this.referencedFormsSubject = new BehaviorSubject(referencedForms)
+                  });
+      
+                }
+  }
 
 }
 

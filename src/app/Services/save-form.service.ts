@@ -16,7 +16,7 @@ export class SaveFormService {
  private newValueReference:Subject<string> = new Subject();
  private newResourceUUID:Subject<string> = new Subject();
  private newUUID:Subject<string> = new Subject();
-
+ private formName:Subject<string> = new Subject();
  constructor(private http:Http, private sessionStorageService:SessionStorageService){
      
     let credentials = sessionStorageService.getItem(Constants.CREDENTIALS_KEY);
@@ -95,6 +95,13 @@ export class SaveFormService {
         return this.newUUID.asObservable();
     }
   
+    setNewFormName(name:string){
+        return this.formName.next(name);
+    }
+
+    getNewFormName(){
+        return this.formName.asObservable();
+    }
     ///////////////////////////////////////////////////////////////////////
 
     publish(uuid){
@@ -104,7 +111,13 @@ export class SaveFormService {
 
     unpublish(uuid){
         let body = { published : false};
-        return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json())
+        return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
+    }
+
+    updateName(name:string,uuid){
+        let body = { name : name };
+        this.setNewFormName(name);
+        return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
     }
 
 }

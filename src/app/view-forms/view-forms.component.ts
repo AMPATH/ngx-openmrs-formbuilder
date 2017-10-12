@@ -56,7 +56,7 @@ export class ViewFormsComponent implements OnInit {
     let schema = this.ls.getObject(Constants.RAW_SCHEMA);
     let timestamp;
     if(this.ls.getObject(Constants.TIME_STAMP)) timestamp = this.ls.getObject(Constants.TIME_STAMP);
-    this.restoreMessage=`Form ${schema.name} was last worked on at ${new Date(parseInt(timestamp))}. Would you like to continue working on this?`;
+    this.restoreMessage=`Form ${this.ls.getObject(Constants.FORM_METADATA).name} was last worked on at ${new Date(parseInt(timestamp))}. Would you like to continue working on this?`;
   }
     
   }
