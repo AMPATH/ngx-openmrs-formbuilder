@@ -103,7 +103,12 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 			}
 
 		else if(uuid=='restoredForm'){
-			this.setFormEditor(this.ls.getObject(Constants.SCHEMA),this.ls.getObject(Constants.RAW_SCHEMA),this.ls.getObject(Constants.FORM_METADATA));
+			
+			this.fs.restoreReferencedForms(this.ls.getObject(Constants.RAW_SCHEMA)).then((res) => {
+				console.log(res);
+				this.setFormEditor(this.ls.getObject(Constants.SCHEMA),this.ls.getObject(Constants.RAW_SCHEMA),this.ls.getObject(Constants.FORM_METADATA));
+			});
+			
 		}
 
 		else{
@@ -140,6 +145,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	
 	this.subscription = this.ns.getClickedElementRawSchema().subscribe(res => 
 		{
+			
 			this.rawSelectedSchema = res
 			this.strRawSchema = JSON.stringify(this.rawSelectedSchema,null,"\t")
 		
@@ -187,6 +193,10 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		this.disableCanDeactivate = true;
 		this.router.navigate(['/edit',uuid]);
 	});
+	this.subscription = this.saveFormService.getNewFormName().subscribe((res) => {
+		this.formMetadata.name = res;
+		this.saveFormMetadata(this.formMetadata);
+	})
 
 	this.subscription = this.encounterTypeService.getEncounterTypes().subscribe(res => this.encounterTypes = res.results);
 
@@ -196,8 +206,6 @@ export class FormEditorComponent implements OnInit,OnDestroy{
   fetchForm(value){
 
    this.fs.fetchForm(value,false).then(res => {
-		//	this.fs.getReferencedFormsArray().subscribe(res => console.log("REFERENCE FORM",res));
-
 			if(this.checkIfSchemaProperlyCompiled(res.pages)){
 				this.setFormEditor(res,this.fs.rawSchema);
 			}
@@ -292,10 +300,11 @@ saveRemotely(){
 	if(this.formMetadata.published||!_.isEmpty(this.formMetadata.uuid)){
 		let message="";
 		if(this.formMetadata.published){
+			console.log(this.formMetadata.published);
 			message = "This form has been published. Would you want to overwrite the existing form?";
 		}
 
-		if(!_.isEmpty(this.formMetadata.uuid)){
+		else if(!_.isEmpty(this.formMetadata.uuid)){
 			message = "Would you want to update the form or save as a new version?"
 		}
 		this.dialogService.addDialog(ConfirmComponent,{title:"Confirm Save", message:message, buttonText:"Update current version"},{backdropColor:'rgba(0,0, 0, 0.5)'})
@@ -322,10 +331,11 @@ saveRemotely(){
 }
 
 showSaveDialog(operation:string,newVersion?:any){
+	console.log(this.formMetadata.name);
 	this.dialogService.addDialog(SaveFormsComponent, {
 		title:"Save Form",
 		operation:operation,
-		name:  this.schema.name,
+		name:  this.formMetadata.name,
 		uuid:this.formMetadata.uuid,
 		version: +newVersion || +this.formMetadata.version,
 		encounterType:this.formMetadata.encounterType,
@@ -350,6 +360,7 @@ showSaveSnackbar(){
 
 	this.ls.setObject(Constants.SCHEMA,schema);
 	this.ls.setObject(Constants.TIME_STAMP,Date.now());
+	
    
   }
   
@@ -380,19 +391,28 @@ showSaveSnackbar(){
 		 }
 	   });
 	
-	   if(!_.isEmpty(sameFormsDifferentVersion))
-	   sameFormsDifferentVersion.forEach((form)=>{
-		 if(form.published) POCForms.results.forEach((pocform) =>{
-		   if(pocform.uuid == form.uuid){
-				this.dialogService.addDialog(ConfirmComponent,
-				{title:"Confirm publish","message":"There is already a version of this form published. Would you like to unpublish that version and publish this one?","buttonText":"Publish"},
-				{backdropColor:"rgba(0,0,0,0.5)"})
-				.subscribe((isConfirmed) => {
-						if(isConfirmed){
-							this.saveFormService.unpublish(pocform.uuid).subscribe((res) => console.log(res));
-						}})}})});
-			console.log("here");
-			this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => this.formMetadata.published = true);
+	   if(!_.isEmpty(sameFormsDifferentVersion)){
+		sameFormsDifferentVersion.forEach((form)=>{
+			if(form.published) POCForms.results.forEach((pocform) =>{
+			  if(pocform.uuid == form.uuid){
+				   this.dialogService.addDialog(ConfirmComponent,
+				   {title:"Confirm publish","message":"There is already a version of this form published. Would you like to unpublish that version and publish this one?","buttonText":"Publish"},
+				   {backdropColor:"rgba(0,0,0,0.5)"})
+				   .subscribe((isConfirmed) => {
+						   if(isConfirmed){
+							   this.saveFormService.unpublish(pocform.uuid).subscribe((res) => this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => this.formMetadata.published = true));
+						   }})}})
+						   else{
+							   this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => this.formMetadata.published = true); //if none of the other versions are published.
+						   }
+					   });
+	   }
+	   
+	   else{
+		this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => this.formMetadata.published = true);
+	   }
+			
+			
 		
 		});		
 	  }

@@ -62,9 +62,18 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
       
   }
   save(formValue) {
+
+
   
     if(this.operation == 'overwrite'){
-      this.updateForm();
+      if(this.name!=formValue.name)
+        this.updateName(formValue.name,this.uuid).subscribe((res) =>{
+          this.updateForm();
+        });
+
+      else{
+        this.updateForm();
+      }
     }
 
     if(this.operation == 'new'){
@@ -104,7 +113,7 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
 
   // create new form/ update form version
   createForm(form){
-
+    console.log(form);
     this.saveFormService.uploadSchema(this.rawSchema).subscribe(valueReference => {
       this.saveFormService.saveNewForm(form.name,form.version,false,form.description,form.encounter).subscribe(createdForm =>{
         
@@ -119,6 +128,11 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
             this.showDoneSnackBar();
         })
       })});
+  }
+
+
+  updateName(name:string,uuid:string){
+    return this.saveFormService.updateName(name,uuid);
   }
 
 }

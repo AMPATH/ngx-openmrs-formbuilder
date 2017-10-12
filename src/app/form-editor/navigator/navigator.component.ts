@@ -147,7 +147,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 			this.ns.setClickedElementRawSchema(this.rawSchema);
 		}
 		else{
-			console.log(JSON.stringify(this.rawSchema.pages),pageIndex);
+			console.log(JSON.stringify(this.rawSchema.pages[pageIndex]),pageIndex);
 			this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex]);
 			return;
 		}

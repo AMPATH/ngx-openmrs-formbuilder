@@ -48,6 +48,7 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
 
    @Input()
    set rawSchema(schema){
+    // console.log(schema,"set")
     this._rawSchema = schema;
     this.editor.setText(this._rawSchema);
     this.editor.getEditor().scrollToLine(0);
@@ -93,6 +94,7 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
           this.editor.getEditor().setFontSize(16);
 
     this.ns.getRawSchema().subscribe(schema =>{
+      // console.log(schema,"get")
       this._rawSchema = JSON.stringify(schema,null,"\t");
       this.editor.setText(this._rawSchema);
       this.editor.getEditor().scrollToLine(0);
@@ -101,7 +103,8 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
 
     setTimeout(() =>{
       let editedSchema=JSON.parse(this.editor.getEditor().getValue());
-      if(!_.isEqual(editedSchema,this._rawSchema)) this.render();
+      console.log(editedSchema,this._rawSchema,editedSchema==this._rawSchema);
+      if(!_.isEqual(editedSchema,this._rawSchema)&&this._rawSchema['name']) this.render();
     },1000*180); //save schema every 3 minutes
            
   }
