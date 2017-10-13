@@ -1,32 +1,33 @@
-<nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="#">Form Builder</a>
-          </div>
-          
-          <ul class="nav navbar-nav navbar-right">
-          
-            <li><button type="button" class="btn btn-success btn-circle btn-outline navbar-btn" (click)="createNew()"><i class="fa fa-plus"></i> Create New</button></li>
-            <li><button type="button" class="btn btn-danger btn-circle btn-outline navbar-btn" (click)="logout()">Logout <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i></button></li>
-            
-          </ul>
-        </div>
-      </nav>
+      <md-toolbar color="primary">
+        <span class="name">Form Builder</span>
+        <span class="space"></span>
+        <span flex></span>
+        <span class="menu">
+            <button md-button  (click)="createNew()" class="menuItem"><i class="fa fa-plus"></i> Create New</button>
+            <button md-button  (click)="logout()" class="menuItem"> <i class="fa fa-sign-out"></i> Exit <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i></button>    
+        </span>
+       
+       
+      </md-toolbar>
 
      
 
     
     <div class="container-f">
       <div class="restoreMsg">
-          <div class="alert alert-success" *ngIf="draftAvailable">
-            <div style="display: inline-block">
-                <small style="font-size:14px;"><i class="fa fa-exclamation-circle fa-lg"></i><b> {{restoreMessage}}</b></small>
-            </div>
-              <div style="display:inline-block" class="pull-right">
-              <button class="btn btn-sm btn-primary" (click)="restore()">Restore</button>
-              <button class="btn btn-sm btn-danger" (click)="discard()">Discard</button>
-            </div>
-            </div>
+            <div *ngIf="draftAvailable">
+                <md-card>
+                <div style="display: inline-block">
+                    <small style="font-size:14px;"><i class="fa fa-exclamation-circle fa-lg"></i><b> {{restoreMessage}}</b></small>
+                </div>
+                  <div style="display:inline-block" class="pull-right">
+                  <button class="btn btn-sm btn-primary" (click)="restore()">Restore</button>
+                  <button class="btn btn-sm btn-danger" (click)="discard()">Discard</button>
+                </div>
+                </md-card>
+                </div>
+    
+          
       </div>
         
         <div class="row">

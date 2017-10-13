@@ -84,6 +84,7 @@ export class ElementEditorComponent implements OnInit {
           question.questionOptions['concept']=setMember.concept;
           if(!_.isEmpty(setMember.answers)) question.questionOptions['answers']=setMember.answers;
           this.form.controls['type'].setValue('obsGroup');
+          this.form.controls['questionOptions.rendering'].setValue('group');
           this.setMembers.push(question);
         });
        

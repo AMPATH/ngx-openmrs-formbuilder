@@ -1,5 +1,13 @@
+.panel{
+  background-color:#fff;
+  box-shadow:0px 2px 2px #aaa;
+  border-color:lightgray;
+  
+}
 .panel-table .panel-body{
     padding:0;
+    /* background-color:#fff;
+    box-shadow:0px 2px 2px #aaa; */
   }
   
   .panel-table .panel-body .table-bordered{
@@ -33,6 +41,12 @@
   .panel-table .panel-footer .pagination{
     margin:0; 
   }
+
+  .panel-primary>.panel-heading {
+    color: #fff;
+    background-color: #3f51b5;
+    border-color: #808080;
+}
   
   /*
   used to vertically center elements, may need modification if you're not using default sizes.
@@ -55,9 +69,7 @@
       font-size:14px;
   }
 
-  .mat-toolbar{
-    background:#008daf;
-}
+ 
 .stylish-input-group .input-group-addon{
     background: white !important; 
 }
@@ -89,6 +101,33 @@
   color:black;
 }
 .restoreMsg{
+  margin-top:10px;
  padding-left: 30px;
  padding-right: 30px;
 }
+
+.menuItem{
+  font-weight:500;
+  color:white;
+  font-family:'Roboto';
+  font-size:14px;
+}
+
+.name{
+  font-size:18px;
+  color:white;
+  font-weight:600;
+  
+}
+.space{
+  margin-left:50px;
+}
+md-card{
+ 
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    margin: 5px 5px 5px 50px;
+
+}
+
