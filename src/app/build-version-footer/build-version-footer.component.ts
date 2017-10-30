@@ -8,7 +8,11 @@ import * as env from '../../environments/environment';
 export class BuildVersionFooterComponent implements OnInit {
 
   date: string;
+<<<<<<< 845710052d3fc4fa05cf93679480800954b1c76f
   version: string;
+=======
+
+>>>>>>> bug fixes
   constructor() { }
 
   ngOnInit() {
