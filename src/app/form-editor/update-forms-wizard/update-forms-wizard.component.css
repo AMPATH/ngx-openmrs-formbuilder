@@ -1,0 +1,11 @@
+.fill-space{
+    flex: 1 1 auto;
+}
+
+.progressbar{
+    margin: 50px;
+}
+
+span{
+    display: inline-block;
+}

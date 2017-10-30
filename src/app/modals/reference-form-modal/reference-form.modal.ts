@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy} from '@angular/core';
 import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
 import { FormGroup,FormControl,FormBuilder,Validators } from '@angular/forms'
 import { FetchFormDetailService } from '../../Services/fetch-form-detail.service'
 import { NavigatorModalComponent } from './../navigator.modal';
 import {ReferenceForm} from '../../form-editor/reference-forms/reference-form-model'
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 
 // Observable class extensions
 import 'rxjs/add/observable/of';
@@ -21,7 +21,7 @@ export interface ReferenceFormModalModel {
   templateUrl:'./reference-form.modal.html',
   styleUrls:['./reference-form.madal.css']
 })
-export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalModel, string> implements ReferenceFormModalModel,OnInit {
+export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalModel, string> implements ReferenceFormModalModel,OnInit,OnDestroy {
   title: string;
   refElement:string; //new element to be refd
   form:FormGroup;
@@ -31,14 +31,14 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
   filteredForms:Observable<any[]>;
   selectField: FormControl = new FormControl("",Validators.required);
   errorMessage:string;
-
+  subscription:Subscription;
   constructor(dialogService: DialogService,private fb:FormBuilder,private fs:FetchFormDetailService) {
     super(dialogService);
     this.form = fb.group({selectField : this.selectField})
   }
 
   ngOnInit(){
-    this.fs.fetchReferencedForms().subscribe((res) =>{
+    this.fs.getReferencedFormsDetails().subscribe((res) =>{
       this.refForms = res;
     });
 
@@ -80,17 +80,18 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
 
   showNavigatorDialog(schema,refElement:string,title:string){
     
-    this.dialogService.addDialog(NavigatorModalComponent,
+    this.subscription = this.dialogService.addDialog(NavigatorModalComponent,
        {title:title,schema:schema, referenceElement:refElement.toLowerCase()},{backdropColor:'rgba(0, 0, 0, 0.8)'})
     .subscribe((formValue)=>{
+
       let i = {}
       i['form']=this.formAlias;
       i[refElement+'s']=formValue;
     
       if(formValue!=undefined) {
-        
-       this.result = JSON.stringify(i);
-       this.close()
+        console.log(i);
+        this.result = JSON.stringify(i);
+        this.close();
         }  
         
       
@@ -114,5 +115,7 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
   typeaheadOnSelect(e){
     this.save(e.value);
   }
+
+
 
 }

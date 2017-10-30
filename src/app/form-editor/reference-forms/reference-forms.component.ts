@@ -43,7 +43,7 @@ export class ReferenceFormsComponent implements OnInit {
     this.fas.fetchAllComponentForms().subscribe(res => this.componentForms=res.results);
 
     this.ns.getRawSchema().subscribe(res => this._rawSchema = _.cloneDeep(res));
-    this.fs.getReferencedFormsArray().subscribe(res => {
+    this.fs.getReferencedFormsSchemasArray().subscribe(res => {
       if(res.length>0){
         this.refFormsArray = res;
       }
@@ -72,7 +72,7 @@ export class ReferenceFormsComponent implements OnInit {
       if(this._schema.referencedForms) {
         this._schema.referencedForms.push(refForm);
         this._rawSchema.referencedForms.push(refForm);
-        this.fs.setReferencedForms(this._schema.referencedForms);
+        this.fs.setReferencedFormsDetails(this._schema.referencedForms);
       }
       else {
         let newOrderedSchema={}
@@ -91,14 +91,14 @@ export class ReferenceFormsComponent implements OnInit {
         newOrderedSchema['pages'] = this._rawSchema.pages;
         this._rawSchema = newOrderedSchema;
 
-        this.fs.setReferencedForms(newOrderedSchema['referencedForms']);
+        this.fs.setReferencedFormsDetails(newOrderedSchema['referencedForms']);
         
       }
 
 
       this.fs.fetchReferencedFormSchemas([refForm]).then(res => {
         this.refFormsArray.push(res[0]);
-        this.fs.setReferencedFormsArray(this.refFormsArray);
+        this.fs.setReferencedFormsSchemasArray(this.refFormsArray);
         this.ns.setSchema(this._schema);
         this.ns.setRawSchema(this._rawSchema);
       })

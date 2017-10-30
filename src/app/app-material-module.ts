@@ -10,10 +10,11 @@ import {
   MdSnackBarModule,
   MdMenuModule,
   MdTabsModule,
-  MdTooltipModule
+  MdTooltipModule,
+  MdProgressBarModule
 } from '@angular/material';
 
 @NgModule({
-  exports: [MdSidenavModule, MdTabsModule, MdIconModule,  MdButtonModule, MdToolbarModule, MdCardModule, MdSnackBarModule,MdMenuModule,MdTooltipModule]
+  exports: [MdSidenavModule, MdTabsModule, MdIconModule,  MdButtonModule, MdToolbarModule, MdCardModule, MdSnackBarModule,MdMenuModule,MdTooltipModule,MdProgressBarModule]
 })
 export class AppMaterialModule {}

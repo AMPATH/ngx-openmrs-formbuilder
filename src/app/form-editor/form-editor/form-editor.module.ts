@@ -18,6 +18,8 @@ import {ConceptService} from '../../Services/concept.service';
 import {FormFactory} from '../form-elements/form-factory.service';
 import {FetchAllFormsService} from '../../Services/fetch-all-forms.service';
 import {ElementEditorService} from '../../Services/element-editor.service';
+import { FormSchemaCompiler } from '../../Services/schema-compiler.service';
+import { UpdateComponentService } from '../../Services/update-component.service';
 
 //Components
 import { ReferenceFormsComponent } from '../reference-forms/reference-forms.component';
@@ -29,6 +31,8 @@ import {DynamicQuestionComponent} from '../element-editor/dynamic-question/dynam
 import { ConceptComponent } from '../concept/concept.component';
 import { FormEditorComponent } from './form-editor.component';
 import { AuditInfoComponent } from '../audit-info/audit-info.component';
+import { UpdateFormsComponent } from '../update-forms/update-forms.component';
+import { UpdateFormsWizardComponent } from '../update-forms-wizard/update-forms-wizard.component';
 
 @NgModule({
   imports: [
@@ -50,7 +54,9 @@ import { AuditInfoComponent } from '../audit-info/audit-info.component';
     ConceptComponent,
     FormEditorComponent,
     ReferenceFormsComponent,
-    AuditInfoComponent
+    AuditInfoComponent,
+    UpdateFormsComponent,
+    UpdateFormsWizardComponent
   ],
 
   providers: [
@@ -63,7 +69,9 @@ import { AuditInfoComponent } from '../audit-info/audit-info.component';
     ConceptService,
     FormFactory,
     FetchAllFormsService,
-    ElementEditorService
+    ElementEditorService,
+    FormSchemaCompiler,
+    UpdateComponentService
     
   ],
 
@@ -74,7 +82,8 @@ import { AuditInfoComponent } from '../audit-info/audit-info.component';
     ReactiveFormsModule,
     ClipboardModule,
     AppMaterialModule,
-    NavigatorComponent
+    NavigatorComponent,
+    UpdateFormsWizardComponent
 
   ]
 })

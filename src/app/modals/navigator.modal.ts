@@ -12,6 +12,7 @@ export interface NavigatorModalModel {
   title:string;
   referenceElement:string;
   schema:any;
+  prechecked:any;
 }
 
 @Component({
@@ -50,6 +51,7 @@ export class NavigatorModalComponent extends DialogComponent<NavigatorModalModel
   referenceElement:string;
   checkedRefElements:any=[];
   res:string;
+  prechecked:any;
 
   constructor(dialogService: DialogService,private fb:FormBuilder,private fs:FetchFormDetailService) {
     
@@ -65,7 +67,7 @@ export class NavigatorModalComponent extends DialogComponent<NavigatorModalModel
 
   close(){
     super.close();
-    this.res=''
+    this.res='';
   }
 
   save() {

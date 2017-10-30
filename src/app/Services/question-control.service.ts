@@ -91,6 +91,10 @@ export class QuestionControlService {
             value: 'testOrder'
           },
           {
+            key: 'control',
+            value: 'control'
+          },
+          {
             key: 'complex-obs',
             value: 'complex-obs'
           },

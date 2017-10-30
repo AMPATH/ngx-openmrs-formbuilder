@@ -10,6 +10,7 @@ import {AuthenticationModule} from './authentication/authentication.module';
 import { TypeaheadModule } from 'ngx-bootstrap';
 import {AppMaterialModule} from './app-material-module';
 import 'hammerjs';
+
 import { AppComponent } from './app.component';
 import { ConfirmComponent } from './modals/confirm.component';
 import { AlertComponent } from './modals/alert.component';
@@ -34,6 +35,9 @@ import { SetMembersModalComponent } from './modals/set-members-modal/set-members
 import { BuildVersionFooterComponent } from './build-version-footer/build-version-footer.component'; 
 import { SaveSnackbarComponent } from './form-editor/snackbar/saved-snackbar';
 import { FormBuilderComponent } from './app-entry-point/form-builder.component';
+import { Str2Num } from './pipes/string_to_number.pipe';
+import { UpdateFormsWizardComponent } from './modals/update-forms-wizard-modal/update-forms-wizard-modal.component';
+
 
 @NgModule({
   declarations: [
@@ -51,11 +55,13 @@ import { FormBuilderComponent } from './app-entry-point/form-builder.component';
     SchemaModalComponent,
     LoginComponent,
     SearchFormFilterPipe,
+    Str2Num,
     SetMembersModalComponent,
     SnackbarComponent,
     BuildVersionFooterComponent, 
     SaveSnackbarComponent, 
-    FormBuilderComponent, 
+    FormBuilderComponent,
+    UpdateFormsWizardComponent
     
   ],
 
@@ -72,7 +78,8 @@ import { FormBuilderComponent } from './app-entry-point/form-builder.component';
     TypeaheadModule.forRoot(),
     AppMaterialModule
   ],
-  entryComponents: [ConfirmComponent,
+  entryComponents: [
+    ConfirmComponent,
      AlertComponent,
      PromptComponent,
      AnswersComponent,
@@ -84,7 +91,8 @@ import { FormBuilderComponent } from './app-entry-point/form-builder.component';
      SetMembersModalComponent,
      SnackbarComponent,
      SaveFormsComponent,
-    SaveSnackbarComponent],
+    SaveSnackbarComponent,
+    UpdateFormsWizardComponent],
 
   providers:[AuthGuardService,EncounterTypeService,FormListService,SaveFormService],
   

@@ -1,7 +1,7 @@
 import { Component, Input,OnInit,AfterViewChecked,ChangeDetectorRef } from '@angular/core';
 import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
 import{ FormGroup, FormBuilder, FormControl } from "@angular/forms";
-
+import * as _ from 'lodash';
 export interface ReferenceModel {
   title:string;
   forms:any;
@@ -32,9 +32,11 @@ export class  InsertReferenceComponent extends DialogComponent<ReferenceModel, s
 
   save(value) {
     let uuid = this.findFormUUID(value.refForm);
-    if(uuid==undefined){
+
+    if(_.isUndefined(uuid)){
       this.errorMessage = "Invalid form."
     }
+    
     else{
       this.errorMessage = undefined;
       value.form = uuid+" "+value.refForm;

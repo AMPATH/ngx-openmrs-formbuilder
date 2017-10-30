@@ -21,7 +21,8 @@ import * as _ from "lodash";
 export class ElementEditorComponent implements OnInit {
   questions:PropertyModel<any>[];
   _rawSchema: any;
-  _schema:any
+  _schema:any;
+  _questionSchema:any;
   form: FormGroup;
   setMembers:any[] = [];
   @Input() pageIndex: number;
@@ -30,6 +31,7 @@ export class ElementEditorComponent implements OnInit {
   @Input() parentQuestionIndex:number;
   @Input() set rawSchema(rawSchema){this._rawSchema=_.cloneDeep(rawSchema)}; //if edit obsGroup question
   @Output() closeComponent:EventEmitter<boolean>=new EventEmitter(); 
+  
   pageStr: string;
   sectionStr: string;
   questionStr: string;
@@ -53,6 +55,7 @@ export class ElementEditorComponent implements OnInit {
   }
   
   @Input() set _questions(questions){
+    console.log(questions);
     this.questions = questions
     this.form = this.qcs.toFormGroup(this.questions);
     this.setMode(this.form)
@@ -60,7 +63,13 @@ export class ElementEditorComponent implements OnInit {
     
   }
 
-  
+  @Input() set questionSchema(schema:any){
+    this._questionSchema = schema;
+    if(this._questionSchema)
+    if(this._questionSchema.questions) this.setMembers = this._questionSchema.questions;
+  }
+
+
   ngOnInit() {
     console.log(this.qis.getIDs(this._schema));
       this.form = this.qcs.toFormGroup(this.questions);
