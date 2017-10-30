@@ -1,103 +1,119 @@
-      <md-toolbar color="primary">
-        <span class="name">Form Builder</span>
-        <span class="space"></span>
-        <span flex></span>
-        <span class="menu">
-            <button md-button  (click)="createNew()" class="menuItem"><i class="fa fa-plus"></i> Create New</button>
-            <button md-button  (click)="logout()" class="menuItem"> <i class="fa fa-sign-out"></i> Exit <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i></button>    
-        </span>
-       
-       
-      </md-toolbar>
+<md-toolbar color="primary">
+  <span class="name">Form Builder</span>
+  <span class="space"></span>
+  <span flex></span>
+  <span class="menu">
+    <button md-button (click)="createNew()" class="menuItem">
+      <i class="fa fa-plus"></i> Create New</button>
+    <button md-button (click)="logout()" class="menuItem">
+      <i class="fa fa-sign-out"></i> Sign Out
+      <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i>
+    </button>
+  </span>
+</md-toolbar>
+<div class="container-f">
+  <div class="restoreMsg">
+    <div *ngIf="draftAvailable">
+      <md-card>
+        <div style="display: inline-block">
+          <small style="font-size:14px;">
+            <i class="fa fa-exclamation-circle fa-lg"></i>
+            <b> {{restoreMessage}}</b>
+          </small>
+        </div>
+        <div style="display:inline-block" class="pull-right">
+          <button class="btn btn-sm btn-primary" (click)="restore()">Restore</button>
+          <button class="btn btn-sm btn-danger" (click)="discard()">Discard</button>
+        </div>
+      </md-card>
+    </div>
 
-     
 
-    
-    <div class="container-f">
-      <div class="restoreMsg">
-            <div *ngIf="draftAvailable">
-                <md-card>
-                <div style="display: inline-block">
-                    <small style="font-size:14px;"><i class="fa fa-exclamation-circle fa-lg"></i><b> {{restoreMessage}}</b></small>
+  </div>
+
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="panel panel-primary panel-table">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col col-xs-2">
+              <select class="form-control panel-title" (change)="onChange($event.target.value)">
+                <option>POC Forms</option>
+                <option>Component Forms</option>
+              </select>
+            </div>
+
+            <div class="col col-xs-5 pull-right">
+              <div id="imaginary_container">
+                <div class="input-group stylish-input-group">
+                  <input type="text" class="form-control" [(ngModel)]="searchValue" placeholder="Search" id="search-box">
+                  <span class="input-group-addon">
+                    <button>
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </span>
                 </div>
-                  <div style="display:inline-block" class="pull-right">
-                  <button class="btn btn-sm btn-primary" (click)="restore()">Restore</button>
-                  <button class="btn btn-sm btn-danger" (click)="discard()">Discard</button>
-                </div>
-                </md-card>
-                </div>
-    
-          
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+
+
+
+          <table class="table table-striped table-bordered table-list">
+            <thead>
+              <tr>
+                <th width="40%">Name</th>
+                <th width="20%">Version</th>
+                <th width="20%">Published</th>
+                <th width="20%">Actions</th>
+
+              </tr>
+            </thead>
+            <tbody *ngIf="forms.length>0">
+              <tr *ngFor="let form of forms | formfilter: searchValue  | paginate: { itemsPerPage: 10, currentPage: page }; let i = index;">
+
+                <td class="formName">
+                  <b>{{form.name}}</b>
+                </td>
+                <td>{{form.version}}</td>
+                <td *ngIf="form.published">
+                  <label class="label label-success">Yes</label>
+                </td>
+                <td *ngIf="!form.published">
+                  <label class="label label-danger">No</label>
+                </td>
+                <td *ngIf="formsWithoutSchemas.indexOf(form.name)>-1">
+                  <a style="cursor: pointer;" data-toggle="tooltip" title="No schema associated with this form">
+                    <i class="fa fa-ban" style="color:red;"></i>
+                  </a>
+                </td>
+                <td *ngIf="formsWithoutSchemas.indexOf(form.name)==-1">
+                  <a (click)="editForm(form,form.uuid)" style="cursor: pointer;">
+                    <button class="btn btn-success">Edit</button>
+                  </a>
+                </td>
+
+              </tr>
+            </tbody>
+
+            <tbody *ngIf="forms.length==0">
+              <td>{{loadingMessage}}</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="panel-footer">
+          <div class="row">
+            <pagination-controls (pageChange)="page = $event"></pagination-controls>
+          </div>
+        </div>
       </div>
-        
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="panel panel-primary panel-table">
-                  <div class="panel-heading">
-                    <div class="row">
-                      <div class="col col-xs-2">
-                        <select class="form-control panel-title" (change)="onChange($event.target.value)">
-                          <option>POC Forms</option>
-                          <option>Component Forms</option>
-                        </select>
-                      </div>
 
-                     <div class="col col-xs-5 pull-right">
-                          <div id="imaginary_container"> 
-                              <div class="input-group stylish-input-group">
-                                  <input type="text" class="form-control" [(ngModel)]="searchValue" placeholder="Search"  id="search-box">
-                                  <span class="input-group-addon">
-                                      <button>
-                                          <i class="fa fa-search"></i>
-                                      </button>  
-                                  </span>
-                              </div>
-                          </div>
-                      </div> 
-                    </div>
-                  </div>
-                  <div class="panel-body">
-
-                    
-                    
-                    <table class="table table-striped table-bordered table-list">
-                      <thead>
-                        <tr>
-                            <th width="40%">Name</th>
-                            <th width="20%">Version</th>
-                            <th width="20%">Published</th>
-                            <th width="20%">Edit</th>
-                            
-                        </tr> 
-                      </thead>
-                      <tbody *ngIf="forms.length>0">
-                              <tr *ngFor="let form of forms | formfilter: searchValue  | paginate: { itemsPerPage: 13, currentPage: page }; let i = index;">
-                            
-                                <td class="formName"><b>{{form.name}}</b></td>
-                                <td>{{form.version}}</td>
-                                <td *ngIf="form.published"><label class="label label-success">Yes</label></td>
-                                <td *ngIf="!form.published"><label class="label label-danger">No</label></td>
-                                <td *ngIf="formsWithoutSchemas.indexOf(form.name)>-1"><a  style="cursor: pointer;" data-toggle="tooltip" title="No schema associated with this form"><i class="fa fa-ban" style="color:red;"></i></a></td>
-                                <td *ngIf="formsWithoutSchemas.indexOf(form.name)==-1"><a (click)="editForm(form.uuid)" style="cursor: pointer;" ><button class="btn btn-success">Edit</button></a></td>
-                                
-                              </tr>
-                            </tbody>
-
-                      <tbody *ngIf="forms.length==0">
-                        <td>{{loadingMessage}}</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                      </tbody>
-                    </table>
-                
-                  </div>
-                  <div class="panel-footer">
-                    <div class="row">
-                        <pagination-controls (pageChange)="page = $event"></pagination-controls>
-                    </div>
-                  </div>
-                </div>
-    
-    </div></div></div>
-
+    </div>
+  </div>
+</div>

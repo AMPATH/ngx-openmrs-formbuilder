@@ -13,4 +13,10 @@ export class Constants {
       public static readonly FORM_METADATA = "formMetadata";
 
       public static readonly TIME_STAMP = "timestamp"; //for saving locally
+
+      public static readonly COMPONENT = "component";
+
+      public static readonly POC = "poc";
+
+      public static readonly FORM_TYPE = "formType";
     }

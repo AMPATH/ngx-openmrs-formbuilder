@@ -54,24 +54,22 @@ a{
 }
 #loadingDiv{
     
-  height: 400px;
+  height: 85vh;
   position: relative;
   background: transparent;
 }
 
 .loader {
-  position: absolute;
-  left: 30%;
-  top: 25%;
-  right: 50%;
-  bottom: 50%;
-  margin-left: -32px; /* -1 * image width / 2 */
-  margin-top: -32px; /* -1 * image height / 2 */
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   
 }
 
 .element-editor{
     margin:auto;
+    max-width:760px;
     
 }
 .bold{
@@ -83,6 +81,9 @@ a{
     margin:auto;
     height: auto;
     /* width:1600px; */
+}
+.errorToolbar{
+    background: darkcyan;
 }
 .menu{
     margin-left:10px;

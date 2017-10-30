@@ -52,6 +52,10 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
     this._rawSchema = schema;
     this.editor.setText(this._rawSchema);
     this.editor.getEditor().scrollToLine(0);
+    this.viewingUncompiled = true;
+    this.editor.viewingCompiled = false;
+    this.tooltip="View Compiled";
+    this.badge="Raw";
    }
  
    @Input()
@@ -84,7 +88,7 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
   ngOnInit() {
    
     
-    this.fs.getReferencedFormsArray().subscribe(refFormArray => this.referencedForms=refFormArray)
+    this.fs.getReferencedFormsSchemasArray().subscribe(refFormArray => this.referencedForms=refFormArray)
 
     this.editor.getEditor().setOptions({
             printMargin:false
@@ -103,7 +107,6 @@ export class SchemaEditorComponent implements OnInit,OnDestroy {
 
     setTimeout(() =>{
       let editedSchema=JSON.parse(this.editor.getEditor().getValue());
-      console.log(editedSchema,this._rawSchema,editedSchema==this._rawSchema);
       if(!_.isEqual(editedSchema,this._rawSchema)&&this._rawSchema['name']) this.render();
     },1000*180); //save schema every 3 minutes
            

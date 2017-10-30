@@ -59,7 +59,7 @@
                         </a>
                     </div>
 
-                    <div class="pull-right" *ngIf="question.key=='questionOptions.answers'">
+                    <div class="pull-right" *ngIf="question.key=='questionOptions.answers'&&question.value">
                         <a (click)="reselectAnswers()" data-toggle="tooltip" title="Reselect Answers">
                             <i class="fa fa-undo" style="font-size:16px;margin:5px;color:green;cursor:pointer"></i>
                         </a>

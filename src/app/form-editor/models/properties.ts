@@ -22,11 +22,21 @@ export class Properties {
     required: false
   });
 
+  private Answers: PropertyModel <any> = new PropertyModel({
+    label: "Answers",
+    parentPath: 'questionOptions.answers',
+    controlType: "",
+    key: "questionOptions.answers",
+    value: "",
+    order: 9,
+    required: false
+  });
+
   private Validators: PropertyModel < any > = new PropertyModel({
     label: "Validators",
     parentPath: 'validators',
-    controlType: "concept",
-    key: "questionOptions.concept",
+    controlType: "textarea",
+    key: "validators",
     value: "",
     order: 9,
     required: false
@@ -35,8 +45,8 @@ export class Properties {
   private Default: PropertyModel < any > = new PropertyModel({
     label: "Default",
     parentPath: 'default',
-    controlType: "concept",
-    key: "questionOptions.concept",
+    controlType: "textbox",
+    key: "default",
     value: "",
     order: 9,
     required: false
@@ -45,8 +55,8 @@ export class Properties {
   private Original: PropertyModel < any >= new PropertyModel({
     label: "Original",
     parentPath: 'original',
-    controlType: "concept",
-    key: "questionOptions.concept",
+    controlType: "textbox",
+    key: "original",
     value: "",
     order: 9,
     required: false
@@ -55,8 +65,8 @@ export class Properties {
   private Required: PropertyModel < any > = new PropertyModel({
     label: "Required",
     parentPath: 'required',
-    controlType: "concept",
-    key: "questionOptions.concept",
+    controlType: "textbox",
+    key: "required",
     value: "",
     order: 9,
     required: false
@@ -65,8 +75,8 @@ export class Properties {
   private HistoricalExpression: PropertyModel < any > = new PropertyModel({
     label: "Historical Expression",
     parentPath: 'historicalExpression',
-    controlType: "concept",
-    key: "questionOptions.concept",
+    controlType: "textarea",
+    key: "historicalExpression",
     value: "",
     order: 9,
     required: false
@@ -75,8 +85,8 @@ export class Properties {
   private Hide: PropertyModel < any > = new PropertyModel({
     label: "Hide",
     parentPath: 'hide',
-    controlType: "concept",
-    key: "questionOptions.concept",
+    controlType: "textarea",
+    key: "hide",
     value: "",
     order: 9,
     required: false
@@ -85,8 +95,8 @@ export class Properties {
   private OrderSettingUUID: PropertyModel < any > = new PropertyModel({
     label: "Order Setting UUID",
     parentPath: 'questionOptions.orderSettingUuid',
-    controlType: "concept",
-    key: "questionOptions.concept",
+    controlType: "textbox",
+    key: "questionOptions.orderSettingUuid",
     value: "",
     order: 9,
     required: false
@@ -94,9 +104,9 @@ export class Properties {
 
   private OrderRequired: PropertyModel < any > = new PropertyModel({
     label: "Order required",
-    parentPath: 'questionOptions.orderSettingUuid',
+    parentPath: 'questionOptions.orderRequired',
     controlType: "concept",
-    key: "questionOptions.concept",
+    key: "questionOptions.orderRequired",
     value: "",
     order: 9,
     required: false
@@ -106,7 +116,7 @@ export class Properties {
     label: "Calculated Expressions",
     parentPath: "calculatedExpressions",
     controlType: "concept",
-    key: "questionOptions.concept",
+    key: "calculatedExpressions",
     value: "",
     order: 9,
     required: false
@@ -146,7 +156,8 @@ export class Properties {
     this.OrderRequired,
     this.CalculatedExpressions,
     this.Alert,
-    this.QuestionInfo
+    this.QuestionInfo,
+    this.Answers
   ]
  
 

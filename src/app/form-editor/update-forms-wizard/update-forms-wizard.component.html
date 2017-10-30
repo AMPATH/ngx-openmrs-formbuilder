@@ -1,0 +1,43 @@
+<div *ngIf="!currentRawSchema" class="text-center progressbar">
+  <md-progress-bar mode="indeterminate"></md-progress-bar>
+</div>
+
+
+
+<div *ngIf="currentRawSchema">
+ 
+  <md-toolbar color="primary">
+      <p>{{currentSchemaMetadata.name}}</p>
+      
+      <span class="fill-space"></span>
+    <div>
+      <span>
+        <form #form="ngForm">
+            <div class="form-group">
+                <input type="number" class="form-control" placeholder="new version" name="version" ngModel required>
+            </div>
+          </form>
+        </span>
+
+        <span>
+      <button class="btn btn-info" *ngIf="currentNode.previous" (click)="fetchPreviousSchema()">Previous
+        <i class="fa fa-arrow-left"></i>
+      </button>
+      <button class="btn btn-info" *ngIf="currentNode.next" (click)="fetchNextSchema(form.value.version)" [disabled]="!form.valid">Next
+        <i class="fa fa-arrow-right"></i>
+      </button>  
+      
+      <button class="btn btn-success" *ngIf="!currentNode.next" (click)="done(form.value.version)" [disabled]="!form.valid">Finish
+          <i class="fa fa-check"></i>
+        </button> 
+        </span>
+    </div>
+  </md-toolbar>
+
+  <h5 class="alert alert-success"><b>The following are sections that reference the new component. Please customize or click next.</b></h5>
+
+  <app-navigator [_schema]="currentCompiledSchema" [formSchema]="currentCompiledSchema" [mode]="'update'" [componentToHighlight]="oldComponentMetadata"></app-navigator>
+  
+
+
+</div>

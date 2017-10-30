@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy,ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import {SnackbarComponent} from '../snackbar/snackbar.component';
 import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
 import { FetchAllFormsService } from '../../Services/fetch-all-forms.service';
@@ -37,7 +37,7 @@ interface FormMetadata{
   styleUrls: ['./form-editor.component.css']
 })
 
-export class FormEditorComponent implements OnInit,OnDestroy{
+export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
   	  schema:any;
 	  selectedSchema:any;
 	  rawSelectedSchema:any;
@@ -56,11 +56,14 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	  encounterTypes:any[];
       @ViewChild('sidenav') public myNav;
 	  loading:boolean=true;
+	  questionSchema:any;
+	  formType:string;
+	  previousVersionUUID:string;
 
   constructor( private fs: FetchFormDetailService, private  ns: NavigatorService,public snackbar:MdSnackBar, private router:Router, 
-	private route:ActivatedRoute,public dialogService:DialogService, private ls:LocalStorageService,private cdRef:ChangeDetectorRef,private fectAllFormsService:FetchAllFormsService,
-	private formListService:FormListService,private saveFormService:SaveFormService,private encounterTypeService:EncounterTypeService){
-  }
+	private route:ActivatedRoute,public dialogService:DialogService, private ls:LocalStorageService,private cdRef:ChangeDetectorRef,
+	private fectAllFormsService:FetchAllFormsService,private formListService:FormListService,private saveFormService:SaveFormService,
+	private encounterTypeService:EncounterTypeService){}
 
   closeElementEditor(){
 	this.questions = undefined;
@@ -74,10 +77,21 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		this.myNav.open();
 	}
 
+	ngAfterViewChecked(){
+		this.cdRef.detectChanges();
+	}
+
 
   ngOnInit(){
 	this.viewMode = 'singleView'; //default view mode
-	this.cdRef.detectChanges();
+
+	this.fectAllFormsService.getFormType().subscribe((res) =>{
+		if(res!=""){
+			this.formType = res;
+			this.ls.setItem("formType",this.formType);
+		}
+	});
+
 	this.formMetadata = {
 		name:"",
 		uuid:"",
@@ -90,7 +104,7 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		published : false,
 	}
 
-	this.fs.setReferencedFormsArray([]);
+	this.fs.setReferencedFormsSchemasArray([]);
 	this.subscription = this.fs.loaded().subscribe((isLoaded) =>{
 		if(isLoaded) this.loading = false;
 	});
@@ -103,19 +117,20 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 			}
 
 		else if(uuid=='restoredForm'){
-			
+			if(this.fs.restoreReferencedForms(this.ls.getObject(Constants.RAW_SCHEMA)))
 			this.fs.restoreReferencedForms(this.ls.getObject(Constants.RAW_SCHEMA)).then((res) => {
-				console.log(res);
 				this.setFormEditor(this.ls.getObject(Constants.SCHEMA),this.ls.getObject(Constants.RAW_SCHEMA),this.ls.getObject(Constants.FORM_METADATA));
 			});
-			
+			else{
+				this.setFormEditor(this.ls.getObject(Constants.SCHEMA),this.ls.getObject(Constants.RAW_SCHEMA));
+			}
+			this.formType = this.ls.getItem("formType");
 		}
 
 		else{
-			console.log("uuid",uuid)
+			
 			this.formMetadata.uuid = uuid;
 			this.fs.fetchFormMetadata(this.formMetadata.uuid,false).then((metadata) => {
-				console.log(metadata);
 				this.formMetadata.version = metadata.version;
 				this.formMetadata.name = metadata.name;
 				if(metadata.encounterType) this.formMetadata.encounterType = metadata.encounterType.display;
@@ -126,11 +141,12 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 				this.formMetadata.published = metadata.published;
 				// this.saveFormMetadata(this.formMetadata); //save form metadata to local storage for retrieval later on
 				this.fetchForm(metadata.resources[0].valueReference);
+				_.includes(this.formMetadata.name,Constants.COMPONENT) ? this.ls.setItem(Constants.FORM_TYPE,Constants.COMPONENT) : this.ls.setItem(Constants.FORM_TYPE, Constants.POC)
 			})
 			.catch(e => {
 				this.loading = false;
 				console.error(e);
-				alert("Check your internet connection then refresh.");
+				alert("Check your internet connection and CORS then refresh.");
 			});
 		}
 		
@@ -176,11 +192,12 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 
   this.subscription = this.ns.getNewQuestion().subscribe(
 	res => {
-		this.questions = res['schema'];
+		this.questions = res['propModelArray'];
 		this.page = res['pageIndex'];
 		this.section = res['sectionIndex'];
 		this.question = res['questionIndex'];
 		this.parentQuestion = res['parentQuestionIndex'];
+		this.questionSchema = res['schema'];
 		this.myNav.close();
 });
 
@@ -189,10 +206,12 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 	this.subscription = this.saveFormService.getNewResourceUUID().subscribe(uuid => this.formMetadata.resourceUUID = uuid);
 	this.subscription = this.saveFormService.getNewValueReference().subscribe(value => this.formMetadata.valueReference = value);
 	this.subscription = this.saveFormService.getNewFormUUID().subscribe(uuid => {
+		this.previousVersionUUID = this.formMetadata.uuid;
 		this.formMetadata.uuid = uuid;
 		this.disableCanDeactivate = true;
 		this.router.navigate(['/edit',uuid]);
 	});
+
 	this.subscription = this.saveFormService.getNewFormName().subscribe((res) => {
 		this.formMetadata.name = res;
 		this.saveFormMetadata(this.formMetadata);
@@ -220,7 +239,13 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 		
 		}) 
 		.catch((error)=>{
+			console.error(error);
 			this.loading=false;
+			this.viewMode = "badSchema" ;
+			this.fs.fetchForm(value,true).then((schema) =>{
+				this.strRawSchema = JSON.stringify(schema,null,"\t");
+			})
+			
 		})
 		
   }
@@ -280,9 +305,11 @@ export class FormEditorComponent implements OnInit,OnDestroy{
 
 
   showSnackbar(){
-	this.snackbar.openFromComponent(SnackbarComponent,{duration:1500,});
+	this.snackbar.openFromComponent(SnackbarComponent,{duration:1500});
 }
-
+showNotificationMessage(message:string){
+	this.snackbar.open(message,"",{duration:1200});
+	}
 setFormEditor(schema,rawSchema,formMetadata?){
 	this.selectedSchema = schema;
 	this.schema = schema;
@@ -323,7 +350,6 @@ saveRemotely(){
 
 				if(decision==2){
 					//save as a new version
-					
 					this.showSaveDialog("new",'0');
 				}
 			});
@@ -338,9 +364,10 @@ saveRemotely(){
 }
 
 showSaveDialog(operation:string,newVersion?:string){
-	console.log(this.formMetadata.name);
+	let dialogTitle = this.formType == Constants.POC ? "POC FORM" : "Component";
 	this.dialogService.addDialog(SaveFormsComponent, {
-		title:"Save Form",
+
+		title:`Save ${dialogTitle}`,
 		operation:operation,
 		name:  this.formMetadata.name,
 		uuid:this.formMetadata.uuid,
@@ -351,8 +378,23 @@ showSaveDialog(operation:string,newVersion?:string){
 		valueReference:this.formMetadata.valueReference,
 		resourceUUID:this.formMetadata.resourceUUID,
 		encounterTypes:this.encounterTypes,
-		published:this.formMetadata.published
-		   }, { backdropColor: 'rgba(255, 255, 255, 0.5)' });
+		published:this.formMetadata.published,
+		
+		   }, { backdropColor: 'rgba(255, 255, 255, 0.5)' })
+		   .subscribe((res) =>{
+
+			   this.formMetadata.name.indexOf('component')>-1 ?  this.formType = Constants.COMPONENT : this.formType = Constants.POC;
+			   if(res&&this.formType==Constants.COMPONENT&&operation=='new'){
+				   this.disableCanDeactivate = true;
+				   this.dialogService.addDialog(ConfirmComponent,{message:"Would you like to update forms referencing this component as well?",
+												title: "Update forms", buttonText:"OK"},{backdropColor:"rgba(0,0,0,0.5)"}).subscribe((confirmed) => {
+					if(confirmed){
+						this.router.navigate(['/update',this.previousVersionUUID,this.formMetadata.uuid]);
+					}})}
+				
+				});
+
+				
 }
 
 toggleView(){
@@ -408,16 +450,23 @@ showSaveSnackbar(){
 				   {backdropColor:"rgba(0,0,0,0.5)"})
 				   .subscribe((isConfirmed) => {
 						   if(isConfirmed){
-							   this.saveFormService.unpublish(pocform.uuid).subscribe((res) => this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => this.formMetadata.published = true));
+							   this.saveFormService.unpublish(pocform.uuid).subscribe((res) => this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => {
+								   this.showNotificationMessage("Form Successfully Published!");
+								   this.formMetadata.published = true
+								}));
 						   }})}})
 						   else{
+							   this.showNotificationMessage("Form Successfully Published!");
 							   this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => this.formMetadata.published = true); //if none of the other versions are published.
 						   }
 					   });
 	   }
 	   
 	   else{
-		this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => this.formMetadata.published = true);
+		this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => {
+			this.showNotificationMessage("Form Successfully Published!");
+			this.formMetadata.published = true
+		});
 	   }
 			
 			

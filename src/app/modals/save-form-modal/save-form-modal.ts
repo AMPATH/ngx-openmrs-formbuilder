@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { SaveFormService } from '../../Services/save-form.service';
 import { MdSnackBar } from '@angular/material';
 import { SaveSnackbarComponent } from '../../form-editor/snackbar/saved-snackbar';
+import { Constants } from '../../Services/constants';
 export interface SaveFormModel {
   title:string;
   name:any;
@@ -42,13 +43,16 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
     operation:string;
     encounterTypeUUID:string;
     published:boolean;
-    
+    formType:string;
+
   constructor(dialogService: DialogService, private saveFormService:SaveFormService,
     private fb:FormBuilder,private snackbar:MdSnackBar) {
     super(dialogService);
   }
 
   ngOnInit(){
+    _.includes(this.name,'component') ? this.formType = Constants.COMPONENT : this.formType = Constants.POC;
+
       this.encounterTypes.forEach(encounterType =>{
         if(encounterType.display == this.encounterType){
           this.encounterTypeUUID = encounterType.uuid;
@@ -90,8 +94,8 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
     }
 
     
-    
-    this.close();
+    this.result = true;
+    super.close();
   }
 
   // keyDownFunction($event,form){
@@ -101,6 +105,11 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
 
   showDoneSnackBar(){
     this.snackbar.openFromComponent(SaveSnackbarComponent,{duration:2000});
+  }
+
+  close(){
+    this.result = false;
+    super.close();
   }
 
 
@@ -121,9 +130,15 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
 
   // create new form/ update form version
   createForm(form){
-    console.log(form);
+    if(form.encounter) this.encounterTypes.forEach((encounterType) =>{
+        if(encounterType.display == form.encounter){
+          this.encounterTypeUUID = encounterType.uuid;
+        }
+      });
+    else
+      this.encounterTypeUUID = undefined;
     this.saveFormService.uploadSchema(this.rawSchema).subscribe(valueReference => {
-      this.saveFormService.saveNewForm(form.name,form.version,false,form.description,form.encounter).subscribe(createdForm =>{
+      this.saveFormService.saveNewForm(form.name,form.version,false,form.description,this.encounterTypeUUID).subscribe(createdForm =>{
         
         let parsedRes = JSON.parse(createdForm._body);
         console.log(parsedRes);

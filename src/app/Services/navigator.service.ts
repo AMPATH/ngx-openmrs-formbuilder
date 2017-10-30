@@ -14,7 +14,7 @@ export class NavigatorService {
   questionSubject:Subject<Object> = new Subject();
   rawSchemaSubject:BehaviorSubject<Object> = new BehaviorSubject({});
   excludedQuestionsSubject:BehaviorSubject<string> = new BehaviorSubject("");
-  
+  prechecked:BehaviorSubject<string> = new BehaviorSubject('');
 
   constructor() {
   }
@@ -47,16 +47,17 @@ export class NavigatorService {
    return this.schemaSubject.asObservable();
  }
 
- newQuestion(schema:any,pageIndex:number,sectionIndex:number,questionIndex?:number,parentQuestionIndex?:number){
+ newQuestion(propModelArray:any,pageIndex:number,sectionIndex:number,questionIndex?:number,parentQuestionIndex?:number,schema?:any){
    if(questionIndex!=undefined){
      console.log("ObsGroup Question!");
    }
      let question = {}
-     question['schema']=schema
-     question['pageIndex']=pageIndex
-     question['sectionIndex']=sectionIndex
-     question['questionIndex']=questionIndex
-     question['parentQuestionIndex']=parentQuestionIndex || -1 
+     question['propModelArray']=propModelArray;
+     question['pageIndex']=pageIndex;
+     question['sectionIndex']=sectionIndex;
+     question['questionIndex']=questionIndex;
+     question['parentQuestionIndex']=parentQuestionIndex || -1;
+     question['schema']=schema;
      this.questionSubject.next(question);
  }
 
@@ -96,6 +97,9 @@ getExcludedQuestions(){
   return this.excludedQuestionsSubject.asObservable();
 }
 
+setPrechecked(label){
+  this.prechecked.next(label);
+}
 
 
 

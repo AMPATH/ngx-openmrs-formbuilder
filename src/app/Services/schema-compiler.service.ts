@@ -187,7 +187,7 @@ export class FormSchemaCompiler {
         this.getReferencedObject(placeHolder.reference, keyValReferencedForms);
 
       if (_.isEmpty(referencedObject)) {
-        throw new Error('Form compile: Error finding referenced object '+ placeHolder.reference);
+        throw new Error('Form compile: Error finding referenced object '+ JSON.stringify(placeHolder.reference));
       } else {
         placeHolder = this.fillPlaceholderObject(placeHolder, referencedObject);
         placeHolder = this.removeExcludedQuestionsFromPlaceholder(placeHolder);
@@ -252,7 +252,7 @@ export class FormSchemaCompiler {
 
   private getReferencedForms(formSchema: any, formSchemasLookupArray: Array<any>): Object {
     let referencedForms: Array<any> = formSchema.referencedForms;
-
+    console.log(referencedForms,formSchema,formSchemasLookupArray);
     if (_.isEmpty(referencedForms)) { return; }
 
     let keyValReferencedForms: Object = {};

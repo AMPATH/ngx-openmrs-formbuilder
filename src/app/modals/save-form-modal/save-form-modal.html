@@ -22,13 +22,14 @@
                     <input class="form-control"  formControlName="version">
                   </div>
 
-                   <div class="form-group" *ngIf="encounterTypes">
+                   <div class="form-group" *ngIf="encounterTypes&&formType!='component'">
                         <label for="encounter-type">Encounter Type</label>
                         <select class="form-control" formControlName="encounter">
-                            <option *ngFor="let e of encounterTypes"  [value]="e.uuid">{{e.display}}</option>
+                            <option  value="" selected>Select Encounter Type</option>
+                            <option *ngFor="let e of encounterTypes" [selected]="encounterType == e.display">{{e.display}}</option>
                         </select>
                       </div> 
-                      
+                       
                       <div class="form-group">
                           <label>Description</label>
                           <textarea class="form-control" rows="4" formControlName="description"></textarea>
