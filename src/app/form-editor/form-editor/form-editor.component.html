@@ -18,6 +18,7 @@
       <button md-icon-button (click)="sidenav.toggle()"><md-icon class="md-24" >menu</md-icon></button>
       <span style="font-size:18px; font-family:'Roboto'">Form Builder</span>
       <span class="menu">
+<<<<<<< daef29cd6299317054325f13630da30535cb8ebd
       <div class="btn-group show-on-hover">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                <span class="fb-menu-item">File</span>
@@ -83,6 +84,21 @@
             <button type="button" class="btn btn-default"  (click)="exit()"><span class="fb-menu-item"> Exit</span></button>
           </div>  
       
+=======
+          <button md-button [mdMenuTriggerFor]="fileMenu"><span style="font-size:14px;font-weight:600; color:white;">File</span></button>
+      <md-menu #fileMenu="mdMenu" [overlapTrigger]="false">
+        <button (click)="saveLocally()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Locally</span></button>
+        <button (click)="saveRemotely()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-server" aria-hidden="true"></i> Save to Server</span></button>
+      </md-menu>
+      <button md-button [mdMenuTriggerFor]="viewMenu"><span style="font-size:14px;font-weight:600; color:white;">View</span></button>
+      <md-menu #viewMenu="mdMenu" [overlapTrigger]="false">
+        <button (click)="toggleView()" md-menu-item><span  style="font-size:14px;font-weight:500"><i class="fa fa-square-o" aria-hidden="true"></i> Single View</span> <i class="fa" [class.fa-check]="viewMode=='singleView'" style="color:green"></i></button>
+        <button (click)="toggleView()" md-menu-item><span  style="font-size:15px;font-weight:500"><i class="fa fa-columns" aria-hidden="true"></i> Split View</span> <i class="fa" [class.fa-check]="viewMode=='multiView'" style="color:green"></i></button>
+      </md-menu>
+
+      <button md-button data-toggle="collapse" data-target="#audit-info"><span style="font-size:14px;font-weight:600">Audit</span> <i class="fa fa-caret-down"></i></button>
+      <button md-button (click)="exit()"><span style="font-size:14px;font-weight:500"> Exit</span></button>
+>>>>>>> Added ability to edit broken schemas
       </span>
       
       <span flex></span>

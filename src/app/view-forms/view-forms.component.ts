@@ -18,6 +18,7 @@ import { saveAs } from 'file-saver/FileSaver';
 })
 export class ViewFormsComponent implements OnInit {
 
+<<<<<<< daef29cd6299317054325f13630da30535cb8ebd
   forms= [];
   componentForms: any;
   POCForms = [];
@@ -49,6 +50,28 @@ export class ViewFormsComponent implements OnInit {
 
 
   ngOnInit() {
+=======
+  forms:Array<any>= [];
+  componentForms:any;
+  POCForms:any[]=[];
+  page: number = 1; // pagination
+  loggingOut=false;
+  searchValue="";
+  loadingMessage="Loading Forms...";
+  restoreMessage="";
+  draftAvailable=false;
+  draft:any;
+  rawDraft:any;
+  formsWithoutSchemas:any[] = [];
+  subscription:Subscription;
+
+  constructor(private fetchAllFormsService:FetchAllFormsService,private router:Router,
+    private fetchFormDetailService:FetchFormDetailService,private auth:AuthenticationService,private ls:LocalStorageService,
+  private formListService:FormListService) { }
+
+
+  ngOnInit(){
+>>>>>>> Added ability to edit broken schemas
 
     this.subscription = this.fetchAllFormsService.resaveAllPOCSchemasToLocalStorage.subscribe((res) => {
       if (res) {
@@ -58,10 +81,17 @@ export class ViewFormsComponent implements OnInit {
     this.subscription = this.fetchAllFormsService.fetchAllPOCForms().subscribe(forms => {
     const f = forms.results;
 
+<<<<<<< daef29cd6299317054325f13630da30535cb8ebd
     f.forEach((form, index) => {
       this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res => {
          if (!form.resources[0] || form.resources.length === 0) {this.formsWithoutSchemas.push(form.name); } else {
             this.POCForms.push(form); }
+=======
+    f.forEach((form,index) =>{
+      this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res => {
+         if(!form.resources[0]||form.resources.length == 0) {this.formsWithoutSchemas.push(form.name);}
+         else  this.POCForms.push(form);
+>>>>>>> Added ability to edit broken schemas
       });
     });
     this.POCForms = _.cloneDeep(f);
@@ -70,7 +100,11 @@ export class ViewFormsComponent implements OnInit {
 
     this.fetchAllFormSchemas(this.POCForms);
 
+<<<<<<< daef29cd6299317054325f13630da30535cb8ebd
     if (this.forms.length === 0) { this.loadingMessage = 'No forms to display'; }
+=======
+    if(this.forms.length==0) this.loadingMessage ="No forms to display";
+>>>>>>> Added ability to edit broken schemas
     });
 
 
@@ -86,10 +120,15 @@ export class ViewFormsComponent implements OnInit {
     this.draftAvailable = true;
     const schema = this.ls.getObject(Constants.RAW_SCHEMA);
     let timestamp;
+<<<<<<< daef29cd6299317054325f13630da30535cb8ebd
     if (this.ls.getObject(Constants.TIME_STAMP)) { timestamp = this.ls.getObject(Constants.TIME_STAMP); }
     this.restoreMessage =
     `Form ${this.ls.getObject(Constants.FORM_METADATA).name} was last worked on at ${new Date(parseInt(timestamp)).toLocaleDateString()}
     ${new Date(parseInt(timestamp)).toLocaleTimeString()} Would you like to continue working on this?`;
+=======
+    if(this.ls.getObject(Constants.TIME_STAMP)) timestamp = this.ls.getObject(Constants.TIME_STAMP);
+    this.restoreMessage= `Form ${this.ls.getObject(Constants.FORM_METADATA).name} was last worked on at ${new Date(parseInt(timestamp))}. Would you like to continue working on this?`;
+>>>>>>> Added ability to edit broken schemas
   }
 
 
@@ -145,6 +184,7 @@ export class ViewFormsComponent implements OnInit {
     }
   }
 
+<<<<<<< daef29cd6299317054325f13630da30535cb8ebd
   fetchAllFormSchemas(POCForms) {
       const date = new Date().getTime();
       let count = 0;
@@ -169,6 +209,27 @@ export class ViewFormsComponent implements OnInit {
               const finishTime = (new Date().getTime() - date) / 1000;
               console.log('Done fetching schemas. Took ' + finishTime + 'seconds');
             }
+=======
+  fetchAllFormSchemas(POCForms){
+    const date = new Date().getTime();
+    let count = 0;
+    const schemas = [];
+    const numberOfPOCForms = POCForms.length;
+    const $forms = _.cloneDeep(POCForms);
+    if(this.ls.getObject("POC_FORM_SCHEMAS")){ this.ls.setObject("POC_FORM_SCHEMAS",[]);}
+    _.forEach(($forms),(formMetadata:any,index:number,form) => {
+          if(formMetadata.resources.length>0 && formMetadata.resources[0].valueReference)
+          this.fetchFormDetailService.fetchForm(formMetadata.resources[0].valueReference,true).then((schema) => {
+          count = index;
+          schemas.push({schema:schema,metadata:formMetadata});
+          if(count == numberOfPOCForms - 1) {
+            //this.fetchAllFormsService.setAllPOCFormSchemas(schemas);
+            this.ls.setObject("POC_FORM_SCHEMAS",schemas);
+            this.fetchAllFormsService.setPOCFormSchemas(schemas);
+            const finishTime = (new Date().getTime() - date) / 1000;
+            console.log('Done fetching schemas. Took ' + finishTime + 'seconds');
+          }
+>>>>>>> Added ability to edit broken schemas
           });
         }
       });
@@ -176,6 +237,7 @@ export class ViewFormsComponent implements OnInit {
 
 
 
+<<<<<<< daef29cd6299317054325f13630da30535cb8ebd
   }
 
   addSchema(form) {
@@ -192,5 +254,17 @@ export class ViewFormsComponent implements OnInit {
   }
 
 
+=======
+        });
+
+
+
+  }
+
+  addSchema(form) {
+    this.router.navigate(['/edit', form.uuid]);
+  }
+
+>>>>>>> Added ability to edit broken schemas
 
 }

@@ -1,7 +1,13 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import '~https://fonts.googleapis.com/icon?family=Material+Icons';
 @import url('https://fonts.googleapis.com/css?family=Roboto');
+<<<<<<< daef29cd6299317054325f13630da30535cb8ebd
 
+=======
+@import '~@swimlane/ngx-datatable/release/index.css';
+@import '~@swimlane/ngx-datatable/release/themes/material.css';
+@import '~@swimlane/ngx-datatable/release/assets/icons.css';
+>>>>>>> Added ability to edit broken schemas
  
 .mat-sidenav-content {
     position: relative;

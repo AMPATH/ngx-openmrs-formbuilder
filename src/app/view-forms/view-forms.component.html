@@ -107,6 +107,7 @@
                 </td>
                 <td *ngIf="form.resources.length==0 || !form.resources[0]?.valueReference">
                   <a style="cursor: pointer;">
+<<<<<<< daef29cd6299317054325f13630da30535cb8ebd
                     <i class="material-icons" (click)="addSchema(form)" data-toggle="tooltip" title="No schema associated with this form. Import schema?">note_add</i>
 
                   </a>
@@ -117,6 +118,15 @@
                   </a>
                   <a (click)="download(form.resources[0].valueReference)" style="cursor: pointer;" data-toggle="tooltip" title="Download Schema">
                     <i class="material-icons download">get_app</i>
+=======
+                    <button class="btn btn-info" (click)="addSchema(form)" data-toggle="tooltip" title="No schema associated with this form. Import schema?">
+                      Add</button>
+                  </a>
+                </td>
+                <td *ngIf="form.resources.length>0 || form.resources[0]?.valueReference">
+                  <a (click)="editForm(form,form.uuid)" style="cursor: pointer;">
+                    <button class="btn btn-success">Edit</button>
+>>>>>>> Added ability to edit broken schemas
                   </a>
                 </td>
 
