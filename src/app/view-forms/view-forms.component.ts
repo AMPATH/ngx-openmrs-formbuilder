@@ -216,8 +216,8 @@ export class ViewFormsComponent implements OnInit {
     const schemas = [];
     const numberOfPOCForms = POCForms.length;
     const $forms = _.cloneDeep(POCForms);
-    if(this.ls.getObject("POC_FORM_SCHEMAS")){ this.ls.setObject("POC_FORM_SCHEMAS",[]);}
-    _.forEach(($forms),(formMetadata:any,index:number,form) => {
+    if (this.ls.getObject('POC_FORM_SCHEMAS')) { this.ls.setObject('POC_FORM_SCHEMAS', []); }
+    _.forEach(($forms), (formMetadata: any, index: number, form) => {
           if(formMetadata.resources.length>0 && formMetadata.resources[0].valueReference)
           this.fetchFormDetailService.fetchForm(formMetadata.resources[0].valueReference,true).then((schema) => {
           count = index;
