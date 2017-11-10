@@ -84,12 +84,13 @@
                 <td *ngIf="!form.published">
                   <label class="label label-danger">No</label>
                 </td>
-                <td *ngIf="formsWithoutSchemas.indexOf(form.name)>-1">
-                  <a style="cursor: pointer;" data-toggle="tooltip" title="No schema associated with this form">
-                    <i class="fa fa-ban" style="color:red;"></i>
+                <td *ngIf="form.resources.length==0 || !form.resources[0]?.valueReference">
+                  <a style="cursor: pointer;">
+                    <button class="btn btn-info" (click)="addSchema(form)" data-toggle="tooltip" title="No schema associated with this form. Import schema?">
+                      Add</button>
                   </a>
                 </td>
-                <td *ngIf="formsWithoutSchemas.indexOf(form.name)==-1">
+                <td *ngIf="form.resources.length>0 || form.resources[0]?.valueReference">
                   <a (click)="editForm(form,form.uuid)" style="cursor: pointer;">
                     <button class="btn btn-success">Edit</button>
                   </a>

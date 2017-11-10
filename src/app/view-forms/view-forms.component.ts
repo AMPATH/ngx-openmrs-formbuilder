@@ -15,15 +15,15 @@ import * as _ from 'lodash';
 })
 export class ViewFormsComponent implements OnInit {
 
-  forms:Array<any>=[];
+  forms:Array<any>= [];
   componentForms:any;
   POCForms:any[]=[];
-  page: number = 1; //pagination
-  loggingOut:boolean=false;
-  searchValue:string="";
-  loadingMessage:string="Loading Forms...";
-  restoreMessage:string="";
-  draftAvailable:boolean=false;
+  page: number = 1; // pagination
+  loggingOut=false;
+  searchValue="";
+  loadingMessage="Loading Forms...";
+  restoreMessage="";
+  draftAvailable=false;
   draft:any;
   rawDraft:any;
   formsWithoutSchemas:any[] = [];
@@ -33,35 +33,35 @@ export class ViewFormsComponent implements OnInit {
     private fetchFormDetailService:FetchFormDetailService,private auth:AuthenticationService,private ls:LocalStorageService,
   private formListService:FormListService) { }
 
- 
+
   ngOnInit(){
-    
+
     this.subscription = this.fetchAllFormsService.resaveAllPOCSchemasToLocalStorage.subscribe((res) => {
       if(res){
         this.fetchAllFormSchemas(this.POCForms)
       }
-    })
-	  this.subscription = this.fetchAllFormsService.fetchAllPOCForms().subscribe(forms =>{
-    let f = forms.results;
-    
+    });
+    this.subscription = this.fetchAllFormsService.fetchAllPOCForms().subscribe(forms => {
+    const f = forms.results;
+
     f.forEach((form,index) =>{
-      this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res =>{
-         if(!form.resources[0]||form.resources.length==0) {this.formsWithoutSchemas.push(form.name);}
-         else this.POCForms.push(form);
+      this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res => {
+         if(!form.resources[0]||form.resources.length == 0) {this.formsWithoutSchemas.push(form.name);}
+         else  this.POCForms.push(form);
       });
     });
     this.POCForms = _.cloneDeep(f);
     this.forms = _.cloneDeep(f);
 
-    
+
     this.fetchAllFormSchemas(this.POCForms);
-    
+
     if(this.forms.length==0) this.loadingMessage ="No forms to display";
     });
 
-    
 
-  
+
+
     this.subscription = this.fetchAllFormsService.fetchAllComponentForms().subscribe(forms =>{
       this.componentForms = forms.results;
     });
@@ -70,13 +70,13 @@ export class ViewFormsComponent implements OnInit {
 
   if(this.ls.getObject(Constants.RAW_SCHEMA)&&this.ls.getObject(Constants.SCHEMA)){
     this.draftAvailable = true;
-    let schema = this.ls.getObject(Constants.RAW_SCHEMA);
+    const schema = this.ls.getObject(Constants.RAW_SCHEMA);
     let timestamp;
     if(this.ls.getObject(Constants.TIME_STAMP)) timestamp = this.ls.getObject(Constants.TIME_STAMP);
-    this.restoreMessage=`Form ${this.ls.getObject(Constants.FORM_METADATA).name} was last worked on at ${new Date(parseInt(timestamp))}. Would you like to continue working on this?`;
+    this.restoreMessage= `Form ${this.ls.getObject(Constants.FORM_METADATA).name} was last worked on at ${new Date(parseInt(timestamp))}. Would you like to continue working on this?`;
   }
-  
-    
+
+
   }
 
 
@@ -103,9 +103,9 @@ export class ViewFormsComponent implements OnInit {
       .subscribe(res => {
         this.router.navigate(['/login']);
       });
-    
-    
-  
+
+
+
   }
 
   discard(){
@@ -132,31 +132,35 @@ export class ViewFormsComponent implements OnInit {
   }
 
   fetchAllFormSchemas(POCForms){
-    let date = new Date().getTime();
+    const date = new Date().getTime();
     let count = 0;
-    let schemas = [];
-    let numberOfPOCForms = POCForms.length;
-    let $forms = _.cloneDeep(POCForms);
+    const schemas = [];
+    const numberOfPOCForms = POCForms.length;
+    const $forms = _.cloneDeep(POCForms);
     if(this.ls.getObject("POC_FORM_SCHEMAS")){ this.ls.setObject("POC_FORM_SCHEMAS",[]);}
-    _.forEach(($forms),(formMetadata:any,index:number,form) =>{
-          if(formMetadata.resources.length>0&&formMetadata.resources[0].valueReference)
+    _.forEach(($forms),(formMetadata:any,index:number,form) => {
+          if(formMetadata.resources.length>0 && formMetadata.resources[0].valueReference)
           this.fetchFormDetailService.fetchForm(formMetadata.resources[0].valueReference,true).then((schema) => {
           count = index;
           schemas.push({schema:schema,metadata:formMetadata});
-          if(count == numberOfPOCForms-1) {
+          if(count == numberOfPOCForms - 1) {
             //this.fetchAllFormsService.setAllPOCFormSchemas(schemas);
             this.ls.setObject("POC_FORM_SCHEMAS",schemas);
             this.fetchAllFormsService.setPOCFormSchemas(schemas);
-            let finishTime = (new Date().getTime() - date)/1000;
-            console.log("Done fetching schemas. Took " + finishTime + "seconds");
+            const finishTime = (new Date().getTime() - date) / 1000;
+            console.log('Done fetching schemas. Took ' + finishTime + 'seconds');
           }
           });
 
         });
-        
-     
-   
+
+
+
   }
 
-  
+  addSchema(form) {
+    this.router.navigate(['/edit', form.uuid]);
+  }
+
+
 }

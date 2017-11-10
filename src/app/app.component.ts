@@ -1,4 +1,4 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {FetchAllFormsService} from './Services/fetch-all-forms.service';
 import { Subject, Observable } from 'rxjs';
 import { Router } from '@angular/router';

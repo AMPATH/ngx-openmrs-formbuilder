@@ -22,11 +22,7 @@
       <md-menu #fileMenu="mdMenu" [overlapTrigger]="false">
         <button (click)="saveLocally()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Locally</span></button>
         <button (click)="saveRemotely()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-server" aria-hidden="true"></i> Save to Server</span></button>
-      <div class="hr"></div>
-        <button (click)="exit()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-arrow-left" aria-hidden="true"></i> Exit</span></button>
-        
       </md-menu>
-
       <button md-button [mdMenuTriggerFor]="viewMenu"><span style="font-size:14px;font-weight:600; color:white;">View</span></button>
       <md-menu #viewMenu="mdMenu" [overlapTrigger]="false">
         <button (click)="toggleView()" md-menu-item><span  style="font-size:14px;font-weight:500"><i class="fa fa-square-o" aria-hidden="true"></i> Single View</span> <i class="fa" [class.fa-check]="viewMode=='singleView'" style="color:green"></i></button>
@@ -34,7 +30,7 @@
       </md-menu>
 
       <button md-button data-toggle="collapse" data-target="#audit-info"><span style="font-size:14px;font-weight:600">Audit</span> <i class="fa fa-caret-down"></i></button>
-      
+      <button md-button (click)="exit()"><span style="font-size:14px;font-weight:500"> Exit</span></button>
       </span>
       <span flex></span>
       <app-reference-forms [schema]="schema"></app-reference-forms>
@@ -71,7 +67,7 @@
         <!--Schema editor-->
         <md-tab label="Schema Editor">
           <md-card class="schema-editor">
-            <app-schema-editor [selectedSchema]="selectedSchema" [schema]="strSchema" [rawSchema]="strRawSchema"
+            <app-schema-editor [schema]="strSchema" [rawSchema]="strRawSchema"
               [$formSchema]="schema"></app-schema-editor>
           </md-card>
 
@@ -107,7 +103,7 @@
           <div [class.col-md-4]="questions" [class.col-md-6]="!questions">
             <h4 class="text-center">Schema Editor</h4>
             <md-card class="schema-editor">
-              <app-schema-editor [selectedSchema]="selectedSchema" [selectedRawSchema]="selectedRawSchema" [schema]="strSchema" [rawSchema]="strRawSchema"
+              <app-schema-editor [schema]="strSchema" [rawSchema]="strRawSchema"
                 [$formSchema]="schema"></app-schema-editor>
             </md-card>
           </div>
@@ -126,9 +122,15 @@
     </div>
   </md-sidenav-container>
 </div>
-<div *ngIf="viewMode == 'badSchema'&&!schema">
+<div *ngIf="viewMode == 'badSchema'&& !schema">
     <md-toolbar class="errorToolbar">
-        <span style="font-size:18px; font-family:'Roboto'">Form Builder</span>
+        <span style="font-size:18px; font-family:'Roboto'; color:white;">Form Builder</span>
     </md-toolbar>
-      <app-schema-editor [rawSchema]="strRawSchema"></app-schema-editor>
+    <span class="alert alert-warning">
+      This schema contains errors and cannot be properly compiled. Please try to correct the errors in the schema and re-compile it.
+    </span>
+    <div class="well">
+      <app-schema-editor [rawSchema]="strRawSchema" [correctionMode]='true' [_errorMessage]="errorMessage"
+      (correctedSchemaErrors)="loadFormBuilder($event)"></app-schema-editor>
+  </div>
   </div>

@@ -29,6 +29,7 @@ interface FormMetadata{
 	encounterType:string;
 	auditInfo:any;
 	published:boolean;
+	
 }
 
 @Component({
@@ -41,6 +42,7 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
   	  schema:any;
 	  selectedSchema:any;
 	  rawSelectedSchema:any;
+	  errorMessage:string='';
 	  strSchema:string;
 	  rawSchema:any;
 	  questions:any;
@@ -135,12 +137,19 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 				this.formMetadata.name = metadata.name;
 				if(metadata.encounterType) this.formMetadata.encounterType = metadata.encounterType.display;
 				if(metadata.description) this.formMetadata.description = metadata.description;
-				this.formMetadata.valueReference = metadata.resources[0].valueReference || '';
-				this.formMetadata.resourceUUID = metadata.resources[0].uuid;
 				this.formMetadata.auditInfo = metadata.auditInfo;
 				this.formMetadata.published = metadata.published;
 				// this.saveFormMetadata(this.formMetadata); //save form metadata to local storage for retrieval later on
-				this.fetchForm(metadata.resources[0].valueReference);
+				if(metadata.resources.length){
+					this.formMetadata.valueReference = metadata.resources[0].valueReference || '';
+					this.formMetadata.resourceUUID = metadata.resources[0].uuid;
+					this.fetchForm(metadata.resources[0].valueReference);
+				}
+
+				else {
+					this.createFormForMissingResource();
+				}
+				
 				_.includes(this.formMetadata.name,Constants.COMPONENT) ? this.ls.setItem(Constants.FORM_TYPE,Constants.COMPONENT) : this.ls.setItem(Constants.FORM_TYPE, Constants.POC)
 			})
 			.catch(e => {
@@ -242,6 +251,7 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 			console.error(error);
 			this.loading=false;
 			this.viewMode = "badSchema" ;
+			this.errorMessage = error;
 			this.fs.fetchForm(value,true).then((schema) =>{
 				this.strRawSchema = JSON.stringify(schema,null,"\t");
 			})
@@ -255,6 +265,12 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 	this.loading = false;
 	this.ls.clear(); //clear local storage
 	let schema=new Form({"name":"","processor":"EncounterFormProcessor","uuid":"xxxx","referencedForms":[],"pages":[]});
+	this.setFormEditor(schema,schema);	
+  }
+
+  createFormForMissingResource(){
+	this.loading = false;
+	let schema=new Form({"name":this.formMetadata.name,"processor":"EncounterFormProcessor","uuid":"xxxx","referencedForms":[],"pages":[]});
 	this.setFormEditor(schema,schema);	
   }
 
@@ -311,6 +327,7 @@ showNotificationMessage(message:string){
 	this.snackbar.open(message,"",{duration:1200});
 	}
 setFormEditor(schema,rawSchema,formMetadata?){
+	console.log(schema, "SCHEMA");
 	this.selectedSchema = schema;
 	this.schema = schema;
 	this.strSchema = JSON.stringify(schema,null,'\t');
@@ -479,6 +496,10 @@ showSaveSnackbar(){
 		
 	  }
 
+ 
+loadFormBuilder($event){
+	this.viewMode='singleView';
+}
 
   exit(){
 	  this.router.navigate(['/forms']);
