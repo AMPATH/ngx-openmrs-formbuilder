@@ -108,7 +108,7 @@ export class ViewFormsComponent implements OnInit {
 
   }
 
-  discard(){
+  discard() {
     this.draftAvailable = false;
     this.ls.remove(Constants.SCHEMA);
     this.ls.remove(Constants.RAW_SCHEMA);
@@ -116,17 +116,15 @@ export class ViewFormsComponent implements OnInit {
 
   }
 
-  restore(){
+  restore() {
     this.draft = this.ls.getObject(Constants.SCHEMA);
-    this.router.navigate(['/edit','restoredForm']);
+    this.router.navigate(['/edit', 'restoredForm']);
   }
 
-  onChange($event){
-    if($event=='Component Forms'){
+  onChange($event) {
+    if ($event === 'Component Forms') {
       this.forms = this.componentForms;
-    }
-
-    else{
+    } else {
       this.forms = this.POCForms;
     }
   }
@@ -137,8 +135,8 @@ export class ViewFormsComponent implements OnInit {
     const schemas = [];
     const numberOfPOCForms = POCForms.length;
     const $forms = _.cloneDeep(POCForms);
-    if(this.ls.getObject("POC_FORM_SCHEMAS")){ this.ls.setObject("POC_FORM_SCHEMAS",[]);}
-    _.forEach(($forms),(formMetadata:any,index:number,form) => {
+    if (this.ls.getObject('POC_FORM_SCHEMAS')) { this.ls.setObject('POC_FORM_SCHEMAS', []); }
+    _.forEach(($forms), (formMetadata: any, index: number, form) => {
           if(formMetadata.resources.length>0 && formMetadata.resources[0].valueReference)
           this.fetchFormDetailService.fetchForm(formMetadata.resources[0].valueReference,true).then((schema) => {
           count = index;
