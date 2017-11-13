@@ -130,4 +130,14 @@ md-card{
     margin: 5px 5px 5px 50px;
 
 }
-
+.fill{
+  flex: 1 1 auto;
+}
+.dropdown-menu{
+  color: black;
+  font-family: 'Roboto';
+  font-weight: 500;
+}
+.dropdown-menu>li {
+  margin-left:5px;
+}

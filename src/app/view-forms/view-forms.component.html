@@ -1,16 +1,26 @@
+
 <md-toolbar color="primary">
-  <span class="name">Form Builder</span>
-  <span class="space"></span>
-  <span flex></span>
-  <span class="menu">
-    <button md-button (click)="createNew()" class="menuItem">
-      <i class="fa fa-plus"></i> Create New</button>
-    <button md-button (click)="logout()" class="menuItem">
-      <i class="fa fa-sign-out"></i> Sign Out
-      <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i>
-    </button>
-  </span>
-</md-toolbar>
+    <span class="menu" style="font-size:18px; font-family:'Roboto'; color:white;">Form Builder</span>
+    <span style="margin-left: 15px;">
+        <button md-button (click)="createNew()" style="color:white; font-size:14px;"><i class="fa fa-plus-circle"></i> Create New</button>
+    </span>
+    <!-- <span style="margin-left: 15px;">
+        <button md-button (click)="download()" style="color:white; font-size:14px;"><i class="fa fa-download"></i> Download</button>
+    </span> -->
+    <span class="fill"></span>
+    <span class="dropdown">
+        <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
+        <i class="fa fa-user"></i> {{ username }}
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu pull-right">
+          <li><a (click)="logout()"><i class="fa fa-sign-out" style="color:red;"></i> Sign Out
+            <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i></a></li>
+          <li><a href="#"></a></li>
+          <li><a href="#"></a></li>
+        </ul>
+      </span>
+  </md-toolbar>
+
 <div class="container-f">
   <div class="restoreMsg">
     <div *ngIf="draftAvailable">
@@ -43,19 +53,32 @@
               </select>
             </div>
 
+
             <div class="col col-xs-5 pull-right">
-              <div id="imaginary_container">
-                <div class="input-group stylish-input-group">
-                  <input type="text" class="form-control" [(ngModel)]="searchValue" placeholder="Search" id="search-box">
-                  <span class="input-group-addon">
-                    <button>
-                      <i class="fa fa-search"></i>
-                    </button>
-                  </span>
-                </div>
-              </div>
+              
+                  <div class="input-group">
+                      <!-- Input -->
+                      <input type="text" class="form-control" [(ngModel)]="searchValue" placeholder="Search" id="search-box">
+                      <span class="input-group-addon" style="background:white; border-left:none;">
+                        
+                          <i class="fa fa-search"></i>
+                        
+                      </span>
+                      <!-- Dropdown -->
+                      <div class="input-group-btn">
+                          <button type="button" class="btn btn-default" data-toggle="dropdown"><i class="fa fa-filter"></i> Filter<span class="caret"></span></button>
+                          <ul class="dropdown-menu pull-right" role="menu">
+                              <li><input type="radio" name="filter" value="name" [(ngModel)]="searchFilter"> Name</li>
+                              <li><input type="radio" name="filter" value="version" [(ngModel)]="searchFilter"> Version</li>
+                              <li><input type="radio" name="filter" value="published" [(ngModel)]="searchFilter"> Published</li>
+                          </ul>
+                        
+                  </div>
+                  
             </div>
+
           </div>
+        </div>
         </div>
         <div class="panel-body">
 
@@ -72,7 +95,7 @@
               </tr>
             </thead>
             <tbody *ngIf="forms.length>0">
-              <tr *ngFor="let form of forms | formfilter: searchValue  | paginate: { itemsPerPage: 10, currentPage: page }; let i = index;">
+              <tr *ngFor="let form of forms | formfilter: searchValue : searchFilter | paginate: { itemsPerPage: 11, currentPage: page }; let i = index;">
 
                 <td class="formName">
                   <b>{{form.name}}</b>
@@ -86,13 +109,17 @@
                 </td>
                 <td *ngIf="form.resources.length==0 || !form.resources[0]?.valueReference">
                   <a style="cursor: pointer;">
-                    <button class="btn btn-info" (click)="addSchema(form)" data-toggle="tooltip" title="No schema associated with this form. Import schema?">
-                      Add</button>
+                    <i class="fa fa-plus" (click)="addSchema(form)" data-toggle="tooltip" title="No schema associated with this form. Import schema?">
+                      </i>
+
                   </a>
                 </td>
                 <td *ngIf="form.resources.length>0 || form.resources[0]?.valueReference">
                   <a (click)="editForm(form,form.uuid)" style="cursor: pointer;">
-                    <button class="btn btn-success">Edit</button>
+                    <i class="fa fa-pencil"></i>
+                  </a>
+                  <a (click)="download(form.resources[0].valueReference)" style="cursor: pointer;">
+                    <i class="fa fa-download"></i>
                   </a>
                 </td>
 

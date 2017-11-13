@@ -4,6 +4,9 @@
 .spinner{
     display: inline-block;
 }
+.container{
+    height: 90vh;
+}
 
 /*
  * Specific styles of signin component

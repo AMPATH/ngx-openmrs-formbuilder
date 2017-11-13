@@ -2,7 +2,7 @@
  <div class="formName" *ngIf="schema.name==''&&editMode">
    <form #form="ngForm" id="formName" (ngSubmit)="editFormName(form.value)">
     <div class="input-group">
-  <input type="text" class="form-control" ngModel name="formName" [value]="schema.name" placeholder="Enter new form name" required>
+  <input type="text" class="form-control" name="formname" placeholder="Enter new form name" [(ngModel)]="formName" required>
   <span class="input-group-btn">
       <button class="btn btn-default" type="submit" [disabled]="!form.valid"><i class="fa fa-check" style="color:green"></i></button>
       <button class="btn btn-default" (click)="schema.name=formName"><i class="fa fa-times"></i></button>
