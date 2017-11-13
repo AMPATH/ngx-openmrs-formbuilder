@@ -95,10 +95,26 @@
         <button (click)="toggleView()" md-menu-item><span  style="font-size:14px;font-weight:500"><i class="fa fa-square-o" aria-hidden="true"></i> Single View</span> <i class="fa" [class.fa-check]="viewMode=='singleView'" style="color:green"></i></button>
         <button (click)="toggleView()" md-menu-item><span  style="font-size:15px;font-weight:500"><i class="fa fa-columns" aria-hidden="true"></i> Split View</span> <i class="fa" [class.fa-check]="viewMode=='multiView'" style="color:green"></i></button>
       </md-menu>
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 
       <button md-button data-toggle="collapse" data-target="#audit-info"><span style="font-size:14px;font-weight:600">Audit</span> <i class="fa fa-caret-down"></i></button>
       <button md-button (click)="exit()"><span style="font-size:14px;font-weight:500"> Exit</span></button>
 >>>>>>> Added ability to edit broken schemas
+=======
+      <!-- <button md-button [mdMenuTriggerFor]="tasksMenu"><span style="font-size:14px;font-weight:600; color:white;">Tasks</span></button>
+      <md-menu #tasksMenu="mdMenu" [overlapTrigger]="false">
+        <button (click)="validateConcepts()" md-menu-item><i class="fa fa-check-square-o"></i>
+          <span  style="font-size:14px;font-weight:500"> Validate Concepts</span></button>
+      </md-menu> -->
+      <button md-button data-toggle="collapse" data-target="#audit-info"><span style="font-size:14px;font-weight:600; color:white;">Audit</span></button>
+      <button md-button [mdMenuTriggerFor]="userMenu"><span style="font-size:14px;font-weight:600; color:white;">User</span></button>
+      <md-menu #userMenu="mdMenu" [overlapTrigger]="false">
+        <button md-menu-item>
+            <i class="fa fa-user"></i><span  style="font-size:14px;font-weight:500"> {{user}}</span></button>
+            <button md-menu-item> <i class="fa fa-server"></i><span style="font-size:14px;font-weight:500"></span> {{url}}</button>
+      </md-menu>
+      <button md-button (click)="exit()"><span style="font-size:14px;font-weight:600; color:white;"> Exit</span></button>
+>>>>>>> added ability to download schemas
       </span>
       
       <span flex></span>

@@ -18,11 +18,15 @@ import { saveAs } from 'file-saver/FileSaver';
 })
 export class ViewFormsComponent implements OnInit {
 
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 <<<<<<< daef29cd6299317054325f13630da30535cb8ebd
+=======
+>>>>>>> added ability to download schemas
   forms= [];
   componentForms: any;
   POCForms = [];
   page= 1; // pagination
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
   loggingOut=false;
   searchValue= '';
   loadingMessage= 'Loading Forms...';
@@ -55,23 +59,40 @@ export class ViewFormsComponent implements OnInit {
   componentForms:any;
   POCForms:any[]=[];
   page: number = 1; // pagination
+=======
+>>>>>>> added ability to download schemas
   loggingOut=false;
-  searchValue="";
-  loadingMessage="Loading Forms...";
-  restoreMessage="";
-  draftAvailable=false;
-  draft:any;
-  rawDraft:any;
-  formsWithoutSchemas:any[] = [];
-  subscription:Subscription;
+  searchValue= '';
+  loadingMessage= 'Loading Forms...';
+  restoreMessage= '';
+  draftAvailable= false;
+  draft: any;
+  rawDraft: any;
+  formsWithoutSchemas: any[] = [];
+  subscription: Subscription;
+  username: string;
+  searchFilter: string;
+  constructor(private fetchAllFormsService: FetchAllFormsService, 
+    private router: Router,
+    private sessionStorageService: SessionStorageService,
+    private fetchFormDetailService: FetchFormDetailService,
+    private auth: AuthenticationService,
+    private ls: LocalStorageService,
+    private formListService: FormListService) {
 
-  constructor(private fetchAllFormsService:FetchAllFormsService,private router:Router,
-    private fetchFormDetailService:FetchFormDetailService,private auth:AuthenticationService,private ls:LocalStorageService,
-  private formListService:FormListService) { }
+    const user = sessionStorageService.getObject('user');
+    this.username = user.username;
+
+  }
 
 
+
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
   ngOnInit(){
 >>>>>>> Added ability to edit broken schemas
+=======
+  ngOnInit() {
+>>>>>>> added ability to download schemas
 
     this.subscription = this.fetchAllFormsService.resaveAllPOCSchemasToLocalStorage.subscribe((res) => {
       if (res) {
@@ -81,6 +102,7 @@ export class ViewFormsComponent implements OnInit {
     this.subscription = this.fetchAllFormsService.fetchAllPOCForms().subscribe(forms => {
     const f = forms.results;
 
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 <<<<<<< daef29cd6299317054325f13630da30535cb8ebd
     f.forEach((form, index) => {
       this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res => {
@@ -92,6 +114,12 @@ export class ViewFormsComponent implements OnInit {
          if(!form.resources[0]||form.resources.length == 0) {this.formsWithoutSchemas.push(form.name);}
          else  this.POCForms.push(form);
 >>>>>>> Added ability to edit broken schemas
+=======
+    f.forEach((form, index) => {
+      this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res => {
+         if (!form.resources[0] || form.resources.length === 0) {this.formsWithoutSchemas.push(form.name); } else {
+            this.POCForms.push(form); }
+>>>>>>> added ability to download schemas
       });
     });
     this.POCForms = _.cloneDeep(f);
@@ -100,11 +128,15 @@ export class ViewFormsComponent implements OnInit {
 
     this.fetchAllFormSchemas(this.POCForms);
 
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 <<<<<<< daef29cd6299317054325f13630da30535cb8ebd
     if (this.forms.length === 0) { this.loadingMessage = 'No forms to display'; }
 =======
     if(this.forms.length==0) this.loadingMessage ="No forms to display";
 >>>>>>> Added ability to edit broken schemas
+=======
+    if (this.forms.length === 0) { this.loadingMessage = 'No forms to display'; }
+>>>>>>> added ability to download schemas
     });
 
 
@@ -120,15 +152,21 @@ export class ViewFormsComponent implements OnInit {
     this.draftAvailable = true;
     const schema = this.ls.getObject(Constants.RAW_SCHEMA);
     let timestamp;
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 <<<<<<< daef29cd6299317054325f13630da30535cb8ebd
+=======
+>>>>>>> added ability to download schemas
     if (this.ls.getObject(Constants.TIME_STAMP)) { timestamp = this.ls.getObject(Constants.TIME_STAMP); }
     this.restoreMessage =
     `Form ${this.ls.getObject(Constants.FORM_METADATA).name} was last worked on at ${new Date(parseInt(timestamp)).toLocaleDateString()}
     ${new Date(parseInt(timestamp)).toLocaleTimeString()} Would you like to continue working on this?`;
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 =======
     if(this.ls.getObject(Constants.TIME_STAMP)) timestamp = this.ls.getObject(Constants.TIME_STAMP);
     this.restoreMessage= `Form ${this.ls.getObject(Constants.FORM_METADATA).name} was last worked on at ${new Date(parseInt(timestamp))}. Would you like to continue working on this?`;
 >>>>>>> Added ability to edit broken schemas
+=======
+>>>>>>> added ability to download schemas
   }
 
 
@@ -184,7 +222,10 @@ export class ViewFormsComponent implements OnInit {
     }
   }
 
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 <<<<<<< daef29cd6299317054325f13630da30535cb8ebd
+=======
+>>>>>>> added ability to download schemas
   fetchAllFormSchemas(POCForms) {
       const date = new Date().getTime();
       let count = 0;
@@ -209,6 +250,7 @@ export class ViewFormsComponent implements OnInit {
               const finishTime = (new Date().getTime() - date) / 1000;
               console.log('Done fetching schemas. Took ' + finishTime + 'seconds');
             }
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 =======
   fetchAllFormSchemas(POCForms){
     const date = new Date().getTime();
@@ -256,6 +298,12 @@ export class ViewFormsComponent implements OnInit {
 
 =======
         });
+=======
+          });
+        }
+      });
+
+>>>>>>> added ability to download schemas
 
 
 
@@ -265,6 +313,19 @@ export class ViewFormsComponent implements OnInit {
     this.router.navigate(['/edit', form.uuid]);
   }
 
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 >>>>>>> Added ability to edit broken schemas
+=======
+  download(valueReference) {
+    this.fetchFormDetailService.fetchForm(valueReference, true).then((schema) => {
+      const blob = new Blob([JSON.stringify(schema, null, '\t')], {
+        type: 'application/json'
+      });
+      saveAs(blob, `${schema.name}.json`);
+    });
+  }
+
+
+>>>>>>> added ability to download schemas
 
 }

@@ -1,3 +1,4 @@
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 import {
   Component,
   OnInit,
@@ -74,6 +75,30 @@ import {
 import {
   NotificationComponent
 } from '../snackbar/notification-toast';
+=======
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+import {SnackbarComponent} from '../snackbar/snackbar.component';
+import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
+import { FetchAllFormsService } from '../../Services/fetch-all-forms.service';
+import { NavigatorService } from '../../Services/navigator.service';
+import { QuestionIdService } from '../../Services/question-id.service';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+import { MdSnackBar} from '@angular/material';
+import { DialogService } from 'ng2-bootstrap-modal';
+import { Form } from '../form-elements/Form';
+import { LocalStorageService } from '../../Services/local-storage.service';
+import { SessionStorageService } from '../../Services/session-storage.service';
+import { Constants } from '../../Services/constants';
+import { SaveFormsComponent } from '../../modals/save-form-modal/save-form-modal';
+import { ConfirmComponent } from '../../modals/confirm.component';
+import { FormListService } from '../../Services/form-list.service';
+import { SaveFormService } from '../../Services/save-form.service';
+import { EncounterTypeService } from '../../Services/encounter-type.service';
+import { ConceptService } from '../../Services/concept.service';
+import { NotificationComponent } from '../snackbar/notification-toast';
+>>>>>>> added ability to download schemas
 import * as _ from 'lodash';
 
 
@@ -175,6 +200,8 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 	  strSchema:string;
 	  rawSchema:any;
 	  questions:any;
+	  user: string;
+	  url: string;
 	  page:any; //to add new question
    	  section:any; //to add new section
 	  question:any;
@@ -192,9 +219,10 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 	  previousVersionUUID:string;
 
   constructor( private fs: FetchFormDetailService, private  ns: NavigatorService,public snackbar:MdSnackBar, private router:Router, 
-	private route:ActivatedRoute,public dialogService:DialogService, private ls:LocalStorageService,private cdRef:ChangeDetectorRef,
-	private fectAllFormsService:FetchAllFormsService,private formListService:FormListService,private saveFormService:SaveFormService,
-	private encounterTypeService:EncounterTypeService){}
+	private route: ActivatedRoute,public dialogService:DialogService, private ls: LocalStorageService,private cdRef: ChangeDetectorRef,
+	private fectAllFormsService: FetchAllFormsService,private formListService: FormListService,private saveFormService: SaveFormService,
+	private encounterTypeService: EncounterTypeService, private sessionStorageService: SessionStorageService, 
+	private conceptService: ConceptService){}
 
   closeElementEditor(){
 	this.questions = undefined;
@@ -214,8 +242,10 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 
 
   ngOnInit(){
-	this.viewMode = 'singleView'; //default view mode
-
+	this.loading = true;
+	this.viewMode = 'singleView'; // default view mode
+	this.user = this.sessionStorageService.getObject('user').username;
+	this.url = this.sessionStorageService.getItem('url');
 	this.fectAllFormsService.getFormType().subscribe((res) =>{
 		if(res!=""){
 			this.formType = res;
@@ -233,7 +263,7 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 		description : "",
 		auditInfo: {},
 		published : false,
-	}
+	};
 
 	this.fs.setReferencedFormsSchemasArray([]);
 	this.subscription = this.fs.loaded().subscribe((isLoaded) =>{
@@ -279,7 +309,7 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 					this.createFormForMissingResource();
 				}
 				
-				_.includes(this.formMetadata.name,Constants.COMPONENT) ? this.ls.setItem(Constants.FORM_TYPE,Constants.COMPONENT) : this.ls.setItem(Constants.FORM_TYPE, Constants.POC)
+				_.includes(this.formMetadata.name,Constants.COMPONENT) ? this.ls.setItem(Constants.FORM_TYPE,Constants.COMPONENT) : this.ls.setItem(Constants.FORM_TYPE, Constants.POC);
 			})
 			.catch(e => {
 				this.loading = false;
@@ -300,8 +330,8 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 	this.subscription = this.ns.getClickedElementRawSchema().subscribe(res => 
 		{
 			
-			this.rawSelectedSchema = res
-			this.strRawSchema = JSON.stringify(this.rawSelectedSchema,null,"\t")
+			this.rawSelectedSchema = res;
+			this.strRawSchema = JSON.stringify(this.rawSelectedSchema,null,"\t");
 		
 		}
 	);
@@ -312,7 +342,7 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 		  this.selectedSchema = res;
 		  this.strSchema = JSON.stringify(this.selectedSchema.selectedSchema,null,'\t');
 	  }
-  )
+  );
 
   //on element added/deleted/modified
   this.subscription =  this.ns.getSchema().subscribe(
@@ -326,7 +356,7 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 	  }
 
    
-  )
+  );
 
   this.subscription = this.ns.getNewQuestion().subscribe(
 	res => {
@@ -376,21 +406,22 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 
 		
 		}) 
-		.catch((error)=>{
+		.catch((error)=> {
 			console.error(error);
 			this.loading=false;
 			this.viewMode = "badSchema" ;
 			this.errorMessage = error;
 			this.fs.fetchForm(value,true).then((schema) =>{
 				this.strRawSchema = JSON.stringify(schema,null,"\t");
-			})
+			});
 			
-		})
+		});
 		
 >>>>>>> Added ability to edit broken schemas
   }
 
 
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
   ngOnInit() {
     this.loading = true;
     this.viewMode = 'singleView'; // default view mode
@@ -546,6 +577,13 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 
 
 
+=======
+  createNewForm(){
+	this.loading = false;
+	this.ls.clear(); // clear local storage
+	let schema=new Form({"name":"","processor":"EncounterFormProcessor","uuid":"xxxx","referencedForms":[],"pages":[]});
+	this.setFormEditor(schema,schema);	
+>>>>>>> added ability to download schemas
   }
 
 <<<<<<< daef29cd6299317054325f13630da30535cb8ebd
@@ -581,6 +619,7 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 >>>>>>> Added ability to edit broken schemas
   }
 
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 
   createNewForm() {
     this.loading = false;
@@ -593,6 +632,41 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
       'pages': []
     });
     this.setFormEditor(schema, schema);
+=======
+  canDeactivate()
+  {
+	  if(!this.disableCanDeactivate){
+		return confirm("Are you sure you want to navigate away from this page and lose all changes?");
+	  }
+	  else{ return true; }
+	  
+  }
+
+  checkIfSchemaProperlyCompiled(elements):boolean{
+	let bool = true;
+	let ets = [];
+	elements.forEach((element) => {
+	  if (!element.label) {
+	    this.loading = false;
+	    ets.push(element);
+	    bool = false;
+	    return bool;
+	  } else {
+	    if (element.sections) {
+	      this.checkIfSchemaProperlyCompiled(element.sections);
+	    }
+	    if (element.questions) {
+	      this.checkIfSchemaProperlyCompiled(element.questions);
+	    }
+	  }
+	});
+
+	if (ets.length > 0) {
+	  this.alertUser(ets);
+	}
+	return bool;
+
+>>>>>>> added ability to download schemas
   }
 
   createFormForMissingResource() {
@@ -663,6 +737,7 @@ setFormEditor(schema,rawSchema,formMetadata?){
     }
     return bool;
 
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
   }
 
   alertUser(elements) {
@@ -701,6 +776,84 @@ setFormEditor(schema,rawSchema,formMetadata?){
     this.saveRawDraft(this.rawSchema);
     this.saveFormMetadata(this.formMetadata);
     if (!silently) { this.showSaveSnackbar(); }
+=======
+saveLocally(silently?:boolean){
+	
+	this.saveDraft(this.schema);
+	this.saveRawDraft(this.rawSchema);
+	this.saveFormMetadata(this.formMetadata);
+	if(!silently) this.showSaveSnackbar();
+	
+}
+
+saveRemotely(){
+	this.saveLocally(true);
+	if(this.formMetadata.published ||!_.isEmpty(this.formMetadata.uuid)){
+		let message="";
+		if(this.formMetadata.published){
+			console.log(this.formMetadata.published);
+			message = "This form has been published. Would you want to overwrite the existing form?";
+		}
+
+		else if(!_.isEmpty(this.formMetadata.uuid)){
+			message = "Would you want to update the form or save as a new version?";
+		}
+		this.dialogService.addDialog(ConfirmComponent,{title:"Confirm Save", message:message, buttonText:"Update current version"},{backdropColor:'rgba(0,0, 0, 0.5)'})
+		.subscribe((decision)=>{
+				if(decision==1) {
+						// overwrite existing form
+						this.showSaveDialog("overwrite");
+				}
+
+				if(decision == 2){
+					// save as a new version
+					this.showSaveDialog("new",'0');
+				}
+			});
+
+	}
+
+	else{
+		this.showSaveDialog("new",'0');
+	}
+	this.saveLocally(true);
+
+}
+
+showSaveDialog(operation:string,newVersion?:string){
+	let dialogTitle = this.formType == Constants.POC ? "POC FORM" : "Component";
+	this.dialogService.addDialog(SaveFormsComponent, {
+
+		title:`Save ${dialogTitle}`,
+		operation:operation,
+		name:  this.formMetadata.name,
+		uuid:this.formMetadata.uuid,
+		version: newVersion || this.formMetadata.version,
+		encounterType:this.formMetadata.encounterType,
+		description:this.formMetadata.description,
+		rawSchema:this.rawSchema,
+		valueReference:this.formMetadata.valueReference,
+		resourceUUID:this.formMetadata.resourceUUID,
+		encounterTypes:this.encounterTypes,
+		published:this.formMetadata.published,
+
+		   }, { backdropColor: 'rgba(255, 255, 255, 0.5)' })
+		   .subscribe((res) => {
+
+			   this.formMetadata.name.indexOf('component') > -1 ?  this.formType = Constants.COMPONENT : this.formType = Constants.POC;
+			   if(res && this.formType == Constants.COMPONENT && operation == 'new'){
+				   this.disableCanDeactivate = true;
+				   this.dialogService.addDialog(ConfirmComponent, {message: "Would you like to update forms referencing this component as well?",
+												title: "Update forms", buttonText: "OK"}, {backdropColor: "rgba(0,0,0,0.5)"}).subscribe((confirmed) => {
+					if (confirmed){
+						this.router.navigate(['/update', this.previousVersionUUID, this.formMetadata.uuid]);
+					}}); }
+
+				});
+
+
+}
+>>>>>>> added ability to download schemas
 
   }
 
@@ -738,6 +891,7 @@ setFormEditor(schema,rawSchema,formMetadata?){
     }
     this.saveLocally(true);
 
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
   }
 
   showSaveDialog(operation: string, newVersion ?: string) {
@@ -799,64 +953,124 @@ setFormEditor(schema,rawSchema,formMetadata?){
 	  let sameFormsDifferentVersion=[];
 	  this.subscription =	this.fectAllFormsService.fetchAllPOCForms().subscribe((POCForms:any) =>{
 		forms = _.cloneDeep(POCForms.results); //currently only poc forms version 1
+=======
+showSaveSnackbar(){
+	this.snackbar.open("Saved Locally!", "", {duration: 1200});
+  }
+
+  saveDraft(schema: any){
+
+	this.ls.setObject(Constants.SCHEMA, schema);
+	this.ls.setObject(Constants.TIME_STAMP, Date.now());
+
+
+  }
+
+  saveRawDraft(rawSchema: any){
+
+	this.ls.setObject(Constants.RAW_SCHEMA, rawSchema);
+
+
+  }
+
+  saveFormMetadata(formMetadata){
+	this.ls.setObject(Constants.FORM_METADATA, formMetadata);
+  }
+
+  publish(form, index){
+	  let forms = [];
+	  let sameFormsDifferentVersion = [];
+	  this.subscription =	this.fectAllFormsService.fetchAllPOCForms().subscribe((POCForms: any) => {
+		forms = _.cloneDeep(POCForms.results); // currently only poc forms version 1
+>>>>>>> added ability to download schemas
 		let formName = this.formListService.removeVersionInformation(this.formMetadata.name);
-		forms.splice(index,1);
+		forms.splice(index, 1);
 		let formsWithoutVersionedNames = this.formListService.removeVersionInformationFromForms(forms);
-		
-		
-		formsWithoutVersionedNames.forEach((form) =>{
-		 if(form.name==formName){
+
+
+		formsWithoutVersionedNames.forEach((form) => {
+		 if (form.name == formName){
 			sameFormsDifferentVersion.push(form);
 		 }
 	   });
-	
-	   if(!_.isEmpty(sameFormsDifferentVersion)){
-		sameFormsDifferentVersion.forEach((form)=>{
-			if(form.published) POCForms.results.forEach((pocform) =>{
-			  if(pocform.uuid == form.uuid){
+
+	   if (!_.isEmpty(sameFormsDifferentVersion)){
+		sameFormsDifferentVersion.forEach((form) => {
+			if (form.published) {
+				POCForms.results.forEach((pocform) => {
+			  if (pocform.uuid === form.uuid){
 				   this.dialogService.addDialog(ConfirmComponent,
-				   {title:"Confirm publish","message":"There is already a version of this form published. Would you like to unpublish that version and publish this one?","buttonText":"Publish"},
-				   {backdropColor:"rgba(0,0,0,0.5)"})
+				   {title: "Confirm publish", "message": "There is already a version of this form published. Would you like to unpublish that version and publish this one?", "buttonText": "Publish"},
+				   {backdropColor: "rgba(0,0,0,0.5)"})
 				   .subscribe((isConfirmed) => {
-						   if(isConfirmed){
+						   if (isConfirmed){
 							   this.saveFormService.unpublish(pocform.uuid).subscribe((res) => this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => {
-								   this.showNotificationMessage("Form Successfully Published!");
-								   this.formMetadata.published = true
+								   this.showNotificationMessage('Form Successfully Published!');
+								   this.formMetadata.published = true;
 								}));
-						   }})}})
+						   }}); }});
+						}
 						   else{
 							   this.showNotificationMessage("Form Successfully Published!");
-							   this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => this.formMetadata.published = true); //if none of the other versions are published.
+							   this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => this.formMetadata.published = true); // if none of the other versions are published.
 						   }
 					   });
 	   }
-	   
+
 	   else{
 		this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => {
 			this.showNotificationMessage("Form Successfully Published!");
-			this.formMetadata.published = true
+			this.formMetadata.published = true;
 		});
 	   }
-			
-			
-		
-		});		
+
+
+
+		});
 	  }
 
 	  unpublish(){
-		this.saveFormService.unpublish(this.formMetadata.uuid).subscribe((res) => this.formMetadata.published= false);
-		
+		this.saveFormService.unpublish(this.formMetadata.uuid).subscribe((res) => this.formMetadata.published = false);
+
 	  }
 
- 
+
 loadFormBuilder($event){
-	this.viewMode='singleView';
+	this.viewMode = 'singleView';
 }
 
   exit(){
 	  this.router.navigate(['/forms']);
 >>>>>>> Added ability to edit broken schemas
   }
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
+=======
+
+  validateConcepts(){
+	  const concepts = this.fetchAllConcepts();
+	  this.snackbar.openFromComponent(NotificationComponent,{data: " Validating Concepts..."})
+	  this.conceptService.validateConcepts(concepts).subscribe((res) => {console.log(res); this.snackbar.open("Concepts Validated","",{duration: 1200})});
+
+  }
+
+  fetchAllConcepts(){
+	const concepts = [];
+	const pages = this.schema.pages;
+	_.each(pages, (page: any) => {
+	  _.each(page.sections, (section: any) => {
+		  _.each((section.questions), (question: any) => {
+			  if (question.questionOptions.concept) { concepts.push(question.questionOptions.concept); }
+			  if (question.questions) {
+				  _.each(question.questions, (nestedQuestion: any) => {
+					  if (nestedQuestion.questionOptions.concept) { concepts.push(nestedQuestion.questionOptions.concept);}});}}); }); });
+	return concepts;
+  }
+
+  
+
+
+}
+>>>>>>> added ability to download schemas
 
   saveDraft(schema: any) {
 

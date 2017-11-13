@@ -8,11 +8,15 @@ import * as env from '../../environments/environment';
 export class BuildVersionFooterComponent implements OnInit {
 
   date: string;
+<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 <<<<<<< 845710052d3fc4fa05cf93679480800954b1c76f
   version: string;
 =======
 
 >>>>>>> bug fixes
+=======
+  version: string;
+>>>>>>> added ability to download schemas
   constructor() { }
 
   ngOnInit() {
