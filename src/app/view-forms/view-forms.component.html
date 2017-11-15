@@ -68,11 +68,14 @@
                       <div class="input-group-btn">
                           <button type="button" class="btn btn-default" data-toggle="dropdown"><i class="fa fa-filter"></i> Filter<span class="caret"></span></button>
                           <ul class="dropdown-menu pull-right" role="menu">
+<<<<<<< c59a72a70f3c203c9b78b8901367a64d2c9f9f39
 <<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 =======
                               <li><input type="radio" name="filter" value="name" [(ngModel)]="searchFilter"> Name</li>
                               <li><input type="radio" name="filter" value="version" [(ngModel)]="searchFilter"> Version</li>
 >>>>>>> added ability to download schemas
+=======
+>>>>>>> Added a feature Validate concepts
                               <li><input type="radio" name="filter" value="published" [(ngModel)]="searchFilter"> Published</li>
                           </ul>
                         
@@ -112,6 +115,7 @@
                 </td>
                 <td *ngIf="form.resources.length==0 || !form.resources[0]?.valueReference">
                   <a style="cursor: pointer;">
+<<<<<<< c59a72a70f3c203c9b78b8901367a64d2c9f9f39
 <<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 <<<<<<< daef29cd6299317054325f13630da30535cb8ebd
                     <i class="material-icons" (click)="addSchema(form)" data-toggle="tooltip" title="No schema associated with this form. Import schema?">note_add</i>
@@ -130,11 +134,15 @@
 =======
                     <i class="fa fa-plus" (click)="addSchema(form)" data-toggle="tooltip" title="No schema associated with this form. Import schema?">
                       </i>
+=======
+                    <i class="material-icons" (click)="addSchema(form)" data-toggle="tooltip" title="No schema associated with this form. Import schema?">note_add</i>
+>>>>>>> Added a feature Validate concepts
 
 >>>>>>> added ability to download schemas
                   </a>
                 </td>
                 <td *ngIf="form.resources.length>0 || form.resources[0]?.valueReference">
+<<<<<<< c59a72a70f3c203c9b78b8901367a64d2c9f9f39
                   <a (click)="editForm(form,form.uuid)" style="cursor: pointer;">
 <<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
                     <button class="btn btn-success">Edit</button>
@@ -145,6 +153,13 @@
                   <a (click)="download(form.resources[0].valueReference)" style="cursor: pointer;">
                     <i class="fa fa-download"></i>
 >>>>>>> added ability to download schemas
+=======
+                  <a (click)="editForm(form,form.uuid)" style="cursor: pointer;" data-toggle="tooltip" title="Edit Schema">
+                    <i class="material-icons edit">mode_edit</i>
+                  </a>
+                  <a (click)="download(form.resources[0].valueReference)" style="cursor: pointer;" data-toggle="tooltip" title="Download Schema">
+                    <i class="material-icons download">get_app</i>
+>>>>>>> Added a feature Validate concepts
                   </a>
                 </td>
 
