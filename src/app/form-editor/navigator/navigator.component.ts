@@ -317,10 +317,10 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	  schemaObj['sectionIndex'] = sectionIndex;
 	  schemaObj['questionIndex'] = questionIndex;
 	  schemaObj['parentQuestionIndex'] = parentQuestionIndex;
-	  this.ns.setClickedElementSchema(schemaObj); //set the current edited question in the schema editor
+	  this.ns.setClickedElementSchema(schemaObj); // set the current edited question in the schema editor
 
 	  this.propertyModelArray = this.qcs.toPropertyModelArray(question);
-	  if (parentQuestionIndex != undefined && parentQuestionIndex > -1) { //thy art an obsgroup question!
+	  if (parentQuestionIndex != undefined && parentQuestionIndex > -1) { // thy art an obsgroup question!
 	    this.ns.newQuestion(this.propertyModelArray, pageIndex, sectionIndex, questionIndex, parentQuestionIndex);
 	  } else {
 	    this.ns.newQuestion(this.propertyModelArray, pageIndex, sectionIndex, questionIndex, undefined, schemaObj['selectedSchema']);
@@ -762,8 +762,8 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
 	editFormName(value: any) {
 
-	  this._formSchema.name = value.formName;
-	  this.rawSchema.name = value.formName;
+	  this._formSchema.name = value.formname;
+	  this.rawSchema.name = value.formname;
 	  this.setSchema(this._formSchema);
 	  this.setRawSchema(this.rawSchema);
 	}
@@ -814,7 +814,10 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 	}
 
 	IsSectionReferenced(pageIndex, sectionIndex) {
-	  let isReferenced: boolean = false;
+		let isReferenced: boolean = false;
+		if (this.selectMode) {
+			return false;
+		}
 	  if (this.rawSchema.pages[pageIndex].label){
 			if (!this.rawSchema.pages[pageIndex].sections[sectionIndex].label) {
 	      isReferenced = true;

@@ -1,10 +1,13 @@
-import {Component} from '@angular/core';
-
+import {Component, Inject} from '@angular/core';
+import { MD_SNACK_BAR_DATA } from '@angular/material';
 @Component({
     selector: 'snackbar',
     template: `<div class="text-center">
     <span style="color:green"><i class="fa fa-check-circle fa-2x"></i></span> 
-    <h5 style="color:white">Schema Updated!</h5>
+    <h5 style="color:white"> {{data}}</h5>
     </div>`
 })
-export class SnackbarComponent {}
+export class SnackbarComponent {
+
+    constructor(@Inject(MD_SNACK_BAR_DATA) public data: any) { }
+}

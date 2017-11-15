@@ -82,7 +82,7 @@
     border:0;
     background:transparent;
 }
-.material-icons{
+.material-icons.edit{
   color:green;
 }
 .navbar-btn{
@@ -96,7 +96,9 @@
     border-color: rgb(111, 84, 153);
     color: rgb(255, 255, 255);
 } */
-
+a:hover{
+  text-decoration: none;
+}
 .panel-title{
   color:black;
 }
@@ -130,4 +132,14 @@ md-card{
     margin: 5px 5px 5px 50px;
 
 }
-
+.fill{
+  flex: 1 1 auto;
+}
+.dropdown-menu{
+  color: black;
+  font-family: 'Roboto';
+  font-weight: 500;
+}
+.dropdown-menu>li {
+  margin-left:5px;
+}

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import * as env from '../../environments/environment';
 @Component({
   selector: 'app-build-version-footer',
   templateUrl: './build-version-footer.component.html',
@@ -7,12 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BuildVersionFooterComponent implements OnInit {
 
-  date:string;
-
+  date: string;
+  version: string;
   constructor() { }
 
   ngOnInit() {
-    // this.date = new Date().getMonth() +"/"+new Date().getDate() +"/"+new Date().getFullYear()+"/" + " "+new Date().toLocaleTimeString();
+    const d = new Date( +env.environment.date );
+    this.date = d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
+    this.version = env.environment.version;
   }
 
 }

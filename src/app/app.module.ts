@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AppRoutingModule } from './app-routing.module';
@@ -10,11 +10,10 @@ import {AuthenticationModule} from './authentication/authentication.module';
 import { TypeaheadModule } from 'ngx-bootstrap';
 import {AppMaterialModule} from './app-material-module';
 import 'hammerjs';
-
 import { AppComponent } from './app.component';
 import { ConfirmComponent } from './modals/confirm.component';
 import { AlertComponent } from './modals/alert.component';
-import {  InsertReferenceComponent }  from './modals//insert-reference-form-modal/insert-reference-forms.modal';
+import {  InsertReferenceComponent } from './modals//insert-reference-form-modal/insert-reference-forms.modal';
 import { SchemaModalComponent  } from './modals/schema-editor.modal';
 import { PromptComponent } from './modals/prompt.component';
 import { AnswersComponent } from './modals/answers-modal/answers.modal';
@@ -25,7 +24,7 @@ import { ViewFormsComponent } from './view-forms/view-forms.component';
 import { LoginComponent } from './login/login.component';
 import { SnackbarComponent } from './form-editor/snackbar/snackbar.component';
 import { SaveFormsComponent } from './modals/save-form-modal/save-form-modal';
-
+import { NotificationComponent } from './form-editor/snackbar/notification-toast';
 import {AuthGuardService} from './Services/auth-guard.service';
 import { SaveFormService } from './Services/save-form.service';
 import {  EncounterTypeService } from './Services/encounter-type.service';
@@ -61,8 +60,8 @@ import { UpdateFormsWizardComponent } from './modals/update-forms-wizard-modal/u
     BuildVersionFooterComponent, 
     SaveSnackbarComponent, 
     FormBuilderComponent,
-    UpdateFormsWizardComponent
-    
+    UpdateFormsWizardComponent,
+    NotificationComponent
   ],
 
 
@@ -92,7 +91,8 @@ import { UpdateFormsWizardComponent } from './modals/update-forms-wizard-modal/u
      SnackbarComponent,
      SaveFormsComponent,
     SaveSnackbarComponent,
-    UpdateFormsWizardComponent],
+    UpdateFormsWizardComponent,
+  NotificationComponent],
 
   providers:[AuthGuardService,EncounterTypeService,FormListService,SaveFormService],
   
