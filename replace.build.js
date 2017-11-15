@@ -1,8 +1,8 @@
 var replace = require('replace-in-file');
-var buildDate = Date.now();
+var buildDate = 'date: \'' + Date.now()+'\'';
 const options = {
   files: 'src/environments/environment.ts',
-  from: /{BUILD_DATE}/g,
+  from: /date\:\s\'(.*?)\'/,
   to: buildDate,
   allowEmptyPaths: false,
 };

@@ -82,7 +82,7 @@
     border:0;
     background:transparent;
 }
-.material-icons{
+.material-icons.edit{
   color:green;
 }
 .navbar-btn{
@@ -96,7 +96,9 @@
     border-color: rgb(111, 84, 153);
     color: rgb(255, 255, 255);
 } */
-
+a:hover{
+  text-decoration: none;
+}
 .panel-title{
   color:black;
 }

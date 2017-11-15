@@ -7,59 +7,77 @@ import { AuthenticationService } from './authentication.service';
 import { SessionStorageService } from './session-storage.service';
 import { FetchFormDetailService } from './fetch-form-detail.service';
 import { LocalStorageService } from './local-storage.service';
-import  { Subject, Observable, BehaviorSubject, AsyncSubject } from 'rxjs';
+import { Subject, Observable, BehaviorSubject} from 'rxjs';
 @Injectable()
 export class FetchAllFormsService {
 
  private headers = new Headers();
- private forms:any={}
- private baseUrl:string;
- private formType:BehaviorSubject<string>=new BehaviorSubject('');
- private allPOCFormsSchemas:BehaviorSubject<any>;
+ private forms = {};
+ private baseUrl: string;
+ private formType: BehaviorSubject<string>= new BehaviorSubject('');
+ private allPOCFormsSchemas: BehaviorSubject<any>;
+ public resaveAllPOCSchemasToLocalStorage: BehaviorSubject<boolean>= new BehaviorSubject(false);
 
- public resaveAllPOCSchemasToLocalStorage:BehaviorSubject<boolean>=new BehaviorSubject(false);
-  constructor(private http:Http,private sessionStorageService:SessionStorageService,private ls:LocalStorageService,
-              private router:Router, private auth:AuthenticationService,private fd:FetchFormDetailService) {
+constructor(private http: Http,
+  private sessionStorageService: SessionStorageService,
+  private ls: LocalStorageService,
+  private router: Router,
+  private auth: AuthenticationService,
+  private fd: FetchFormDetailService) {
   this.allPOCFormsSchemas = new BehaviorSubject(ls.getObject('POC_FORM_SCHEMAS'));
-  auth.getBaseUrl().subscribe((baseUrl) => this.baseUrl = baseUrl)
-  auth.getCredentialsSubject().subscribe((credentials) => { 
-    this.headers.delete("Authorization");
-    this.headers.append("Authorization", "Basic " + credentials);
+  auth.getBaseUrl().subscribe((baseUrl) => this.baseUrl = baseUrl);
+  auth.getCredentialsSubject().subscribe((credentials) => {
+    this.headers.delete('Authorization');
+    this.headers.append('Authorization', 'Basic ' + credentials);
   });
-  this.headers.append("Content-Type", "application/json");
- 
-    
+  this.headers.append('Content-Type', 'application/json');
+              }
+
+
+   fetchAllPOCForms() {
+    const v = 'custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference))';
+    return this.http.get(`${this.baseUrl}/ws/rest/v1/form?q=POC&v=${v}`, {headers: this.headers}).map(
+      data => this.forms = data.json())
+      .catch((e) => {
+        if (e.status === 0) {
+          alert('Please check that you have internet connection and CORS is turned on then refresh.');
+        } else if ( e.status === 403) {
+          this.router.navigate(['/login']);
+        }
+        return e;
+      });
+
    }
 
-   
-   fetchAllPOCForms(){
 
-    return this.http.get(`${this.baseUrl}/ws/rest/v1/form?q=POC&v=custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference))`,{headers:this.headers}).map(
+  fetchAllComponentForms() {
+    const v = 'custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference)';
+    return this.http
+    .get(`${this.baseUrl}/ws/rest/v1/form?q=Component&v=${v})`, {headers: this.headers}).map(
       data => this.forms = data.json())
-      .catch(e => {alert("Error found: "+ e); return e;});
-      
-   }
-
-
-  fetchAllComponentForms(){
-    return this.http.get(`${this.baseUrl}/ws/rest/v1/form?q=Component&v=custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference))`,{headers:this.headers}).map(
-      data => this.forms = data.json())
-      .catch((e) => {alert("Error found: "+e); return e;})
+      .catch((e) => {
+        if (e.status === 0) {
+          alert('Please check that you have internet connection and CORS is turned on then refresh.');
+        } else if ( e.status === 403) {
+          this.router.navigate(['/login']);
+        }
+        return e;
+      });
   }
 
-  setFormType(form:string){
+  setFormType(form: string) {
     this.formType.next(form);
   }
 
-  getFormType(){
+  getFormType() {
     return this.formType;
   }
 
-  setPOCFormSchemas(schemas:any){
+  setPOCFormSchemas(schemas: any) {
     this.allPOCFormsSchemas.next(schemas);
   }
 
-  getPOCFormSchemas(){
+  getPOCFormSchemas() {
     return this.allPOCFormsSchemas;
   }
 
