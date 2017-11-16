@@ -1,3 +1,4 @@
+<<<<<<< 0e3e320d58e8e838b39dd245419b291540d60e04
 <<<<<<< c59a72a70f3c203c9b78b8901367a64d2c9f9f39
 <<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 =======
@@ -82,14 +83,23 @@ import {
 =======
 import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import {SnackbarComponent} from '../snackbar/snackbar.component';
+=======
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+import { SnackbarComponent } from '../snackbar/snackbar.component';
+>>>>>>> Fixed concepts validator bug
 import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
 import { FetchAllFormsService } from '../../Services/fetch-all-forms.service';
 import { NavigatorService } from '../../Services/navigator.service';
 import { QuestionIdService } from '../../Services/question-id.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+<<<<<<< 0e3e320d58e8e838b39dd245419b291540d60e04
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { MdSnackBar} from '@angular/material';
+=======
+import { Subscription } from 'rxjs/Subscription'; import { Observable } from 'rxjs/Observable';
+import { MdSnackBar } from '@angular/material';
+>>>>>>> Fixed concepts validator bug
 import { DialogService } from 'ng2-bootstrap-modal';
 import { Form } from '../form-elements/Form';
 import { LocalStorageService } from '../../Services/local-storage.service';
@@ -97,13 +107,23 @@ import { SessionStorageService } from '../../Services/session-storage.service';
 import { Constants } from '../../Services/constants';
 import { SaveFormsComponent } from '../../modals/save-form-modal/save-form-modal';
 import { ConfirmComponent } from '../../modals/confirm.component';
+<<<<<<< 0e3e320d58e8e838b39dd245419b291540d60e04
+=======
+import { AlertComponent } from '../../modals/alert.component';
+>>>>>>> Fixed concepts validator bug
 import { FormListService } from '../../Services/form-list.service';
 import { SaveFormService } from '../../Services/save-form.service';
 import { EncounterTypeService } from '../../Services/encounter-type.service';
 import { ConceptService } from '../../Services/concept.service';
+<<<<<<< 0e3e320d58e8e838b39dd245419b291540d60e04
 import { NotificationComponent } from '../snackbar/notification-toast';
 >>>>>>> added ability to download schemas
 import * as _ from 'lodash';
+=======
+import { NotificationComponent } from '../snackbar/notification-toast'; import * as _ from 'lodash';
+import { Question, QuestionOptions } from '../form-elements/Question';
+
+>>>>>>> Fixed concepts validator bug
 
 
 <<<<<<< daef29cd6299317054325f13630da30535cb8ebd
@@ -1096,14 +1116,16 @@ loadFormBuilder($event){
       data: ' Validating Concepts...'
     });
     this.conceptService.validateConcepts(concepts).subscribe((res: any[]) => {
+
       const undefinedConcepts = res.filter((x) => x !== undefined);
+      console.log(undefinedConcepts);
       if (undefinedConcepts.length > 0) {
-        let undefined_concepts = '\n';
+        let undefined_concepts = '\n \n';
         _.each(undefinedConcepts, (concept) => {
-          undefined_concepts = undefined_concepts + '\n' + concept;
+          undefined_concepts = undefined_concepts + '\n \n' + concept;
         });
         this.dialogService.addDialog(AlertComponent, {
-          message: `The following concepts are invalid: ${concepts}`
+          message: `The following concepts are invalid: ${undefined_concepts}`
         });
         this.snackbar.dismiss();
       } else {
@@ -1118,18 +1140,28 @@ loadFormBuilder($event){
     const pages = this.schema.pages;
     _.each(pages, (page: any) => {
       _.each(page.sections, (section: any) => {
-        _.each((section.questions), (question: any) => {
+        _.each((section.questions), (question: Question) => {
           if (question.questionOptions.concept) {
             concepts.push(question.questionOptions.concept);
           }
+          if (question.questionOptions.answers) {
+            _.each(question.questionOptions.answers, (answer) => {
+              if (concepts.indexOf(answer.concept) === -1) { concepts.push(answer.concept); }});
+            }
           if (question.questions) {
             _.each(question.questions, (nestedQuestion: any) => {
               if (nestedQuestion.questionOptions.concept) {
-                concepts.push(nestedQuestion.questionOptions.concept);
+                if (concepts.indexOf(nestedQuestion.questionOptions.concept) === -1) {
+                  concepts.push(nestedQuestion.questionOptions.concept); }
               }
-            });
-          }
-        });
+              if (nestedQuestion.questionOptions.answers) {
+                _.each(question.questionOptions.answers, (answer) => {
+                  if (concepts.indexOf(nestedQuestion.questionOptions.answer.concept) === -1) {
+                  concepts.push(answer.concept);
+                  }
+                });
+              }});
+          }});
       });
     });
     return concepts;
