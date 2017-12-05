@@ -8,6 +8,7 @@ import { SessionStorageService } from './session-storage.service';
 import { FetchFormDetailService } from './fetch-form-detail.service';
 import { LocalStorageService } from './local-storage.service';
 import { Subject, Observable, BehaviorSubject} from 'rxjs';
+import { FormListService } from './form-list.service';
 @Injectable()
 export class FetchAllFormsService {
 
@@ -23,7 +24,8 @@ constructor(private http: Http,
   private ls: LocalStorageService,
   private router: Router,
   private auth: AuthenticationService,
-  private fd: FetchFormDetailService) {
+  private fd: FetchFormDetailService,
+private formListService: FormListService) {
   this.allPOCFormsSchemas = new BehaviorSubject(ls.getObject('POC_FORM_SCHEMAS'));
   auth.getBaseUrl().subscribe((baseUrl) => this.baseUrl = baseUrl);
   auth.getCredentialsSubject().subscribe((credentials) => {
@@ -35,7 +37,7 @@ constructor(private http: Http,
 
 
    fetchAllPOCForms() {
-    const v = 'custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference))';
+    const v = 'custom:(uuid,name,encounterType:(uuid,name),version,published,retired,resources:(uuid,name,dataType,valueReference))';
     return this.http.get(`${this.baseUrl}/ws/rest/v1/form?q=POC&v=${v}`, {headers: this.headers}).map(
       data => this.forms = data.json())
       .catch((e) => {
@@ -81,6 +83,31 @@ constructor(private http: Http,
     return this.allPOCFormsSchemas;
   }
 
+  getPOCSameFormsDifferentVersions(formMetadata: any): Observable<any[]> {
+    const sameFormsDifferentVersion = [];
+    return this.fetchAllPOCForms().switchMap((POCForms: any) => {
+      const forms = _.cloneDeep(POCForms.results); // currently only poc forms version 1
+      const formName = this.formListService.removeVersionInformation(formMetadata.name);
+      const formsWithoutVersionedNames = this.formListService.removeVersionInformationFromForms(forms);
+      formsWithoutVersionedNames.forEach(($form) => {
+        if ($form.name === formName) {
+          sameFormsDifferentVersion.push($form);
+        }
+      });
+
+      return Observable.of(sameFormsDifferentVersion);
+  });
+}
+
+
+getLatestPublishedVersion(sameFormsDifferentVersion: any[], formUuidToBePublished: any) {
+  let form: any = {};
+  if (!_.isEmpty(sameFormsDifferentVersion)) {
+    sameFormsDifferentVersion.forEach((_form) => {
+      if (_form.published && _form.uuid !== formUuidToBePublished) {
+        form = _form; }});
+    return form;
+}}}
   // fetchAllPOCFormsSchemas(metadatas:any){
   //   let promises:Promise<any>[] = []
   //   // _.each(metadatas,(metadata:any) => {
@@ -110,4 +137,4 @@ constructor(private http: Http,
 
   //   });
   // }
-}
+

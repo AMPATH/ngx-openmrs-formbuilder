@@ -125,32 +125,42 @@ export class SaveFormService {
 
     ///////////////////////////////////////////////////////////////////////
 
-    publish(uuid){
-        let body = { published : true };
+    publish(uuid) {
+        const body = { published : true };
         return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
     }
 
     unpublish(uuid){
-        let body = { published : false};
+        const body = { published : false};
         return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
     }
 
     updateName(name:string,uuid){
-        let body = { name : name };
+        const body = { name : name };
         this.setNewFormName(name);
         return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
     }
 
     updateVersion(version:string,uuid){
-        let body = { version : version };
+        const body = { version : version };
         this.setNewVersion(version);
         return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
     }
 
     updateDescription(description:string,uuid){
-        let body = { description : description };
+        const body = { description : description };
         this.setNewDescription(description);
         return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
+    }
+
+    retire(uuid: string) {
+        // const body = { retired : true, retiredReason : "Retire Reason!" };
+        return this.http.delete(`${this.baseUrl}/ws/rest/v1/form/${uuid}?!purge`, {headers: this.headers}).map(res => res.json());
+    }
+
+    unretire(uuid: string) {
+        const body = { retired : false };
+        return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`, body, {headers: this.headers}).map(res => res.json());
     }
 
 }

@@ -33,7 +33,7 @@ import { FormEditorComponent } from './form-editor.component';
 import { AuditInfoComponent } from '../audit-info/audit-info.component';
 import { UpdateFormsComponent } from '../update-forms/update-forms.component';
 import { UpdateFormsWizardComponent } from '../update-forms-wizard/update-forms-wizard.component';
-
+import { NgDragDropModule } from 'ng-drag-drop';
 @NgModule({
   imports: [
     CommonModule,
@@ -42,7 +42,8 @@ import { UpdateFormsWizardComponent } from '../update-forms-wizard/update-forms-
     FormsModule,
     ReactiveFormsModule,
     ClipboardModule,
-    AppMaterialModule
+    AppMaterialModule,
+    NgDragDropModule.forRoot()
   ],
 
   declarations: [
@@ -50,7 +51,7 @@ import { UpdateFormsWizardComponent } from '../update-forms-wizard/update-forms-
     SchemaEditorComponent,
     ElementEditorComponent,
     FormRendererComponent,
-    DynamicQuestionComponent, 
+    DynamicQuestionComponent,
     ConceptComponent,
     FormEditorComponent,
     ReferenceFormsComponent,

@@ -13,8 +13,6 @@ export class SearchFormFilterPipe implements PipeTransform {
       return _.filter(forms, (form) => _.includes(form['name'].toLowerCase(), value));
     } else if (_.isEqual(filter, 'published')) {
       return _.filter(forms, (form) => _.includes(form['name'].toLowerCase(), value) && form['published'] === true);
-    } else if (_.isEqual(filter, 'version')) {
-      return _.filter(forms, (form) => _.includes(form['name'].toLowerCase(), value));
     }
   }
 }

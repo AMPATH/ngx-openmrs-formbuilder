@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewChecked, AfterContentInit } from '@angular/core';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
 import { FetchAllFormsService } from '../../Services/fetch-all-forms.service';
@@ -43,7 +43,7 @@ interface FormMetadata {
   styleUrls: ['./form-editor.component.css']
 })
 
-export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked, AfterContentInit {
   schema: any;
   selectedSchema: any;
   rawSelectedSchema: any;
@@ -82,7 +82,9 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked 
     private saveFormService: SaveFormService,
     private encounterTypeService: EncounterTypeService,
     private sessionStorageService: SessionStorageService,
-    private conceptService: ConceptService) {}
+    private conceptService: ConceptService) {
+      this.loading = true;
+    }
 
   closeElementEditor() {
     this.questions = undefined;
@@ -100,9 +102,11 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.cdRef.detectChanges();
   }
 
+  ngAfterContentInit() {
+    this.loading = true;
+  }
 
   ngOnInit() {
-    this.loading = true;
     this.viewMode = 'singleView'; // default view mode
     this.user = this.sessionStorageService.getObject('user').username;
     this.url = this.sessionStorageService.getItem('url');
@@ -493,63 +497,27 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.ls.setObject(Constants.FORM_METADATA, formMetadata);
   }
 
-  publish(form, index) {
-    let forms = [];
-    const sameFormsDifferentVersion = [];
-    this.subscription = this.fectAllFormsService.fetchAllPOCForms().subscribe((POCForms: any) => {
-      forms = _.cloneDeep(POCForms.results); // currently only poc forms version 1
-      const formName = this.formListService.removeVersionInformation(this.formMetadata.name);
-      forms.splice(index, 1);
-      const formsWithoutVersionedNames = this.formListService.removeVersionInformationFromForms(forms);
+  publish() {
 
-
-      formsWithoutVersionedNames.forEach(($form) => {
-        if ($form.name === formName) {
-          sameFormsDifferentVersion.push($form);
-        }
-      });
-
-      if (!_.isEmpty(sameFormsDifferentVersion)) {
-        sameFormsDifferentVersion.forEach((_form) => {
-          if (_form.published) {
-            POCForms.results.forEach((pocform) => {
-              if (pocform.uuid === _form.uuid) {
-                this.dialogService.addDialog(ConfirmComponent, {
-                    title: 'Confirm publish',
-                    message: 'There is already a version of this form published.' +
-                    'Would you like to unpublish that version and publish this one?',
-                     buttonText: 'Publish'
-                  }, {
-                    backdropColor: 'rgba(0,0,0,0.5)'
-                  })
-                  .subscribe((isConfirmed) => {
-                    if (isConfirmed) {
-                      this.saveFormService.unpublish(pocform.uuid)
-                      .subscribe((res) => this.saveFormService.publish(this.formMetadata.uuid).subscribe( (ress) => {
-                        this.showSuccessToast('Form Successfully Published!');
-                        this.formMetadata.published = true;
-                      }));
-                    }
-                  });
-              }
-            });
-          } else {
-            this.showSuccessToast('Form Successfully Published!');
-            this.saveFormService.publish(this.formMetadata.uuid)
-            .subscribe(res => this.formMetadata.published = true); // if none of the other versions are published.
-          }
-        });
-      } else {
-        this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => {
-          this.showSuccessToast('Form Successfully Published!');
-          this.formMetadata.published = true;
-        });
-      }
-
-
-
-    });
-  }
+    this.subscription = this.fectAllFormsService.getPOCSameFormsDifferentVersions(this.formMetadata)
+    .subscribe((forms) => { console.log(forms);
+      const publishedForm = this.fectAllFormsService.getLatestPublishedVersion(forms, this.formMetadata.uuid);
+      if (!_.isEmpty(publishedForm)) {
+          this.dialogService.addDialog(ConfirmComponent, {
+              title: 'Confirm publish',
+              message: `Version ${publishedForm.version}  of this form published.
+              Would you like to unpublish that version and publish this one?`,
+               buttonText: 'Publish'
+            }, { backdropColor: 'rgba(0,0,0,0.5)'})
+            .subscribe((isConfirmed) => {
+              if (isConfirmed) {
+                this.saveFormService.unpublish(publishedForm.uuid)
+                .subscribe((res) => this.saveFormService.publish(this.formMetadata.uuid).subscribe( (ress) => {
+                  this.showSuccessToast('Form Successfully Published!');
+                  this.formMetadata.published = true;
+                }));
+              }});
+          }}); }
 
   unpublish() {
     this.saveFormService.unpublish(this.formMetadata.uuid).subscribe((res) => this.formMetadata.published = false);
@@ -577,17 +545,14 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked 
       if (undefinedConcepts.length > 0) {
         let undefined_concepts = '\n \n';
         _.each(undefinedConcepts, (concept) => {
-          undefined_concepts = undefined_concepts + '\n \n' + concept;
-        });
+          undefined_concepts = undefined_concepts + '\n \n' + concept; });
         this.dialogService.addDialog(AlertComponent, {
           message: `The following concepts are invalid: ${undefined_concepts}`
         });
         this.snackbar.dismiss();
       } else {
         this.showSuccessToast('All Concept are valid');
-      }
-
-    });
+      }});
   }
 
   fetchAllConcepts() {

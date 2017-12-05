@@ -1,6 +1,6 @@
 
 <md-toolbar color="primary">
-    <span class="menu" style="font-size:18px; font-family:'Roboto'; color:white;">Form Builder</span>
+    <span class="menu" style="font-size:18px; font-family:'Roboto'; color:white;">Forms Manager</span>
     <span style="margin-left: 15px;">
         <button md-button (click)="createNew()" style="color:white; font-size:14px;"><i class="fa fa-plus-circle"></i> Create New</button>
     </span>
@@ -68,7 +68,7 @@
                       <div class="input-group-btn">
                           <button type="button" class="btn btn-default" data-toggle="dropdown"><i class="fa fa-filter"></i> Filter<span class="caret"></span></button>
                           <ul class="dropdown-menu pull-right" role="menu">
-                              <li><input type="radio" name="filter" value="published" [(ngModel)]="searchFilter"> Published</li>
+                              <li><input type="checkbox" name="filter" value="published" (change)="filterEvent($event)"> Published</li>
                           </ul>
                         
                   </div>
@@ -82,12 +82,13 @@
 
 
 
-          <table class="table table-striped table-bordered table-list">
+          <table class="table table-striped table-bordered table-list table-hover">
             <thead>
               <tr>
-                <th width="40%">Name</th>
-                <th width="20%">Version</th>
-                <th width="20%">Published</th>
+                <th width="30%">Name</th>
+                <th width="15%">Version</th>
+                <th width="15%">Published</th>
+                <th width="15%">Retired</th>
                 <th width="20%">Actions</th>
 
               </tr>
@@ -99,11 +100,13 @@
                   <b>{{form.name}}</b>
                 </td>
                 <td>{{form.version}}</td>
-                <td *ngIf="form.published">
-                  <label class="label label-success">Yes</label>
+                <td >
+                  <label *ngIf="form.published" class="label label-success">Yes</label>
+                  <label *ngIf="!form.published" class="label label-danger">No</label>
                 </td>
-                <td *ngIf="!form.published">
-                  <label class="label label-danger">No</label>
+                <td>
+                  <label *ngIf="form.retired" class="label label-danger">Yes</label>
+                  <label *ngIf="!form.retired" class="label label-success">No</label>
                 </td>
                 <td *ngIf="form.resources.length==0 || !form.resources[0]?.valueReference">
                   <a style="cursor: pointer;">
@@ -115,8 +118,20 @@
                   <a (click)="editForm(form,form.uuid)" style="cursor: pointer;" data-toggle="tooltip" title="Edit Schema">
                     <i class="material-icons edit">mode_edit</i>
                   </a>
+                  <a *ngIf="!form.published" (click)="publish(form.uuid, form)" style="cursor: pointer;" data-toggle="tooltip" title="Publish">
+                    <i class="material-icons publish">speaker_notes</i>
+                  </a>
+                  <a *ngIf="form.published" (click)="unpublish(form.uuid, form)" style="cursor: pointer;" data-toggle="tooltip" title="Unpublish">
+                    <i class="material-icons unpublish">speaker_notes_off</i>
+                  </a>
                   <a (click)="download(form.resources[0].valueReference)" style="cursor: pointer;" data-toggle="tooltip" title="Download Schema">
                     <i class="material-icons download">get_app</i>
+                  </a>
+                  <a (click)="retire(form.uuid,form)" *ngIf="!form.retired" style="cursor: pointer;" data-toggle="tooltip" title="Retire">
+                    <i class="material-icons delete">delete</i>
+                  </a>
+                  <a *ngIf="form.retired" (click)="unretire(form.uuid,form)" style="cursor: pointer;" data-toggle="tooltip" title="Un-retire">
+                    <i class="material-icons edit">restore</i>
                   </a>
                 </td>
 
