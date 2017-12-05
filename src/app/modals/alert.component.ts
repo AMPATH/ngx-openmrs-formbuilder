@@ -20,7 +20,11 @@ export interface AlertModel {
                    </div>
                 </div>
              </div>`,
-  styles: [`.msg{white-space: pre}`]
+
+  styles: [`.msg{
+    white-space: pre-line;
+  }`]
+
 })
 export class AlertComponent extends DialogComponent<AlertModel, null> implements AlertModel {
   message: string;

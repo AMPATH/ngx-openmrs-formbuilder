@@ -1,21 +1,21 @@
 import {FormElement} from './FormElement';
-interface QuestionOptions{
-    rendering:string;
-    
+export class QuestionOptions {
+    rendering: string;
+    answers: any;
+    concept: string;
+
 }
-export class Question extends FormElement{
+export class Question extends FormElement {
 
-        id:string='';
+        id = '';
         type: string;
-        questionOptions:QuestionOptions=
-        {rendering:''
-        };
-       
+        questionOptions: QuestionOptions = new QuestionOptions();
+        questions: Question[];
 
-    constructor(options:{}={}){
-        super(options)
+
+    constructor(options: {}= {}) {
+        super(options);
         this.type = options['type'] || '';
-        this.questionOptions.rendering = options['questionOptions.rendering'] || ''
-        
+        this.questionOptions.rendering = options['questionOptions.rendering'] || '';
     }
 }

@@ -82,9 +82,7 @@
     border:0;
     background:transparent;
 }
-.material-icons.edit{
-  color:green;
-}
+
 .navbar-btn{
   margin: 5px 5px 0px 5px;
 }
@@ -143,3 +141,7 @@ md-card{
 .dropdown-menu>li {
   margin-left:5px;
 }
+.material-icons.delete{
+  color: maroon;
+}
+

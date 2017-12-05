@@ -8,8 +8,11 @@ import { Router } from '@angular/router';
 import { Constants } from '../Services/constants';
 import { FormListService } from '../Services/form-list.service';
 import { Subscription } from 'rxjs/Subscription';
+import { SaveFormService } from '../Services/save-form.service';
 import * as _ from 'lodash';
 import { saveAs } from 'file-saver/FileSaver';
+import { DialogService } from 'ng2-bootstrap-modal';
+import { ConfirmComponent } from '../modals/confirm.component';
 
 @Component({
   selector: 'app-view-forms',
@@ -39,7 +42,11 @@ export class ViewFormsComponent implements OnInit {
     private fetchFormDetailService: FetchFormDetailService,
     private auth: AuthenticationService,
     private ls: LocalStorageService,
-    private formListService: FormListService) {
+
+    private formListService: FormListService,
+    private saveFormService: SaveFormService,
+    private dialogService: DialogService) {
+
 
     const user = sessionStorageService.getObject('user');
     this.username = user.username;
@@ -60,8 +67,9 @@ export class ViewFormsComponent implements OnInit {
 
     f.forEach((form, index) => {
       this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res => {
-         if (!form.resources[0] || form.resources.length === 0) {this.formsWithoutSchemas.push(form.name); } else {
-            this.POCForms.push(form); }
+            console.log(form);
+            this.POCForms.push(form);
+
       });
     });
     this.POCForms = _.cloneDeep(f);
@@ -173,9 +181,6 @@ export class ViewFormsComponent implements OnInit {
         }
       });
 
-
-
-
   }
 
   addSchema(form) {
@@ -191,6 +196,54 @@ export class ViewFormsComponent implements OnInit {
     });
   }
 
+  retire(uuid: string,form: any) {
+    this.saveFormService.retire(uuid).subscribe((res) => form.retired = true);
+  }
 
+  unretire(uuid: string,form: any) {
+    this.saveFormService.unretire(uuid).subscribe((res) => form.retired = false);
+  }
 
+  publish(uuid: string, form: any) {
+    console.log(form);
+    this.subscription = this.fetchAllFormsService.getPOCSameFormsDifferentVersions(form)
+    .subscribe((forms) => {
+      console.log(forms);
+      const publishedForm = this.fetchAllFormsService.getLatestPublishedVersion(forms, form.uuid);
+      if (!_.isEmpty(publishedForm)) {
+        const dialogOptions = {
+          title: 'Confirm publish',
+          message: `Version ${publishedForm.version}  of this form published.
+          Would you like to unpublish that version and publish this one?`,
+           buttonText: 'Publish'
+        };
+          this.dialogService.addDialog(ConfirmComponent, dialogOptions, { backdropColor: 'rgba(0,0,0,0.5)'})
+            .subscribe((isConfirmed) => {
+              if (isConfirmed) {
+                this.saveFormService.unpublish(publishedForm.uuid)
+                .subscribe((res) => {
+                  this.saveFormService.publish(form.uuid).subscribe( (ress) => {
+                  form.published = true;
+                });
+              });
+              }});
+          } else {
+           this.saveFormService.publish(form.uuid).subscribe( (ress) => {
+            form.published = true;
+          });
+        }});
+  }
+
+  unpublish(uuid: string, form: any) {
+    this.saveFormService.unpublish(uuid).subscribe((res) => form.published = false);
+  }
+
+  filterEvent($event: any) {
+    if ($event.target.checked) {
+      this.searchFilter = 'published';
+    }
+    if (!$event.target.checked) {
+      this.searchFilter = undefined;
+    }
+  }
 }
