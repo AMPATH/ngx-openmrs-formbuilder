@@ -1,6 +1,8 @@
 
 <md-toolbar color="primary">
+
     <span class="menu" style="font-size:18px; font-family:'Roboto'; color:white;">Forms Manager</span>
+
     <span style="margin-left: 15px;">
         <button md-button (click)="createNew()" style="color:white; font-size:14px;"><i class="fa fa-plus-circle"></i> Create New</button>
     </span>
@@ -68,7 +70,9 @@
                       <div class="input-group-btn">
                           <button type="button" class="btn btn-default" data-toggle="dropdown"><i class="fa fa-filter"></i> Filter<span class="caret"></span></button>
                           <ul class="dropdown-menu pull-right" role="menu">
+
                               <li><input type="checkbox" name="filter" value="published" (change)="filterEvent($event)"> Published</li>
+
                           </ul>
                         
                   </div>
@@ -118,6 +122,7 @@
                   <a (click)="editForm(form,form.uuid)" style="cursor: pointer;" data-toggle="tooltip" title="Edit Schema">
                     <i class="material-icons edit">mode_edit</i>
                   </a>
+
                   <a *ngIf="!form.published" (click)="publish(form.uuid, form)" style="cursor: pointer;" data-toggle="tooltip" title="Publish">
                     <i class="material-icons publish">speaker_notes</i>
                   </a>
@@ -132,6 +137,7 @@
                   </a>
                   <a *ngIf="form.retired" (click)="unretire(form.uuid,form)" style="cursor: pointer;" data-toggle="tooltip" title="Un-retire">
                     <i class="material-icons edit">restore</i>
+
                   </a>
                 </td>
 

@@ -13,6 +13,7 @@ import * as _ from 'lodash';
 import { saveAs } from 'file-saver/FileSaver';
 import { DialogService } from 'ng2-bootstrap-modal';
 import { ConfirmComponent } from '../modals/confirm.component';
+
 @Component({
   selector: 'app-view-forms',
   templateUrl: './view-forms.component.html',
@@ -41,9 +42,11 @@ export class ViewFormsComponent implements OnInit {
     private fetchFormDetailService: FetchFormDetailService,
     private auth: AuthenticationService,
     private ls: LocalStorageService,
+
     private formListService: FormListService,
     private saveFormService: SaveFormService,
     private dialogService: DialogService) {
+
 
     const user = sessionStorageService.getObject('user');
     this.username = user.username;
@@ -66,6 +69,7 @@ export class ViewFormsComponent implements OnInit {
       this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res => {
             console.log(form);
             this.POCForms.push(form);
+
       });
     });
     this.POCForms = _.cloneDeep(f);
@@ -177,9 +181,6 @@ export class ViewFormsComponent implements OnInit {
         }
       });
 
-
-
-
   }
 
   addSchema(form) {
@@ -245,5 +246,4 @@ export class ViewFormsComponent implements OnInit {
       this.searchFilter = undefined;
     }
   }
-
 }

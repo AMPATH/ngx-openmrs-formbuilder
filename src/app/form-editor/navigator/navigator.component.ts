@@ -21,6 +21,7 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./navigator.component.css']
 })
 
+
 export class NavigatorComponent implements OnInit, OnDestroy {
 
   schema: any; // recursive schema could represent a question,section,page or form
@@ -468,6 +469,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       });
   }
 
+
   setCheckedReferenceElement(event, element ? ) {
 
     let ev;
@@ -508,7 +510,6 @@ export class NavigatorComponent implements OnInit, OnDestroy {
     e['element'] = element;
     this.nestedCheckedRefElementEmitter.emit(e);
   }
-
 
 
   closeNav() {
@@ -1020,4 +1021,5 @@ export class NavigatorComponent implements OnInit, OnDestroy {
 
   
   }
+	
 

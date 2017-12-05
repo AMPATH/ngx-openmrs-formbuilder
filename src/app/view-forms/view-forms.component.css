@@ -82,6 +82,7 @@
     border:0;
     background:transparent;
 }
+
 .navbar-btn{
   margin: 5px 5px 0px 5px;
 }
@@ -143,3 +144,4 @@ md-card{
 .material-icons.delete{
   color: maroon;
 }
+

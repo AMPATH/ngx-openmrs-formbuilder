@@ -9,6 +9,7 @@ import { FetchFormDetailService } from './fetch-form-detail.service';
 import { LocalStorageService } from './local-storage.service';
 import { Subject, Observable, BehaviorSubject} from 'rxjs';
 import { FormListService } from './form-list.service';
+
 @Injectable()
 export class FetchAllFormsService {
 
@@ -25,7 +26,10 @@ constructor(private http: Http,
   private router: Router,
   private auth: AuthenticationService,
   private fd: FetchFormDetailService,
-private formListService: FormListService) {
+  private formListService: FormListService) {
+
+  private fd: FetchFormDetailService) {
+
   this.allPOCFormsSchemas = new BehaviorSubject(ls.getObject('POC_FORM_SCHEMAS'));
   auth.getBaseUrl().subscribe((baseUrl) => this.baseUrl = baseUrl);
   auth.getCredentialsSubject().subscribe((credentials) => {
@@ -37,6 +41,7 @@ private formListService: FormListService) {
 
 
    fetchAllPOCForms() {
+
     const v = 'custom:(uuid,name,encounterType:(uuid,name),version,published,retired,resources:(uuid,name,dataType,valueReference))';
     return this.http.get(`${this.baseUrl}/ws/rest/v1/form?q=POC&v=${v}`, {headers: this.headers}).map(
       data => this.forms = data.json())

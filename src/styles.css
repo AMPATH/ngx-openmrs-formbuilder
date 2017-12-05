@@ -2,6 +2,7 @@
 @import '~https://fonts.googleapis.com/icon?family=Material+Icons';
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import '~ng-drag-drop/style.css';
+
  
 .mat-sidenav-content {
     position: relative;

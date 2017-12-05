@@ -1,3 +1,4 @@
+
 <div class="well">
   <div class="formName" *ngIf="schema.name==''&&editMode">
     <form #form="ngForm" id="formName" (ngSubmit)="editFormName(form.value)">
@@ -18,6 +19,7 @@
   <div class="formName" *ngIf="schema.name&&selectMode">
     <h4 id="schema" (click)="onClicked(schema)">
       <i class="fa fa-lg fa-newspaper-o"></i> {{schema.name}}</h4>
+
   </div>
 
   <div class="formName" *ngIf="schema.name&&editMode">

@@ -43,7 +43,9 @@ interface FormMetadata {
   styleUrls: ['./form-editor.component.css']
 })
 
+
 export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked, AfterContentInit {
+
   schema: any;
   selectedSchema: any;
   rawSelectedSchema: any;
@@ -82,6 +84,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     private saveFormService: SaveFormService,
     private encounterTypeService: EncounterTypeService,
     private sessionStorageService: SessionStorageService,
+
     private conceptService: ConceptService) {
       this.loading = true;
     }
@@ -96,7 +99,6 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
   openNavigator() {
     this.myNav.open();
-  }
 
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
@@ -386,6 +388,37 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     this.saveFormMetadata(this.formMetadata);
     if (!silently) { this.showSaveSnackbar(); }
 
+git
+  showSuccessToast(message: string) {
+    this.snackbar.openFromComponent(SnackbarComponent, {
+      duration: 1500,
+      data: message
+    });
+  }
+  showNotificationMessage(message: string) {
+    this.snackbar.open(message, '', {
+      duration: 1200
+    });
+
+  }
+  setFormEditor(schema, rawSchema, formMetadata ? ) {
+    console.log(schema, 'SCHEMA');
+    this.selectedSchema = schema;
+    this.schema = schema;
+    this.strSchema = JSON.stringify(schema, null, '\t');
+    this.rawSchema = rawSchema;
+    this.ns.setRawSchema(this.rawSchema);
+    this.strRawSchema = JSON.stringify(this.rawSchema, null, '\t');
+    if (formMetadata) { this.formMetadata = formMetadata; } // if form is being restored from local storage, retrieve metadata.
+  }
+
+  saveLocally(silently ?: boolean) {
+
+    this.saveDraft(this.schema);
+    this.saveRawDraft(this.rawSchema);
+    this.saveFormMetadata(this.formMetadata);
+    if (!silently) { this.showSaveSnackbar(); }
+
   }
 
   saveRemotely() {
@@ -478,6 +511,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     });
   }
 
+
   saveDraft(schema: any) {
 
     this.ls.setObject(Constants.SCHEMA, schema);
@@ -496,6 +530,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
   saveFormMetadata(formMetadata) {
     this.ls.setObject(Constants.FORM_METADATA, formMetadata);
   }
+
 
   publish() {
 
@@ -519,6 +554,8 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
               }});
           }}); }
 
+ 
+
   unpublish() {
     this.saveFormService.unpublish(this.formMetadata.uuid).subscribe((res) => this.formMetadata.published = false);
 
@@ -540,6 +577,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     });
     this.conceptService.validateConcepts(concepts).subscribe((res: any[]) => {
 
+
       const undefinedConcepts = res.filter((x) => x !== undefined);
       console.log(undefinedConcepts);
       if (undefinedConcepts.length > 0) {
@@ -548,11 +586,14 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
           undefined_concepts = undefined_concepts + '\n \n' + concept; });
         this.dialogService.addDialog(AlertComponent, {
           message: `The following concepts are invalid: ${undefined_concepts}`
+
         });
         this.snackbar.dismiss();
       } else {
         this.showSuccessToast('All Concept are valid');
+
       }});
+
   }
 
   fetchAllConcepts() {
@@ -560,6 +601,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     const pages = this.schema.pages;
     _.each(pages, (page: any) => {
       _.each(page.sections, (section: any) => {
+
         _.each((section.questions), (question: Question) => {
           if (question.questionOptions.concept) {
             concepts.push(question.questionOptions.concept);
@@ -582,6 +624,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
                 });
               }});
           }});
+
       });
     });
     return concepts;
