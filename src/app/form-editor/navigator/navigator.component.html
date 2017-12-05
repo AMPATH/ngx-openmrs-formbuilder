@@ -97,48 +97,49 @@
     <div *ngFor="let section of schema.sections; let j= index;" [draggable] [dragClass]="'drag-over'" [dragScope]="'sections'"
       [dragData]="{schema:section, pageIndex:pageIndex, sectionIndex:j}" [dragHandle]="'.section-drag-bar'">
 
-      <div *ngIf="IsSectionReferencedFromComponent(pageIndex, j)" class="sections" droppable (onDrop)="sectionMoved($event,pageIndex,j)" [dropScope]="'sections'" [dragOverClass]="'drag-target-border'"
-      (onDrag)="onDrag(pageIndex,j)">
+      <div *ngIf="IsSectionReferencedFromComponent(pageIndex, j)" class="sections" droppable (onDrop)="sectionMoved($event,pageIndex,j)"
+        [dropScope]="'sections'" [dragOverClass]="'drag-target-border'">
 
         <div *ngIf="selectMode&&_refElement=='section'" class="selectMode d-inline-block">
           <input type="checkbox" (change)="emitCheckedReferenceElement($event,{'page':_formSchema.pages[pageIndex].label,'section':section.label})"
             [checked]="section.label==prechecked">
         </div>
-          <a [href]="'#section'+section.label.slice(0,2)+pageIndex+ _formSchema.name.slice(0,2)+j" data-toggle="collapse">
-            <i class="fa fa-chevron-down"> </i>
+        <a [href]="'#section'+section.label.slice(0,2)+pageIndex+ _formSchema.name.slice(0,2)+j" data-toggle="collapse">
+          <i class="fa fa-chevron-down"> </i>
+        </a>
+
+        <label (click)="onClicked(section,pageIndex,j)" class="element">{{section.label}}
+
+          <span *ngIf="IsSectionReferenced(pageIndex,j)&&!IsPageReferenced(pageIndex)&&updateMode" class="label label-success"> This section has been referenced.</span>
+
+        </label>
+
+        <div *ngIf="editMode || updateMode" style="float:right;" [hidden]="editPageMode || editSectionMode">
+          <a *ngIf="!IsSectionReferenced(pageIndex,j)">
+            <i (click)="showEditForm(section,pageIndex,j) " class="fa fa-pencil" aria-hidden="true"></i>
           </a>
-
-          <label (click)="onClicked(section,pageIndex,j)" class="element">{{section.label}}
-
-            <span *ngIf="IsSectionReferenced(pageIndex,j)&&!IsPageReferenced(pageIndex)&&updateMode" class="label label-success"> This section has been referenced.</span>
-
-          </label>
-
-          <div *ngIf="editMode || updateMode" style="float:right;" [hidden]="editPageMode || editSectionMode">
-            <a *ngIf="!IsSectionReferenced(pageIndex,j)">
-              <i (click)="showEditForm(section,pageIndex,j) " class="fa fa-pencil" aria-hidden="true"></i>
-            </a>
-            <a *ngIf="IsSectionReferenced(pageIndex,j)&&IsSectionOnlyReferenced(pageIndex,j)" (click)="editReferenceSection(pageIndex,j)"
-              data-toggle="tooltip" title="Edit Referenced Section">
-              <i class="fa fa-reply-all" style="color:green;" aria-hidden="true"></i>
-            </a>
-            <a *ngIf="!IsPageReferenced(pageIndex)&&IsSectionOnlyReferenced(pageIndex,j)">
-              <i class="fa fa-trash-o" aria-hidden="true" style="color:#8b0000" (click)="showDeleteDialog(section,'section',pageIndex,j)"></i>
-            </a>
-            <i #dragHandle class="section-drag-bar drag-handle fa fa-arrows d-inline-block" aria-hidden="true"></i>
-          </div>
+                 
+          <a *ngIf="IsSectionReferenced(pageIndex,j)&&IsSectionOnlyReferenced(pageIndex,j)" (click)="editReferenceSection(pageIndex,j)"
+            data-toggle="tooltip" title="Edit Referenced Section">
+            <i #dragHandle class="section-drag-bar drag-handle fa fa-arrows d-inline-block" aria-hidden="true"></i>  
+            <i class="fa fa-reply-all" style="color:green;" aria-hidden="true"></i>
+          </a>
+          <a *ngIf="!IsPageReferenced(pageIndex)&&IsSectionOnlyReferenced(pageIndex,j)">
+            <i class="fa fa-trash-o" aria-hidden="true" style="color:#8b0000" (click)="showDeleteDialog(section,'section',pageIndex,j)"></i>
+          </a>
+        </div>
 
 
-          <!--Exclude Section-->
-          <!-- <div *ngIf="selectMode&&_refElement=='page'" style="float:right;">
+        <!--Exclude Section-->
+        <!-- <div *ngIf="selectMode&&_refElement=='page'" style="float:right;">
           <a ><i class="fa fa-times" aria-hidden="true"  data-toggle="tooltip" title="Exclude section" style="color:red" (click)="excludeSection(pageIndex,j)"></i></a>
           </div> -->
 
 
-          <div [id]="'section'+section.label.slice(0,2)+pageIndex+ _formSchema.name.slice(0,2)+j" class="collapse">
-            <app-navigator [sectionIndex]="j" [_schema]="section" [formSchema]="_formSchema" [pageIndex]="pageIndex" [mode]="mode" [referenceElement]="_refElement"
-              (nestedCheckedRefElementEmitter)="emitCheckedReferenceElement($event.event,$event.element)"></app-navigator>
-          </div>
+        <div [id]="'section'+section.label.slice(0,2)+pageIndex+ _formSchema.name.slice(0,2)+j" class="collapse">
+          <app-navigator [sectionIndex]="j" [_schema]="section" [formSchema]="_formSchema" [pageIndex]="pageIndex" [mode]="mode" [referenceElement]="_refElement"
+            (nestedCheckedRefElementEmitter)="emitCheckedReferenceElement($event.event,$event.element)"></app-navigator>
+        </div>
       </div>
     </div>
   </div>
@@ -152,13 +153,15 @@
     </div>
 
 
-    <div *ngFor="let question of schema.questions; let k=index;">
+    <div *ngFor="let question of schema.questions; let k=index;" [draggable] [dragClass]="'drag-over'" [dragScope]="'questions'"
+    [dragData]="{schema:question, pageIndex:pageIndex, sectionIndex:sectionIndex, questionIndex:k}" [dragHandle]="'.question-drag-bar'">
 
       <!-- <div *ngIf="selectMode&&_refElement=='question'" class="selectMode">
       <input type="checkbox" 
       (change)="emitCheckedReferenceElement($event,{'page':_formSchema.pages[pageIndex].label,'section':_formSchema.pages[pageIndex].sections[sectionIndex].label,'question':question.id || question.questions})">
     </div> -->
-
+      <div droppable (onDrop)="questionMoved($event,pageIndex,sectionIndex,k)"
+      [dropScope]="'questions'" [dragOverClass]="'drag-target-border'">
       <a *ngIf="question.questions" [href]="'#question'+question.label.slice(0,3)+ _formSchema.name.slice(0,2)+pageIndex+sectionIndex+k"
         data-toggle="collapse">
         <i class="fa fa-toggle-down"> </i>
@@ -177,13 +180,14 @@
         <a *ngIf="!IsSectionReferenced(pageIndex,sectionIndex)">
           <i (click)="editQuestion(question,pageIndex,sectionIndex,k,questionIndex)" class="fa fa-pencil" aria-hidden="true"></i>
         </a>
+        <i *ngIf="!questionIndex" #dragHandle class="question-drag-bar drag-handle fa fa-arrows d-inline-block" aria-hidden="true"></i>
         <a *ngIf="!IsSectionReferenced(pageIndex,sectionIndex)">
           <i class="fa fa-trash-o" aria-hidden="true" style="color:#8b0000" (click)="showDeleteDialog(question,'question',pageIndex,sectionIndex,k,questionIndex)"></i>
         </a>
         <a *ngIf="!IsPageReferenced(pageIndex)&&IsSectionReferenced(pageIndex,sectionIndex)&&!question.questions&&question.id?.indexOf('__')==-1&&questionIndex==undefined">
           <i class="fa fa-times" aria-hidden="true" data-toggle="tooltip" title="Exclude question" style="color:red" (click)="excludeQuestionFromReferencedSection(pageIndex,sectionIndex,k,question.id)"></i>
         </a>
-        <span *ngIf="question.id?.indexOf('__')>=0" data-toggle="tooltip" title="This question doesn't have an ID. Please add one.">
+        <span *ngIf="question.id?.indexOf('__')>=0&&selectMode" data-toggle="tooltip" title="This question doesn't have an ID. Please add one.">
           <i class="fa fa-info-circle"></i>
         </span>
       </div>
@@ -198,6 +202,8 @@
           [count]="_count" [mode]="mode" [referenceElement]="_refElement" (nestedCheckedRefElementEmitter)="emitCheckedReferenceElement($event.event,$event.element)"></app-navigator>
       </div>
     </div>
+    </div>
 
   </div>
 </div>
+

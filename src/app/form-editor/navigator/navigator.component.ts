@@ -975,23 +975,46 @@ export class NavigatorComponent implements OnInit, OnDestroy {
     const section = $event.dragData.schema;
     const schema = _.cloneDeep(this._formSchema);
     const rawSchema = _.cloneDeep(this.rawSchema);
-    schema.pages[toPageIndex].sections.splice(toSectionIndex, 0, section);
     schema.pages[fromPageIndex].sections.splice(fromSectionIndex, 1);
+    schema.pages[toPageIndex].sections.splice(toSectionIndex, 0, section);
 
-    rawSchema.pages[toPageIndex].sections.splice(toSectionIndex, 0, section);
     rawSchema.pages[fromPageIndex].sections.splice(fromSectionIndex, 1);
+    rawSchema.pages[toPageIndex].sections.splice(toSectionIndex, 0, section);
+
 
     this.rawSchema = rawSchema;
     this._formSchema = schema;
     this.setSchema(this._formSchema);
     this.setRawSchema(this.rawSchema);
-    
+
+  }
+
+
+  questionMoved($event, toPageIndex, toSectionIndex, toQuestionIndex) {
+    const fromPageIndex = $event.dragData.pageIndex;
+    const fromSectionIndex = $event.dragData.sectionIndex;
+    const fromQuestionIndex = $event.dragData.questionIndex;
+    const question = $event.dragData.schema;
+    const schema = _.cloneDeep(this._formSchema);
+    const rawSchema = _.cloneDeep(this.rawSchema);
+
+    schema.pages[fromPageIndex].sections[fromSectionIndex].questions.splice(fromQuestionIndex, 1);
+    schema.pages[toPageIndex].sections[toSectionIndex].questions.splice(toQuestionIndex, 0, question);
+
+    rawSchema.pages[fromPageIndex].sections[fromSectionIndex].questions.splice(fromQuestionIndex, 1);
+    rawSchema.pages[toPageIndex].sections[toSectionIndex].questions.splice(toQuestionIndex, 0, question);
+
+
+    this.rawSchema = rawSchema;
+    this._formSchema = schema;
+
+    this.setSchema(this._formSchema);
+    this.setRawSchema(this.rawSchema);
   }
 
 
   moveElementInArray(array: any[], fromIndex: number, toIndex: number): any[] {
     array.splice(toIndex, 0, array.splice(fromIndex, 1)[0]);
-    console.log(array, toIndex, fromIndex);
     return array;
   }
 
