@@ -1,6 +1,7 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import '~https://fonts.googleapis.com/icon?family=Material+Icons';
 @import url('https://fonts.googleapis.com/css?family=Roboto');
+<<<<<<< f14152ea89300d307cfce0a642ee623a1caf34a0
 <<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
 <<<<<<< daef29cd6299317054325f13630da30535cb8ebd
 
@@ -12,6 +13,8 @@
 =======
 
 >>>>>>> added ability to download schemas
+=======
+>>>>>>> Code clean up
  
 .mat-sidenav-content {
     position: relative;

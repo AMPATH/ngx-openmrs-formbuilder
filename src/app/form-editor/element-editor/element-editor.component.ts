@@ -10,8 +10,9 @@ import { DialogService } from 'ng2-bootstrap-modal';
 import { ElementEditorService } from '../../Services/element-editor.service';
 import { Question } from '../form-elements/Question';
 import { SchemaModalComponent } from '../../modals/schema-editor.modal';
-import { ALL_PROPERTIES } from '../models/properties'; import * as _ from 'lodash';
-
+import { ALL_PROPERTIES, Properties } from '../models/properties'; import * as _ from 'lodash';
+import { PropertyFactory } from '../models/property-factory';
+import { TextboxProperty } from '../models/textbox-property';
 
 @Component({
   selector: 'app-element-editor',
@@ -19,19 +20,18 @@ import { ALL_PROPERTIES } from '../models/properties'; import * as _ from 'lodas
   styleUrls: ['./element-editor.component.css']
 })
 export class ElementEditorComponent implements OnInit {
-  questions: PropertyModel < any > [];
   _rawSchema: any;
   _schema: any;
   _questionSchema: any;
+  questions: PropertyModel < any > [];
+  questionProperties: Properties = new Properties();
   form: FormGroup;
   setMembers: any[] = [];
   @Input() pageIndex: number;
   @Input() sectionIndex: number;
   @Input() questionIndex: number; // if editMode or addMode obsGroup Question
   @Input() parentQuestionIndex: number;
-  @Input() set rawSchema(rawSchema) {
-    this._rawSchema = _.cloneDeep(rawSchema);
-  } // if edit obsGroup question
+  @Input() set rawSchema(rawSchema) { this._rawSchema = _.cloneDeep(rawSchema); } // if edit obsGroup question
   @Output() closeComponent: EventEmitter < boolean >= new EventEmitter();
 
   pageStr: string;
@@ -49,7 +49,8 @@ export class ElementEditorComponent implements OnInit {
     private qis: QuestionIdService,
     private ns: NavigatorService,
     private dialogService: DialogService,
-    private el: ElementEditorService) {}
+    private el: ElementEditorService,
+    private propertyFactory: PropertyFactory) {}
 
   @Input() set schema(schema) {
     this._schema = _.clone(schema);
@@ -75,7 +76,7 @@ export class ElementEditorComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log(this.qis.getIDs(this._schema));
+
     this.form = this.qcs.toFormGroup(this.questions);
     this.setMode(this.form);
     this.allPossibleproperties = ALL_PROPERTIES;
@@ -88,8 +89,7 @@ export class ElementEditorComponent implements OnInit {
         if (setMember.answers.length > 0) {
           rendering = 'select';
         }
-        let question: Question = new Question();
-        console.log(question);
+        const question: Question = new Question();
         question.label = setMember.label;
         question.type = 'obs';
         question.id = '',
@@ -109,31 +109,20 @@ export class ElementEditorComponent implements OnInit {
   }
 
 
-  addProperty(prop) {
-    if (this.form.contains(prop)) {
+  addProperty(prop: PropertyModel<any>) {
+    if (this.form.contains(prop.parentPath)) {
       this.showAlert('Property already added!');
       return;
     }
-
-    const obj = {};
-    obj[prop] = '';
-    const newField = this.qcs.toPropertyModelArray(obj);
-    // TODO: do not depend on qcs to create new property model. fix this! prop is already a propertymodel.
-
-    if (newField.length > 0) {
-      this.form.addControl(prop, new FormControl(''));
-      this.questions.push(newField[0]);
-    }
+      this.form.addControl(prop.parentPath, new FormControl(''));
+      this.questions.push(prop);
   }
 
 
   onSubmit() {
-    if (!this.form.contains('label') || !this.form.contains('questionOptions.rendering') || !this.form.contains('type')) {
-      this.showAlert('Some mandatory question properties are missing! \n A question must include: type,label,redering and id');
-    }
-
-    if (this.form.contains('id')) {
-      if (!this.checkId(this.form.get('id').value)) {
+    const id = this.getProperty('id');
+    if (this.form.contains(id.key)) {
+      if (!this.checkId(this.form.get(id.key).value)) {
         return;
       }
     }
@@ -164,12 +153,10 @@ export class ElementEditorComponent implements OnInit {
     //   question.questionOptions['selectableOrders'] = _.cloneDeep(question.questionOptions['answers']);
     //   delete question.questionOptions['answers'];
     // }
-    console.log(question);
 
     if (this.addMode) {
       this.addQuestion(question, this.pageIndex, this.sectionIndex, this.questionIndex);
     }
-
     if (this.editMode) {
       this.editQuestion(question, this.pageIndex, this.sectionIndex, this.questionIndex, this.parentQuestionIndex);
     }
@@ -193,7 +180,6 @@ export class ElementEditorComponent implements OnInit {
   delete(i) {
     this.form.removeControl(this.questions[i].key);
     this.questions.splice(i, 1);
-    console.log(this.questions);
   }
 
   setMode(form: FormGroup) {
@@ -237,7 +223,6 @@ export class ElementEditorComponent implements OnInit {
 
 
   setAnswers(answers) {
-    console.log(answers, 'Element Editor!');
     this.answers = answers; // selectedAnswers
     if (answers.length > 0) {
       if (this.form.contains('questionOptions.answers')) {
@@ -348,6 +333,7 @@ export class ElementEditorComponent implements OnInit {
 
 
   checkQuestion(question) {
+
     if (question.key === 'label' || question.key === 'type' || question.key === 'questionOptions.rendering') {
       return false;
     }
@@ -356,33 +342,44 @@ export class ElementEditorComponent implements OnInit {
 
   typeSelected(type: string) {
     if (type === 'obs') {
-      if (!this.form.contains('questionOptions.concept')) { this.addProperty('questionOptions.concept'); }
+      if (!this.form.contains('questionOptions.concept')) { this.addProperty(this.getProperty('concept')); }
     }
   }
 
 
+  getProperty(propertyName: string): PropertyModel<any> {
+    return this.questionProperties.getPropertyByName(propertyName);
+  }
+
+
   renderingSelected(rendering: string) {
+    const maxProperty = this.getProperty('max');
+    const minProperty = this.getProperty('min');
+    const showDateProperty = this.getProperty('showdate');
+    const rowsProperty = this.getProperty('rows');
+    const showWeeksProperty = this.getProperty('weekslist');
+
     switch (rendering) {
       case 'number':
         this.removePreviousFields(rendering);
-        if (!this.form.contains('questionOptions.max') && !this.form.contains('questionOptions.min')) {
-          this.addProperty('questionOptions.max');
-          this.addProperty('questionOptions.min');
-          this.addProperty('questionOptions.showDate');
+        if (!this.form.contains(maxProperty.key) && !this.form.contains(minProperty.key)) {
+          this.addProperty(maxProperty);
+          this.addProperty(minProperty);
+          this.addProperty(showDateProperty);
         }
         break;
 
       case 'textarea':
         this.removePreviousFields(rendering);
-        if (!this.form.contains('questionOptions.rows')) {
-          this.addProperty('questionOptions.rows');
+        if (!this.form.contains(rowsProperty.key)) {
+          this.addProperty(rowsProperty);
         }
         break;
 
       case 'date':
         this.removePreviousFields(rendering);
-        if (!this.form.contains('questionOptions.showWeeks')) {
-          this.addProperty('questionOptions.showWeeks');
+        if (!this.form.contains(showWeeksProperty.key)) {
+          this.addProperty(showWeeksProperty);
         }
         break;
 
@@ -444,22 +441,20 @@ export class ElementEditorComponent implements OnInit {
   removeQuestion(qn) {
     let i;
     this.questions.forEach((question, index) => {
-      if (question['key'] === qn) {
-        i = index;
-      }
-    });
+      if (question['key'] === qn) { i = index; }});
     this.questions.splice(i, 1);
 
   }
 
   showDate($event) {
+    const showDateOptionsProperty = this.getProperty('showdateoptions');
     if ($event === true) {
-      if (!this.form.contains('questionOptions.showDateOptions')) {
-        this.addProperty('questionOptions.showDateOptions');
+      if (!this.form.contains(showDateOptionsProperty.key)) {
+        this.addProperty(showDateOptionsProperty);
       }
     } else {
-      this.form.removeControl('questionOptions.showDate');
-      this.removeQuestion('questionOptions.showDate');
+      this.form.removeControl(showDateOptionsProperty.key);
+      this.removeQuestion(showDateOptionsProperty.key);
     }
   }
 
@@ -487,9 +482,9 @@ export class ElementEditorComponent implements OnInit {
   }
 
   removeDateRelatedFields() {
-    if (this.form.contains('questionOptions.showWeeks')) {
-      this.form.removeControl('questionOptions.showWeeks');
-      this.removeQuestion('questionOptions.showWeeks');
+    if (this.form.contains('questionOptions.weeksList')) {
+      this.form.removeControl('questionOptions.weeksList');
+      this.removeQuestion('questionOptions.weeksList');
     }
   }
 }
