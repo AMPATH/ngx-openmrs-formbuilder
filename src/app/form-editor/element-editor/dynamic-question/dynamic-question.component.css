@@ -7,3 +7,6 @@
 .panel-body {
     padding: 0px 15px 0px 15px;
 }
+.form-control.ng-invalid.ng-touched{
+    border: 1px solid red;
+}

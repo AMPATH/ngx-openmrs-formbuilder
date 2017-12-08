@@ -13,7 +13,8 @@ import {
   ViewChild,
   OnDestroy,
   ChangeDetectorRef,
-  AfterViewChecked
+  AfterViewChecked,
+  AfterContentInit
 } from '@angular/core';
 import {
   SnackbarComponent
@@ -140,6 +141,7 @@ import * as _ from 'lodash';
 <<<<<<< daef29cd6299317054325f13630da30535cb8ebd
 =======
 import * as _ from 'lodash';
+import { ObsValueAdapter, FormFactory } from 'ng2-openmrs-formentry';
 
 
 >>>>>>> Added a feature Validate concepts
@@ -178,6 +180,7 @@ interface FormMetadata{
   styleUrls: ['./form-editor.component.css']
 })
 
+<<<<<<< 71b145a7a09a611fd5cb569b35eb15d048fb5507
 <<<<<<< e5360742c65e5bf7d4787d569ff6f10cd76842f4
 <<<<<<< f14152ea89300d307cfce0a642ee623a1caf34a0
 <<<<<<< c59a72a70f3c203c9b78b8901367a64d2c9f9f39
@@ -191,6 +194,9 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 =======
 export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked {
 >>>>>>> reverted form-editor component
+=======
+export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked, AfterContentInit {
+>>>>>>> Added ability to add and edit question of type testOrder
   schema: any;
   selectedSchema: any;
   rawSelectedSchema: any;
@@ -229,7 +235,9 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked 
     private saveFormService: SaveFormService,
     private encounterTypeService: EncounterTypeService,
     private sessionStorageService: SessionStorageService,
-    private conceptService: ConceptService) {}
+    private conceptService: ConceptService,
+    private obsAdapter: ObsValueAdapter,
+    private formFactory: FormFactory) {}
 
   closeElementEditor() {
     this.questions = undefined;
@@ -311,6 +319,10 @@ export class FormEditorComponent implements OnInit,OnDestroy, AfterViewChecked{
 		});
 		
 >>>>>>> Added ability to edit broken schemas
+  }
+
+  ngAfterContentInit() {
+    this.loading = true;
   }
 
 
@@ -679,7 +691,6 @@ setFormEditor(schema,rawSchema,formMetadata?){
     });
   }
   setFormEditor(schema, rawSchema, formMetadata ? ) {
-    console.log(schema, 'SCHEMA');
     this.selectedSchema = schema;
     this.schema = schema;
     this.strSchema = JSON.stringify(schema, null, '\t');

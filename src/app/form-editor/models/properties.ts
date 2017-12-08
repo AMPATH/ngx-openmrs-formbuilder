@@ -2,26 +2,20 @@ import { PropertyModel} from './property-model';
 import { TextboxProperty } from './textbox-property';
 import { SelectProperty } from './select-property';
 import { TextAreaProperty } from './textarea-property';
+import { SearchboxProperty } from './searchbox-property';
 export class Properties {
 
   private ID: PropertyModel < any > = new PropertyModel({
     label: 'ID',
     parentPath: 'id',
     controlType: 'textbox',
-    key: 'id',
-    value: '',
-    order: 9,
-    required: false
   });
 
-  private Concept: PropertyModel < any > = new PropertyModel({
+  private Concept: SearchboxProperty  = new SearchboxProperty({
     label: 'Concept',
     parentPath: 'questionOptions.concept',
-    controlType: 'concept',
     key: 'questionOptions.concept',
-    value: '',
-    order: 9,
-    required: false
+    searchData: 'concept'
   });
 
   private Answers: PropertyModel < any > = new PropertyModel({
@@ -29,9 +23,6 @@ export class Properties {
     parentPath: 'questionOptions.answers',
     controlType: '',
     key: 'questionOptions.answers',
-    value: '',
-    order: 9,
-    required: false
   });
 
   private Validators: PropertyModel < any > = new PropertyModel({
@@ -39,9 +30,6 @@ export class Properties {
     parentPath: 'validators',
     controlType: 'textarea',
     key: 'validators',
-    value: '',
-    order: 9,
-    required: false
   });
 
   private Default: PropertyModel < any > = new PropertyModel({
@@ -49,39 +37,28 @@ export class Properties {
     parentPath: 'default',
     controlType: 'textbox',
     key: 'default',
-    value: '',
-    order: 9,
-    required: false
+
   });
 
   private Original: PropertyModel < any >= new PropertyModel({
     label: 'Original',
     parentPath: 'original',
     controlType: 'textbox',
-    key: 'original',
-    value: '',
-    order: 9,
-    required: false
+    key: 'original'
   });
 
   private Required: PropertyModel < any > = new PropertyModel({
     label: 'Required',
     parentPath: 'required',
     controlType: 'textbox',
-    key: 'required',
-    value: '',
-    order: 9,
-    required: false
+    key: 'required'
   });
 
   private HistoricalExpression: PropertyModel < any > = new PropertyModel({
     label: 'Historical Expression',
     parentPath: 'historicalExpression',
     controlType: 'textarea',
-    key: 'historicalExpression',
-    value: '',
-    order: 9,
-    required: false
+    key: 'historicalExpression'
   });
 
   private Hide: PropertyModel < any > = new PropertyModel({
@@ -89,34 +66,19 @@ export class Properties {
     parentPath: 'hide',
     controlType: 'textarea',
     key: 'hide',
-    value: '',
-    order: 9,
-    required: false
   });
 
-  private OrderSettingUUID: PropertyModel < any > = new PropertyModel({
-    label: 'Order Setting UUID',
-    parentPath: 'questionOptions.orderSettingUuid',
-    controlType: 'textbox',
-    key: 'questionOptions.orderSettingUuid',
-    value: '',
-    order: 9,
-    required: false
-  });
-
-  private OrderType: TextboxProperty = new TextboxProperty({
+  private OrderType: SelectProperty = new SelectProperty({
     label: 'Order Type',
     parentPath: 'questionOptions.orderType',
-    type: 'text',
+    options: [{key: 'drugorder', value: 'Drug Order'}, {key: 'testorder', value: 'Test Order'}],
     key: 'questionOptions.orderType'
   });
 
   private OrderSettingUuid: TextboxProperty = new TextboxProperty({
     label: 'Order Setting Uuid',
     parentPath: 'questionOptions.orderSettingUuid',
-    type: 'text',
     key: 'questionOptions.orderSettingUuid'
-
   });
 
 
@@ -127,10 +89,10 @@ export class Properties {
     rows: 8
   });
 
-  private CalculatedExpressions: PropertyModel < any > = new PropertyModel({
+  private CalculatedExpressions: TextAreaProperty = new TextAreaProperty({
     label: 'Calculated Expressions',
     parentPath: 'calculatedExpressions',
-    controlType: 'concept',
+    rows: 5,
     key: 'calculatedExpressions'
   });
 
@@ -207,7 +169,8 @@ export class Properties {
     this.CalculatedExpressions,
     this.Alert,
     this.QuestionInfo,
-    this.Answers
+    this.Answers,
+    this.selectableOrders
   ];
 
 
@@ -230,7 +193,7 @@ export class Properties {
         return this.HistoricalExpression;
       case 'hide':
         return this.Hide;
-      case 'orderType':
+      case 'ordertype':
         return this.OrderType;
       case 'calculatedexpressions':
         return this.CalculatedExpressions;
@@ -252,6 +215,10 @@ export class Properties {
         return this.showDate;
       case 'rows':
         return this.Rows;
+      case 'ordersettinguuid':
+        return this.OrderSettingUuid;
+      case 'selectableorders':
+        return this.selectableOrders;
       default:
         console.error(`${propertyName} does not exist in the property dictionary, please add it in property-model.ts`);
 

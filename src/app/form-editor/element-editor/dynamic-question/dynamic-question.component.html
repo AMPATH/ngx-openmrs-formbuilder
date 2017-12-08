@@ -2,6 +2,9 @@
   <!--<a [href]="'#'+question.label" data-toggle="collapse"><i class="fa fa-caret-down"></i></a>-->
 
   <label [attr.for]="question.key" class="label">{{question.label}}</label>
+  <span>
+    <small *ngIf="!isControlValid(question.key)" class="text-danger">This field is required.</small>
+  </span>
 
   <div [ngSwitch]="question.controlType">
     <div [id]="question.label" class="">
@@ -34,7 +37,8 @@
 
       <div class="form-group">
         <div *ngSwitchCase="'searchbox'">
-          <app-concept [question]="question" [form]="form" (answers)="emitAnswers($event)"></app-concept>
+          <app-concept *ngIf="question.searchData == 'concept'" [question]="question" [form]="form" (answers)="emitAnswers($event)"></app-concept>
+          <!--<app-order *ngIf="question.searchData == 'order'" [_question]="question" [_form]="form"></app-order>-->
         </div>
       </div>
     </div>

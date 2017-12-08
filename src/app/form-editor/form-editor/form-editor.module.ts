@@ -33,7 +33,7 @@ import { FormEditorComponent } from './form-editor.component';
 import { AuditInfoComponent } from '../audit-info/audit-info.component';
 import { UpdateFormsComponent } from '../update-forms/update-forms.component';
 import { UpdateFormsWizardComponent } from '../update-forms-wizard/update-forms-wizard.component';
-
+import { OrderComponent } from '../order/order.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -50,13 +50,14 @@ import { UpdateFormsWizardComponent } from '../update-forms-wizard/update-forms-
     SchemaEditorComponent,
     ElementEditorComponent,
     FormRendererComponent,
-    DynamicQuestionComponent, 
+    DynamicQuestionComponent,
     ConceptComponent,
     FormEditorComponent,
     ReferenceFormsComponent,
     AuditInfoComponent,
     UpdateFormsComponent,
-    UpdateFormsWizardComponent
+    UpdateFormsWizardComponent,
+    OrderComponent
   ],
 
   providers: [
@@ -72,10 +73,9 @@ import { UpdateFormsWizardComponent } from '../update-forms-wizard/update-forms-
     ElementEditorService,
     FormSchemaCompiler,
     UpdateComponentService
-    
   ],
 
-  exports:[
+  exports: [
     FormEntryModule,
     AceEditorModule,
     FormsModule,
@@ -84,7 +84,6 @@ import { UpdateFormsWizardComponent } from '../update-forms-wizard/update-forms-
     AppMaterialModule,
     NavigatorComponent,
     UpdateFormsWizardComponent
-
   ]
 })
 export class FormEditorModule { }

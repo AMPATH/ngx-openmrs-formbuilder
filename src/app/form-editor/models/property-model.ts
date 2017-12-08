@@ -20,7 +20,7 @@ export class PropertyModel<T>{
       order?: number
     } = {}) {
 
-        this.value = options.value;
+        this.value = options.value || null;
         this.key = options.key || '';
         this.label = options.label || '';
         this.controlType = options.controlType || '';

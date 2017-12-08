@@ -38,6 +38,7 @@ import { Str2Num } from './pipes/string_to_number.pipe';
 import { UpdateFormsWizardComponent } from './modals/update-forms-wizard-modal/update-forms-wizard-modal.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,

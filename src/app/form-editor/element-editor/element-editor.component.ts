@@ -149,6 +149,10 @@ export class ElementEditorComponent implements OnInit {
       question.questionOptions['answers'] = this.parse(this.form.controls['questionOptions.answers'].value);
     }
 
+    if (question.questionOptions['selectableOrders']) {
+      question.questionOptions['selectableOrders'] = this.parse(this.form.controls['questionOptions.selectableOrders'].value);
+    }
+
     // if(question.questionOptions['answers']&&question['type']=="testOrder"){
     //   question.questionOptions['selectableOrders'] = _.cloneDeep(question.questionOptions['answers']);
     //   delete question.questionOptions['answers'];
@@ -341,8 +345,14 @@ export class ElementEditorComponent implements OnInit {
   }
 
   typeSelected(type: string) {
+    const conceptProperty = this.getProperty('concept');
+    const orderTypeProperty = this.getProperty('ordertype');
+    const orderSettingUuid = this.getProperty('ordersettinguuid');
     if (type === 'obs') {
-      if (!this.form.contains('questionOptions.concept')) { this.addProperty(this.getProperty('concept')); }
+      if (!this.form.contains(conceptProperty.key)) { this.addProperty(conceptProperty); }
+    } else if (type === 'testOrder') {
+      if (!this.form.contains(orderTypeProperty.key)) { this.addProperty(orderTypeProperty); }
+      if (!this.form.contains(orderSettingUuid.key)) {  this.addProperty(orderSettingUuid); }
     }
   }
 
@@ -382,7 +392,6 @@ export class ElementEditorComponent implements OnInit {
           this.addProperty(showWeeksProperty);
         }
         break;
-
       default:
         this.removePreviousFields(rendering);
 
@@ -487,4 +496,6 @@ export class ElementEditorComponent implements OnInit {
       this.removeQuestion('questionOptions.weeksList');
     }
   }
+
+
 }
