@@ -21,15 +21,21 @@ export class DynamicQuestionComponent implements OnInit {
  
 
   @Input() set _form(form){
-  console.log("New form")
   this.form = form;
 }
   constructor() {}
 
   ngOnInit() {
-    
+
   }
 
+  isControlValid(controlName: string) {
+    if (this.form.controls[controlName].valid || this.form.controls[controlName].untouched) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   typeSelected(selectBox:string){
     if(selectBox=='type'){

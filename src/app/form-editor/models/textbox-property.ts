@@ -1,13 +1,12 @@
 import { PropertyModel } from './property-model';
 export class TextboxProperty extends PropertyModel<string>{
-    
-    controlType = "textbox";
-    type:string;
-    placeholder:string;
+    controlType = 'textbox';
+    type: string;
+    placeholder: string;
 
-    constructor(options:{}={}){
+    constructor(options: {} = {}) {
         super(options);
-        this.type = options['type'] || '';
+        this.type = options['type'] || 'text';
         this.placeholder = options['placeholder'] || '';
     }
 }

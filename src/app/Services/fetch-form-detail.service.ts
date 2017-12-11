@@ -14,11 +14,11 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class FetchFormDetailService {
 
-  private schema: Object = {}
+  private schema: any = {}
   private referencedForms: Array < Object >= []
-  private _rawSchema: Object = {}
+  private _rawSchema: any = {}
   private referencedFormsSchemasSubject: BehaviorSubject < any[] >= new BehaviorSubject([])
-  private referencedFormsDetailsSubject: BehaviorSubject < any[] > = new BehaviorSubject < any[] > ([]) //formName,alias,uuid
+  private referencedFormsDetailsSubject: BehaviorSubject < any[] > = new BehaviorSubject < any[] > ([]) // formName,alias,uuid
   private headers: Headers = new Headers();
   private baseUrl: string = ''
   private formEditorLoaded: BehaviorSubject < boolean > = new BehaviorSubject(false);
@@ -28,8 +28,8 @@ export class FetchFormDetailService {
     private sessionStorageService: SessionStorageService,private auth:AuthenticationService) {
     this.credentials = sessionStorageService.getItem(Constants.CREDENTIALS_KEY);
     auth.getBaseUrl().subscribe((baseUrl) => this.baseUrl = baseUrl);
-    console.warn(this.baseUrl,"BASE URL");
-    this.headers.append("Authorization", "Basic " + this.credentials);
+    console.warn(this.baseUrl,'BASE URL');
+    this.headers.append('Authorization', 'Basic ' + this.credentials);
     // this.headers.append( 'Content-Type', 'application/json');
   }
 
@@ -39,7 +39,7 @@ export class FetchFormDetailService {
    return this.http.get(`${this.baseUrl}/ws/rest/v1/form/${uuid}?v=full`, {headers: this.headers})
       .map(metadata => {return metadata.json(); })
       .catch(error => {
-        console.log("Error:" + error)
+        console.log('Error:' + error)
         return error;
       })
       .toPromise()
@@ -61,7 +61,7 @@ export class FetchFormDetailService {
 
             this.setReferencedFormsDetails(res.json().referencedForms);
             return this.fetchReferencedFormSchemas(res.json().referencedForms).then(referencedForms => {
-              console.log("setting ref forms")
+              console.log('setting ref forms')
               this.referencedFormsSchemasSubject = new BehaviorSubject(referencedForms);
               return this.fsc.compileFormSchema(res.json(), referencedForms);
             });

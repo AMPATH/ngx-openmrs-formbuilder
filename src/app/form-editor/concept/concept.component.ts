@@ -1,17 +1,42 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
-import {ConceptService} from '../../Services/concept.service';
-import {DialogService} from "ng2-bootstrap-modal";
-import {AnswersComponent} from "../../modals/answers-modal/answers.modal";
-import { FormGroup,FormBuilder,FormControl } from '@angular/forms';
-import { ConceptsModalComponent } from '../../modals/concept.modal';
-import { SetMembersModalComponent } from '../../modals/set-members-modal/set-members-modal.component'
-import {ElementEditorService} from '../../Services/element-editor.service';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy
+} from '@angular/core';
+import {
+  ConceptService
+} from '../../Services/concept.service';
+import {
+  DialogService
+} from "ng2-bootstrap-modal";
+import {
+  AnswersComponent
+} from "../../modals/answers-modal/answers.modal";
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl
+} from '@angular/forms';
+import {
+  ConceptsModalComponent
+} from '../../modals/concept.modal';
+import {
+  SetMembersModalComponent
+} from '../../modals/set-members-modal/set-members-modal.component'
+import {
+  ElementEditorService
+} from '../../Services/element-editor.service';
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs/Subscription';
+import {
+  Subscription
+} from 'rxjs/Subscription';
 
-interface Answer{
-  label:string;
-  concept:string;
+interface Answer {
+  label: string;
+  concept: string;
 }
 
 
@@ -22,216 +47,224 @@ interface Answer{
 })
 
 
-export class ConceptComponent implements OnInit,OnDestroy{
-private subscription:Subscription;
-@Input() question:any; 
-@Input() form:FormGroup;
-@Output() answers = new EventEmitter<any>();
-searching:boolean=false;
+export class ConceptComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
+  @Input() question: any;
+  @Input() form: FormGroup;
+  @Output() answers = new EventEmitter < any > ();
+  searching: boolean = false;
 
-searchResult:any;
-allAvailableAnswers:Array<any>; //after search result
-allAvailableSetMembers:Array<any>;
-previousSelectedAnswersIndexes:number[] = [];
-yesUUID:string;
-noUUID:string;
+  searchResult: any;
+  allAvailableAnswers: Array < any > ; //after search result
+  allAvailableSetMembers: Array < any > ;
+  previousSelectedAnswersIndexes: number[] = [];
+  yesUUID: string;
+  noUUID: string;
 
-  constructor(private cs:ConceptService,private dialogService:DialogService,private fb:FormBuilder,private el:ElementEditorService) { }
+  constructor(private cs: ConceptService, private dialogService: DialogService, private fb: FormBuilder, private el: ElementEditorService) {}
 
   ngOnInit() {
-   this.subscription = this.el.reselectAnswers().subscribe((res) => {
-      if(this.allAvailableAnswers!=undefined) {
-        
-        this.findIndexesOfPreviouslySelectedAnswers(res,this.allAvailableAnswers);
+    this.subscription = this.el.reselectAnswers().subscribe((res) => {
+      if (this.allAvailableAnswers !== undefined) {
+        this.findIndexesOfPreviouslySelectedAnswers(res, this.allAvailableAnswers);
         this.showAnswersDialog(this.allAvailableAnswers);
-      }
-      else {
+      } else {
         this.getAnswers(this.form.controls[this.question.key].value);
       }
-      
     });
 
 
-    this.subscription = this.el.reselectSetMembers().subscribe((res) =>{
-      //set res to be checked
+    this.subscription = this.el.reselectSetMembers().subscribe((res) => {
+      // set res to be checked
       this.showSetMembersDialog(this.allAvailableSetMembers);
     });
 
-
     this.getYesAndNoConceptUUID();
-    
+
   }
 
 
-  searchConcept(){
+  searchConcept() {
     let conceptID = this.form.controls[this.question.key].value;
     this.searching = true;
 
-    if(!_.isEmpty(conceptID)){
-    if(conceptID.length==36&&conceptID.indexOf(' ')==-1){ //searching with concept uuid
-      this.subscription = this.cs.searchConceptByUUID(conceptID).subscribe((res) =>{
-        this.searching = false;
-        let arr = [];
-        if(res!=[]) arr.push(res);
-        if(arr!=[]) this.showConceptsDialog(arr);
-        else alert("No concept found!");
-      });
-      
-}
+    if (!_.isEmpty(conceptID)) {
+      if (conceptID.length == 36 && conceptID.indexOf(' ') == -1) { //searching with concept uuid
+        this.subscription = this.cs.searchConceptByUUID(conceptID).subscribe((res) => {
+          this.searching = false;
+          let arr = [];
+          if (res != []) arr.push(res);
+          if (arr != []) this.showConceptsDialog(arr);
+          else alert("No concept found!");
+        });
 
-else{
+      } else {
 
-  this.subscription = this.cs.searchConcept(conceptID).subscribe(res => {
-    this.searchResult = res;
-    this.searching = false;
-    if(this.searchResult.results.length>0){
-      this.showConceptsDialog(res.results);
-    }
-
-    else{
-      alert("No concept found!");
-    }
-  });
-}
-}}
-
-getAnswers(conceptID){
-
- this.subscription = this.cs.searchConceptByUUID(conceptID).subscribe(
-    res => {
-     
-    if(res.answers&&res.answers.length > 0) {
-      this.allAvailableAnswers = res.answers;
-      this.showAnswersDialog(this.allAvailableAnswers);
-}
-
-else{
-this.setSelectedAnswers([]);
-}});
-
-}
-
-showConceptsDialog(searchResults:any[]){
-  console.log(searchResults);
-   this.dialogService.addDialog(ConceptsModalComponent, {
-     concepts:searchResults,title:"Concepts"
-    }, { backdropColor: 'rgba(255, 255, 255, 0.5)' })
-     .subscribe((formValue)=>{
-       if(formValue){
-         this.setFormControlValue(formValue);
-         searchResults.forEach((concept) =>{
-
-          if(formValue['concept']==concept.uuid){
-
-            if(concept.answers.length>0){
-              this.emitSetMembers([]);
-              this.allAvailableAnswers = concept.answers;
-              this.showAnswersDialog(this.allAvailableAnswers);
-            }
-
-            if(concept.setMembers.length>0){
-              this.allAvailableSetMembers = concept.setMembers;
-              this.showSetMembersDialog(this.allAvailableSetMembers);
-            }
-
-            if(concept.datatype.name == "Boolean"){
-              
-              let answers:Answer[]=[{label:"yes",concept:this.yesUUID},{label:"no",concept:this.noUUID}]
-              this.answers.emit(answers);
-            }
-
+        this.subscription = this.cs.searchConcept(conceptID).subscribe(res => {
+          this.searchResult = res;
+          this.searching = false;
+          if (this.searchResult.results.length > 0) {
+            this.showConceptsDialog(res.results);
+          } else {
+            alert("No concept found!");
           }
-         });
-   }});
+        });
+      }
+    }
+  }
+
+  getAnswers(conceptID) {
+
+    this.subscription = this.cs.searchConceptByUUID(conceptID).subscribe(
+      res => {
+
+        if (res.answers && res.answers.length > 0) {
+          this.allAvailableAnswers = res.answers;
+          this.showAnswersDialog(this.allAvailableAnswers);
+        } else {
+          this.setSelectedAnswers([]);
+        }
+      });
+
+  }
+
+  showConceptsDialog(searchResults: any[]) {
+    console.log(searchResults);
+    this.dialogService.addDialog(ConceptsModalComponent, {
+        concepts: searchResults,
+        title: "Concepts"
+      }, {
+        backdropColor: 'rgba(255, 255, 255, 0.5)'
+      })
+      .subscribe((formValue) => {
+        if (formValue) {
+          this.setFormControlValue(formValue);
+          searchResults.forEach((concept) => {
+
+            if (formValue['concept'] == concept.uuid) {
+
+              if (concept.answers.length > 0) {
+                this.emitSetMembers([]);
+                this.allAvailableAnswers = concept.answers;
+                this.showAnswersDialog(this.allAvailableAnswers);
+              }
+
+              if (concept.setMembers.length > 0) {
+                this.allAvailableSetMembers = concept.setMembers;
+                this.showSetMembersDialog(this.allAvailableSetMembers);
+              }
+
+              if (concept.datatype.name == "Boolean") {
+
+                let answers: Answer[] = [{
+                  label: "yes",
+                  concept: this.yesUUID
+                }, {
+                  label: "no",
+                  concept: this.noUUID
+                }]
+                this.answers.emit(answers);
+              }
+
+            }
+          });
+        }
+      });
   }
 
 
-  getYesAndNoConceptUUID(){
-    let exactUUID="";
-    this.subscription = this.cs.searchConcept('yes').subscribe((res) =>{
-      if(res.results){
+  getYesAndNoConceptUUID() {
+    this.subscription = this.cs.searchConcept('yes').subscribe((res) => {
+      if (res.results) {
         res.results.forEach((concept) => {
-          
-          if(concept.name.display.toLowerCase()==='yes'){
+
+          if (concept.name.display.toLowerCase() === 'yes') {
             this.yesUUID = concept.uuid;
           }
         });
       }
     });
 
-    this.subscription = this.cs.searchConcept('no').subscribe((res) =>{
-      if(res.results){
+    this.subscription = this.cs.searchConcept('no').subscribe((res) => {
+      if (res.results) {
         res.results.forEach((concept) => {
-          
-          if(concept.name.display.toLowerCase()==='no'){
+
+          if (concept.name.display.toLowerCase() === 'no') {
             this.noUUID = concept.uuid;
           }
         });
       }
     });
-    
+
   }
 
-  showAnswersDialog(results){
+  showAnswersDialog(results) {
     this.subscription = this.dialogService.addDialog(AnswersComponent, {
-      answers:results
-     }, { backdropColor: 'rgba(255, 255, 255, 0.5)' })
-      .subscribe((formValue)=>{
-        if(formValue) this.setSelectedAnswers(formValue);
+        answers: results
+      }, {
+        backdropColor: 'rgba(255, 255, 255, 0.5)'
+      })
+      .subscribe((formValue) => {
+        if (formValue) this.setSelectedAnswers(formValue);
       });
   }
 
-  showSetMembersDialog(setMembers){
-   this.subscription = this.dialogService.addDialog(SetMembersModalComponent, {
-      setMembers:setMembers
-     }, { backdropColor: 'rgba(255, 255, 255, 0.5)' })
-      .subscribe((formValue)=>{
-        if(formValue)
+  showSetMembersDialog(setMembers) {
+    this.subscription = this.dialogService.addDialog(SetMembersModalComponent, {
+        setMembers: setMembers
+      }, {
+        backdropColor: 'rgba(255, 255, 255, 0.5)'
+      })
+      .subscribe((formValue) => {
+        if (formValue)
           this.emitSetMembers(JSON.parse(formValue));
       });
   }
-  setSelectedAnswers(obj){
-   let answers:Answer[] = []
-   
-   if(obj.length>0){
-    let jsobj = JSON.parse(obj);
-    for(var answer in jsobj ){
-     let label = jsobj[answer].slice(0,jsobj[answer].indexOf(','))
-     let concept = jsobj[answer].slice(jsobj[answer].indexOf(',')+1)
-     let temp:Answer= {"label":label,"concept":concept}
-     answers.push(temp)
- }
-   }
- 
+  setSelectedAnswers(obj) {
+    let answers: Answer[] = []
+
+    if (obj.length > 0) {
+      let jsobj = JSON.parse(obj);
+      for (var answer in jsobj) {
+        let label = jsobj[answer].slice(0, jsobj[answer].indexOf(','))
+        let concept = jsobj[answer].slice(jsobj[answer].indexOf(',') + 1)
+        let temp: Answer = {
+          "label": label,
+          "concept": concept
+        }
+        answers.push(temp)
+      }
+    }
+
     this.answers.emit(answers);
   }
 
-  
-  setFormControlValue(formValue){
+
+  setFormControlValue(formValue) {
     this.form.controls['questionOptions.concept'].setValue(formValue.concept)
   }
 
-  keyDownFunction($event){
-    if($event.keyCode==13&&this.form.controls[this.question.key].value!='')
-        this.searchConcept();
+  keyDownFunction($event) {
+    if ($event.keyCode == 13 && this.form.controls[this.question.key].value != '')
+      this.searchConcept();
   }
 
-  findIndexesOfPreviouslySelectedAnswers(previouslySelectedAnswers:any,allAvailableAnswers:any[]){
-      let indexes = [];
-      previouslySelectedAnswers.forEach((answer,index) =>{
-        if(_.indexOf(allAvailableAnswers,answer)){
-          indexes.push(index)
-        }
-      });
-      console.log(indexes);
-      return indexes;
+  findIndexesOfPreviouslySelectedAnswers(previouslySelectedAnswers: any, allAvailableAnswers: any[]) {
+    let indexes = [];
+    previouslySelectedAnswers.forEach((answer, index) => {
+      if (_.indexOf(allAvailableAnswers, answer)) {
+        indexes.push(index)
+      }
+    });
+    console.log(indexes);
+    return indexes;
   }
 
-  emitSetMembers(setMembers:any[]){
+  emitSetMembers(setMembers: any[]) {
     this.el.setMembers(setMembers);
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 }

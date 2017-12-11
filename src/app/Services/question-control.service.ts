@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { PropertyModel } from '../form-editor/models/property-model'
 import { PropertyFactory } from '../form-editor/models/property-factory';
 import {FormGroup, FormControl, FormBuilder, FormArray, Validators} from '@angular/forms';
-import { ALL_PROPERTIES } from '../form-editor/models/properties';
-
+import { ALL_PROPERTIES, Properties } from '../form-editor/models/properties';
 @Injectable()
 export class QuestionControlService {
 
   propertyModels: any = [];
+  properties: Properties = new Properties();
   constructor(private propertyFactory: PropertyFactory, private fb: FormBuilder) {}
 
   toFormGroup(questions: PropertyModel < any > []): FormGroup {
@@ -42,22 +42,23 @@ export class QuestionControlService {
 
   createFields(prop: string, value ? ) {
 
-    
-    let options = {
+
+    const options = {
       key: prop,
-      label: "",
+      label: '',
       value: value || null,
       required: false,
       options: [],
       order: 5,
-      placeholder: "",
+      placeholder: '',
       rows: 5,
-      type:'text'
+      searchData: '',
+      type: 'text'
     }
 
 
     switch (prop) {
-      
+
       case "label":
         options.label = "Label";
         options.required = true;
@@ -181,8 +182,8 @@ export class QuestionControlService {
         break;
 
       case "isExpanded":
-        options.label = "Is Expanded"
-        options.required = true
+        options.label = "Is Expanded";
+        options.required = true;
         options.options = [{
             key: "true",
             value: "true"
@@ -199,6 +200,7 @@ export class QuestionControlService {
 
       case "questionOptions.concept":
         options.label = "Concept";
+        options.searchData = "concept";
         this.propertyModels.push(this.propertyFactory.createProperty('searchbox', options));
         break;
 
@@ -207,7 +209,7 @@ export class QuestionControlService {
         options.rows = 3;
         this.propertyModels.push(this.propertyFactory.createProperty('textarea', options));
         break;
-        
+
       case "default":
         options.label = "Default"
         this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
@@ -219,8 +221,8 @@ export class QuestionControlService {
         break;
 
       case "questionOptions.orderSettingUuid":
-        options.label = "Order Setting Uuid"
-        this.propertyModels.push(this.propertyFactory.createProperty('searchbox', options));
+        options.label = "Order Setting Uuid";
+        this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
         break;
 
       case "questionOptions.orderType":
@@ -269,60 +271,67 @@ export class QuestionControlService {
       case "historicalExpression":
         options.label = "Historical Expression";
         options.rows = 4;
-        if(value) options.value = JSON.stringify(value, undefined, "\t");
+        if(value) options.value = JSON.stringify(value, undefined, '\t');
         this.propertyModels.push(this.propertyFactory.createProperty('textarea', options));
         break;
       
       
-      case "questionOptions.max":
-        options.label="Max";
-        options.type = "number";
+      case 'questionOptions.max':
+        options.label='Max';
+        options.type = 'number';
         this.propertyModels.push(this.propertyFactory.createProperty('textbox',options));
         break;
       
-      case "questionOptions.min":
-        options.label = "Min";
-        options.type = "number";
+      case 'questionOptions.min':
+        options.label = 'Min';
+        options.type = 'number';
         this.propertyModels.push(this.propertyFactory.createProperty('textbox',options));
         break;
 
-      case "questionOptions.rows":
-        options.label = "Rows";
-        options.type = "number"
+      case 'questionOptions.rows':
+        options.label = 'Rows';
+        options.type = 'number'
         this.propertyModels.push(this.propertyFactory.createProperty('textbox',options));
         break;
 
-      case "questionOptions.showDate":
-        options.label = "Show Date";
+      case 'questionOptions.showDate':
+        options.label = 'Show Date';
         options.options = [{key:'true', value:'true'}, {key:'false',value:'false'}];
         this.propertyModels.push(this.propertyFactory.createProperty('select',options));
         break;
 
-      case "questionOptions.showDateOptions":
-        options.label = "Show Date Options";
+      case 'questionOptions.showDateOptions':
+        options.label = 'Show Date Options';
         options.rows = 5;
-        if(value) options.value = JSON.stringify(value, undefined, "\t");
+        if(value) options.value = JSON.stringify(value, undefined, '\t');
         this.propertyModels.push(this.propertyFactory.createProperty('textarea',options));
         break;
 
-      case "questionOptions.showWeeks":
-      options.label = "Show Weeks List";
+      case 'questionOptions.showWeeks':
+      options.label = 'Show Weeks List';
       options.rows = 3;
-      options.placeholder = "[2,12,16,18...]";
-      if(value) options.value = JSON.stringify(value, undefined, "\t");
+      options.placeholder = '[2,12,16,18...]';
+      if(value) options.value = JSON.stringify(value, undefined, '\t');
       this.propertyModels.push(this.propertyFactory.createProperty('textarea',options));
       break;
 
 
-      case "alert":
-      options.label = "Alert"
+      case 'alert':
+      options.label = 'Alert'
       options.rows = 5
-      if(value) options.value = JSON.stringify(value, undefined, "\t");
+      if(value) options.value = JSON.stringify(value, undefined, '\t');
       this.propertyModels.push(this.propertyFactory.createProperty('textarea', options))
       break;
 
-      case "questionInfo":
-        options.label = "Question Info";
+
+      case 'questionOptions.selectableOrders':
+        let p = this.properties.getPropertyByName('selectableOrders');
+        p.value = JSON.stringify(value, undefined, '\t');
+        this.propertyModels.push(p);
+        break;
+
+      case 'questionInfo':
+        options.label = 'Question Info';
         this.propertyModels.push(this.propertyFactory.createProperty('textbox', options));
         break;
 
@@ -355,13 +364,13 @@ export class QuestionControlService {
         var isEmpty = true;
         for (var p in cur) {
           isEmpty = false;
-          recurse(cur[p], prop ? prop + "." + p : p);
+          recurse(cur[p], prop ? prop + '.' + p : p);
         }
         if (isEmpty && prop)
           result[prop] = {};
       }
     }
-    recurse(data, "");
+    recurse(data, '');
     return result;
 
   }
@@ -369,14 +378,14 @@ export class QuestionControlService {
 
 
   unflatten(data) {
-    "use strict";
+    'use strict';
     if (Object(data) !== data || Array.isArray(data))
       return data;
     var regex = /\.?([^.\[\]]+)|\[(\d+)\]/g,
       resultholder = {};
     for (var p in data) {
       var cur = resultholder,
-        prop = "",
+        prop = '',
         m;
       while (m = regex.exec(p)) {
         cur = cur[prop] || (cur[prop] = (m[2] ? [] : {}));
@@ -384,7 +393,7 @@ export class QuestionControlService {
       }
       cur[prop] = data[p];
     }
-    return resultholder[""] || resultholder;
+    return resultholder[''] || resultholder;
   };
 
 
