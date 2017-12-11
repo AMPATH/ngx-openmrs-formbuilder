@@ -165,11 +165,12 @@ export class Properties {
     this.Required,
     this.HistoricalExpression,
     this.Hide,
-    this.OrderType,
     this.CalculatedExpressions,
     this.Alert,
     this.QuestionInfo,
     this.Answers,
+    this.OrderType,
+    this.OrderSettingUuid,
     this.selectableOrders
   ];
 

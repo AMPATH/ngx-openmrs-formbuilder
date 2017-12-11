@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { PropertyModel } from '../form-editor/models/property-model'
 import { PropertyFactory } from '../form-editor/models/property-factory';
 import {FormGroup, FormControl, FormBuilder, FormArray, Validators} from '@angular/forms';
-import { ALL_PROPERTIES } from '../form-editor/models/properties';
-
+import { ALL_PROPERTIES, Properties } from '../form-editor/models/properties';
 @Injectable()
 export class QuestionControlService {
 
   propertyModels: any = [];
+  properties: Properties = new Properties();
   constructor(private propertyFactory: PropertyFactory, private fb: FormBuilder) {}
 
   toFormGroup(questions: PropertyModel < any > []): FormGroup {
@@ -322,6 +322,13 @@ export class QuestionControlService {
       if(value) options.value = JSON.stringify(value, undefined, '\t');
       this.propertyModels.push(this.propertyFactory.createProperty('textarea', options))
       break;
+
+
+      case 'questionOptions.selectableOrders':
+        let p = this.properties.getPropertyByName('selectableOrders');
+        p.value = JSON.stringify(value, undefined, '\t');
+        this.propertyModels.push(p);
+        break;
 
       case 'questionInfo':
         options.label = 'Question Info';

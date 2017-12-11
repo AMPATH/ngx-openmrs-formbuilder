@@ -18,10 +18,6 @@
       <button md-icon-button (click)="sidenav.toggle()"><md-icon class="md-24" >menu</md-icon></button>
       <span style="font-size:18px; font-family:'Roboto'">Form Builder</span>
       <span class="menu">
-<<<<<<< c59a72a70f3c203c9b78b8901367a64d2c9f9f39
-<<<<<<< daef29cd6299317054325f13630da30535cb8ebd
-=======
->>>>>>> Added a feature Validate concepts
       <div class="btn-group show-on-hover">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                <span class="fb-menu-item">File</span>
@@ -87,40 +83,6 @@
             <button type="button" class="btn btn-default"  (click)="exit()"><span class="fb-menu-item"> Exit</span></button>
           </div>  
       
-<<<<<<< c59a72a70f3c203c9b78b8901367a64d2c9f9f39
-=======
-          <button md-button [mdMenuTriggerFor]="fileMenu"><span style="font-size:14px;font-weight:600; color:white;">File</span></button>
-      <md-menu #fileMenu="mdMenu" [overlapTrigger]="false">
-        <button (click)="saveLocally()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Locally</span></button>
-        <button (click)="saveRemotely()" md-menu-item><span style="font-size:14px;font-weight:500"><i class="fa fa-server" aria-hidden="true"></i> Save to Server</span></button>
-      </md-menu>
-      <button md-button [mdMenuTriggerFor]="viewMenu"><span style="font-size:14px;font-weight:600; color:white;">View</span></button>
-      <md-menu #viewMenu="mdMenu" [overlapTrigger]="false">
-        <button (click)="toggleView()" md-menu-item><span  style="font-size:14px;font-weight:500"><i class="fa fa-square-o" aria-hidden="true"></i> Single View</span> <i class="fa" [class.fa-check]="viewMode=='singleView'" style="color:green"></i></button>
-        <button (click)="toggleView()" md-menu-item><span  style="font-size:15px;font-weight:500"><i class="fa fa-columns" aria-hidden="true"></i> Split View</span> <i class="fa" [class.fa-check]="viewMode=='multiView'" style="color:green"></i></button>
-      </md-menu>
-<<<<<<< bf0743308bba6ccfbdf2e91941974edc11d12637
-
-      <button md-button data-toggle="collapse" data-target="#audit-info"><span style="font-size:14px;font-weight:600">Audit</span> <i class="fa fa-caret-down"></i></button>
-      <button md-button (click)="exit()"><span style="font-size:14px;font-weight:500"> Exit</span></button>
->>>>>>> Added ability to edit broken schemas
-=======
-      <!-- <button md-button [mdMenuTriggerFor]="tasksMenu"><span style="font-size:14px;font-weight:600; color:white;">Tasks</span></button>
-      <md-menu #tasksMenu="mdMenu" [overlapTrigger]="false">
-        <button (click)="validateConcepts()" md-menu-item><i class="fa fa-check-square-o"></i>
-          <span  style="font-size:14px;font-weight:500"> Validate Concepts</span></button>
-      </md-menu> -->
-      <button md-button data-toggle="collapse" data-target="#audit-info"><span style="font-size:14px;font-weight:600; color:white;">Audit</span></button>
-      <button md-button [mdMenuTriggerFor]="userMenu"><span style="font-size:14px;font-weight:600; color:white;">User</span></button>
-      <md-menu #userMenu="mdMenu" [overlapTrigger]="false">
-        <button md-menu-item>
-            <i class="fa fa-user"></i><span  style="font-size:14px;font-weight:500"> {{user}}</span></button>
-            <button md-menu-item> <i class="fa fa-server"></i><span style="font-size:14px;font-weight:500"></span> {{url}}</button>
-      </md-menu>
-      <button md-button (click)="exit()"><span style="font-size:14px;font-weight:600; color:white;"> Exit</span></button>
->>>>>>> added ability to download schemas
-=======
->>>>>>> Added a feature Validate concepts
       </span>
       
       <span flex></span>
