@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { UpdateComponentService } from '../../Services/update-component.service';
 import { NavigatorService} from '../../Services/navigator.service';
-import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
+import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
 import { FormSchemaCompiler } from '../../Services/schema-compiler.service';
-import { SaveFormService } from '../../Services/save-form.service';
+import { SaveFormService } from '../../Services/openmrs-api/save-form.service';
 import { Node, LinkedList } from '../../collections/linked-list';
 import { FormListService } from '../../Services/form-list.service';
 import { MdSnackBar } from '@angular/material';

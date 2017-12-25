@@ -1,80 +1,26 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  OnDestroy,
-  ChangeDetectorRef,
-  AfterViewChecked
-} from '@angular/core';
-import {
-  SnackbarComponent
-} from '../snackbar/snackbar.component';
-import {
-  FetchFormDetailService
-} from '../../Services/fetch-form-detail.service';
-import {
-  FetchAllFormsService
-} from '../../Services/fetch-all-forms.service';
-import {
-  NavigatorService
-} from '../../Services/navigator.service';
-import {
-  QuestionIdService
-} from '../../Services/question-id.service';
-import {
-  ActivatedRoute,
-  Router,
-  ParamMap
-} from '@angular/router';
-import {
-  Subscription
-} from 'rxjs/Subscription';
-import {
-  Observable
-} from 'rxjs/Observable';
-import {
-  MdSnackBar
-} from '@angular/material';
-import {
-  DialogService
-} from 'ng2-bootstrap-modal';
-import {
-  Form
-} from '../form-elements/Form';
-import {
-  LocalStorageService
-} from '../../Services/local-storage.service';
-import {
-  SessionStorageService
-} from '../../Services/session-storage.service';
-import {
-  Constants
-} from '../../Services/constants';
-import {
-  SaveFormsComponent
-} from '../../modals/save-form-modal/save-form-modal';
-import {
-  ConfirmComponent
-} from '../../modals/confirm.component';
-import {
-  AlertComponent
-} from '../../modals/alert.component';
-import {
-  FormListService
-} from '../../Services/form-list.service';
-import {
-  SaveFormService
-} from '../../Services/save-form.service';
-import {
-  EncounterTypeService
-} from '../../Services/encounter-type.service';
-import {
-  ConceptService
-} from '../../Services/concept.service';
-import {
-  NotificationComponent
-} from '../snackbar/notification-toast';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewChecked, AfterContentInit } from '@angular/core';
+import { SnackbarComponent } from '../snackbar/snackbar.component';
+import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
+import { FetchAllFormsService } from '../../Services/openmrs-api/fetch-all-forms.service';
+import { NavigatorService } from '../../Services/navigator.service';
+import { QuestionIdService } from '../../Services/question-id.service';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription'; import { Observable } from 'rxjs/Observable';
+import { MdSnackBar } from '@angular/material'; import { DialogService } from 'ng2-bootstrap-modal';
+import { Form } from '../form-elements/Form';
+import { LocalStorageService } from '../../Services/storage/local-storage.service';
+import { SessionStorageService } from '../../Services/storage/session-storage.service';
+import { Constants } from '../../Services/constants';
+import { SaveFormsComponent} from '../../modals/save-form-modal/save-form-modal';
+import { ConfirmComponent } from '../../modals/confirm.component';
+import { AlertComponent } from '../../modals/alert.component';
+import { FormListService } from '../../Services/form-list.service';
+import { SaveFormService } from '../../Services/openmrs-api/save-form.service';
+import { EncounterTypeService } from '../../Services/openmrs-api/encounter-type.service';
+import { ConceptService } from '../../Services/openmrs-api/concept.service';
+import { NotificationComponent } from '../snackbar/notification-toast';
 import * as _ from 'lodash';
+
 
 
 interface FormMetadata {
@@ -96,7 +42,7 @@ interface FormMetadata {
   styleUrls: ['./form-editor.component.css']
 })
 
-export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked, AfterContentInit {
   schema: any;
   selectedSchema: any;
   rawSelectedSchema: any;
@@ -151,6 +97,10 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked 
 
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
+  }
+
+  ngAfterContentInit() {
+    this.loading = true;
   }
 
 

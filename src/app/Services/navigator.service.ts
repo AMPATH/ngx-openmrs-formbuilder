@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import  { Subject, Observable, BehaviorSubject } from 'rxjs';
-import { LocalStorageService } from './local-storage.service';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { LocalStorageService } from './storage/local-storage.service';
 import { Constants } from './constants';
 
 @Injectable()

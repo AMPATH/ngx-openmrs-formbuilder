@@ -3,7 +3,7 @@ import {AceEditorComponent} from 'ng2-ace-editor';
 import {NavigatorService} from '../../Services/navigator.service';
 import {MdSnackBar} from '@angular/material';
 import { FormSchemaCompiler } from '../../Services/schema-compiler.service';
-import {FetchFormDetailService} from '../../Services/fetch-form-detail.service';
+import {FetchFormDetailService} from '../../Services/openmrs-api/fetch-form-detail.service';
 import * as _ from 'lodash';
 import 'brace/index';
 import 'brace/mode/json';

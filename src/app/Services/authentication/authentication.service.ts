@@ -1,42 +1,42 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
-import { SessionService } from './session.service';
-import { SessionStorageService } from './session-storage.service';
-import { Constants } from './constants';
+import { SessionService } from '../storage/session.service';
+import { SessionStorageService } from '../storage/session-storage.service';
+import { Constants } from '../constants';
 import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class AuthenticationService {
 
   isLoggedIn = false;
-  redirectUrl:string='';
-  baseUrl:BehaviorSubject<string> = new BehaviorSubject('');
-  credentials:BehaviorSubject<string> = new BehaviorSubject('');
+  redirectUrl ='';
+  baseUrl: BehaviorSubject<string> = new BehaviorSubject('');
+  credentials: BehaviorSubject<string> = new BehaviorSubject('');
 
 
   constructor(
     private sessionStorageService: SessionStorageService,
     private sessionService: SessionService) {
 
-      if(this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY)!=null&&this.sessionStorageService.getItem(Constants.BASE_URL)!=null){
+      if (this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY) != null
+      && this.sessionStorageService.getItem(Constants.BASE_URL) != null) {
         this.setCredentialsSubjectEncrypted(this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY));
         this.setBaseUrl(this.sessionStorageService.getItem(Constants.BASE_URL));
         this.isLoggedIn = true;
       }
-      
     }
 
   public authenticate(username: string, password: string, baseUrl: string) {
-   
-    let credentials = {
+
+    const credentials = {
       username: username,
       password: password
     };
 
-    let request = this.sessionService.getSession(credentials, baseUrl);
+    const request = this.sessionService.getSession(credentials, baseUrl);
 
     request.subscribe((response: Response) => {
-        let data = response.json();
+        const data = response.json();
         if (data.authenticated) {
           this.isLoggedIn = true;
           this.setCredentials(username, password,baseUrl);

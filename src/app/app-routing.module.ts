@@ -4,18 +4,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormEditorComponent } from './form-editor/form-editor/form-editor.component';
 import { ViewFormsComponent } from './view-forms/view-forms.component';
 import { LoginComponent } from './login/login.component';
-import { SaveFormsGuardService } from './Services/save-forms-guard.service';
-import {AuthGuardService} from './Services/auth-guard.service';
+import { SaveFormsGuardService } from './Services/route-guards/save-forms-guard.service';
+import {AuthGuardService} from './Services/route-guards/auth-guard.service';
 import {UpdateFormsComponent} from './form-editor/update-forms/update-forms.component';
 import {UpdateFormsWizardComponent } from './form-editor/update-forms-wizard/update-forms-wizard.component';
-
-const appRoutes : Routes = [
-  {path:'', redirectTo:'forms', pathMatch:'full'},
-  {path:'login', component:LoginComponent},
-  {path:'forms', component:ViewFormsComponent, canActivate:[AuthGuardService]},
-  {path:'edit/:uuid', component:FormEditorComponent, canDeactivate:[SaveFormsGuardService]},
-  {path:'update/:oldUuid/:newUuid', component:UpdateFormsComponent, canActivate:[AuthGuardService]}
-]
+import { TestComponent } from './test/test.component';
+const appRoutes: Routes = [
+  {path: '', redirectTo: 'forms', pathMatch: 'full'},
+  {path: 'login', component: LoginComponent},
+  {path: 'forms', component: ViewFormsComponent, canActivate: [AuthGuardService]},
+  {path: 'edit/:uuid', component: FormEditorComponent, canDeactivate: [SaveFormsGuardService]},
+  {path: 'update/:oldUuid/:newUuid', component: UpdateFormsComponent, canActivate: [AuthGuardService]},
+  {path: 'test', component: TestComponent, canActivate: [AuthGuardService]}
+];
 
 @NgModule({
   imports: [

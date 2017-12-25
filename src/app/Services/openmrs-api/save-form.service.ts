@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http} from '@angular/http';
-import {Observable} from 'rxjs';
-import { SessionStorageService } from './session-storage.service';
-import {Constants} from '../Services/constants';
+import {Observable} from 'rxjs/Observable';
+import { SessionStorageService } from '../storage/session-storage.service';
+import {Constants} from '../constants';
 import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';

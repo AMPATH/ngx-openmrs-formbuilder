@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
-import {Constants} from './constants';
-import { AuthenticationService } from './authentication.service';
-import { SessionStorageService } from './session-storage.service';
-import { FetchFormDetailService } from './fetch-form-detail.service';
-import { LocalStorageService } from './local-storage.service';
+import {Constants} from '../constants';
+import { AuthenticationService } from '../authentication/authentication.service';
+import { SessionStorageService } from '../storage/session-storage.service';
+import { FetchFormDetailService } from '../openmrs-api/fetch-form-detail.service';
+import { LocalStorageService } from '../storage/local-storage.service';
 import { Subject, Observable, BehaviorSubject} from 'rxjs';
 @Injectable()
 export class FetchAllFormsService {

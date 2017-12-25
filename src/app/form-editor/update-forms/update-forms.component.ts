@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FetchAllFormsService } from '../../Services/fetch-all-forms.service';
+import { FetchAllFormsService } from '../../Services/openmrs-api/fetch-all-forms.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
-import { LocalStorageService } from '../../Services/local-storage.service';
+import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
+import { LocalStorageService } from '../../Services/storage/local-storage.service';
 import { UpdateComponentService } from '../../Services/update-component.service';
 import { FormListService } from '../../Services/form-list.service';
 import { DialogService } from 'ng2-bootstrap-modal';
-import { UpdateFormsWizardComponent } from '../../modals/update-forms-wizard-modal/update-forms-wizard-modal.component';
+import { UpdateFormsWizardModalComponent } from '../../modals/update-forms-wizard-modal/update-forms-wizard-modal.component';
 import * as _ from 'lodash';
 @Component({
   selector: 'app-update-forms',
@@ -45,7 +45,7 @@ export class UpdateFormsComponent implements OnInit, OnDestroy {
     this.subscription = this.route.params.subscribe((params) => {
       this.oldComponentUUID = params['oldUuid'];
       this.newComponentUUID = params['newUuid'];
-      let forms = [];
+      const forms = [];
       let count = 0;
 
       this.fd.fetchFormMetadata(this.newComponentUUID, true).then((res) => {
@@ -105,7 +105,7 @@ checkIfReferencesComponent(componentUUID, form) {
 
 updateForms() {
   console.log(this.newComponentMetadata);
-  this.dialogService.addDialog(UpdateFormsWizardComponent,
+  this.dialogService.addDialog(UpdateFormsWizardModalComponent,
     {  componentMetadata: this.newComponentMetadata,
        oldComponentUUID: this.oldComponentUUID ,
        selectedForms: this.selectedForms},

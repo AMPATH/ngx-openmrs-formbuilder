@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnDestroy} from '@angular/core';
-import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
+import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
 import { FormGroup,FormControl,FormBuilder,Validators } from '@angular/forms'
-import { FetchFormDetailService } from '../../Services/fetch-form-detail.service'
+import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service'
 import { NavigatorModalComponent } from './../navigator.modal';
 import {ReferenceForm} from '../../form-editor/reference-forms/reference-form-model'
 import {Observable, Subscription} from 'rxjs';
@@ -27,9 +27,9 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
   form:FormGroup;
   formAlias:string; //the form alias selected
   refForms:any[];
-  searchValue:string="";
+  searchValue:string='';
   filteredForms:Observable<any[]>;
-  selectField: FormControl = new FormControl("",Validators.required);
+  selectField: FormControl = new FormControl('',Validators.required);
   errorMessage:string;
   subscription:Subscription;
   constructor(dialogService: DialogService,private fb:FormBuilder,private fs:FetchFormDetailService) {
@@ -62,7 +62,7 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
     });
 
     if(selectedForm==undefined){
-      this.errorMessage = "Please select a valid form";
+      this.errorMessage = 'Please select a valid form';
       return;
     }
     if(selectedForm.ref.uuid){
@@ -74,7 +74,7 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
     
 
     else
-    console.error("formName is undefined!");
+    console.error('formName is undefined!');
     
   }
 

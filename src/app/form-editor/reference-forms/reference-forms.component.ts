@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { InsertReferenceComponent } from '../../modals/insert-reference-form-modal/insert-reference-forms.modal';
-import { FetchAllFormsService } from '../../Services/fetch-all-forms.service';
+import { FetchAllFormsService } from '../../Services/openmrs-api/fetch-all-forms.service';
 import { DialogService } from 'ng2-bootstrap-modal';
 import {NavigatorService} from '../../Services/navigator.service';
-import {FetchFormDetailService} from '../../Services/fetch-form-detail.service'
-import {SchemaModalComponent} from '../../modals/schema-editor.modal'
+import {FetchFormDetailService} from '../../Services/openmrs-api/fetch-form-detail.service';
+import {SchemaModalComponent} from '../../modals/schema-editor.modal';
 import * as _ from 'lodash';
 
 export class ReferenceForms{
@@ -15,7 +15,7 @@ export class ReferenceForms{
     "uuid":'',
     "display":''
   }
-  
+
 
 }
 @Component({
