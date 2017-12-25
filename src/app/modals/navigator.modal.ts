@@ -1,18 +1,18 @@
 import { Component, Input } from '@angular/core';
-import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
-import { FormGroup,FormControl,FormBuilder,Validators } from '@angular/forms'
-import { FetchFormDetailService } from '../Services/fetch-form-detail.service'
-import {Observable} from 'rxjs'
+import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FetchFormDetailService } from '../Services/openmrs-api/fetch-form-detail.service';
+import {Observable} from 'rxjs/Observable';
 // Observable class extensions
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 export interface NavigatorModalModel {
-  title:string;
-  referenceElement:string;
-  schema:any;
-  prechecked:any;
+  title: string;
+  referenceElement: string;
+  schema: any;
+  prechecked: any;
 }
 
 @Component({
@@ -24,7 +24,10 @@ export interface NavigatorModalModel {
                      <h4 class="modal-title title">Select {{referenceElement}} to reference</h4>
                    </div>
                    <div class="modal-body">
-                   <app-navigator [_schema]="schema" [formSchema]="schema" [mode]="'select'" [referenceElement]="referenceElement" (checkedRefElementsEmitter)="rfEmitted($event)"></app-navigator>
+                   <app-navigator [_schema]="schema"
+                    [formSchema]="schema" [mode]="'select'"
+                     [referenceElement]="referenceElement"
+                      (checkedRefElementsEmitter)="rfEmitted($event)"></app-navigator>
                    </div>
                    <div class="modal-footer">
                      <button type="button" class="btn btn-primary" (click)="save()">OK</button>
@@ -32,7 +35,7 @@ export interface NavigatorModalModel {
                    </div>
                  </div>
                 </div>`,
-                styles:[`
+                styles: [`
                 .modal-body {
                   position: relative;
                   padding: 20px;
@@ -47,34 +50,30 @@ export interface NavigatorModalModel {
 })
 export class NavigatorModalComponent extends DialogComponent<NavigatorModalModel, string> implements NavigatorModalModel {
   title: string;
-  schema:any;
-  referenceElement:string;
-  checkedRefElements:any=[];
-  res:string;
-  prechecked:any;
+  schema: any;
+  referenceElement: string;
+  checkedRefElements: any= [];
+  res: string;
+  prechecked: any;
 
-  constructor(dialogService: DialogService,private fb:FormBuilder,private fs:FetchFormDetailService) {
-    
+  constructor(dialogService: DialogService, private fb: FormBuilder, private fs: FetchFormDetailService) {
     super(dialogService);
-    
-    
   }
 
-  rfEmitted(refElements:any[]){
-  
+  rfEmitted(refElements: any[]) {
+
     this.checkedRefElements = refElements;
   }
 
-  close(){
+  close() {
     super.close();
-    this.res='';
+    this.res = '';
   }
 
   save() {
-    this.res = JSON.stringify(this.checkedRefElements);   
-    this.result=this.res;
+    this.res = JSON.stringify(this.checkedRefElements);
+    this.result = this.res;
     this.close();
   }
 
-  
 }

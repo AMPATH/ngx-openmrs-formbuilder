@@ -8,13 +8,13 @@ import {
 } from '@angular/core';
 import {
   ConceptService
-} from '../../Services/concept.service';
+} from '../../Services/openmrs-api/concept.service';
 import {
   DialogService
-} from "ng2-bootstrap-modal";
+} from 'ng2-bootstrap-modal';
 import {
   AnswersComponent
-} from "../../modals/answers-modal/answers.modal";
+} from '../../modals/answers-modal/answers.modal';
 import {
   FormGroup,
   FormBuilder,
@@ -25,7 +25,7 @@ import {
 } from '../../modals/concept.modal';
 import {
   SetMembersModalComponent
-} from '../../modals/set-members-modal/set-members-modal.component'
+} from '../../modals/set-members-modal/set-members-modal.component';
 import {
   ElementEditorService
 } from '../../Services/element-editor.service';
@@ -160,7 +160,7 @@ export class ConceptComponent implements OnInit, OnDestroy {
                   label: "yes",
                   concept: this.yesUUID
                 }, {
-                  label: "no",
+                  label: 'no',
                   concept: this.noUUID
                 }]
                 this.answers.emit(answers);
@@ -229,8 +229,8 @@ export class ConceptComponent implements OnInit, OnDestroy {
         let label = jsobj[answer].slice(0, jsobj[answer].indexOf(','))
         let concept = jsobj[answer].slice(jsobj[answer].indexOf(',') + 1)
         let temp: Answer = {
-          "label": label,
-          "concept": concept
+          'label': label,
+          'concept': concept
         }
         answers.push(temp)
       }

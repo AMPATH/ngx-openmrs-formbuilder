@@ -14,7 +14,7 @@ export interface UpdateFormsWizardModel {
     styleUrls: ['./update-forms-wizard-modal.component.css']
 
 })
-export class  UpdateFormsWizardComponent extends DialogComponent<UpdateFormsWizardModel, string> 
+export class  UpdateFormsWizardModalComponent extends DialogComponent<UpdateFormsWizardModel, string> 
 implements UpdateFormsWizardModel, OnInit, AfterViewChecked {
 
   selectedForms: any;

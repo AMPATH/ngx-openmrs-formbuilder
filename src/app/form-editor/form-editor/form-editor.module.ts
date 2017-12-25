@@ -2,28 +2,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormEntryModule} from 'ng2-openmrs-formentry';
-import {AceEditorModule} from 'ng2-ace-editor';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { ClipboardModule } from 'ngx-clipboard';
-import {AppMaterialModule} from '../../app-material-module';
-
+import { SharedModule } from '../../shared-module';
 //Services
-import { FetchFormDetailService } from '../../Services/fetch-form-detail.service';
+import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
 import {NavigatorService} from '../../Services/navigator.service';
 import {QuestionControlService} from '../../Services/question-control.service';
 import {PropertyFactory} from '../models/property-factory';
 import {FormElementFactory} from '../form-elements/form-element-factory';
 import {QuestionIdService} from '../../Services/question-id.service';
-import {ConceptService} from '../../Services/concept.service';
+import {ConceptService} from '../../Services/openmrs-api/concept.service';
 import {FormFactory} from '../form-elements/form-factory.service';
-import {FetchAllFormsService} from '../../Services/fetch-all-forms.service';
+import {FetchAllFormsService} from '../../Services/openmrs-api/fetch-all-forms.service';
 import {ElementEditorService} from '../../Services/element-editor.service';
 import { FormSchemaCompiler } from '../../Services/schema-compiler.service';
 import { UpdateComponentService } from '../../Services/update-component.service';
 
 //Components
 import { ReferenceFormsComponent } from '../reference-forms/reference-forms.component';
-import { NavigatorComponent } from '../navigator/navigator.component';
 import { SchemaEditorComponent } from '../schema-editor/schema-editor.component';
 import { ElementEditorComponent } from '../element-editor/element-editor.component';
 import { FormRendererComponent } from '../form-renderer/form-renderer.component';
@@ -32,21 +27,15 @@ import { ConceptComponent } from '../concept/concept.component';
 import { FormEditorComponent } from './form-editor.component';
 import { AuditInfoComponent } from '../audit-info/audit-info.component';
 import { UpdateFormsComponent } from '../update-forms/update-forms.component';
-import { UpdateFormsWizardComponent } from '../update-forms-wizard/update-forms-wizard.component';
 import { OrderComponent } from '../order/order.component';
 @NgModule({
   imports: [
     CommonModule,
     FormEntryModule,
-    AceEditorModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ClipboardModule,
-    AppMaterialModule
+    SharedModule
   ],
 
   declarations: [
-    NavigatorComponent,
     SchemaEditorComponent,
     ElementEditorComponent,
     FormRendererComponent,
@@ -56,7 +45,6 @@ import { OrderComponent } from '../order/order.component';
     ReferenceFormsComponent,
     AuditInfoComponent,
     UpdateFormsComponent,
-    UpdateFormsWizardComponent,
     OrderComponent
   ],
 
@@ -76,14 +64,7 @@ import { OrderComponent } from '../order/order.component';
   ],
 
   exports: [
-    FormEntryModule,
-    AceEditorModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ClipboardModule,
-    AppMaterialModule,
-    NavigatorComponent,
-    UpdateFormsWizardComponent
+    FormEntryModule
   ]
 })
 export class FormEditorModule { }

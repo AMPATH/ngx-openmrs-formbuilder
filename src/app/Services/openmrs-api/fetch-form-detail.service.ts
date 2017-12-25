@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import {FormSchemaCompiler} from '../Services/schema-compiler.service';
-import {NavigatorService} from './navigator.service';
-import {SessionStorageService} from './session-storage.service';
-import {Constants} from './constants';
+import {FormSchemaCompiler} from '../schema-compiler.service';
+import {NavigatorService} from '../navigator.service';
+import {SessionStorageService} from '../storage/session-storage.service';
+import {Constants} from '../constants';
 import {Router} from '@angular/router';
-import { AuthenticationService } from './authentication.service';
+import { AuthenticationService } from '../authentication/authentication.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';

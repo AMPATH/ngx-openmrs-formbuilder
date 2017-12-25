@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FetchAllFormsService } from '../Services/fetch-all-forms.service';
-import { FetchFormDetailService } from '../Services/fetch-form-detail.service'
-import { AuthenticationService } from '../Services/authentication.service';
-import { LocalStorageService } from '../Services/local-storage.service';
-import { SessionStorageService } from '../Services/session-storage.service';
+import { FetchAllFormsService } from '../Services/openmrs-api/fetch-all-forms.service';
+import { FetchFormDetailService } from '../Services/openmrs-api/fetch-form-detail.service'
+import { AuthenticationService } from '../Services/authentication/authentication.service';
+import { LocalStorageService } from '../Services/storage/local-storage.service';
+import { SessionStorageService } from '../Services/storage/session-storage.service';
 import { Router } from '@angular/router';
 import { Constants } from '../Services/constants';
 import { FormListService } from '../Services/form-list.service';
@@ -192,5 +192,8 @@ export class ViewFormsComponent implements OnInit {
   }
 
 
+  navigateToTestPage(){
+    this.router.navigate(['/test']);
+  }
 
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-import { SessionStorageService } from './session-storage.service';
+import { SessionStorageService } from './storage/session-storage.service';
 import {Constants} from '../Services/constants';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/of';
