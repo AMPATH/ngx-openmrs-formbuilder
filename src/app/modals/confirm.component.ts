@@ -22,7 +22,7 @@ export interface ConfirmModel {
                    <div class="modal-footer">
                      <button type="button" class="btn btn-danger" (click)="confirm()">{{buttonText || 'Delete'}}</button>
                      <div style="display:inline-block" *ngIf="saveModal()"><button type="button" class="btn btn-success" (click)="confirmNewVersion()">Save as a new version</button></div>
-                     <button type="button" class="btn btn-default" (click)="close()" >Cancel</button>
+                     <button type="button" class="btn btn-default" (click)="close()" >{{'Cancel'|| canceButtonText }} </button>
                    </div>
                  </div>
               </div>`
@@ -31,7 +31,7 @@ export class ConfirmComponent extends DialogComponent<ConfirmModel, number> impl
   title: string;
   message: string;
   buttonText:string;
-
+  cancelButtonText: string;
   constructor(dialogService: DialogService) {
     super(dialogService);
   }
