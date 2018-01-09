@@ -9,6 +9,7 @@ import { TypeaheadModule } from 'ngx-bootstrap';
 import {LocalStorageService} from './Services/storage/local-storage.service';
 import {SessionStorageService} from './Services/storage/session-storage.service';
 import {SessionService} from './Services/storage/session.service';
+import { FormEntryModule } from 'ng2-openmrs-formentry';
 @NgModule({
     declarations: [
         NavigatorComponent
@@ -20,7 +21,8 @@ import {SessionService} from './Services/storage/session.service';
         AppMaterialModule,
         AceEditorModule,
         ClipboardModule,
-        TypeaheadModule
+        TypeaheadModule.forRoot(),
+        FormEntryModule
     ],
     exports: [
         NavigatorComponent,
@@ -29,7 +31,8 @@ import {SessionService} from './Services/storage/session.service';
         AppMaterialModule,
         AceEditorModule,
         ClipboardModule,
-        TypeaheadModule
+        TypeaheadModule,
+        FormEntryModule
     ],
     providers: [
         LocalStorageService,

@@ -13,6 +13,8 @@ import { ReferenceModalComponent } from './reference-form-modal/reference-form.m
 import { NavigatorModalComponent } from './navigator.modal';
 import { SaveFormsComponent } from './save-form-modal/save-form-modal';
 import { UpdateFormsWizardComponent } from '../form-editor/update-forms-wizard/update-forms-wizard.component';
+import { EncounterModalDetailsComponent  } from './encounter-details.modal';
+import { EncounterViewerModalComponent } from './encounter-viewer-modal';
 import { SharedModule } from '../shared-module';
 @NgModule({
     declarations: [
@@ -29,6 +31,8 @@ import { SharedModule } from '../shared-module';
         UpdateFormsWizardComponent,
         InsertReferenceComponent,
         SchemaModalComponent,
+        EncounterModalDetailsComponent,
+        EncounterViewerModalComponent
     ],
     entryComponents: [
         ConfirmComponent,
@@ -43,6 +47,8 @@ import { SharedModule } from '../shared-module';
         UpdateFormsWizardModalComponent,
         InsertReferenceComponent,
         SchemaModalComponent,
+        EncounterModalDetailsComponent,
+        EncounterViewerModalComponent
     ],
     imports: [
         CommonModule,
@@ -61,6 +67,7 @@ import { SharedModule } from '../shared-module';
         UpdateFormsWizardModalComponent,
         InsertReferenceComponent,
         SchemaModalComponent,
+        EncounterModalDetailsComponent
     ],
     providers: [],
 })

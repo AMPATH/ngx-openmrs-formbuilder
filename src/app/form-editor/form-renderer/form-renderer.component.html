@@ -1,9 +1,7 @@
-<!-- <div class="text-center" style="padding:5px 0px 10px 0px; background:#ebebeb">
-  Form Renderer
-</div> -->
-
-
 <div class="container-fluid" *ngIf="form">
-<form-renderer [node]="form.rootNode"></form-renderer>
+  <error-renderer [form]="form"></error-renderer>
+  <form-renderer [node]="form.rootNode"></form-renderer>
+  <div class="text-center">
+    <button class="btn btn-success btn-lg" type="submit" (click)="submitForm($event)">Submit Form</button>
+  </div>
 </div>
-
