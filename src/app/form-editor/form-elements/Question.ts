@@ -1,10 +1,18 @@
 import {FormElement} from './FormElement';
 export class QuestionOptions {
     rendering: string;
-    answers: any;
+    answers: any[];
+    max: string;
+    min: string;
     concept: string;
+    conceptMappings: any[];
+    attritubeType: string;
+    calculate: any;
+    rows: number;
+    conceptId: string;
 
 }
+
 export class Question extends FormElement {
 
         id = '';

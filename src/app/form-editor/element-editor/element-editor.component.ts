@@ -13,6 +13,7 @@ import { SchemaModalComponent } from '../../modals/schema-editor.modal';
 import { ALL_PROPERTIES, Properties } from '../models/properties'; import * as _ from 'lodash';
 import { PropertyFactory } from '../models/property-factory';
 import { TextboxProperty } from '../models/textbox-property';
+import { ConceptService } from '../../Services/openmrs-api/concept.service';
 
 @Component({
   selector: 'app-element-editor',
@@ -50,7 +51,8 @@ export class ElementEditorComponent implements OnInit {
     private ns: NavigatorService,
     private dialogService: DialogService,
     private el: ElementEditorService,
-    private propertyFactory: PropertyFactory) {}
+    private propertyFactory: PropertyFactory,
+    private conceptService: ConceptService) {}
 
   @Input() set schema(schema) {
     this._schema = _.clone(schema);
@@ -81,41 +83,35 @@ export class ElementEditorComponent implements OnInit {
     this.setMode(this.form);
     this.allPossibleproperties = ALL_PROPERTIES;
     this.breadcrumbsSetup();
+    this.el.getMappings().subscribe((mappings) => {
+      this.setMappings(mappings);
+    });
     this.el.getSetMembers().subscribe((setMembers) => {
-      console.log(setMembers);
-      this.setMembers = [];
-      setMembers.forEach((setMember) => {
-        let rendering = 'text';
-        if (setMember.answers.length > 0) {
-          rendering = 'select';
-        }
-        const question: Question = new Question();
-        question.label = setMember.label;
-        question.type = 'obs';
-        question.id = '',
-          question.questionOptions.rendering = rendering;
+      this.setSetMembers(setMembers);
+    });
 
-
-        question.questionOptions['concept'] = setMember.concept;
-        if (!_.isEmpty(setMember.answers)) {
-          question.questionOptions['answers'] = setMember.answers;
-        }
-        this.form.controls['type'].setValue('obsGroup');
-        this.form.controls['questionOptions.rendering'].setValue('group');
-        this.setMembers.push(question);
-      });
-
+    this.el.getConceptId().subscribe((id) => {
+      this.setConceptId(id);
     });
   }
 
-
+  public setConceptId(id) {
+    const prop = this.getProperty('conceptID');
+    if (!this.form.contains(prop.key)) {
+       prop.value = id;
+       this.addProperty(prop);
+    } else { this.form.controls[prop.key].setValue(id); }
+  }
   addProperty(prop: PropertyModel<any>) {
-    if (this.form.contains(prop.parentPath)) {
+    if (this.form.contains(prop.key)) {
       this.showAlert('Property already added!');
       return;
     }
-      this.form.addControl(prop.parentPath, new FormControl(''));
-      this.questions.push(prop);
+    if (!prop.value) {
+      this.form.addControl(prop.key, new FormControl(''));
+    } else {
+      this.form.addControl(prop.key, new FormControl(prop.value)); }
+    this.questions.push(prop);
   }
 
 
@@ -126,9 +122,7 @@ export class ElementEditorComponent implements OnInit {
         return;
       }
     }
-
     const question = this.qcs.unflatten(this.form.value);
-
     if (question['type'] === 'obsGroup') {
       question['questions'] = this.setMembers;
     }
@@ -153,10 +147,9 @@ export class ElementEditorComponent implements OnInit {
       question.questionOptions['selectableOrders'] = this.parse(this.form.controls['questionOptions.selectableOrders'].value);
     }
 
-    // if(question.questionOptions['answers']&&question['type']=="testOrder"){
-    //   question.questionOptions['selectableOrders'] = _.cloneDeep(question.questionOptions['answers']);
-    //   delete question.questionOptions['answers'];
-    // }
+    if (question.questionOptions['conceptMappings']) {
+      question.questionOptions['conceptMappings'] = this.parse(this.form.controls['questionOptions.conceptMappings'].value);
+    }
 
     if (this.addMode) {
       this.addQuestion(question, this.pageIndex, this.sectionIndex, this.questionIndex);
@@ -169,10 +162,9 @@ export class ElementEditorComponent implements OnInit {
   breadcrumbsSetup() {
     this.pageStr = this._schema.pages[this.pageIndex].label;
     this.sectionStr = this._schema.pages[this.pageIndex].sections[this.sectionIndex].label;
+    this.questionStr = '';
     if (this.editMode && this.questionIndex !== -1) {
       this.questionStr = this._schema.pages[this.pageIndex].sections[this.sectionIndex].questions[this.questionIndex].label;
-    } else {
-      this.questionStr = '';
     }
   }
 
@@ -180,23 +172,61 @@ export class ElementEditorComponent implements OnInit {
     return JSON.parse(str);
   }
 
+//   parseTextAreaQuestions(form: FormGroup, formValue: any) {
+//     const question = this.qcs.unflatten(formValue);
+//     for (const prop in formValue){
+//         const propModel = this.getProperty(prop); 
+//         if (propModel) {
+//           if (propModel.controlType === 'textarea') {
+//             question[propModel.key] = this.parse(form.controls[propModel.key].value);
+//           }
+//         } 
+//   }
+//   return question;
+// }
 
-  delete(i) {
-    this.form.removeControl(this.questions[i].key);
-    this.questions.splice(i, 1);
+  deleteProp(index: number) {
+    this.form.removeControl(this.questions[index].key);
+    this.questions.splice(index, 1);
   }
 
   setMode(form: FormGroup) {
-    if (this.form.get('label').value === '') {
-      console.log('addMode');
-      this.editMode = false;
-      this.addMode = true;
-    } else {
+    this.form.get('label').value === '' ? this.setAddMode() : this.setEditMode() ;
+  }
+
+  setAddMode() {
+    this.editMode = false;
+    this.addMode = true;
+  }
+
+  setEditMode() {
       this.editMode = true;
       this.addMode = false;
       this.id = this.form.get('id').value;
-      console.log('editMode');
-    }
+  }
+
+  setSetMembers(setMembers) {
+    this.setMembers = [];
+    setMembers.forEach((setMember) => {
+      let rendering = 'text';
+      if (setMember.answers.length > 0) {
+        rendering = 'select';
+      }
+      const question: Question = new Question();
+      question.label = setMember.label;
+      question.type = 'obs';
+      question.id = '',
+        question.questionOptions.rendering = rendering;
+
+
+      question.questionOptions['concept'] = setMember.concept;
+      if (!_.isEmpty(setMember.answers)) {
+        question.questionOptions['answers'] = setMember.answers;
+      }
+      this.form.controls['type'].setValue('obsGroup');
+      this.form.controls['questionOptions.rendering'].setValue('group');
+      this.setMembers.push(question);
+    });
   }
 
   checkId(id): boolean {
@@ -225,22 +255,21 @@ export class ElementEditorComponent implements OnInit {
     });
   }
 
+  setPropValue(propKey, value) {
+    this.form.controls[propKey].setValue(value);
+  }
 
   setAnswers(answers) {
+    const answersProp = this.getProperty('answers');
     this.answers = answers; // selectedAnswers
     if (answers.length > 0) {
-      if (this.form.contains('questionOptions.answers')) {
-        this.form.controls['questionOptions.answers'].setValue(JSON.stringify(answers, undefined, '\t'));
+      if (this.form.contains(answersProp.key)) {
+        this.setPropValue(answersProp.key, JSON.stringify(answers, undefined, '\t'));
       } else {
-        const field = this.qcs.toPropertyModelArray({
-          'questionOptions.answers': answers
-        });
-        this.form.addControl('questionOptions.answers', new FormControl(JSON.stringify(answers, undefined, '\t')));
-        this.questions.push(field[0]);
-      }
-    } else {
-      if (this.form.controls['questionOptions.answers']) {
-        this.form.removeControl('questionOptions.answers');
+        answersProp.value = JSON.stringify(answers, undefined, '\t');
+        this.addProperty(answersProp);
+      }} else {
+      if (this.form.controls[answersProp.key]) {
         this.removeQuestion('questionOptions.answers');
       } else {
         return;
@@ -253,8 +282,19 @@ export class ElementEditorComponent implements OnInit {
 
   }
 
-  addQuestion(question: any, pageIndex: number, sectionIndex: number, questionIndex ?: number) {
+  setMappings(mappings) {
+    const mappingsProp = this.getProperty('conceptMappings');
+    const props = this.conceptService.createMappingsValue(mappings);
+    if (!this.form.controls[mappingsProp.key]) {
+      mappingsProp.value = JSON.stringify(props, null, '\t');
+      this.addProperty(mappingsProp);
+    } else { this.form.controls[mappingsProp.key].setValue(JSON.stringify(props, null, '\t')); }
+    console.log(this.form.value);
+  }
 
+
+  addQuestion(question: any, pageIndex: number, sectionIndex: number, questionIndex ?: number) {
+    console.log(question, pageIndex, sectionIndex, questionIndex);
     if (questionIndex !== undefined) { // obsGroup question
       console.log('has parent!');
       if (this._rawSchema.pages[pageIndex].label) {
@@ -451,8 +491,7 @@ export class ElementEditorComponent implements OnInit {
     let i;
     this.questions.forEach((question, index) => {
       if (question['key'] === qn) { i = index; }});
-    this.questions.splice(i, 1);
-
+    this.deleteProp(i);
   }
 
   showDate($event) {

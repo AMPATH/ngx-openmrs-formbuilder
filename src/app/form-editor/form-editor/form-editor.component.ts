@@ -20,6 +20,8 @@ import { EncounterTypeService } from '../../Services/openmrs-api/encounter-type.
 import { ConceptService } from '../../Services/openmrs-api/concept.service';
 import { NotificationComponent } from '../snackbar/notification-toast';
 import * as _ from 'lodash';
+import { Question } from '../form-elements/Question';
+import { FormSchemaCompiler } from 'ng2-openmrs-formentry';
 
 
 
@@ -81,7 +83,8 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     private saveFormService: SaveFormService,
     private encounterTypeService: EncounterTypeService,
     private sessionStorageService: SessionStorageService,
-    private conceptService: ConceptService) {}
+    private conceptService: ConceptService,
+    private formSchemaCompiler: FormSchemaCompiler) {}
 
   closeElementEditor() {
     this.questions = undefined;
@@ -197,7 +200,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
       this.rawSelectedSchema = res;
       this.strRawSchema = JSON.stringify(this.rawSelectedSchema, null, '\t');
-
+      console.log(res);
     });
     // prevent from saving form metadata.
     // on navigator element clicked for editing
@@ -570,24 +573,16 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
   validateConcepts() {
     const concepts = this.fetchAllConcepts();
-    this.snackbar.openFromComponent(NotificationComponent, {
-      data: ' Validating Concepts...'
-    });
+    this.snackbar.openFromComponent(NotificationComponent, { data: ' Validating Concepts...'});
     this.conceptService.validateConcepts(concepts).subscribe((res: any[]) => {
       const undefinedConcepts = res.filter((x) => x !== undefined);
       if (undefinedConcepts.length > 0) {
         let undefined_concepts = '\n';
-        _.each(undefinedConcepts, (concept) => {
-          undefined_concepts = undefined_concepts + '\n' + concept;
-        });
-        this.dialogService.addDialog(AlertComponent, {
-          message: `The following concepts are invalid: ${concepts}`
-        });
-        this.snackbar.dismiss();
-      } else {
-        this.showSuccessToast('All Concept are valid');
-      }
-
+        _.each(undefinedConcepts, (concept) => { undefined_concepts = undefined_concepts + '\n' + concept; });
+        this.dialogService.addDialog(AlertComponent, { message: `The following concepts are invalid: ${concepts}`});
+        this.snackbar.dismiss(); } else {
+        this.showSuccessToast('All Concepts are valid');
+        }
     });
   }
 
@@ -613,7 +608,121 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     return concepts;
   }
 
+  addConceptMappingsToForm(_schema, pIndex?, sIndex?, qIndex?, pqIndex?, full?) {
+    let schema = _.cloneDeep(_schema);
+    let fullSchema = full ||  _.cloneDeep(this.rawSchema);
+    this.snackbar.openFromComponent(NotificationComponent, { data: ' Adding concept mappings...'});
+
+    if (schema.pages) {
+       _.forEach(schema.pages, (page, pageIndex: number) => {
+         return this.addConceptMappingsToForm(page, pageIndex, undefined, undefined, undefined, fullSchema);
+    }); } else if (schema.sections) {
+      _.forEach(schema.sections, (section, sectionIndex) => {
+        return this.addConceptMappingsToForm(section, pIndex, sectionIndex, undefined, undefined, fullSchema);
+      }); } else if (schema.questions && !schema.type) {
+       _.forEach(schema.questions, (question, index) => {
+         this.addConceptMappingsToForm(question, pIndex, sIndex, index, undefined, fullSchema); }); } else
+            if (schema.questions && schema.type) {
+      _.forEach(schema.questions, (question, pqindex) => {
+        this.addConceptMappingsToForm(question, pIndex, sIndex, qIndex, pqIndex, fullSchema); });
+
+      } else {
+      if (schema.questionOptions) {
+          if (schema.questionOptions.concept) {
+          const concept = schema.questionOptions.concept;
+          let conceptId;
+          this.conceptService.getConceptID(concept).flatMap((conceptData) => {
+            console.log(conceptData);
+            conceptId = conceptData;
+            return this.conceptService.searchConceptByUUID(concept);
+              }).subscribe((res) => {
+                const mappings = this.conceptService.createMappingsValue(res.mappings);
+              if (mappings) {
+                 if (pqIndex) {
+                 fullSchema.pages[pIndex].sections[sIndex].questions[pqIndex].questions[qIndex] =
+                 this.addMappingAndIDToQuestion(schema, mappings, conceptId);
+                } else {
+                  fullSchema.pages[pIndex].sections[sIndex].questions[qIndex] =
+                  this.addMappingAndIDToQuestion(schema, mappings, conceptId);
+                }
+                if (this.isLastQuestion(pIndex, sIndex, qIndex, pqIndex)) {
+                  this.showSuccessToast('Finished mapping concepts!');
+                  this.setFormEditorByRawSchema(fullSchema);
+              }
+              }
+              });
+            }
+        if (schema.questionOptions.answers) {
+           const answers = schema.questionOptions.answers;
+        answers.forEach((answer, answerIndex) => {
+          const concept = answer.concept;
+          let conceptData;
+          this.conceptService.searchConceptByUUID(concept).flatMap((r) => {
+            conceptData = r;
+            return this.conceptService.getConceptID(concept);
+          }).subscribe((res) => {
+            const mappings = this.conceptService.createMappingsValue(conceptData.mappings);
+            if (mappings) {
+              if (pqIndex) { fullSchema.pages[pIndex].sections[sIndex].questions[pqIndex].questions[qIndex].answers[answerIndex] =
+                this.addMappingAndIdToAnswer(answer, mappings, res[0].concept_id);
+               } else {
+                 fullSchema.pages[pIndex].sections[sIndex].questions[qIndex].answers =
+                 this.addMappingAndIdToAnswer(answer, mappings, res[0].concept_id);
+               }
+            }
+          });
+        });
+      }}
+      }
+    }
 
 
+  addMappingAndIDToQuestion(question: Question, mappings: any[], ID: any) {
+      question.questionOptions.conceptMappings = mappings;
+      question.questionOptions.conceptId = ID[0].concept_id;
+      return question;
+  }
 
-}
+  addMappingAndIdToAnswer(answer, mappings: any[], ID: string) {
+    answer.conceptMappings = mappings;
+    answer.conceptId = ID;
+    return answer;
+  }
+
+  setFormEditorByRawSchema(rawSchema) {
+    console.log(JSON.stringify(rawSchema));
+    this.fs.getReferencedFormsSchemasArray().subscribe((refForms) => {
+      this.rawSchema = rawSchema;
+      const uncompiledSchema = _.cloneDeep(rawSchema);
+      this.schema = this.formSchemaCompiler.compileFormSchema(uncompiledSchema, refForms);
+      this.ns.setRawSchema(this.rawSchema);
+    });
+  }
+  isLastQuestion(pIndex?, sIndex?, qIndex?, pqIndex?): boolean {
+    console.log(pIndex,sIndex,qIndex,pqIndex);
+    let answer = false;
+    if (pqIndex) {
+      if (pIndex === this.rawSchema.pages.length - 1) {
+        if (sIndex === this.rawSchema.pages[pIndex].sections.length - 1) {
+          if (qIndex === this.rawSchema.pages[pIndex].sections[sIndex].questions.length - 1 ) {
+            if (pqIndex === this.rawSchema.pages[pIndex].sections[sIndex].questions[qIndex].questions.length - 1) {
+              answer = true;
+            }
+          }
+        }
+      }
+     } else {
+        if (pIndex === this.rawSchema.pages.length - 1) {
+        if (sIndex === this.rawSchema.pages[pIndex].sections.length - 1) {
+          if (qIndex === this.rawSchema.pages[pIndex].sections[sIndex].questions.length - 1 ) {
+      answer = true;
+      }
+
+      return answer;
+  }
+
+        }
+      }
+    }
+  }
+

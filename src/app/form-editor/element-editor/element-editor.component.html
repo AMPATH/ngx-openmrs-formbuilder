@@ -54,7 +54,7 @@
                 <div *ngFor="let question of questions; let i=index;">
                     
                     <div class="pull-right" *ngIf="checkQuestion(question)">
-                        <a (click)="delete(i)" data-toggle="tooltip" title="Delete">
+                        <a (click)="deleteProp(i)" data-toggle="tooltip" title="Delete">
                             <i class="fa fa-times" style="font-size:16px;margin:5px;color:red;cursor:pointer"></i>
                         </a>
                     </div>

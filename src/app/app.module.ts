@@ -61,7 +61,8 @@ import { Str2Num } from './pipes/string_to_number.pipe';
 
   entryComponents: [
     SaveSnackbarComponent,
-    SnackbarComponent
+    SnackbarComponent,
+    NotificationComponent
   ],
   providers: [
     AuthGuardService,

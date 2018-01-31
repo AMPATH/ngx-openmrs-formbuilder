@@ -1,6 +1,7 @@
 import { Component, Input,OnInit,AfterViewChecked,ChangeDetectorRef } from '@angular/core';
 import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
 import{ FormGroup, FormBuilder, FormControl } from "@angular/forms"
+import { ConceptService } from '../../Services/openmrs-api/concept.service';
 export interface SetMembersModel {
   setMembers:any[];
 }
@@ -8,13 +9,14 @@ export interface SetMembersModel {
 interface Questions{
   label:string;
   concept:string;
-  answers:Answers[];
+  answers:Answer[];
 
 }
 
-interface Answers{
+interface Answer{
   label:string;
   concept:string;
+  conceptMappings:any[];
 }
 
 @Component({
@@ -28,7 +30,10 @@ export class SetMembersModalComponent extends DialogComponent<SetMembersModel, s
   setMembers:any[];
   questionsChecked:Questions[]=[];
 
-  constructor(dialogService: DialogService,private fb:FormBuilder,private cdRef:ChangeDetectorRef) {
+  constructor(dialogService: DialogService,
+              private fb:FormBuilder,
+              private cs: ConceptService,
+              private cdRef:ChangeDetectorRef) {
     super(dialogService);
   }
   
@@ -71,11 +76,12 @@ export class SetMembersModalComponent extends DialogComponent<SetMembersModel, s
 
 
   setAnswers(event,i,j){
-
+    let $ans = this.setMembers[i].answers[j];
     if(event.target.checked){
-      let answer:Answers={
-        label: this.setMembers[i].answers[j].display,
-        concept: this.setMembers[i].answers[j].uuid
+      let answer:Answer={
+        label: $ans.display,
+        concept: $ans.uuid,
+        conceptMappings: this.cs.createMappingsValue($ans.mappings)
       }
 
    
