@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormEntryModule} from 'ng2-openmrs-formentry';
 import { SharedModule } from '../../shared-module';
-//Services
+// Services
 import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
 import {NavigatorService} from '../../Services/navigator.service';
 import {QuestionControlService} from '../../Services/question-control.service';
@@ -17,7 +17,7 @@ import {ElementEditorService} from '../../Services/element-editor.service';
 import { FormSchemaCompiler } from '../../Services/schema-compiler.service';
 import { UpdateComponentService } from '../../Services/update-component.service';
 
-//Components
+// Components
 import { ReferenceFormsComponent } from '../reference-forms/reference-forms.component';
 import { SchemaEditorComponent } from '../schema-editor/schema-editor.component';
 import { ElementEditorComponent } from '../element-editor/element-editor.component';

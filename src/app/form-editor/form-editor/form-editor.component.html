@@ -9,7 +9,7 @@
 
       <!---Navigator-->
      
-          <app-navigator [_schema]="schema" [formSchema]="schema" [mode]="'edit'" (closeSidebar)="closeNavigator($event)"></app-navigator>
+          <app-navigator [_rawSchema]="rawSchema" [_schema]="schema" [formSchema]="schema" [mode]="'edit'" (closeSidebar)="closeNavigator($event)"></app-navigator>
 
       
 
@@ -55,6 +55,10 @@
                     <li>
                         <a (click)="validateConcepts()"><i class="fa fa-check-square-o"></i>
                           <span  style="font-size:14px;font-weight:500;"> Validate Concepts</span></a>
+                    </li>
+                    <li>
+                      <a (click)="addConceptMappingsToForm(rawSchema)"><i class="fa fa-plus-circle"></i>
+                        <span  style="font-size:14px;font-weight:500;"> Add Concept Mappings to Schema</span></a>
                     </li>
                   </ul>
                 </div>
@@ -120,8 +124,8 @@
         <!--Schema editor-->
         <md-tab label="Schema Editor">
           <md-card class="schema-editor">
-            <app-schema-editor [schema]="strSchema" [rawSchema]="strRawSchema"
-              [$formSchema]="schema"></app-schema-editor>
+            <app-schema-editor [schema]="schema" [rawSchema]="rawSchema"
+              [$formSchema]="schema" [strRawSchema]="strRawSchema" [strSchema]="strSchema"></app-schema-editor>
           </md-card>
 
         </md-tab>

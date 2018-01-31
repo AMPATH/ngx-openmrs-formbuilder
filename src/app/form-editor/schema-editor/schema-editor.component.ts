@@ -42,7 +42,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
 
    @Input()
    set schema(newSchema: string){
-      this._schema = newSchema;
+      this._schema = JSON.stringify(newSchema, null, '\t');;
       this.viewingUncompiled = true;
       this.editor.viewingCompiled = false;
       this.tooltip = 'View Compiled';
@@ -51,7 +51,26 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
 
    @Input()
    set rawSchema(schema){
-    // console.log(schema,"set")
+    // console.log('set');
+    // this.editor.setText("Updating...");
+    // setTimeout(() => {
+    //   this._rawSchema = JSON.stringify(schema, null, '\t');
+    //   this.editor.setText(this._rawSchema);
+    //   this.editor.getEditor().scrollToLine(0);
+    //   this.viewingUncompiled = true;
+    //   this.editor.viewingCompiled = false;
+    //   this.tooltip = 'View Compiled';
+    //   this.badge = 'Raw';
+    // }, 1500);
+   
+   }
+  @Input()
+   set selectedRawSchema(schema){
+   }
+
+
+   @Input() set strRawSchema(schema) {
+    
     this._rawSchema = schema;
     this.editor.setText(this._rawSchema);
     this.editor.getEditor().scrollToLine(0);
@@ -60,11 +79,11 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     this.tooltip = 'View Compiled';
     this.badge = 'Raw';
    }
-  @Input()
-   set selectedRawSchema(schema){
+
+   @Input() set strSchema(schema) {
+    this._schema = schema;
+    this.editor.getEditor().scrollToLine(0);
    }
-
-
    @Input()
    set selectedSchema(newSchema: any){
      this._selectedSchemaObj = newSchema;
@@ -105,11 +124,17 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
           this.editor.getEditor().setFontSize(16);
 
     this.ns.getRawSchema().subscribe(schema => {
-      // console.log(schema,"get")
-      this._rawSchema = JSON.stringify(schema, null, '\t');
-      this.editor.setText(this._rawSchema);
-      this.editor.getEditor().scrollToLine(0);
-      this.editor.setTheme('chrome');
+      console.log('set');
+      this.editor.setText("Updating...");
+      setTimeout(() => {
+        this._rawSchema = JSON.stringify(schema, null, '\t');
+        this.editor.setText(this._rawSchema);
+        this.editor.getEditor().scrollToLine(0);
+        this.viewingUncompiled = true;
+        this.editor.viewingCompiled = false;
+        this.tooltip = 'View Compiled';
+        this.badge = 'Raw';
+      }, 1000);
     });
 
     setTimeout(() => {

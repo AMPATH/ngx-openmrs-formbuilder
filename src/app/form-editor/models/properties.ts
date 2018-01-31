@@ -18,10 +18,15 @@ export class Properties {
     searchData: 'concept'
   });
 
-  private Answers: PropertyModel < any > = new PropertyModel({
+  private ConceptId: TextboxProperty = new TextboxProperty({
+    label: 'Concept ID',
+    parentPath: 'questionOptions.conceptId',
+    key: 'questionOptions.conceptId'
+  });
+  private Answers: TextAreaProperty = new TextAreaProperty({
     label: 'Answers',
     parentPath: 'questionOptions.answers',
-    controlType: '',
+    rows: 5,
     key: 'questionOptions.answers',
   });
 
@@ -155,6 +160,12 @@ export class Properties {
     placeholder: '[2,12,16,18...]',
   });
 
+  private conceptMappings: TextAreaProperty = new TextAreaProperty({
+    label: 'Concept Mappings',
+    parentPath: 'questionOptions.conceptMappings',
+    key: 'questionOptions.conceptMappings',
+    rows: 5,
+  });
 
   public allQuestionProperties: PropertyModel < any > [] = [
     this.ID,
@@ -171,7 +182,9 @@ export class Properties {
     this.Answers,
     this.OrderType,
     this.OrderSettingUuid,
-    this.selectableOrders
+    this.selectableOrders,
+    this.conceptMappings,
+    this.ConceptId
   ];
 
 
@@ -182,6 +195,8 @@ export class Properties {
         return this.ID;
       case 'concept':
         return this.Concept;
+      case 'conceptid':
+        return this.ConceptId;
       case 'default':
         return this.Default;
       case 'validators':
@@ -220,6 +235,8 @@ export class Properties {
         return this.OrderSettingUuid;
       case 'selectableorders':
         return this.selectableOrders;
+      case 'conceptmappings':
+        return this.conceptMappings;
       default:
         console.error(`${propertyName} does not exist in the property dictionary, please add it in property-model.ts`);
 

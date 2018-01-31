@@ -51,6 +51,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
   @Input() set referenceElement(refElement){this._refElement = refElement; } // element to be referenced if select mode
   @Input() set count(count){this._count = count; }// keeps count of recursive calls
   @Input() set _schema(schema: any){ this.schema = schema; }
+  @Input() set _rawSchema(schema: any){ this.rawSchema = schema; }
   @Input() set formSchema(fschema: any){ this._formSchema = _.clone(fschema); }
   @Input() set componentToHighlight(formName: string){
     this._componentToHighlight = formName;
@@ -119,7 +120,7 @@ export class NavigatorComponent implements OnInit, OnDestroy{
 
   // when element is clicked in navigator
   onClicked(selectedSchema, pageIndex ? : number, sectionIndex ? : number, questionIndex ? : number, parentQuestionIndex ? : number) {
-    if (this.selectMode) return;
+    if (this.selectMode) { return; }
     let schemaObj = {};
     schemaObj['selectedSchema'] = selectedSchema;
     schemaObj['pageIndex'] = pageIndex;
@@ -130,7 +131,8 @@ export class NavigatorComponent implements OnInit, OnDestroy{
     if (pageIndex != undefined && sectionIndex != undefined && questionIndex != undefined && parentQuestionIndex != undefined) {
       if (this.rawSchema.pages[pageIndex].label) {
         if (this.rawSchema.pages[pageIndex].sections[sectionIndex].label) {
-          this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex].sections[sectionIndex].questions[questionIndex].questions[parentQuestionIndex]);
+          this.ns.setClickedElementRawSchema
+          (this.rawSchema.pages[pageIndex].sections[sectionIndex].questions[questionIndex].questions[parentQuestionIndex]);
           return;
         } else {
           this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex].sections[sectionIndex]);
@@ -164,10 +166,8 @@ export class NavigatorComponent implements OnInit, OnDestroy{
       }
 
     } else if (selectedSchema['name']) {
-      console.log('tere', this.rawSchema);
       this.ns.setClickedElementRawSchema(this.rawSchema);
     } else {
-      console.log(JSON.stringify(this.rawSchema.pages[pageIndex]), pageIndex);
       this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex]);
       return;
     }

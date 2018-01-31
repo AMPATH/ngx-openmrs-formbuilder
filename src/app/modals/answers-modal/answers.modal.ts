@@ -13,7 +13,7 @@ export interface AnswersModel {
 })
 export class AnswersComponent extends DialogComponent<AnswersModel, string> implements AnswersModel,OnInit,AfterViewChecked {
   answers:any;
-  checkboxes={};
+  checkboxes=[];
   checked:boolean=false;
 
   constructor(dialogService: DialogService,private fb:FormBuilder,private cdRef:ChangeDetectorRef) {
@@ -36,11 +36,11 @@ export class AnswersComponent extends DialogComponent<AnswersModel, string> impl
 
   setCheckboxes(event,i){
     if(event.target.checked){
-    this.checkboxes['answer'+i]=event.target.getAttribute('value');
+    this.checkboxes.push(event.target.getAttribute('value'));
   }
   
   else{
-    delete this.checkboxes['answer'+i];
+    this.checkboxes.splice(i,1);
   }
     
    
@@ -51,14 +51,14 @@ export class AnswersComponent extends DialogComponent<AnswersModel, string> impl
     if(event.target.checked){
          this.answers.forEach((answer,index) => {
             this.checked = event.target.checked;
-            this.checkboxes['answer'+index]=answer.display+","+answer.uuid;
+            this.checkboxes.push(answer.uuid);
     });
     }
    else{
        this.answers.forEach((answer,index) => {
             this.checked = false;
     });
-      this.checkboxes = {};
+      this.checkboxes = [];
   }
     
   }

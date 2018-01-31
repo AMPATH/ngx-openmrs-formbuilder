@@ -86,9 +86,10 @@
             <thead>
               <tr>
                 <th width="40%">Name</th>
-                <th width="20%">Version</th>
-                <th width="20%">Published</th>
-                <th width="20%">Actions</th>
+                <th width="10%">Version</th>
+                <th width="10%">Published</th>
+                <th width="10%">Retired</th>
+                <th width="30%">Actions</th>
 
               </tr>
             </thead>
@@ -99,11 +100,13 @@
                   <b>{{form.name}}</b>
                 </td>
                 <td>{{form.version}}</td>
-                <td *ngIf="form.published">
-                  <label class="label label-success">Yes</label>
+                <td>
+                  <label *ngIf="form.published" class="label label-success">Yes</label>
+                  <label  *ngIf="!form.published" class="label label-danger">No</label>
                 </td>
-                <td *ngIf="!form.published">
-                  <label class="label label-danger">No</label>
+                <td>
+                  <label *ngIf="form.retired" class="label label-danger">Yes</label>
+                  <label  *ngIf="!form.retired" class="label label-success">No</label>
                 </td>
                 <td *ngIf="form.resources.length==0 || !form.resources[0]?.valueReference">
                   <a style="cursor: pointer;">
