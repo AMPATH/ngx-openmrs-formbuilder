@@ -21,7 +21,7 @@ import 'brace/ext/searchbox';
 
 
 export class SchemaEditorComponent implements OnInit, OnDestroy {
-
+  public parsedRawSchema: any;
    @ViewChild('editor') editor;
    private _schema: string;
    private _selectedSchemaObj: any;
@@ -72,6 +72,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
    @Input() set strRawSchema(schema) {
     
     this._rawSchema = schema;
+    this.parsedRawSchema = JSON.parse(schema);
     this.editor.setText(this._rawSchema);
     this.editor.getEditor().scrollToLine(0);
     this.viewingUncompiled = true;
@@ -117,7 +118,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     this.fs.getReferencedFormsSchemasArray().subscribe(refFormArray => this.referencedForms = refFormArray);
 
     this.editor.getEditor().setOptions({
-            printMargin: false
+            printMargin: false, 
         });
           this.editor.setTheme('chrome');
           this.editor.setMode('json');
@@ -127,6 +128,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
       console.log('set');
       this.editor.setText("Updating...");
       setTimeout(() => {
+        this.parsedRawSchema = schema;
         this._rawSchema = JSON.stringify(schema, null, '\t');
         this.editor.setText(this._rawSchema);
         this.editor.getEditor().scrollToLine(0);
@@ -214,6 +216,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     this.editor.getEditor().scrollToLine(line[0]);
     this._schema = JSON.stringify(this._formSchema, null, '\t');
     this.ns.getRawSchema().subscribe(rawSchema => {
+      this.parsedRawSchema = rawSchema;
       this._rawSchema = JSON.stringify(rawSchema, null, '\t');
       this.editor.getEditor().setOptions({readOnly: true});
     });
@@ -241,6 +244,10 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     }
 
     return fooLineNumbers;
+}
+
+ onTextChanged(text) {
+   this.parsedRawSchema = JSON.parse(text);
 }
 
 }

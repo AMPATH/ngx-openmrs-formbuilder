@@ -10,13 +10,13 @@
 </div>
 
 <div style="clear:both;">
-  <ace-editor #editor style="height:70vh; width:100%; overflow:auto;"></ace-editor><br/>
+  <ace-editor #editor (textChanged)="onTextChanged($event)" style="height:70vh; width:100%; overflow:auto;"></ace-editor><br/>
   <div class="row">
     <div class="text-center container" *ngIf="viewingUncompiled">
         <div class="alert alert-danger" *ngIf="errorMessage">
             <small><b>{{errorMessage}}</b></small>
           </div>
-      <button (click)="render()" *ngIf="buildSchemaMode&&_rawSchema.name" class="btn btn-primary" data-toggle="tooltip" title="Update and render the schema">Render</button>
+      <button (click)="render()" *ngIf="buildSchemaMode&&parsedRawSchema.name" class="btn btn-primary" data-toggle="tooltip" title="Update and render the schema">Render</button>
       <button (click)="render()" *ngIf="correctSchemaMode" class="btn btn-success" data-toggle="tooltip" title="Fix errors">Compile</button>
     </div>
   </div>
