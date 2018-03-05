@@ -197,10 +197,11 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
 
     this.subscription = this.ns.getClickedElementRawSchema().subscribe(res => {
-
-      this.rawSelectedSchema = res;
-      this.strRawSchema = JSON.stringify(this.rawSelectedSchema, null, '\t');
-      console.log(res);
+      if (res) {
+        this.rawSelectedSchema = res;
+        this.strRawSchema = JSON.stringify(this.rawSelectedSchema, null, '\t');
+        console.log(res);
+      }
     });
     // prevent from saving form metadata.
     // on navigator element clicked for editing
