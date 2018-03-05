@@ -70,7 +70,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
 
 
    @Input() set strRawSchema(schema) {
-    
+    console.log(schema);
     this._rawSchema = schema;
     this.parsedRawSchema = JSON.parse(schema);
     this.editor.setText(this._rawSchema);
@@ -246,8 +246,10 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     return fooLineNumbers;
 }
 
- onTextChanged(text) {
-   this.parsedRawSchema = JSON.parse(text);
+ onTextChanged(text:string) {
+   if(!_.isEmpty(text) && !_.includes(text, 'Updating...')) {
+    this.parsedRawSchema = JSON.parse(text);
+   }
 }
 
 }
