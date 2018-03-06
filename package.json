@@ -33,7 +33,7 @@
     "moment": "2.18.0",
     "ng2-ace-editor": "^0.2.3",
     "ng2-bootstrap-modal": "^1.0.1",
-    "ng2-openmrs-formentry": "https://github.com/AMPATH/ng2-opemmrs-formentry.git#v2.6.0-beta2",
+    "ng2-openmrs-formentry": "git+https://github.com/tankip/ng2-formentry.git",
     "ngx-bootstrap": "^1.9.3",
     "ngx-clipboard": "^8.0.4",
     "ngx-cookie": "^1.0.0",

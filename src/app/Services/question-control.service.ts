@@ -174,8 +174,16 @@ export class QuestionControlService {
           {
             key: 'problem',
             value: 'problem'
+          },
+          {
+            key: 'radio',
+            value: 'radio'
+          },
+          {
+            key: 'checkbox',
+            value: 'checkbox'
           }
-        ]
+        ];
 
         this.propertyModels.push(this.propertyFactory.createProperty('select', options));
 
