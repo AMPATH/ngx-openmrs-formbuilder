@@ -91,7 +91,6 @@ export class FormRendererComponent implements OnInit {
           if (this.form.valid) {
               this.form.showErrors = false;
               const payload: any = this.encAdapter.generateFormPayload(this.form);
-              payload.provider = null;
               this.saveEncounter(payload);
           } else {
               this.form.showErrors = true;
