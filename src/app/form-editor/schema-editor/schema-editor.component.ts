@@ -62,7 +62,6 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     //   this.tooltip = 'View Compiled';
     //   this.badge = 'Raw';
     // }, 1500);
-   
    }
   @Input()
    set selectedRawSchema(schema){
@@ -70,7 +69,6 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
 
 
    @Input() set strRawSchema(schema) {
-    console.log(schema);
     this._rawSchema = schema;
     this.parsedRawSchema = JSON.parse(schema);
     this.editor.setText(this._rawSchema);
@@ -118,15 +116,15 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     this.fs.getReferencedFormsSchemasArray().subscribe(refFormArray => this.referencedForms = refFormArray);
 
     this.editor.getEditor().setOptions({
-            printMargin: false, 
+            printMargin: false,
         });
           this.editor.setTheme('chrome');
           this.editor.setMode('json');
           this.editor.getEditor().setFontSize(16);
 
     this.ns.getRawSchema().subscribe(schema => {
-      console.log('set');
-      this.editor.setText("Updating...");
+      if (!_.isEmpty(schema) && !this.correctSchemaMode) {
+        this.editor.setText('Updating...');
       setTimeout(() => {
         this.parsedRawSchema = schema;
         this._rawSchema = JSON.stringify(schema, null, '\t');
@@ -137,7 +135,9 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
         this.tooltip = 'View Compiled';
         this.badge = 'Raw';
       }, 1000);
-    });
+    }
+
+      });
 
     setTimeout(() => {
       const editedSchema = JSON.parse(this.editor.getEditor().getValue());
@@ -162,12 +162,36 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     if (!_.isEmpty(schema)) {
       this.errorMessage = undefined;
       if (this.correctSchemaMode) {
-
        this.correctedSchemaErrors.emit(true);
       }
       this.ns.setSchema(compiledSchema);
       this.ns.setRawSchema(JSON.parse(rawSchema));
     }
+  }
+
+
+  reCompile() {
+    const editedSchema = this.editor.getEditor().getValue();
+    const rawSchema = _.cloneDeep(editedSchema);
+    const referencedForms = JSON.parse(rawSchema).referencedForms;
+    this.fs.fetchReferencedFormSchemas(referencedForms).then(refForms => {
+      let compiledSchema;
+      try {
+        compiledSchema = this.fsc.compileFormSchema(JSON.parse(editedSchema), refForms);
+      } catch (e) {
+    compiledSchema = e;
+    this.errorMessage = 'Invalid JSON schema. ' + e;
+  }
+  const schema = JSON.parse(JSON.stringify(compiledSchema));
+    if (!_.isEmpty(schema)) {
+      this.errorMessage = undefined;
+      if (this.correctSchemaMode) {
+       this.correctedSchemaErrors.emit(true);
+      }
+      this.ns.setSchema(compiledSchema);
+      this.ns.setRawSchema(JSON.parse(rawSchema));
+    }
+    });
   }
 
 
