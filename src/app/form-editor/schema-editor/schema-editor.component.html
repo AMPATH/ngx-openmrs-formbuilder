@@ -17,7 +17,7 @@
             <small><b>{{errorMessage}}</b></small>
           </div>
       <button (click)="render()" *ngIf="buildSchemaMode&&parsedRawSchema.name!==undefined" class="btn btn-primary" data-toggle="tooltip" title="Update and render the schema">Render</button>
-      <button (click)="render()" *ngIf="correctSchemaMode" class="btn btn-success" data-toggle="tooltip" title="Fix errors">Compile</button>
+      <button (click)="reCompile()" *ngIf="correctSchemaMode" class="btn btn-success" data-toggle="tooltip" title="Fix errors">Compile</button>
     </div>
   </div>
 </div>

@@ -187,7 +187,7 @@
       This schema contains errors and cannot be properly compiled. Please try to correct the errors in the schema and re-compile it.
     </span>
     <div class="well">
-      <app-schema-editor [rawSchema]="strRawSchema" [correctionMode]='true' [_errorMessage]="errorMessage"
+      <app-schema-editor [strRawSchema]="strRawSchema" [correctionMode]='true' [_errorMessage]="errorMessage"
       (correctedSchemaErrors)="loadFormBuilder($event)"></app-schema-editor>
   </div>
   </div>

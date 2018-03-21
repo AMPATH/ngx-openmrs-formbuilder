@@ -30,7 +30,7 @@
     "file-saver": "^1.3.3",
     "hammerjs": "^2.0.8",
     "mkdirp": "^0.5.1",
-    "moment": "2.18.0",
+    "moment": "2.19.3",
     "ng2-ace-editor": "^0.2.3",
     "ng2-bootstrap-modal": "^1.0.1",
     "ng2-openmrs-formentry": "git+https://github.com/tankip/ng2-formentry.git",
