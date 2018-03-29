@@ -19,6 +19,7 @@ export class SaveFormService {
  private formName:Subject<string> = new Subject();
  private newVersion:Subject<string> = new Subject();
  private newDescription:Subject<string> = new Subject();
+ private newEncounterType:Subject<string> = new Subject();
  constructor(private http:Http, private sessionStorageService:SessionStorageService){
      
     let credentials = sessionStorageService.getItem(Constants.CREDENTIALS_KEY);
@@ -27,10 +28,8 @@ export class SaveFormService {
 
  }
 
- 
 
-
-  deleteClobData(valueReference:string){
+  deleteClobData(valueReference: string) {
     return this.http.delete(`${this.baseUrl}/ws/rest/v1/clobdata/${valueReference}`,{headers:this.headers}).toPromise();
   }
 
@@ -39,9 +38,9 @@ export class SaveFormService {
   }
 
 
-  //returns the new value reference
+  // returns the new value reference
   uploadSchema(schema){
-    
+
     let schemaBlob = new Blob([JSON.stringify(schema)], {type:'application/json'});
     let body = new FormData();
     body.append("file", schemaBlob);
@@ -77,6 +76,7 @@ export class SaveFormService {
         this.newValueReference.next(valueReference);
     }
   
+    
     getNewValueReference(){
         return this.newValueReference.asObservable();
        }
@@ -89,6 +89,9 @@ export class SaveFormService {
         return this.newResourceUUID.asObservable();
     }
 
+    getNewEncounterType() {
+        return this.newEncounterType.asObservable();
+    }
     setNewFormUUID(newUUID){
         this.newUUID.next(newUUID);
     }
@@ -122,7 +125,6 @@ export class SaveFormService {
         return this.newDescription.asObservable();
     }
 
-
     ///////////////////////////////////////////////////////////////////////
 
     publish(uuid){
@@ -151,6 +153,12 @@ export class SaveFormService {
         let body = { description : description };
         this.setNewDescription(description);
         return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`,body,{headers:this.headers}).map(res => res.json());
+    }
+
+    updateEncounterType(encounterType: any, formUuid: string){
+        const body = {encounterType : encounterType.uuid };
+        this.newEncounterType.next(encounterType.display);
+        return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${formUuid}`, body, {headers: this.headers}).map(res => res.json());
     }
 
 }
