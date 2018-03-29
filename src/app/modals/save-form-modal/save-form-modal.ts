@@ -52,7 +52,7 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
     _.includes(this.name, 'component') ? this.formType = Constants.COMPONENT : this.formType = Constants.POC;
 
       this.encounterTypes.forEach(encounterType => {
-        if (encounterType.display == this.encounterType){
+        if (encounterType.display === this.encounterType) {
           this.encounterTypeUUID = encounterType.uuid;
         }
       });
@@ -68,22 +68,31 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
   save(formValue) {
 
 
-  
-    if (this.operation == 'overwrite'){
-      if (this.name != formValue.name)
+    if (this.operation === 'overwrite') {
+      if (this.name !== formValue.name){
         this.updateName(formValue.name, this.uuid).subscribe((res) => {
           this.updateForm();
-        });
-
-      else if (this.version != formValue.version){
+        }); }
+       if (this.version !== formValue.version){
           this.saveFormService.updateVersion(formValue.version, this.uuid).subscribe((res) => {
             this.updateForm();
           });
       }
-
-      else{
+       if ( this.encounterType !== formValue.encounter) {
+        const encounterType = _.find(this.encounterTypes, (encounterType) => {
+          return encounterType.display === formValue.encounter;
+        });
+        if (encounterType) {
+          this.saveFormService.updateEncounterType(encounterType, this.uuid)
+          .subscribe((res) => {
+            this.updateForm();
+          });
+      } else {
         this.updateForm();
       }
+    } else {
+        this.updateForm();
+       }
     }
 
     if (this.operation == 'new'){
@@ -91,7 +100,7 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
       this.createForm(formValue);
     }
 
-    
+
     this.result = true;
     super.close();
   }

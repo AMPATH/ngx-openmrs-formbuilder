@@ -241,6 +241,8 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     // getting new form metadata after saving remotely
     this.subscription = this.saveFormService.getNewResourceUUID().subscribe(uuid => this.formMetadata.resourceUUID = uuid);
     this.subscription = this.saveFormService.getNewValueReference().subscribe(value => this.formMetadata.valueReference = value);
+    this.subscription = this.saveFormService.getNewEncounterType().subscribe(encounterType =>
+      this.formMetadata.encounterType = encounterType);
     this.subscription = this.saveFormService.getNewFormUUID().subscribe(uuid => {
       this.previousVersionUUID = this.formMetadata.uuid;
       this.formMetadata.uuid = uuid;
