@@ -7,10 +7,10 @@ import {ReferenceForm} from '../../form-editor/reference-forms/reference-form-mo
 import {Observable, Subscription} from 'rxjs';
 
 // Observable class extensions
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
+
+
+
+
 export interface ReferenceFormModalModel {
   title:string;
   refElement:string;

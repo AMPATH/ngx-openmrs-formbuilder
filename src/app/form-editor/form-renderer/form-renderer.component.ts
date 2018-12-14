@@ -1,8 +1,12 @@
+
+import {from as observableFrom,  Observable, Subject } from 'rxjs';
+
+import {mergeMap} from 'rxjs/operators';
 import { Component, OnInit, Input } from '@angular/core';
-import { Form, FormFactory, QuestionFactory, EncounterAdapter, DataSources, FormErrorsService } from 'ng2-openmrs-formentry';
+// tslint:disable-next-line:max-line-length
+import { Form, FormFactory, QuestionFactory, EncounterAdapter, DataSources, FormErrorsService } from 'ngx-openmrs-formentry/dist/ngx-formentry';
 import { NavigatorService } from '../../Services/navigator.service';
 import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
-import { Observable, Subject } from 'rxjs';
 import { MockDataSourceService } from './mock-data-source.service';
 import { EncounterService } from '../../Services/openmrs-api/encounters.service';
 import { DialogService } from 'ng2-bootstrap-modal';
@@ -69,14 +73,14 @@ export class FormRendererComponent implements OnInit {
   submitForm($event) {
           let formuuid = '';
           let encounterType = '';
-          this.route.params.flatMap((routeParams) => {
+          this.route.params.pipe(mergeMap((routeParams) => {
             formuuid = routeParams['uuid'];
-            return Observable.fromPromise(this.fetchAllForms.fetchFormMetadata(formuuid, true));
-          })
-          .flatMap((form) => {
+            return observableFrom(this.fetchAllForms.fetchFormMetadata(formuuid, true));
+          }),
+          mergeMap((form) => {
             encounterType = form.encounterType.uuid;
             return this.showDialog(EncounterModalDetailsComponent);
-          })
+          }),)
           .subscribe((results: any) => {
             if (results) {
                     $event.preventDefault();
@@ -106,14 +110,14 @@ export class FormRendererComponent implements OnInit {
 
   saveEncounter(payload: any) {
     let encounterUuid;
-    this.encounterService.saveEncounter(payload).flatMap((result) => {
+    this.encounterService.saveEncounter(payload).pipe(mergeMap((result) => {
       encounterUuid = result.uuid;
       return this.showDialog(ConfirmComponent,
         {title: 'Encounter Saved Successfully',
         message: 'Would you like to view the obs generated?',
         buttonText: 'Yes',
         cancelButtonText: 'No, Thanks.'});
-    })
+    }))
     .subscribe((confirm) => {
       if (confirm) {
         this.encounterService.getEncounterByUuid(encounterUuid).subscribe((res) => {

@@ -1,3 +1,5 @@
+
+import {catchError} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { SessionStorageService } from './session-storage.service';
@@ -26,11 +28,11 @@ export class SessionService {
     
     return this.http.get(this.url, {
       headers: headers
-    })
-    .catch((error) =>{
+    }).pipe(
+    catchError((error) =>{
       console.log(error);
       return error;
-    });
+    }));
   }
 
 

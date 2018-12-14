@@ -2,12 +2,12 @@ import { Component, Input } from '@angular/core';
 import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { FetchFormDetailService } from '../Services/openmrs-api/fetch-form-detail.service';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 // Observable class extensions
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
+
+
+
+
 export interface NavigatorModalModel {
   title: string;
   referenceElement: string;

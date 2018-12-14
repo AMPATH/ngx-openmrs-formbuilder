@@ -1,3 +1,5 @@
+
+import {mergeMap} from 'rxjs/operators';
 import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewChecked, AfterContentInit } from '@angular/core';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
@@ -5,8 +7,9 @@ import { FetchAllFormsService } from '../../Services/openmrs-api/fetch-all-forms
 import { NavigatorService } from '../../Services/navigator.service';
 import { QuestionIdService } from '../../Services/question-id.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription'; import { Observable } from 'rxjs/Observable';
-import { MdSnackBar } from '@angular/material'; import { DialogService } from 'ng2-bootstrap-modal';
+import { Subscription ,  Observable } from 'rxjs';
+import { MatSnackBar } from '@angular/material';
+import { DialogService } from 'ng2-bootstrap-modal';
 import { Form } from '../form-elements/Form';
 import { LocalStorageService } from '../../Services/storage/local-storage.service';
 import { SessionStorageService } from '../../Services/storage/session-storage.service';
@@ -21,7 +24,7 @@ import { ConceptService } from '../../Services/openmrs-api/concept.service';
 import { NotificationComponent } from '../snackbar/notification-toast';
 import * as _ from 'lodash';
 import { Question } from '../form-elements/Question';
-import { FormSchemaCompiler } from 'ng2-openmrs-formentry';
+import { FormSchemaCompiler } from 'ngx-openmrs-formentry/dist/ngx-formentry';
 
 
 
@@ -72,7 +75,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
   constructor(private fs: FetchFormDetailService,
     private ns: NavigatorService,
-    public snackbar: MdSnackBar,
+    public snackbar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
     public dialogService: DialogService,
@@ -634,11 +637,11 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
           if (schema.questionOptions.concept) {
           const concept = schema.questionOptions.concept;
           let conceptId;
-          this.conceptService.getConceptID(concept).flatMap((conceptData) => {
+          this.conceptService.getConceptID(concept).pipe(mergeMap((conceptData) => {
             console.log(conceptData);
             conceptId = conceptData;
             return this.conceptService.searchConceptByUUID(concept);
-              }).subscribe((res) => {
+              })).subscribe((res) => {
                 const mappings = this.conceptService.createMappingsValue(res.mappings);
               if (mappings) {
                  if (pqIndex) {
@@ -660,10 +663,10 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
         answers.forEach((answer, answerIndex) => {
           const concept = answer.concept;
           let conceptData;
-          this.conceptService.searchConceptByUUID(concept).flatMap((r) => {
+          this.conceptService.searchConceptByUUID(concept).pipe(mergeMap((r) => {
             conceptData = r;
             return this.conceptService.getConceptID(concept);
-          }).subscribe((res) => {
+          })).subscribe((res) => {
             const mappings = this.conceptService.createMappingsValue(conceptData.mappings);
             if (mappings) {
               if (pqIndex) { fullSchema.pages[pIndex].sections[sIndex].questions[pqIndex].questions[qIndex].answers[answerIndex] =
@@ -702,7 +705,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     });
   }
   isLastQuestion(pIndex?, sIndex?, qIndex?, pqIndex?): boolean {
-    console.log(pIndex,sIndex,qIndex,pqIndex);
+    console.log(pIndex, sIndex, qIndex, pqIndex);
     let answer = false;
     if (pqIndex) {
       if (pIndex === this.rawSchema.pages.length - 1) {

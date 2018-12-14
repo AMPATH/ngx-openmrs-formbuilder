@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ApplicationRef } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
@@ -73,4 +73,9 @@ import { Str2Num } from './pipes/string_to_number.pipe';
 
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(applicationRef: ApplicationRef) {
+    // for ng2-bootstrap-modal in angualar 5
+    Object.defineProperty(applicationRef, '_rootComponents', {get: () => applicationRef['components']});
+  }
+}

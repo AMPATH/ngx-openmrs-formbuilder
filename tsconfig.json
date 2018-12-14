@@ -1,6 +1,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@angular/*": ["node_modules/@angular/*"]
+    },
+    "importHelpers": true,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -8,11 +12,18 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "types": ["node","jasmine"],
-    "typeRoots": ["./node_modules/@types" ],
+    "types": [
+      "node",
+      "jasmine"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
     "lib": [
       "es2016",
       "dom"
-    ]
+    ],
+    "module": "es2015",
+    "baseUrl": "./"
   }
 }

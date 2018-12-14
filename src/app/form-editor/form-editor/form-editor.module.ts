@@ -1,7 +1,7 @@
 // Modules
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormEntryModule} from 'ng2-openmrs-formentry';
+import {FormEntryModule} from 'ngx-openmrs-formentry/dist/ngx-formentry';
 import { SharedModule } from '../../shared-module';
 // Services
 import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';

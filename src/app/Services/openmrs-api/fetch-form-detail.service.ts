@@ -1,3 +1,5 @@
+
+import {catchError, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -7,9 +9,9 @@ import {SessionStorageService} from '../storage/session-storage.service';
 import {Constants} from '../constants';
 import {Router} from '@angular/router';
 import { AuthenticationService } from '../authentication/authentication.service';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/toPromise';
+
+
+
 
 @Injectable()
 export class FetchFormDetailService {
@@ -36,12 +38,12 @@ export class FetchFormDetailService {
 
 
   public fetchFormMetadata(uuid: string, isComponent: boolean) {
-   return this.http.get(`${this.baseUrl}/ws/rest/v1/form/${uuid}?v=full`, {headers: this.headers})
-      .map(metadata => {return metadata.json(); })
-      .catch(error => {
+   return this.http.get(`${this.baseUrl}/ws/rest/v1/form/${uuid}?v=full`, {headers: this.headers}).pipe(
+      map(metadata => {return metadata.json(); }),
+      catchError(error => {
         console.log('Error:' + error)
         return error;
-      })
+      }),)
       .toPromise()
   }
 
@@ -49,8 +51,8 @@ export class FetchFormDetailService {
     let arr;
     return this.http.get(`${this.baseUrl}/ws/rest/v1/clobdata/${valueReference}`, {
         headers: this.headers
-      })
-      .map((res) => {
+      }).pipe(
+      map((res) => {
 
 
           if (!isReferenceForm) {
@@ -75,7 +77,7 @@ export class FetchFormDetailService {
 
         }
 
-      )
+      ))
       .toPromise();
 
   }

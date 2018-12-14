@@ -1,9 +1,12 @@
+
+import {forkJoin as observableForkJoin, of as observableOf, Observable} from 'rxjs';
+
+import {catchError, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Headers, Http} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
 import { SessionStorageService } from '../storage/session-storage.service';
 import {Constants} from '../constants';
-import 'rxjs/add/operator/map';
+
 import * as _ from 'lodash';
 interface ConceptUuid {
     uuid: string;
@@ -28,9 +31,9 @@ export class ConceptService {
         // searching with concept display
         return this.http
         .get(`${this.baseUrl}/ws/rest/v1/concept?q=${conceptID}&v=full`,
-        {headers: this.headers})
-        .map(data => this.data = data.json())
-        .catch((error) => {alert(error.message); return Observable.of(error.json()); });
+        {headers: this.headers}).pipe(
+        map(data => this.data = data.json()),
+        catchError((error) => {alert(error.message); return observableOf(error.json()); }),);
  }
 
 
@@ -38,22 +41,22 @@ export class ConceptService {
 
     return this.http
     .get(`${this.baseUrl}/ws/rest/v1/concept/${conceptUUID}?v=full`,
-    {headers: this.headers}).map(
-        data => this.data = data.json())
-    .catch((error: Response) => { console.error(error.status); return Observable.of(error.json()); });
+    {headers: this.headers}).pipe(map(
+        data => this.data = data.json()),
+    catchError((error: Response) => { console.error(error.status); return observableOf(error.json()); }),);
  }
 
  public validateConcepts(conceptUuids: any) {
         const observablesArray = [];
      _.each((conceptUuids), (conceptUuid) => {
-        observablesArray.push(this.searchConceptByUUID(conceptUuid).map((concept) => {
+        observablesArray.push(this.searchConceptByUUID(conceptUuid).pipe(map((concept) => {
             if (concept.error) { return conceptUuid; }
-        })
-        .catch((error) => {
+        }),
+        catchError((error) => {
             return error;
-        }));
+        }),));
      });
-     return Observable.forkJoin(observablesArray);
+     return observableForkJoin(observablesArray);
  }
 
 
@@ -70,17 +73,17 @@ export class ConceptService {
 
   public getConceptID(conceptUuid: string): Observable<any> {
     return this.http
-    .get(`https://ngx.ampath.or.ke/concept-server/api/${conceptUuid}`).map(
-        data => this.data = data.json())
-    .catch((error: Response) => { console.error(error.status); return Observable.of(error.json()); });
+    .get(`https://ngx.ampath.or.ke/concept-server/api/${conceptUuid}`).pipe(map(
+        data => this.data = data.json()),
+    catchError((error: Response) => { console.error(error.status); return observableOf(error.json()); }),);
   }
 
   public getAllConcepts(){
     return this.http
     .get(`${this.baseUrl}/ws/rest/v1/concept?v=full`,
-    {headers: this.headers}).map(
-        data => this.data = data.json())
-    .catch((error: Response) => { console.error(error.status); return Observable.of(error.json()); });
+    {headers: this.headers}).pipe(map(
+        data => this.data = data.json()),
+    catchError((error: Response) => { console.error(error.status); return observableOf(error.json()); }),);
   }
 
 }

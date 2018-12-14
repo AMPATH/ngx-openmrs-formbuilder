@@ -2,19 +2,23 @@ import {
   NgModule
 } from '@angular/core';
 import {
-  MdSidenavModule,
-  MdButtonModule,
-  MdIconModule,
-  MdToolbarModule,
-  MdCardModule,
-  MdSnackBarModule,
-  MdMenuModule,
-  MdTabsModule,
-  MdTooltipModule,
-  MdProgressBarModule
+  MatSidenavModule,
+  MatButtonModule,
+  MatIconModule,
+  MatToolbarModule,
+  MatCardModule,
+  MatSnackBarModule,
+  MatMenuModule,
+  MatTabsModule,
+  MatTooltipModule,
+  MatProgressBarModule
 } from '@angular/material';
 
 @NgModule({
-  exports: [MdSidenavModule, MdTabsModule, MdIconModule,  MdButtonModule, MdToolbarModule, MdCardModule, MdSnackBarModule,MdMenuModule,MdTooltipModule,MdProgressBarModule]
+  exports: [MatSidenavModule,
+    MatTabsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatToolbarModule, MatCardModule, MatSnackBarModule, MatMenuModule, MatTooltipModule, MatProgressBarModule]
 })
 export class AppMaterialModule {}

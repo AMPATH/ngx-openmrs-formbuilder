@@ -1,9 +1,11 @@
+
+import {catchError, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Constants } from '../constants';
 import { Http, Headers } from '@angular/http';
 import { SessionStorageService } from '../storage/session-storage.service';
 import { AuthenticationService } from '../authentication/authentication.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 @Injectable()
 export class PatientResourceService {
 
@@ -21,15 +23,15 @@ export class PatientResourceService {
 
     searchPatientByName(name: string) {
         const url = `${this.rest_url}?q=${name}`;
-        return this.http.get(url, {headers: this.headers}).map((res) => res.json())
-                        .catch((error) => { console.error(error); return error; });
+        return this.http.get(url, {headers: this.headers}).pipe(map((res) => res.json()),
+                        catchError((error) => { console.error(error); return error; }),);
     }
 
     public searchPatientByUuid(uuid: string): Observable<any> {
       const url = `${this.rest_url}/${uuid}`;
-      return this.http.get(url, {headers: this.headers}).map((res) => {
+      return this.http.get(url, {headers: this.headers}).pipe(map((res) => {
         return res.json();
-      })
-      .catch((error) => {console.log(error); return error; });
+      }),
+      catchError((error) => {console.log(error); return error; }),);
     }
 }
