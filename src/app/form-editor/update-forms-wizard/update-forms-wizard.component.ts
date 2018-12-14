@@ -6,10 +6,10 @@ import { FormSchemaCompiler } from '../../Services/schema-compiler.service';
 import { SaveFormService } from '../../Services/openmrs-api/save-form.service';
 import { Node, LinkedList } from '../../collections/linked-list';
 import { FormListService } from '../../Services/form-list.service';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-update-forms-wizard',
@@ -46,7 +46,7 @@ export class UpdateFormsWizardComponent implements OnInit {
   constructor(
     private updateComponentService: UpdateComponentService,
     private saveFormService: SaveFormService,
-    private snackbar: MdSnackBar,
+    private snackbar: MatSnackBar,
     private fetchFormDetailService: FetchFormDetailService,
     private ns: NavigatorService, compiler: FormSchemaCompiler,
     private formListService: FormListService,

@@ -1,7 +1,8 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable ,  Subject } from 'rxjs';
 import { SessionStorageService } from '../storage/session-storage.service';
 import {Constants} from '../constants';
 import { Router } from '@angular/router';
@@ -24,6 +25,6 @@ export class EncounterTypeService {
 
    getEncounterTypes() {
 
-    return this.http.get(`${this.baseUrl}/ws/rest/v1/encountertype`, { headers: this.headers}).map((res) => res.json());
+    return this.http.get(`${this.baseUrl}/ws/rest/v1/encountertype`, { headers: this.headers}).pipe(map((res) => res.json()));
    }
   }

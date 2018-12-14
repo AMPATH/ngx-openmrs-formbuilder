@@ -13,7 +13,7 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { FormSchemaCompiler } from '../../Services/schema-compiler.service';
 import { NavigatorModalComponent } from '../../modals/navigator.modal';
 import * as _ from 'lodash';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-navigator',
   templateUrl: './navigator.component.html',

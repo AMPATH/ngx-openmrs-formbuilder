@@ -1,9 +1,9 @@
 <div *ngIf="loading" class="text-center progressbar">
-  <md-progress-bar mode="indeterminate"></md-progress-bar>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
 
  
-  <md-toolbar color="primary" *ngIf="!loading">
+  <mat-toolbar color="primary" *ngIf="!loading">
       <p>{{currentSchemaMetadata.name}}</p>
       
       <span class="fill-space"></span>
@@ -29,7 +29,7 @@
         </button> 
         </span>
     </div>
-  </md-toolbar>
+  </mat-toolbar>
 <div class="container">
   <div class="alert alert-danger" *ngIf="errorMessage">
     <span><i class="fa fa-exclamation-circle"></i> {{errorMessage}}</span>

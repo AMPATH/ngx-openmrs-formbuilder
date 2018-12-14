@@ -1,3 +1,5 @@
+
+import {catchError} from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FetchAllFormsService } from '../Services/openmrs-api/fetch-all-forms.service';
 import { FetchFormDetailService } from '../Services/openmrs-api/fetch-form-detail.service'
@@ -7,7 +9,7 @@ import { SessionStorageService } from '../Services/storage/session-storage.servi
 import { Router } from '@angular/router';
 import { Constants } from '../Services/constants';
 import { FormListService } from '../Services/form-list.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { saveAs } from 'file-saver';
 
@@ -114,7 +116,7 @@ export class ViewFormsComponent implements OnInit {
 
   logout() {
     this.loggingOut = true;
-      this.auth.logOut().catch(e => this.router.navigate(['/login']))
+      this.auth.logOut().pipe(catchError(e => this.router.navigate(['/login'])))
       .subscribe(res => {
         this.router.navigate(['/login']);
       });

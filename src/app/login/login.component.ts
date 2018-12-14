@@ -1,3 +1,5 @@
+
+import {catchError} from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../Services/authentication/authentication.service';
 import { Router } from '@angular/router';
@@ -25,12 +27,12 @@ export class LoginComponent implements OnInit {
     this.auth.setCredentialsSubject(credentials.username, credentials.password);
 
     this.message = 'Logging in...';
-    this.auth.authenticate(credentials.username, credentials.password, credentials.baseUrl).catch((error) => {
+    this.auth.authenticate(credentials.username, credentials.password, credentials.baseUrl).pipe(catchError((error) => {
       if (error.message.indexOf('You provided an invalid object where a stream was expected.') !== -1) {
       this.message = 'Kindly check your internet connection and make sure CORS is turned on then refresh the page.';
       }
       return error;
-    })
+    }))
     .subscribe((res) => {
       this.setMessage();
       if (this.auth.isLoggedIn) {

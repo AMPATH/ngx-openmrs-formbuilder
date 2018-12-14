@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FetchAllFormsService } from '../../Services/openmrs-api/fetch-all-forms.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
 import { LocalStorageService } from '../../Services/storage/local-storage.service';
 import { UpdateComponentService } from '../../Services/update-component.service';

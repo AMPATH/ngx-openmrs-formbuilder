@@ -1,9 +1,11 @@
+
+import {catchError, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Constants } from '../constants';
 import { Http, Headers } from '@angular/http';
 import { SessionStorageService } from '../storage/session-storage.service';
 import { AuthenticationService } from '../authentication/authentication.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 @Injectable()
 export class LocationResourceService {
 
@@ -20,7 +22,7 @@ export class LocationResourceService {
       }
 
     getAllLocations() {
-        return this.http.get(this.rest_url, {headers: this.headers}).map((res) => res.json())
-                        .catch((error) => { console.error(error); return error; });
+        return this.http.get(this.rest_url, {headers: this.headers}).pipe(map((res) => res.json()),
+                        catchError((error) => { console.error(error); return error; }),);
     }
 }

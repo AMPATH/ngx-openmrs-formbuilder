@@ -5,7 +5,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { ConceptsModalComponent } from '../../modals/concept.modal';
 import { SetMembersModalComponent } from '../../modals/set-members-modal/set-members-modal.component';
 import { ElementEditorService } from '../../Services/element-editor.service';
-import * as _ from 'lodash'; import { Subscription } from 'rxjs/Subscription';
+import * as _ from 'lodash'; import { Subscription } from 'rxjs';
 
 
 interface Answer {

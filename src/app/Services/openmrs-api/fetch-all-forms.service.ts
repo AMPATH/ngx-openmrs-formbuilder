@@ -1,3 +1,5 @@
+
+import {catchError, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Router } from '@angular/router';
@@ -36,16 +38,16 @@ constructor(private http: Http,
 
    fetchAllPOCForms() {
     const v = 'custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference))';
-    return this.http.get(`${this.baseUrl}/ws/rest/v1/form?q=POC&v=${v}`, {headers: this.headers}).map(
-      data => this.forms = data.json())
-      .catch((e) => {
+    return this.http.get(`${this.baseUrl}/ws/rest/v1/form?q=POC&v=${v}`, {headers: this.headers}).pipe(map(
+      data => this.forms = data.json()),
+      catchError((e) => {
         if (e.status === 0) {
           alert('Please check that you have internet connection and CORS is turned on then refresh.');
         } else if ( e.status === 403) {
           this.router.navigate(['/login']);
         }
         return e;
-      });
+      }),);
 
    }
 
@@ -53,16 +55,16 @@ constructor(private http: Http,
   fetchAllComponentForms() {
     const v = 'custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference)';
     return this.http
-    .get(`${this.baseUrl}/ws/rest/v1/form?q=Component&v=${v})`, {headers: this.headers}).map(
-      data => this.forms = data.json())
-      .catch((e) => {
+    .get(`${this.baseUrl}/ws/rest/v1/form?q=Component&v=${v})`, {headers: this.headers}).pipe(map(
+      data => this.forms = data.json()),
+      catchError((e) => {
         if (e.status === 0) {
           alert('Please check that you have internet connection and CORS is turned on then refresh.');
         } else if ( e.status === 403) {
           this.router.navigate(['/login']);
         }
         return e;
-      });
+      }),);
   }
 
   setFormType(form: string) {

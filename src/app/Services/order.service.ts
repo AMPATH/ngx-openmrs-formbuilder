@@ -1,10 +1,13 @@
+
+import {of as observableOf, Observable} from 'rxjs';
+
+import {map, catchError} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Headers, Http} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
 import { SessionStorageService } from './storage/session-storage.service';
 import {Constants} from '../Services/constants';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/of';
+
+
 import * as _ from 'lodash';
 interface ConceptUuid {
     uuid: string;
@@ -29,17 +32,17 @@ export class OrderService {
 // searching with concept display
         return this.http
         .get(`${this.baseUrl}/ws/rest/v1/order?q=${orderID}`,
-        {headers: this.headers}).map(data => this.data = data.json())
-        .catch((error) => {alert(error.message); return Observable.of(error.json()); });
+        {headers: this.headers}).pipe(map(data => this.data = data.json()),
+        catchError((error) => {alert(error.message); return observableOf(error.json()); }),);
  }
 
 
  public searchOrderByUUID(orderUUID: string): Observable<any> {
     return this.http
     .get(`${this.baseUrl}/ws/rest/v1/order/${orderUUID}?`,
-    {headers: this.headers}).map(
-        data => this.data = data.json())
-    .catch((error: Response) => { console.error(error.status); return Observable.of(error.json()); });
+    {headers: this.headers}).pipe(map(
+        data => this.data = data.json()),
+    catchError((error: Response) => { console.error(error.status); return observableOf(error.json()); }),);
  }
 
 }

@@ -3,7 +3,7 @@ import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import * as _ from 'lodash';
 import { SaveFormService } from '../../Services/openmrs-api/save-form.service';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { SaveSnackbarComponent } from '../../form-editor/snackbar/saved-snackbar';
 import { Constants } from '../../Services/constants';
 export interface SaveFormModel {
@@ -44,7 +44,7 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
     formType: string;
 
   constructor(dialogService: DialogService, private saveFormService: SaveFormService,
-    private fb: FormBuilder, private snackbar: MdSnackBar) {
+    private fb: FormBuilder, private snackbar: MatSnackBar) {
     super(dialogService);
   }
 

@@ -1,11 +1,11 @@
 
-<md-toolbar color="primary">
+<mat-toolbar color="primary">
     <span class="menu" style="font-size:18px; font-family:'Roboto'; color:white;">Form Builder</span>
     <span style="margin-left: 15px;">
-        <button md-button (click)="createNew()" style="color:white; font-size:14px;"><i class="fa fa-plus-circle"></i> Create New</button>
+        <button mat-button (click)="createNew()" style="color:white; font-size:14px;"><i class="fa fa-plus-circle"></i> Create New</button>
     </span>
     <!-- <span style="margin-left: 15px;">
-        <button md-button (click)="download()" style="color:white; font-size:14px;"><i class="fa fa-download"></i> Download</button>
+        <button mat-button (click)="download()" style="color:white; font-size:14px;"><i class="fa fa-download"></i> Download</button>
     </span> -->
     <span class="fill"></span>
     <span class="dropdown">
@@ -19,12 +19,12 @@
           <li><a href="#"></a></li>
         </ul>
       </span>
-  </md-toolbar>
+  </mat-toolbar>
 
 <div class="container-f">
   <div class="restoreMsg">
     <div *ngIf="draftAvailable">
-      <md-card>
+      <mat-card>
         <div style="display: inline-block">
           <small style="font-size:14px;">
             <i class="fa fa-exclamation-circle fa-lg"></i>
@@ -35,7 +35,7 @@
           <button class="btn btn-sm btn-primary" (click)="restore()">Restore</button>
           <button class="btn btn-sm btn-danger" (click)="discard()">Discard</button>
         </div>
-      </md-card>
+      </mat-card>
     </div>
 
 

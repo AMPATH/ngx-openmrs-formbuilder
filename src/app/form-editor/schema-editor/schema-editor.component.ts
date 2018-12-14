@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import {AceEditorComponent} from 'ng2-ace-editor';
 import {NavigatorService} from '../../Services/navigator.service';
-import {MdSnackBar} from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { FormSchemaCompiler } from '../../Services/schema-compiler.service';
 import {FetchFormDetailService} from '../../Services/openmrs-api/fetch-form-detail.service';
 import * as _ from 'lodash';
@@ -108,7 +108,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
    }
 
   constructor(private ns: NavigatorService,
-              public snackbar: MdSnackBar,
+              public snackbar: MatSnackBar,
               private fsc: FormSchemaCompiler,
               private fs: FetchFormDetailService) {}
 

@@ -4,8 +4,8 @@
 </div>
 <div *ngIf="schema">
 
-  <md-sidenav-container>
-    <md-sidenav #sidenav mode="over" class="app-sidenav">
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="over" class="app-sidenav">
 
       <!---Navigator-->
      
@@ -13,9 +13,9 @@
 
       
 
-    </md-sidenav>
-    <md-toolbar color="primary">
-      <button md-icon-button (click)="sidenav.toggle()"><md-icon class="md-24" >menu</md-icon></button>
+    </mat-sidenav>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="sidenav.toggle()"><mat-icon class="md-24" >menu</mat-icon></button>
       <span style="font-size:18px; font-family:'Roboto'">Form Builder</span>
       <span class="menu">
       <div class="btn-group show-on-hover">
@@ -95,48 +95,48 @@
       <button *ngIf="!formMetadata.published" type="button" class="btn btn-info" (click)="publish()"> Publish</button>
       <button *ngIf="formMetadata.published" type="button" class="btn btn-danger" (click)="unpublish()"> Unpublish</button>
       
-    </md-toolbar>
+    </mat-toolbar>
     <div id="audit-info" class="container collapse audit-content">
-      <md-card>
+      <mat-card>
           <audit-info [_formMetadata]="formMetadata"></audit-info>
-      </md-card>
+      </mat-card>
     </div>
 
 
     <div class="app-content" *ngIf="schema">
 
   <div *ngIf="viewMode=='singleView'">
-      <md-tab-group md-stretch-tabs class="schema-editor">
+      <mat-tab-group mat-stretch-tabs class="schema-editor">
 
         <!--Element Editor-->
-        <md-tab *ngIf="questions" label="Element Editor">
-          <ng-template md-tab-label>
+        <mat-tab *ngIf="questions" label="Element Editor">
+          <ng-template mat-tab-label>
             Question Editor
             <a (click)="closeElementEditor()" data-toggle="tooltip" title="close tab" class="pull-right" style="margin-right:25px; padding-top:5px; cursor:pointer;"><i class="material-icons" >highlight_off</i></a>
           </ng-template>
 
-          <md-card class="element-editor">
+          <mat-card class="element-editor">
             <app-element-editor [schema]="schema" [pageIndex]="page" [sectionIndex]="section" [questionIndex]="question" [parentQuestionIndex]="parentQuestionIndex"
               [_questions]="questions" [rawSchema]="rawSchema" (closeComponent)="closeElementEditor()" [questionSchema]="questionSchema"></app-element-editor>
-          </md-card>
-        </md-tab>
+          </mat-card>
+        </mat-tab>
 
         <!--Schema editor-->
-        <md-tab label="Schema Editor">
-          <md-card class="schema-editor">
+        <mat-tab label="Schema Editor">
+          <mat-card class="schema-editor">
             <app-schema-editor [schema]="schema" [rawSchema]="rawSchema"
               [$formSchema]="schema" [strRawSchema]="strRawSchema" [strSchema]="strSchema"></app-schema-editor>
-          </md-card>
+          </mat-card>
 
-        </md-tab>
+        </mat-tab>
 
         <!--Form-renderer-->
-        <md-tab label="Form Viewer">
-          <md-card class="schema-editor">
+        <mat-tab label="Form Viewer">
+          <mat-card class="schema-editor">
             <app-form-renderer [schema]="schema"></app-form-renderer>
-          </md-card>
-        </md-tab>
-      </md-tab-group>
+          </mat-card>
+        </mat-tab>
+      </mat-tab-group>
     </div>
 
     <div *ngIf="viewMode=='multiView'">
@@ -150,39 +150,39 @@
              
            
   
-            <md-card class="element-editor">
+            <mat-card class="element-editor">
               <app-element-editor [schema]="schema" [pageIndex]="page" [sectionIndex]="section" [questionIndex]="question" [parentQuestionIndex]="parentQuestionIndex"
                 [_questions]="questions" [rawSchema]="rawSchema" (closeComponent)="closeElementEditor()"></app-element-editor>
-            </md-card>
+            </mat-card>
           </div>
   
           <!--Schema editor-->
           <div [class.col-md-4]="questions" [class.col-md-6]="!questions">
             <h4 class="text-center">Schema Editor</h4>
-            <md-card class="schema-editor">
+            <mat-card class="schema-editor">
               <app-schema-editor [schema]="strSchema" [rawSchema]="strRawSchema"
                 [$formSchema]="schema"></app-schema-editor>
-            </md-card>
+            </mat-card>
           </div>
   
           <!--Form-renderer-->
           <div [class.col-md-4]="questions" [class.col-md-6]="!questions">
               <h4 class="text-center">Form Viewer</h4>
-            <md-card class="schema-editor">
+            <mat-card class="schema-editor">
               <app-form-renderer [schema]="schema"></app-form-renderer>
-            </md-card>
+            </mat-card>
           </div>
       </div>
     </div>
 
    
     </div>
-  </md-sidenav-container>
+  </mat-sidenav-container>
 </div>
 <div *ngIf="viewMode == 'badSchema'&& !schema">
-    <md-toolbar class="errorToolbar">
+    <mat-toolbar class="errorToolbar">
         <span style="font-size:18px; font-family:'Roboto'; color:white;">Form Builder</span>
-    </md-toolbar>
+    </mat-toolbar>
     <span class="alert alert-warning">
       This schema contains errors and cannot be properly compiled. Please try to correct the errors in the schema and re-compile it.
     </span>
