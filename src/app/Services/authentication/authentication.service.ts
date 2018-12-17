@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
 import { SessionService } from '../storage/session.service';
 import { SessionStorageService } from '../storage/session-storage.service';
 import { Constants } from '../constants';
@@ -9,7 +8,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 export class AuthenticationService {
 
   isLoggedIn = false;
-  redirectUrl ='';
+  redirectUrl = '';
   baseUrl: BehaviorSubject<string> = new BehaviorSubject('');
   credentials: BehaviorSubject<string> = new BehaviorSubject('');
 
@@ -35,17 +34,14 @@ export class AuthenticationService {
 
     const request = this.sessionService.getSession(credentials, baseUrl);
 
-    request.subscribe((response: Response) => {
-        const data = response.json();
+    request.subscribe((data: any) => {
         if (data.authenticated) {
           this.isLoggedIn = true;
-          this.setCredentials(username, password,baseUrl);
+          this.setCredentials(username, password, baseUrl);
           // store logged in user details in session storage
-          let user = data.user;
+          const user = data.user;
           this.storeUser(user);
-        }
-
-        else{
+        } else {
           this.isLoggedIn = false;
         }
       });
@@ -55,11 +51,11 @@ export class AuthenticationService {
 
   public logOut() {
     this.isLoggedIn = false;
-    let response = this.sessionService.deleteSession();
+    const response = this.sessionService.deleteSession();
 
     response
       .subscribe(
-      (res: Response) => {
+      (res) => {
 
         this.clearSessionCache();
       },
@@ -75,10 +71,10 @@ export class AuthenticationService {
     this.clearCredentials();
     this.clearUserDetails();
   }
- 
-  private setCredentials(username: string, password: string, baseUrl:string) {
 
-    let base64 = btoa(username + ':' + password);
+  private setCredentials(username: string, password: string, baseUrl: string) {
+
+    const base64 = btoa(username + ':' + password);
     this.sessionStorageService.setItem(Constants.CREDENTIALS_KEY, base64);
     this.sessionStorageService.setItem(Constants.BASE_URL, baseUrl);
   }
@@ -96,24 +92,24 @@ export class AuthenticationService {
     this.sessionStorageService.remove(Constants.USER_KEY);
   }
 
-  setBaseUrl(baseUrl:string){
+  setBaseUrl(baseUrl: string) {
     this.baseUrl.next(baseUrl);
   }
 
-  getBaseUrl(){
+  getBaseUrl() {
     return this.baseUrl.asObservable();
   }
 
-  setCredentialsSubject(username:string,password:string){
-    let base64 = btoa(username + ':' + password);
+  setCredentialsSubject(username: string, password: string) {
+    const base64 = btoa(username + ':' + password);
     this.credentials.next(base64);
   }
 
-  setCredentialsSubjectEncrypted(base64:string){
+  setCredentialsSubjectEncrypted(base64: string) {
     this.credentials.next(base64);
   }
 
-  getCredentialsSubject(){
+  getCredentialsSubject() {
     return this.credentials.asObservable();
   }
 }

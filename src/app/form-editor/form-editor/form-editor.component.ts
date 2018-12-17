@@ -74,12 +74,12 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
   previousVersionUUID: string;
 
   constructor(private fs: FetchFormDetailService,
-    private ns: NavigatorService,
+    private navigatorService: NavigatorService,
     public snackbar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
     public dialogService: DialogService,
-    private ls: LocalStorageService,
+    private localStorageService: LocalStorageService,
     private cdRef: ChangeDetectorRef,
     private fectAllFormsService: FetchAllFormsService,
     private formListService: FormListService,
@@ -118,7 +118,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     this.fectAllFormsService.getFormType().subscribe((res) => {
       if (res !== '') {
         this.formType = res;
-        this.ls.setItem('formType', this.formType);
+        this.localStorageService.setItem('formType', this.formType);
       }
     });
 
@@ -136,6 +136,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
     this.fs.setReferencedFormsSchemasArray([]);
     this.subscription = this.fs.loaded().subscribe((isLoaded) => {
+      console.log(isLoaded);
       if (isLoaded) {
         this.loading = false;
       }
@@ -147,15 +148,16 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
       if (uuid === 'new') {
         this.createNewForm();
       } else if (uuid === 'restoredForm') {
-        if (this.fs.restoreReferencedForms(this.ls.getObject(Constants.RAW_SCHEMA))) {
-          this.fs.restoreReferencedForms(this.ls.getObject(Constants.RAW_SCHEMA)).then((res) => {
-                this.setFormEditor(this.ls.getObject(Constants.SCHEMA),
-                  this.ls.getObject(Constants.RAW_SCHEMA), this.ls.getObject(Constants.FORM_METADATA));
+        if (this.fs.restoreReferencedForms(this.localStorageService.getObject(Constants.RAW_SCHEMA))) {
+          this.fs.restoreReferencedForms(this.localStorageService.getObject(Constants.RAW_SCHEMA)).then((res) => {
+                this.setFormEditor(this.localStorageService.getObject(Constants.SCHEMA),
+                  this.localStorageService.getObject(Constants.RAW_SCHEMA), this.localStorageService.getObject(Constants.FORM_METADATA));
           });
         } else {
-          this.setFormEditor(this.ls.getObject(Constants.SCHEMA), this.ls.getObject(Constants.RAW_SCHEMA));
+          this.setFormEditor(this.localStorageService.getObject(Constants.SCHEMA),
+          this.localStorageService.getObject(Constants.RAW_SCHEMA));
         }
-        this.formType = this.ls.getItem('formType');
+        this.formType = this.localStorageService.getItem('formType');
       } else {
 
         this.formMetadata.uuid = uuid;
@@ -176,7 +178,8 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
             }
 
         _.includes(this.formMetadata.name, Constants.COMPONENT) ?
-         this.ls.setItem(Constants.FORM_TYPE, Constants.COMPONENT) : this.ls.setItem(Constants.FORM_TYPE, Constants.POC);
+         this.localStorageService.setItem(Constants.FORM_TYPE, Constants.COMPONENT) :
+         this.localStorageService.setItem(Constants.FORM_TYPE, Constants.POC);
 
           })
           .catch(e => {
@@ -188,18 +191,18 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
     });
 
-    this.subscription = this.ns.getRawSchema().subscribe(res => {
+    this.subscription = this.navigatorService.getRawSchema().subscribe(res => {
       this.rawSchema = res;
       this.strRawSchema = JSON.stringify(this.rawSchema, null, '\t');
-      if (this.ls.getObject(Constants.SCHEMA)) {
-         if (this.rawSchema.name === this.ls.getObject(Constants.SCHEMA).name) {
+      if (this.localStorageService.getObject(Constants.SCHEMA)) {
+         if (this.rawSchema.name === this.localStorageService.getObject(Constants.SCHEMA).name) {
             this.saveRawDraft(this.rawSchema); // only save when compiled version exists in memory.
           }
         }
     });
 
 
-    this.subscription = this.ns.getClickedElementRawSchema().subscribe(res => {
+    this.subscription = this.navigatorService.getClickedElementRawSchema().subscribe(res => {
       if (res) {
         this.rawSelectedSchema = res;
         this.strRawSchema = JSON.stringify(this.rawSelectedSchema, null, '\t');
@@ -208,7 +211,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     });
     // prevent from saving form metadata.
     // on navigator element clicked for editing
-    this.subscription = this.ns.getClickedElementSchema().subscribe(
+    this.subscription = this.navigatorService.getClickedElementSchema().subscribe(
       res => {
         this.selectedSchema = res;
         this.strSchema = JSON.stringify(this.selectedSchema.selectedSchema, null, '\t');
@@ -216,7 +219,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     );
 
     // on element added/deleted/modified
-    this.subscription = this.ns.getSchema().subscribe(
+    this.subscription = this.navigatorService.getSchema().subscribe(
       res => {
 
         this.schema = res;
@@ -229,7 +232,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
     );
 
-    this.subscription = this.ns.getNewQuestion().subscribe(
+    this.subscription = this.navigatorService.getNewQuestion().subscribe(
       res => {
         this.questions = res['propModelArray'];
         this.page = res['pageIndex'];
@@ -295,7 +298,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
   createNewForm() {
     this.loading = false;
-    this.ls.clear(); // clear local storage
+    this.localStorageService.clear(); // clear local storage
     const schema = new Form({
       'name': '',
       'processor': 'EncounterFormProcessor',
@@ -382,7 +385,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     this.schema = schema;
     this.strSchema = JSON.stringify(schema, null, '\t');
     this.rawSchema = rawSchema;
-    this.ns.setRawSchema(this.rawSchema);
+    this.navigatorService.setRawSchema(this.rawSchema);
     this.strRawSchema = JSON.stringify(this.rawSchema, null, '\t');
     if (formMetadata) { this.formMetadata = formMetadata; } // if form is being restored from local storage, retrieve metadata.
   }
@@ -488,21 +491,21 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
   saveDraft(schema: any) {
 
-    this.ls.setObject(Constants.SCHEMA, schema);
-    this.ls.setObject(Constants.TIME_STAMP, Date.now());
+    this.localStorageService.setObject(Constants.SCHEMA, schema);
+    this.localStorageService.setObject(Constants.TIME_STAMP, Date.now());
 
 
   }
 
   saveRawDraft(rawSchema: any) {
 
-    this.ls.setObject(Constants.RAW_SCHEMA, rawSchema);
+    this.localStorageService.setObject(Constants.RAW_SCHEMA, rawSchema);
 
 
   }
 
   saveFormMetadata(formMetadata) {
-    this.ls.setObject(Constants.FORM_METADATA, formMetadata);
+    this.localStorageService.setObject(Constants.FORM_METADATA, formMetadata);
   }
 
   publish(form, index) {
@@ -701,7 +704,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
       this.rawSchema = rawSchema;
       const uncompiledSchema = _.cloneDeep(rawSchema);
       this.schema = this.formSchemaCompiler.compileFormSchema(uncompiledSchema, refForms);
-      this.ns.setRawSchema(this.rawSchema);
+      this.navigatorService.setRawSchema(this.rawSchema);
     });
   }
   isLastQuestion(pIndex?, sIndex?, qIndex?, pqIndex?): boolean {

@@ -775,17 +775,15 @@ export class NavigatorComponent implements OnInit, OnDestroy{
   showSpinner() {
     try {
       if (!_.isEmpty(this._formSchema.pages)) {
-        let lastPageIndex: number = this._formSchema.pages.length - 1;
+        let lastPageIndex = this._formSchema.pages.length - 1;
 
         if (!_.isEmpty(this._formSchema.pages[lastPageIndex].sections)) {
-          let lastSectionIndex: number = this._formSchema.pages[lastPageIndex].sections.indexOf(this._formSchema.pages[lastPageIndex].sections[this._formSchema.pages[lastPageIndex].sections.length - 1]);
+          let lastSectionIndex = this._formSchema.pages[lastPageIndex].sections.length - 1;
 
           if (this._formSchema.pages[lastPageIndex].sections[lastSectionIndex]) {
             if (this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions) {
-              let lastQuestionIndex: number = this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.indexOf(this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.length - 1]);
-              if (this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions[lastQuestionIndex] == this.schema) {
-                this.fs.setLoaded(true);
-              }
+              let lastQuestionIndex = this._formSchema.pages[lastPageIndex].sections[lastSectionIndex].questions.length - 1;
+              this.fs.setLoaded(true);
             }
           } else {
             this.fs.setLoaded(true);
