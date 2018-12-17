@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ApplicationRef } from '@angular/core';
-import { HttpModule } from '@angular/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -25,6 +24,8 @@ import { BuildVersionFooterComponent } from './build-version-footer/build-versio
 import { SaveSnackbarComponent } from './form-editor/snackbar/saved-snackbar';
 import { FormBuilderComponent } from './app-entry-point/form-builder.component';
 import { Str2Num } from './pipes/string_to_number.pipe';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormBuilderHttpInteceptor } from './Services/http-interceptor.service';
 
 
 
@@ -47,7 +48,7 @@ import { Str2Num } from './pipes/string_to_number.pipe';
 
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     BootstrapModalModule,
     NgxPaginationModule,
@@ -68,7 +69,12 @@ import { Str2Num } from './pipes/string_to_number.pipe';
     AuthGuardService,
     EncounterTypeService,
     FormListService,
-    SaveFormService
+    SaveFormService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: FormBuilderHttpInteceptor,
+      multi: true
+    }
   ],
 
   bootstrap: [AppComponent]

@@ -1,28 +1,23 @@
 
-import {catchError, map} from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Constants } from '../constants';
-import { Http, Headers } from '@angular/http';
 import { SessionStorageService } from '../storage/session-storage.service';
 import { AuthenticationService } from '../authentication/authentication.service';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class LocationResourceService {
 
-    private credentials: any;
     private baseUrl: string;
-    private headers: Headers = new Headers();
     private rest_endpoint = '/ws/rest/v1/location';
     private rest_url;
-    constructor(private http: Http, private auth: AuthenticationService,
+    constructor(private http: HttpClient, private auth: AuthenticationService,
         private sessionStorageService: SessionStorageService) {
-        this.credentials = sessionStorageService.getItem(Constants.CREDENTIALS_KEY);
-        auth.getBaseUrl().subscribe((baseUrl) => {this.baseUrl = baseUrl; this.rest_url = this.baseUrl + this.rest_endpoint;});
-        this.headers.append('Authorization', 'Basic ' + this.credentials);
+        auth.getBaseUrl().subscribe((baseUrl) => {this.baseUrl = baseUrl; this.rest_url = this.baseUrl + this.rest_endpoint;
+        });
       }
 
     getAllLocations() {
-        return this.http.get(this.rest_url, {headers: this.headers}).pipe(map((res) => res.json()),
-                        catchError((error) => { console.error(error); return error; }),);
+        return this.http.get(this.rest_url).pipe(
+                        catchError((error) => { console.error(error); return error; }));
     }
 }

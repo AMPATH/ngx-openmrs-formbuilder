@@ -1,2 +1,6 @@
-.app{ height: 100%; }
-.footer{ margin:10px 10px 0px 0px;}
+.app{ 
+    min-height: calc(100vh - 70px);
+}
+.footer{ 
+    height: 50px;
+}
