@@ -46,7 +46,9 @@ export class SaveFormService {
     const body = new FormData();
     body.append('file', schemaBlob);
     return this.http.post(`${this.baseUrl}/ws/rest/v1/clobdata`,
-    body, {headers: this.headers}).pipe(map(res => JSON.parse(JSON.stringify(res))));
+    body, {headers: this.headers,   responseType: 'text'
+    });
+
   }
 
   // returns the new resource uuid
@@ -56,8 +58,8 @@ export class SaveFormService {
         dataType: 'AmpathJsonSchema',
         valueReference: valueReference
     };
-    return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${formUUID}/resource`, body, {headers: this.headers})
-    .pipe(map(res => JSON.parse(JSON.stringify(res))));
+    return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${formUUID}/resource`,   body, {headers: this.headers,   responseType: 'text'
+});
   }
 
 

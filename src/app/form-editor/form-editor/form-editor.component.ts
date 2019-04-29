@@ -136,7 +136,6 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
     this.fs.setReferencedFormsSchemasArray([]);
     this.subscription = this.fs.loaded().subscribe((isLoaded) => {
-      console.log(isLoaded);
       if (isLoaded) {
         this.loading = false;
       }
@@ -286,7 +285,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
         console.error(error);
         this.loading = false;
         this.viewMode = 'badSchema';
-        this.errorMessage = error;
+        this.errorMessage = error.message;
         this.fs.fetchForm(value, true).then((schema) => {
           this.strRawSchema = JSON.stringify(schema, null, '\t');
         });
@@ -618,8 +617,8 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
   }
 
   addConceptMappingsToForm(_schema, pIndex?, sIndex?, qIndex?, pqIndex?, full?) {
-    let schema = _.cloneDeep(_schema);
-    let fullSchema = full ||  _.cloneDeep(this.rawSchema);
+    const schema = _.cloneDeep(_schema);
+    const fullSchema = full ||  _.cloneDeep(this.rawSchema);
     this.snackbar.openFromComponent(NotificationComponent, { data: ' Adding concept mappings...'});
 
     if (schema.pages) {

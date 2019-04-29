@@ -129,7 +129,7 @@ export class UpdateFormsWizardComponent implements OnInit {
       console.log(valueReference);
       this.saveFormService.saveNewForm(newName, strNewVersion, false, form.description).subscribe(createdForm => {
         const parsedRes = JSON.parse(createdForm._body);
-        this.saveFormService.getResourceUUID(parsedRes.uuid, valueReference._body).subscribe(resourceUUID =>
+        this.saveFormService.getResourceUUID(parsedRes.uuid, valueReference).subscribe(resourceUUID =>
           this.showDoneSnackBar(newName));
       });
     });
