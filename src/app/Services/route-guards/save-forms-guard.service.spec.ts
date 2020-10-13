@@ -9,7 +9,10 @@ describe('SaveFormsGuardService', () => {
     });
   });
 
-  it('should be created', inject([SaveFormsGuardService], (service: SaveFormsGuardService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [SaveFormsGuardService],
+    (service: SaveFormsGuardService) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

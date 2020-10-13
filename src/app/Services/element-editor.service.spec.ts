@@ -9,7 +9,10 @@ describe('ElementEditorService', () => {
     });
   });
 
-  it('should be created', inject([ElementEditorService], (service: ElementEditorService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [ElementEditorService],
+    (service: ElementEditorService) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

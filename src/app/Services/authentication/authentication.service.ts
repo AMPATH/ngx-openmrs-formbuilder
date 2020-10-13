@@ -6,27 +6,28 @@ import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class AuthenticationService {
-
   isLoggedIn = false;
   redirectUrl = '';
   baseUrl: BehaviorSubject<string> = new BehaviorSubject('');
   credentials: BehaviorSubject<string> = new BehaviorSubject('');
 
-
   constructor(
     private sessionStorageService: SessionStorageService,
-    private sessionService: SessionService) {
-
-      if (this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY) != null
-      && this.sessionStorageService.getItem(Constants.BASE_URL) != null) {
-        this.setCredentialsSubjectEncrypted(this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY));
-        this.setBaseUrl(this.sessionStorageService.getItem(Constants.BASE_URL));
-        this.isLoggedIn = true;
-      }
+    private sessionService: SessionService
+  ) {
+    if (
+      this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY) != null &&
+      this.sessionStorageService.getItem(Constants.BASE_URL) != null
+    ) {
+      this.setCredentialsSubjectEncrypted(
+        this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY)
+      );
+      this.setBaseUrl(this.sessionStorageService.getItem(Constants.BASE_URL));
+      this.isLoggedIn = true;
     }
+  }
 
   public authenticate(username: string, password: string, baseUrl: string) {
-
     const credentials = {
       username: username,
       password: password
@@ -35,16 +36,16 @@ export class AuthenticationService {
     const request = this.sessionService.getSession(credentials, baseUrl);
 
     request.subscribe((data: any) => {
-        if (data.authenticated) {
-          this.isLoggedIn = true;
-          this.setCredentials(username, password, baseUrl);
-          // store logged in user details in session storage
-          const user = data.user;
-          this.storeUser(user);
-        } else {
-          this.isLoggedIn = false;
-        }
-      });
+      if (data.authenticated) {
+        this.isLoggedIn = true;
+        this.setCredentials(username, password, baseUrl);
+        // store logged in user details in session storage
+        const user = data.user;
+        this.storeUser(user);
+      } else {
+        this.isLoggedIn = false;
+      }
+    });
 
     return request;
   }
@@ -53,16 +54,14 @@ export class AuthenticationService {
     this.isLoggedIn = false;
     const response = this.sessionService.deleteSession();
 
-    response
-      .subscribe(
+    response.subscribe(
       (res) => {
-
         this.clearSessionCache();
       },
       (error: Error) => {
-
         this.clearSessionCache();
-      });
+      }
+    );
 
     return response;
   }
@@ -73,14 +72,12 @@ export class AuthenticationService {
   }
 
   private setCredentials(username: string, password: string, baseUrl: string) {
-
     const base64 = btoa(username + ':' + password);
     this.sessionStorageService.setItem(Constants.CREDENTIALS_KEY, base64);
     this.sessionStorageService.setItem(Constants.BASE_URL, baseUrl);
   }
 
   private clearCredentials() {
-
     this.sessionStorageService.remove(Constants.CREDENTIALS_KEY);
   }
 

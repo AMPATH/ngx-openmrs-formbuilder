@@ -1,17 +1,16 @@
-import { PropertyModel} from './property-model';
+import { PropertyModel } from './property-model';
 import { TextboxProperty } from './textbox-property';
 import { SelectProperty } from './select-property';
 import { TextAreaProperty } from './textarea-property';
 import { SearchboxProperty } from './searchbox-property';
 export class Properties {
-
-  private ID: PropertyModel < any > = new PropertyModel({
+  private ID: PropertyModel<any> = new PropertyModel({
     label: 'ID',
     parentPath: 'id',
-    controlType: 'textbox',
+    controlType: 'textbox'
   });
 
-  private Concept: SearchboxProperty  = new SearchboxProperty({
+  private Concept: SearchboxProperty = new SearchboxProperty({
     label: 'Concept',
     parentPath: 'questionOptions.concept',
     key: 'questionOptions.concept',
@@ -27,56 +26,58 @@ export class Properties {
     label: 'Answers',
     parentPath: 'questionOptions.answers',
     rows: 5,
-    key: 'questionOptions.answers',
+    key: 'questionOptions.answers'
   });
 
-  private Validators: PropertyModel < any > = new PropertyModel({
+  private Validators: PropertyModel<any> = new PropertyModel({
     label: 'Validators',
     parentPath: 'validators',
     controlType: 'textarea',
-    key: 'validators',
+    key: 'validators'
   });
 
-  private Default: PropertyModel < any > = new PropertyModel({
+  private Default: PropertyModel<any> = new PropertyModel({
     label: 'Default',
     parentPath: 'default',
     controlType: 'textbox',
-    key: 'default',
-
+    key: 'default'
   });
 
-  private Original: PropertyModel < any >= new PropertyModel({
+  private Original: PropertyModel<any> = new PropertyModel({
     label: 'Original',
     parentPath: 'original',
     controlType: 'textbox',
     key: 'original'
   });
 
-  private Required: PropertyModel < any > = new PropertyModel({
+  private Required: PropertyModel<any> = new PropertyModel({
     label: 'Required',
     parentPath: 'required',
     controlType: 'textbox',
     key: 'required'
   });
 
-  private HistoricalExpression: PropertyModel < any > = new PropertyModel({
+  private HistoricalExpression: PropertyModel<any> = new PropertyModel({
     label: 'Historical Expression',
     parentPath: 'historicalExpression',
     controlType: 'textarea',
     key: 'historicalExpression'
   });
 
-  private Hide: PropertyModel < any > = new PropertyModel({
+  private Hide: PropertyModel<any> = new PropertyModel({
     label: 'Hide',
     parentPath: 'hide',
     controlType: 'textarea',
-    key: 'hide',
+    key: 'hide'
   });
 
   private OrderType: SelectProperty = new SelectProperty({
     label: 'Order Type',
     parentPath: 'questionOptions.orderType',
-    options: [{key: 'drugorder', value: 'Drug Order'}, {key: 'testorder', value: 'Test Order'}],
+    options: [
+      { key: 'drugorder', value: 'Drug Order' },
+      { key: 'testorder', value: 'Test Order' }
+    ],
     key: 'questionOptions.orderType'
   });
 
@@ -85,7 +86,6 @@ export class Properties {
     parentPath: 'questionOptions.orderSettingUuid',
     key: 'questionOptions.orderSettingUuid'
   });
-
 
   private selectableOrders: TextAreaProperty = new TextAreaProperty({
     label: 'Selectable Orders',
@@ -101,55 +101,55 @@ export class Properties {
     key: 'calculatedExpressions'
   });
 
-
   private Alert: TextAreaProperty = new TextAreaProperty({
     label: 'Alert',
     parentPath: 'alert',
-    key: 'alert',
+    key: 'alert'
   });
 
-
-  private QuestionInfo: PropertyModel < any > = new PropertyModel({
+  private QuestionInfo: PropertyModel<any> = new PropertyModel({
     label: 'Question Info',
     parentPath: 'questionInfo',
     controlType: 'textbox',
-    key: 'questionInfo',
+    key: 'questionInfo'
   });
 
   private Max: TextboxProperty = new TextboxProperty({
     label: 'Max',
     parentPath: 'questionOptions.max',
     type: 'number',
-    key: 'questionOptions.max',
+    key: 'questionOptions.max'
   });
 
-
-  private Min: TextboxProperty  = new TextboxProperty({
+  private Min: TextboxProperty = new TextboxProperty({
     label: 'Min',
     parentPath: 'questionOptions.min',
     type: 'number',
-    key: 'questionOptions.min',
+    key: 'questionOptions.min'
   });
 
-  private Rows: TextboxProperty  = new TextboxProperty({
+  private Rows: TextboxProperty = new TextboxProperty({
     label: 'Rows',
     parentPath: 'questionOptions.rows',
     type: 'number',
-    key: 'questionOptions.rows',
+    key: 'questionOptions.rows'
   });
 
-  private showDate: SelectProperty  = new SelectProperty({
+  private showDate: SelectProperty = new SelectProperty({
     label: 'Show Date',
     parentPath: 'questionOptions.showDate',
-    options: [{key: 'true', value: 'true'}, {key: 'false', value: 'false'}],
-    key: 'questionOptions.showDate',
+    options: [
+      { key: 'true', value: 'true' },
+      { key: 'false', value: 'false' }
+    ],
+    key: 'questionOptions.showDate'
   });
 
-  private showDateOptions: TextAreaProperty  = new TextAreaProperty({
+  private showDateOptions: TextAreaProperty = new TextAreaProperty({
     label: 'Show Date Options',
     parentPath: 'questionOptions.showDateOptions',
     key: 'questionOptions.showDateOptions',
-    rows: 5,
+    rows: 5
   });
 
   private weeksList: TextAreaProperty = new TextAreaProperty({
@@ -157,17 +157,17 @@ export class Properties {
     parentPath: 'questionOptions.weeksList',
     key: 'questionOptions.weeksList',
     rows: 3,
-    placeholder: '[2,12,16,18...]',
+    placeholder: '[2,12,16,18...]'
   });
 
   private conceptMappings: TextAreaProperty = new TextAreaProperty({
     label: 'Concept Mappings',
     parentPath: 'questionOptions.conceptMappings',
     key: 'questionOptions.conceptMappings',
-    rows: 5,
+    rows: 5
   });
 
-  public allQuestionProperties: PropertyModel < any > [] = [
+  public allQuestionProperties: PropertyModel<any>[] = [
     this.ID,
     this.Concept,
     this.Validators,
@@ -186,7 +186,6 @@ export class Properties {
     this.conceptMappings,
     this.ConceptId
   ];
-
 
   getPropertyByName(name: string) {
     const propertyName = name.toLowerCase();
@@ -238,13 +237,11 @@ export class Properties {
       case 'conceptmappings':
         return this.conceptMappings;
       default:
-        console.error(`${propertyName} does not exist in the property dictionary, please add it in property-model.ts`);
-
-
-
+        console.error(
+          `${propertyName} does not exist in the property dictionary, please add it in property-model.ts`
+        );
     }
   }
-
 }
 
 export const ALL_PROPERTIES = new Properties().allQuestionProperties;

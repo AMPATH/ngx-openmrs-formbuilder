@@ -9,7 +9,10 @@ describe('FetchAllFormsService', () => {
     });
   });
 
-  it('should be created', inject([FetchAllFormsService], (service: FetchAllFormsService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [FetchAllFormsService],
+    (service: FetchAllFormsService) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

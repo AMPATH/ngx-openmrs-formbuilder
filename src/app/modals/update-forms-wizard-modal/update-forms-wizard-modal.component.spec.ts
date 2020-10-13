@@ -8,9 +8,8 @@ describe('UpdateFormsWizardModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UpdateFormsWizardModalComponent ]
-    })
-    .compileComponents();
+      declarations: [UpdateFormsWizardModalComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

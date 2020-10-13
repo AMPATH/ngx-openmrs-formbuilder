@@ -1,8 +1,7 @@
-
-import {catchError} from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { FetchAllFormsService } from '../Services/openmrs-api/fetch-all-forms.service';
-import { FetchFormDetailService } from '../Services/openmrs-api/fetch-form-detail.service'
+import { FetchFormDetailService } from '../Services/openmrs-api/fetch-form-detail.service';
 import { AuthenticationService } from '../Services/authentication/authentication.service';
 import { LocalStorageService } from '../Services/storage/local-storage.service';
 import { SessionStorageService } from '../Services/storage/session-storage.service';
@@ -19,84 +18,91 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./view-forms.component.css']
 })
 export class ViewFormsComponent implements OnInit {
-
-  forms= [];
+  forms = [];
   componentForms: any;
   POCForms = [];
-  page= 1; // pagination
-  loggingOut=false;
-  searchValue= '';
-  loadingMessage= 'Loading Forms...';
-  restoreMessage= '';
-  draftAvailable= false;
+  page = 1; // pagination
+  loggingOut = false;
+  searchValue = '';
+  loadingMessage = 'Loading Forms...';
+  restoreMessage = '';
+  draftAvailable = false;
   draft: any;
   rawDraft: any;
   formsWithoutSchemas: any[] = [];
   subscription: Subscription;
   username: string;
   searchFilter: string;
-  constructor(private fetchAllFormsService: FetchAllFormsService, 
+  constructor(
+    private fetchAllFormsService: FetchAllFormsService,
     private router: Router,
     private sessionStorageService: SessionStorageService,
     private fetchFormDetailService: FetchFormDetailService,
     private auth: AuthenticationService,
     private ls: LocalStorageService,
-    private formListService: FormListService) {
-
+    private formListService: FormListService
+  ) {
     const user = sessionStorageService.getObject('user');
     this.username = user.username;
-
   }
 
-
-
   ngOnInit() {
-
     // this.subscription = this.fetchAllFormsService.resaveAllPOCSchemasToLocalStorage.subscribe((res) => {
     //   if (res) {
     //     this.fetchAllFormSchemas(this.POCForms);
     //   }
     // });
-    this.subscription = this.fetchAllFormsService.fetchAllPOCForms().subscribe(forms => {
-    const f = forms.results;
-    f.forEach((form, index) => {
-      this.fetchFormDetailService.fetchFormMetadata(form.uuid,false).then(res => {
-         if (!form.resources[0] || form.resources.length === 0) {this.formsWithoutSchemas.push(form.name); } else {
-            this.POCForms.push(form); }
+    this.subscription = this.fetchAllFormsService
+      .fetchAllPOCForms()
+      .subscribe((forms) => {
+        const f = forms.results;
+        f.forEach((form, index) => {
+          this.fetchFormDetailService
+            .fetchFormMetadata(form.uuid, false)
+            .then((res) => {
+              if (!form.resources[0] || form.resources.length === 0) {
+                this.formsWithoutSchemas.push(form.name);
+              } else {
+                this.POCForms.push(form);
+              }
+            });
+        });
+        this.POCForms = _.cloneDeep(f);
+        this.forms = _.cloneDeep(f);
+
+        // this.fetchAllFormSchemas(this.POCForms);
+
+        if (this.forms.length === 0) {
+          this.loadingMessage = 'No forms to display';
+        }
       });
-    });
-    this.POCForms = _.cloneDeep(f);
-    this.forms = _.cloneDeep(f);
 
+    this.subscription = this.fetchAllFormsService
+      .fetchAllComponentForms()
+      .subscribe((forms) => {
+        this.componentForms = forms.results;
+      });
 
-    // this.fetchAllFormSchemas(this.POCForms);
-
-    if (this.forms.length === 0) { this.loadingMessage = 'No forms to display'; }
-    });
-
-
-
-
-    this.subscription = this.fetchAllFormsService.fetchAllComponentForms().subscribe(forms =>{
-      this.componentForms = forms.results;
-    });
-
-
-
-  if (this.ls.getObject(Constants.RAW_SCHEMA) && this.ls.getObject(Constants.SCHEMA)) {
-    this.draftAvailable = true;
-    const schema = this.ls.getObject(Constants.RAW_SCHEMA);
-    let timestamp;
-    if (this.ls.getObject(Constants.TIME_STAMP)) { timestamp = this.ls.getObject(Constants.TIME_STAMP); }
-    this.restoreMessage =
-    `Form ${this.ls.getObject(Constants.FORM_METADATA).name} was last worked on at ${new Date(parseInt(timestamp)).toLocaleDateString()}
-    ${new Date(parseInt(timestamp)).toLocaleTimeString()} Would you like to continue working on this?`;
+    if (
+      this.ls.getObject(Constants.RAW_SCHEMA) &&
+      this.ls.getObject(Constants.SCHEMA)
+    ) {
+      this.draftAvailable = true;
+      const schema = this.ls.getObject(Constants.RAW_SCHEMA);
+      let timestamp;
+      if (this.ls.getObject(Constants.TIME_STAMP)) {
+        timestamp = this.ls.getObject(Constants.TIME_STAMP);
+      }
+      this.restoreMessage = `Form ${
+        this.ls.getObject(Constants.FORM_METADATA).name
+      } was last worked on at ${new Date(
+        parseInt(timestamp)
+      ).toLocaleDateString()}
+    ${new Date(
+      parseInt(timestamp)
+    ).toLocaleTimeString()} Would you like to continue working on this?`;
+    }
   }
-
-
-  }
-
-
 
   editForm(form: any, uuid: string) {
     if (_.includes(this.componentForms, form)) {
@@ -109,20 +115,18 @@ export class ViewFormsComponent implements OnInit {
     this.router.navigate(['/edit', uuid]);
   }
 
-
   createNew() {
     this.router.navigate(['/edit', 'new']);
   }
 
   logout() {
     this.loggingOut = true;
-      this.auth.logOut().pipe(catchError(e => this.router.navigate(['/login'])))
-      .subscribe(res => {
+    this.auth
+      .logOut()
+      .pipe(catchError((e) => this.router.navigate(['/login'])))
+      .subscribe((res) => {
         this.router.navigate(['/login']);
       });
-
-
-
   }
 
   discard() {
@@ -130,7 +134,6 @@ export class ViewFormsComponent implements OnInit {
     this.ls.remove(Constants.SCHEMA);
     this.ls.remove(Constants.RAW_SCHEMA);
     this.ls.remove(Constants.FORM_METADATA);
-
   }
 
   restore() {
@@ -174,27 +177,24 @@ export class ViewFormsComponent implements OnInit {
   //       }
   //     });
 
-
-
-
-//  }
+  //  }
 
   addSchema(form) {
     this.router.navigate(['/edit', form.uuid]);
   }
 
   download(valueReference) {
-    this.fetchFormDetailService.fetchForm(valueReference, true).then((schema) => {
-      const blob = new Blob([JSON.stringify(schema, null, '\t')], {
-        type: 'application/json'
+    this.fetchFormDetailService
+      .fetchForm(valueReference, true)
+      .then((schema) => {
+        const blob = new Blob([JSON.stringify(schema, null, '\t')], {
+          type: 'application/json'
+        });
+        saveAs(blob, `${schema.name}.json`);
       });
-      saveAs(blob, `${schema.name}.json`);
-    });
   }
 
-
-  navigateToTestPage(){
+  navigateToTestPage() {
     this.router.navigate(['/test']);
   }
-
 }

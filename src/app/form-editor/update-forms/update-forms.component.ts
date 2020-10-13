@@ -12,34 +12,34 @@ import * as _ from 'lodash';
 @Component({
   selector: 'app-update-forms',
   templateUrl: './update-forms.component.html',
-  styleUrls: ['./update-forms.component.css'],
+  styleUrls: ['./update-forms.component.css']
 })
 export class UpdateFormsComponent implements OnInit, OnDestroy {
-
   subscription: Subscription;
-  formSchemas: any[]= [];
+  formSchemas: any[] = [];
   oldComponentUUID: any;
   newComponentUUID: any;
   newComponentMetadata: any;
   oldComponentMetadata: any;
-  formsReferencingThisComponent: any[]= [];
+  formsReferencingThisComponent: any[] = [];
   viewAlert = true;
-  selectedForms: any[]= [];
+  selectedForms: any[] = [];
 
-  constructor(private fa: FetchAllFormsService,
-      private route: ActivatedRoute,
-      private fd: FetchFormDetailService,
-      private ls: LocalStorageService,
-      private formListService: FormListService,
-       private router: Router,
-        private updateComponentService: UpdateComponentService,
-        private dialogService: DialogService) { }
+  constructor(
+    private fa: FetchAllFormsService,
+    private route: ActivatedRoute,
+    private fd: FetchFormDetailService,
+    private ls: LocalStorageService,
+    private formListService: FormListService,
+    private router: Router,
+    private updateComponentService: UpdateComponentService,
+    private dialogService: DialogService
+  ) {}
 
   ngOnInit() {
-
-    this.fa.getPOCFormSchemas().subscribe(res => {
-        this.formSchemas = res;
-        console.log('res');
+    this.fa.getPOCFormSchemas().subscribe((res) => {
+      this.formSchemas = res;
+      console.log('res');
     });
 
     this.subscription = this.route.params.subscribe((params) => {
@@ -55,77 +55,91 @@ export class UpdateFormsComponent implements OnInit, OnDestroy {
         this.oldComponentMetadata = res;
       });
 
-
       this.formSchemas.forEach((schema, index) => {
-        const checkSchema = this.checkIfReferencesComponent(this.oldComponentUUID, schema);
-        if (!_.isEmpty(checkSchema)) { forms.push(checkSchema); }
+        const checkSchema = this.checkIfReferencesComponent(
+          this.oldComponentUUID,
+          schema
+        );
+        if (!_.isEmpty(checkSchema)) {
+          forms.push(checkSchema);
+        }
         count = index;
       });
 
       if (count === this.formSchemas.length - 1) {
         _.forEach(forms, (form) => {
-          const name = this.formListService.removeVersionInformation(form['metadata']['name']);
+          const name = this.formListService.removeVersionInformation(
+            form['metadata']['name']
+          );
           const versionsArr = [];
           _.forEach(forms, ($form, index) => {
-
             if (_.includes($form['metadata']['name'], name)) {
               versionsArr.push($form);
             }
             if (index === forms.length - 1) {
               const highestVersion = versionsArr.reduce((a, b) =>
-              parseFloat(a['metadata']['version']) > parseFloat(b['metadata']['version']) ? a : b);
-              if (!_.includes(this.formsReferencingThisComponent, highestVersion)) {
+                parseFloat(a['metadata']['version']) >
+                parseFloat(b['metadata']['version'])
+                  ? a
+                  : b
+              );
+              if (
+                !_.includes(this.formsReferencingThisComponent, highestVersion)
+              ) {
                 this.formsReferencingThisComponent.push(highestVersion);
               }
             }
           });
         });
       }
-
     });
+  }
 
+  checkIfReferencesComponent(componentUUID, form) {
+    let _schema = {};
+    if (form['schema'].referencedForms) {
+      if (!_.isEmpty(form['schema'].referencedForms)) {
+        _.forEach(form['schema'].referencedForms, (refForm: any) => {
+          if (_.isEqual(refForm.ref.uuid, componentUUID)) {
+            _schema = form;
+          }
+        });
+      }
+    }
+    return _schema;
+  }
 
-}
-
-checkIfReferencesComponent(componentUUID, form) {
-
-  let _schema = {};
-  if (form['schema'].referencedForms) {
-    if (!_.isEmpty(form['schema'].referencedForms)) {
-      _.forEach(form['schema'].referencedForms, (refForm: any) => {
-        if (_.isEqual(refForm.ref.uuid, componentUUID)) {
-          _schema = form;
+  updateForms() {
+    console.log(this.newComponentMetadata);
+    this.dialogService
+      .addDialog(
+        UpdateFormsWizardModalComponent,
+        {
+          componentMetadata: this.newComponentMetadata,
+          oldComponentUUID: this.oldComponentUUID,
+          selectedForms: this.selectedForms
+        },
+        { backdropColor: 'rgba(0,0,0,0.5)' }
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.router.navigate(['/forms']);
         }
       });
+  }
+
+  onChange(form, checked) {
+    if (checked) {
+      this.selectedForms.push(form);
+    } else {
+      if (_.includes(this.selectedForms, form)) {
+        const index = _.indexOf(this.selectedForms, form);
+        this.selectedForms.splice(index, 1);
+      }
     }
   }
-  return _schema;
-}
 
-
-updateForms() {
-  console.log(this.newComponentMetadata);
-  this.dialogService.addDialog(UpdateFormsWizardModalComponent,
-    {  componentMetadata: this.newComponentMetadata,
-       oldComponentUUID: this.oldComponentUUID ,
-       selectedForms: this.selectedForms},
-       {backdropColor: 'rgba(0,0,0,0.5)'})
-    .subscribe((res) => {if (res) { this.router.navigate(['/forms']); }});
-}
-
-
-onChange(form, checked) {
-  if (checked) {
-    this.selectedForms.push(form);
-  } else {
-    if (_.includes(this.selectedForms, form)) {
-      const index = _.indexOf(this.selectedForms, form);
-        this.selectedForms.splice(index, 1);
-      }}
-}
-
-
-ngOnDestroy() {
-  this.subscription.unsubscribe();
-}
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }

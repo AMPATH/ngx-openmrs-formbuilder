@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
-import {Form} from './Form'
+import { Form } from './Form';
 @Injectable()
 export class FormFactory {
+  constructor() {}
 
-  constructor() {
-    
-   }
-
-  createForm(options){
+  createForm(options) {
     return new Form(options);
   }
-
 }

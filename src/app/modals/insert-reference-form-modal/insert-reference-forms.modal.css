@@ -1,14 +1,13 @@
-.modal-dialog{
-    overflow-y: initial !important
+.modal-dialog {
+  overflow-y: initial !important;
 }
-.modal-body{
-    
-    overflow-y: auto;
+.modal-body {
+  overflow-y: auto;
 }
-option{
-  padding:10px;
+option {
+  padding: 10px;
   border-bottom: 1px solid lightgray;
 }
-.data-list{
-    max-height:50px;
+.data-list {
+  max-height: 50px;
 }

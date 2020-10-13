@@ -1,29 +1,44 @@
 <div *ngIf="refForms">
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close" (click)="close()">&times;</button>
-      <h4 class="modal-title">Search form to reference</h4>
-    </div>
-    <div class="modal-body">
-      <form [formGroup]="form" (keydown)="keyDownFunction($event)">
-        <div class="form-group">
-          <label for="label">Enter Form Name</label>
-          <input list="refForms" name="form" class="form-control" formControlName="selectField" autocomplete="off">
-          <datalist id="refForms">
-             <option *ngFor="let form of refForms">{{form.formName}}
-         </datalist>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" (click)="close()">&times;</button>
+        <h4 class="modal-title">Search form to reference</h4>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form" (keydown)="keyDownFunction($event)">
+          <div class="form-group">
+            <label for="label">Enter Form Name</label>
+            <input
+              list="refForms"
+              name="form"
+              class="form-control"
+              formControlName="selectField"
+              autocomplete="off"
+            />
+            <datalist id="refForms">
+              <option *ngFor="let form of refForms">{{form.formName}}</option>
+            </datalist>
+          </div>
 
-        <div *ngIf="errorMessage" class="alert alert-danger">
-          <small><b>{{errorMessage}}</b></small>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="save(selectField.value)" [disabled]="!form.valid">OK</button>
-      <button type="button" class="btn btn-default" (click)="close()">Cancel</button>
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            <small><b>{{errorMessage}}</b></small>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="save(selectField.value)"
+          [disabled]="!form.valid"
+        >
+          OK
+        </button>
+        <button type="button" class="btn btn-default" (click)="close()">
+          Cancel
+        </button>
+      </div>
     </div>
   </div>
-</div>
 </div>

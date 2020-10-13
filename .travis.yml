@@ -1,23 +1,23 @@
 language: node_js
 dist: xenial
 node_js:
-- "10"
+  - '10'
 services:
-- docker
-- xvfb
+  - docker
+  - xvfb
 before_install:
-- npm i -g brfs
+  - npm i -g brfs
 script:
-- npm run build
+  - npm run build
 sudo: required
 addons:
   apt:
     packages:
-    - sshpass
-    - google-chrome-stable
+      - sshpass
+      - google-chrome-stable
 after_success:
-- mv dist "fb-${TRAVIS_BRANCH}"
-- tar -czf build.tgz "fb-${TRAVIS_BRANCH}"
-- export SSHPASS=$DEPLOY_PASS
-- sshpass -e scp -o stricthostkeychecking=no build.tgz $DEPLOY_USER@$DEPLOY_HOST:./
-- sshpass -e ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST ./deploy-build.sh
+  - mv dist "fb-${TRAVIS_BRANCH}"
+  - tar -czf build.tgz "fb-${TRAVIS_BRANCH}"
+  - export SSHPASS=$DEPLOY_PASS
+  - sshpass -e scp -o stricthostkeychecking=no build.tgz $DEPLOY_USER@$DEPLOY_HOST:./
+  - sshpass -e ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST ./deploy-build.sh

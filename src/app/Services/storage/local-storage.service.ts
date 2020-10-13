@@ -34,8 +34,7 @@ export class LocalStorageService {
   }
 
   get storageLength(): number {
-  
-    console.log(window.localStorage.length,"length");
+    console.log(window.localStorage.length, 'length');
     return window.localStorage.length;
   }
 }

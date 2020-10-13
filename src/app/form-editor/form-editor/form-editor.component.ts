@@ -1,20 +1,27 @@
-
-import {mergeMap} from 'rxjs/operators';
-import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, AfterViewChecked, AfterContentInit } from '@angular/core';
+import { mergeMap } from 'rxjs/operators';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+  ChangeDetectorRef,
+  AfterViewChecked,
+  AfterContentInit
+} from '@angular/core';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
 import { FetchAllFormsService } from '../../Services/openmrs-api/fetch-all-forms.service';
 import { NavigatorService } from '../../Services/navigator.service';
 import { QuestionIdService } from '../../Services/question-id.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { Subscription ,  Observable } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 import { DialogService } from 'ng2-bootstrap-modal';
 import { Form } from '../form-elements/Form';
 import { LocalStorageService } from '../../Services/storage/local-storage.service';
 import { SessionStorageService } from '../../Services/storage/session-storage.service';
 import { Constants } from '../../Services/constants';
-import { SaveFormsComponent} from '../../modals/save-form-modal/save-form-modal';
+import { SaveFormsComponent } from '../../modals/save-form-modal/save-form-modal';
 import { ConfirmComponent } from '../../modals/confirm.component';
 import { AlertComponent } from '../../modals/alert.component';
 import { FormListService } from '../../Services/form-list.service';
@@ -26,8 +33,6 @@ import * as _ from 'lodash';
 import { Question } from '../form-elements/Question';
 import { FormSchemaCompiler } from 'ngx-openmrs-formentry/dist/ngx-formentry';
 
-
-
 interface FormMetadata {
   name: string;
   uuid: string;
@@ -38,7 +43,6 @@ interface FormMetadata {
   encounterType: string;
   auditInfo: any;
   published: boolean;
-
 }
 
 @Component({
@@ -46,8 +50,8 @@ interface FormMetadata {
   templateUrl: './form-editor.component.html',
   styleUrls: ['./form-editor.component.css']
 })
-
-export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked, AfterContentInit {
+export class FormEditorComponent
+  implements OnInit, OnDestroy, AfterViewChecked, AfterContentInit {
   schema: any;
   selectedSchema: any;
   rawSelectedSchema: any;
@@ -73,7 +77,8 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
   formType: string;
   previousVersionUUID: string;
 
-  constructor(private fs: FetchFormDetailService,
+  constructor(
+    private fs: FetchFormDetailService,
     private navigatorService: NavigatorService,
     public snackbar: MatSnackBar,
     private router: Router,
@@ -87,7 +92,8 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     private encounterTypeService: EncounterTypeService,
     private sessionStorageService: SessionStorageService,
     private conceptService: ConceptService,
-    private formSchemaCompiler: FormSchemaCompiler) {}
+    private formSchemaCompiler: FormSchemaCompiler
+  ) {}
 
   closeElementEditor() {
     this.questions = undefined;
@@ -108,7 +114,6 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
   ngAfterContentInit() {
     this.loading = true;
   }
-
 
   ngOnInit() {
     this.loading = true;
@@ -131,7 +136,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
       encounterType: '',
       description: '',
       auditInfo: {},
-      published: false,
+      published: false
     };
 
     this.fs.setReferencedFormsSchemasArray([]);
@@ -141,98 +146,131 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
       }
     });
 
-    this.subscription = this.route.params.subscribe(params => {
+    this.subscription = this.route.params.subscribe((params) => {
       const uuid = params['uuid'];
 
       if (uuid === 'new') {
         this.createNewForm();
       } else if (uuid === 'restoredForm') {
-        if (this.fs.restoreReferencedForms(this.localStorageService.getObject(Constants.RAW_SCHEMA))) {
-          this.fs.restoreReferencedForms(this.localStorageService.getObject(Constants.RAW_SCHEMA)).then((res) => {
-                this.setFormEditor(this.localStorageService.getObject(Constants.SCHEMA),
-                  this.localStorageService.getObject(Constants.RAW_SCHEMA), this.localStorageService.getObject(Constants.FORM_METADATA));
-          });
+        if (
+          this.fs.restoreReferencedForms(
+            this.localStorageService.getObject(Constants.RAW_SCHEMA)
+          )
+        ) {
+          this.fs
+            .restoreReferencedForms(
+              this.localStorageService.getObject(Constants.RAW_SCHEMA)
+            )
+            .then((res) => {
+              this.setFormEditor(
+                this.localStorageService.getObject(Constants.SCHEMA),
+                this.localStorageService.getObject(Constants.RAW_SCHEMA),
+                this.localStorageService.getObject(Constants.FORM_METADATA)
+              );
+            });
         } else {
-          this.setFormEditor(this.localStorageService.getObject(Constants.SCHEMA),
-          this.localStorageService.getObject(Constants.RAW_SCHEMA));
+          this.setFormEditor(
+            this.localStorageService.getObject(Constants.SCHEMA),
+            this.localStorageService.getObject(Constants.RAW_SCHEMA)
+          );
         }
         this.formType = this.localStorageService.getItem('formType');
       } else {
-
         this.formMetadata.uuid = uuid;
-        this.fs.fetchFormMetadata(this.formMetadata.uuid, false).then((metadata) => {
+        this.fs
+          .fetchFormMetadata(this.formMetadata.uuid, false)
+          .then((metadata) => {
             this.formMetadata.version = metadata.version;
             this.formMetadata.name = metadata.name;
-            if (metadata.encounterType) { this.formMetadata.encounterType = metadata.encounterType.display; }
-            if (metadata.description) { this.formMetadata.description = metadata.description; }
+            if (metadata.encounterType) {
+              this.formMetadata.encounterType = metadata.encounterType.display;
+            }
+            if (metadata.description) {
+              this.formMetadata.description = metadata.description;
+            }
             this.formMetadata.auditInfo = metadata.auditInfo;
             this.formMetadata.published = metadata.published;
             // this.saveFormMetadata(this.formMetadata); //save form metadata to local storage for retrieval later on
             if (metadata.resources.length) {
-              this.formMetadata.valueReference = metadata.resources[0].valueReference || '';
+              this.formMetadata.valueReference =
+                metadata.resources[0].valueReference || '';
               this.formMetadata.resourceUUID = metadata.resources[0].uuid;
               this.fetchForm(metadata.resources[0].valueReference);
             } else {
               this.createFormForMissingResource();
             }
 
-        _.includes(this.formMetadata.name, Constants.COMPONENT) ?
-         this.localStorageService.setItem(Constants.FORM_TYPE, Constants.COMPONENT) :
-         this.localStorageService.setItem(Constants.FORM_TYPE, Constants.POC);
-
+            _.includes(this.formMetadata.name, Constants.COMPONENT)
+              ? this.localStorageService.setItem(
+                  Constants.FORM_TYPE,
+                  Constants.COMPONENT
+                )
+              : this.localStorageService.setItem(
+                  Constants.FORM_TYPE,
+                  Constants.POC
+                );
           })
-          .catch(e => {
+          .catch((e) => {
             this.loading = false;
             console.error(e);
             alert('Check your internet connection and CORS then refresh.');
           });
       }
-
     });
 
-    this.subscription = this.navigatorService.getRawSchema().subscribe(res => {
-      this.rawSchema = res;
-      this.strRawSchema = JSON.stringify(this.rawSchema, null, '\t');
-      if (this.localStorageService.getObject(Constants.SCHEMA)) {
-         if (this.rawSchema.name === this.localStorageService.getObject(Constants.SCHEMA).name) {
+    this.subscription = this.navigatorService
+      .getRawSchema()
+      .subscribe((res) => {
+        this.rawSchema = res;
+        this.strRawSchema = JSON.stringify(this.rawSchema, null, '\t');
+        if (this.localStorageService.getObject(Constants.SCHEMA)) {
+          if (
+            this.rawSchema.name ===
+            this.localStorageService.getObject(Constants.SCHEMA).name
+          ) {
             this.saveRawDraft(this.rawSchema); // only save when compiled version exists in memory.
           }
         }
-    });
+      });
 
-
-    this.subscription = this.navigatorService.getClickedElementRawSchema().subscribe(res => {
-      if (res) {
-        this.rawSelectedSchema = res;
-        this.strRawSchema = JSON.stringify(this.rawSelectedSchema, null, '\t');
-        console.log(res);
-      }
-    });
+    this.subscription = this.navigatorService
+      .getClickedElementRawSchema()
+      .subscribe((res) => {
+        if (res) {
+          this.rawSelectedSchema = res;
+          this.strRawSchema = JSON.stringify(
+            this.rawSelectedSchema,
+            null,
+            '\t'
+          );
+          console.log(res);
+        }
+      });
     // prevent from saving form metadata.
     // on navigator element clicked for editing
-    this.subscription = this.navigatorService.getClickedElementSchema().subscribe(
-      res => {
+    this.subscription = this.navigatorService
+      .getClickedElementSchema()
+      .subscribe((res) => {
         this.selectedSchema = res;
-        this.strSchema = JSON.stringify(this.selectedSchema.selectedSchema, null, '\t');
-      }
-    );
+        this.strSchema = JSON.stringify(
+          this.selectedSchema.selectedSchema,
+          null,
+          '\t'
+        );
+      });
 
     // on element added/deleted/modified
-    this.subscription = this.navigatorService.getSchema().subscribe(
-      res => {
+    this.subscription = this.navigatorService.getSchema().subscribe((res) => {
+      this.schema = res;
+      this.strSchema = JSON.stringify(this.schema, null, '\t');
+      this.saveDraft(this.schema);
+      this.saveFormMetadata(this.formMetadata);
+      this.showSuccessToast('Schema Updated!');
+    });
 
-        this.schema = res;
-        this.strSchema = JSON.stringify(this.schema, null, '\t');
-        this.saveDraft(this.schema);
-        this.saveFormMetadata(this.formMetadata);
-        this.showSuccessToast('Schema Updated!');
-      }
-
-
-    );
-
-    this.subscription = this.navigatorService.getNewQuestion().subscribe(
-      res => {
+    this.subscription = this.navigatorService
+      .getNewQuestion()
+      .subscribe((res) => {
         this.questions = res['propModelArray'];
         this.page = res['pageIndex'];
         this.section = res['sectionIndex'];
@@ -242,44 +280,53 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
         this.myNav.close();
       });
 
-
     // getting new form metadata after saving remotely
-    this.subscription = this.saveFormService.getNewResourceUUID().subscribe(uuid => this.formMetadata.resourceUUID = uuid);
-    this.subscription = this.saveFormService.getNewValueReference().subscribe(value => this.formMetadata.valueReference = value);
-    this.subscription = this.saveFormService.getNewEncounterType().subscribe(encounterType =>
-      this.formMetadata.encounterType = encounterType);
-    this.subscription = this.saveFormService.getNewFormUUID().subscribe(uuid => {
-      this.previousVersionUUID = this.formMetadata.uuid;
-      this.formMetadata.uuid = uuid;
-      this.disableCanDeactivate = true;
-      this.router.navigate(['/edit', uuid]);
-    });
+    this.subscription = this.saveFormService
+      .getNewResourceUUID()
+      .subscribe((uuid) => (this.formMetadata.resourceUUID = uuid));
+    this.subscription = this.saveFormService
+      .getNewValueReference()
+      .subscribe((value) => (this.formMetadata.valueReference = value));
+    this.subscription = this.saveFormService
+      .getNewEncounterType()
+      .subscribe(
+        (encounterType) => (this.formMetadata.encounterType = encounterType)
+      );
+    this.subscription = this.saveFormService
+      .getNewFormUUID()
+      .subscribe((uuid) => {
+        this.previousVersionUUID = this.formMetadata.uuid;
+        this.formMetadata.uuid = uuid;
+        this.disableCanDeactivate = true;
+        this.router.navigate(['/edit', uuid]);
+      });
 
-    this.subscription = this.saveFormService.getNewFormName().subscribe((res) => {
-      this.formMetadata.name = res;
-      this.saveFormMetadata(this.formMetadata);
-    });
+    this.subscription = this.saveFormService
+      .getNewFormName()
+      .subscribe((res) => {
+        this.formMetadata.name = res;
+        this.saveFormMetadata(this.formMetadata);
+      });
 
-    this.subscription = this.saveFormService.getNewVersion().subscribe((res) => {
-      this.formMetadata.version = res;
-      this.saveFormMetadata(this.formMetadata);
-    });
+    this.subscription = this.saveFormService
+      .getNewVersion()
+      .subscribe((res) => {
+        this.formMetadata.version = res;
+        this.saveFormMetadata(this.formMetadata);
+      });
 
-
-    this.subscription = this.encounterTypeService.getEncounterTypes().subscribe(res => this.encounterTypes = res.results);
-
-
-
+    this.subscription = this.encounterTypeService
+      .getEncounterTypes()
+      .subscribe((res) => (this.encounterTypes = res.results));
   }
 
   fetchForm(value) {
-
-    this.fs.fetchForm(value, false).then(res => {
+    this.fs
+      .fetchForm(value, false)
+      .then((res) => {
         if (this.checkIfSchemaProperlyCompiled(res.pages)) {
           this.setFormEditor(res, this.fs.rawSchema);
         }
-
-
       })
       .catch((error) => {
         console.error(error);
@@ -289,21 +336,18 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
         this.fs.fetchForm(value, true).then((schema) => {
           this.strRawSchema = JSON.stringify(schema, null, '\t');
         });
-
       });
-
   }
-
 
   createNewForm() {
     this.loading = false;
     this.localStorageService.clear(); // clear local storage
     const schema = new Form({
-      'name': '',
-      'processor': 'EncounterFormProcessor',
-      'uuid': 'xxxx',
-      'referencedForms': [],
-      'pages': []
+      name: '',
+      processor: 'EncounterFormProcessor',
+      uuid: 'xxxx',
+      referencedForms: [],
+      pages: []
     });
     this.setFormEditor(schema, schema);
   }
@@ -311,11 +355,11 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
   createFormForMissingResource() {
     this.loading = false;
     const schema = new Form({
-      'name': this.formMetadata.name,
-      'processor': 'EncounterFormProcessor',
-      'uuid': 'xxxx',
-      'referencedForms': [],
-      'pages': []
+      name: this.formMetadata.name,
+      processor: 'EncounterFormProcessor',
+      uuid: 'xxxx',
+      referencedForms: [],
+      pages: []
     });
     this.setFormEditor(schema, schema);
   }
@@ -326,11 +370,12 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
   canDeactivate() {
     if (!this.disableCanDeactivate) {
-      return confirm('Are you sure you want to navigate away from this page and lose all changes?');
+      return confirm(
+        'Are you sure you want to navigate away from this page and lose all changes?'
+      );
     } else {
       return true;
     }
-
   }
 
   checkIfSchemaProperlyCompiled(elements): boolean {
@@ -356,16 +401,17 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
       this.alertUser(ets);
     }
     return bool;
-
   }
 
   alertUser(elements) {
-   alert('This form cannot be edited because the some referenced elements was not found.' +
-   'Please check the respective components if these elements exist then retry \n \n' + JSON.stringify(elements, null, 2));
+    alert(
+      'This form cannot be edited because the some referenced elements was not found.' +
+        'Please check the respective components if these elements exist then retry \n \n' +
+        JSON.stringify(elements, null, 2)
+    );
     this.disableCanDeactivate = true;
     this.router.navigate(['/forms']);
   }
-
 
   showSuccessToast(message: string) {
     this.snackbar.openFromComponent(SnackbarComponent, {
@@ -378,7 +424,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
       duration: 1200
     });
   }
-  setFormEditor(schema, rawSchema, formMetadata ? ) {
+  setFormEditor(schema, rawSchema, formMetadata?) {
     console.log(schema, 'SCHEMA');
     this.selectedSchema = schema;
     this.schema = schema;
@@ -386,16 +432,18 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     this.rawSchema = rawSchema;
     this.navigatorService.setRawSchema(this.rawSchema);
     this.strRawSchema = JSON.stringify(this.rawSchema, null, '\t');
-    if (formMetadata) { this.formMetadata = formMetadata; } // if form is being restored from local storage, retrieve metadata.
+    if (formMetadata) {
+      this.formMetadata = formMetadata;
+    } // if form is being restored from local storage, retrieve metadata.
   }
 
-  saveLocally(silently ?: boolean) {
-
+  saveLocally(silently?: boolean) {
     this.saveDraft(this.schema);
     this.saveRawDraft(this.rawSchema);
     this.saveFormMetadata(this.formMetadata);
-    if (!silently) { this.showSaveSnackbar(); }
-
+    if (!silently) {
+      this.showSaveSnackbar();
+    }
   }
 
   saveRemotely() {
@@ -404,17 +452,23 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
       let message = '';
       if (this.formMetadata.published) {
         console.log(this.formMetadata.published);
-        message = 'This form has been published. Would you want to overwrite the existing form?';
+        message =
+          'This form has been published. Would you want to overwrite the existing form?';
       } else if (!_.isEmpty(this.formMetadata.uuid)) {
         message = 'Would you want to update the form or save as a new version?';
       }
-      this.dialogService.addDialog(ConfirmComponent, {
-          title: 'Confirm Save',
-          message: message,
-          buttonText: 'Update current version'
-        }, {
-          backdropColor: 'rgba(0,0, 0, 0.5)'
-        })
+      this.dialogService
+        .addDialog(
+          ConfirmComponent,
+          {
+            title: 'Confirm Save',
+            message: message,
+            buttonText: 'Update current version'
+          },
+          {
+            backdropColor: 'rgba(0,0, 0, 0.5)'
+          }
+        )
         .subscribe((decision) => {
           if (decision === 1) {
             // overwrite existing form
@@ -426,61 +480,75 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
             this.showSaveDialog('new', '0');
           }
         });
-
     } else {
       this.showSaveDialog('new', '0');
     }
     this.saveLocally(true);
-
   }
 
-  showSaveDialog(operation: string, newVersion ?: string) {
-    const dialogTitle = this.formType === Constants.POC ? 'POC FORM' : 'Component';
-    this.dialogService.addDialog(SaveFormsComponent, {
-
-        title: `Save ${dialogTitle}`,
-        operation: operation,
-        name: this.formMetadata.name,
-        uuid: this.formMetadata.uuid,
-        version: newVersion || this.formMetadata.version,
-        encounterType: this.formMetadata.encounterType,
-        description: this.formMetadata.description,
-        rawSchema: this.rawSchema,
-        valueReference: this.formMetadata.valueReference,
-        resourceUUID: this.formMetadata.resourceUUID,
-        encounterTypes: this.encounterTypes,
-        published: this.formMetadata.published,
-
-      }, {
-        backdropColor: 'rgba(255, 255, 255, 0.5)'
-      })
-      .subscribe((res) => {
-
-        this.formMetadata.name.indexOf('component') > -1 ? this.formType = Constants.COMPONENT : this.formType = Constants.POC;
-        if (res && this.formType === Constants.COMPONENT && operation === 'new') {
-          this.disableCanDeactivate = true;
-          this.dialogService.addDialog(ConfirmComponent, {
-            message: 'Would you like to update forms referencing this component as well?',
-            title: 'Update forms',
-            buttonText: 'OK'
-          }, {
-            backdropColor: 'rgba(0,0,0,0.5)'
-          }).subscribe((confirmed) => {
-            if (confirmed) {
-              this.router.navigate(['/update', this.previousVersionUUID, this.formMetadata.uuid]);
-            }
-          });
+  showSaveDialog(operation: string, newVersion?: string) {
+    const dialogTitle =
+      this.formType === Constants.POC ? 'POC FORM' : 'Component';
+    this.dialogService
+      .addDialog(
+        SaveFormsComponent,
+        {
+          title: `Save ${dialogTitle}`,
+          operation: operation,
+          name: this.formMetadata.name,
+          uuid: this.formMetadata.uuid,
+          version: newVersion || this.formMetadata.version,
+          encounterType: this.formMetadata.encounterType,
+          description: this.formMetadata.description,
+          rawSchema: this.rawSchema,
+          valueReference: this.formMetadata.valueReference,
+          resourceUUID: this.formMetadata.resourceUUID,
+          encounterTypes: this.encounterTypes,
+          published: this.formMetadata.published
+        },
+        {
+          backdropColor: 'rgba(255, 255, 255, 0.5)'
         }
-
+      )
+      .subscribe((res) => {
+        this.formMetadata.name.indexOf('component') > -1
+          ? (this.formType = Constants.COMPONENT)
+          : (this.formType = Constants.POC);
+        if (
+          res &&
+          this.formType === Constants.COMPONENT &&
+          operation === 'new'
+        ) {
+          this.disableCanDeactivate = true;
+          this.dialogService
+            .addDialog(
+              ConfirmComponent,
+              {
+                message:
+                  'Would you like to update forms referencing this component as well?',
+                title: 'Update forms',
+                buttonText: 'OK'
+              },
+              {
+                backdropColor: 'rgba(0,0,0,0.5)'
+              }
+            )
+            .subscribe((confirmed) => {
+              if (confirmed) {
+                this.router.navigate([
+                  '/update',
+                  this.previousVersionUUID,
+                  this.formMetadata.uuid
+                ]);
+              }
+            });
+        }
       });
-
-
   }
 
   toggleView() {
     this.viewMode = this.viewMode === 'singleView' ? 'multiView' : 'singleView';
   }
-
 
   showSaveSnackbar() {
     this.snackbar.open('Saved Locally!', '', {
@@ -489,18 +557,12 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
   }
 
   saveDraft(schema: any) {
-
     this.localStorageService.setObject(Constants.SCHEMA, schema);
     this.localStorageService.setObject(Constants.TIME_STAMP, Date.now());
-
-
   }
 
   saveRawDraft(rawSchema: any) {
-
     this.localStorageService.setObject(Constants.RAW_SCHEMA, rawSchema);
-
-
   }
 
   saveFormMetadata(formMetadata) {
@@ -510,66 +572,84 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
   publish(form, index) {
     let forms = [];
     const sameFormsDifferentVersion = [];
-    this.subscription = this.fectAllFormsService.fetchAllPOCForms().subscribe((POCForms: any) => {
-      forms = _.cloneDeep(POCForms.results); // currently only poc forms version 1
-      const formName = this.formListService.removeVersionInformation(this.formMetadata.name);
-      forms.splice(index, 1);
-      const formsWithoutVersionedNames = this.formListService.removeVersionInformationFromForms(forms);
+    this.subscription = this.fectAllFormsService
+      .fetchAllPOCForms()
+      .subscribe((POCForms: any) => {
+        forms = _.cloneDeep(POCForms.results); // currently only poc forms version 1
+        const formName = this.formListService.removeVersionInformation(
+          this.formMetadata.name
+        );
+        forms.splice(index, 1);
+        const formsWithoutVersionedNames = this.formListService.removeVersionInformationFromForms(
+          forms
+        );
 
-
-      formsWithoutVersionedNames.forEach(($form) => {
-        if ($form.name === formName) {
-          sameFormsDifferentVersion.push($form);
-        }
-      });
-
-      if (!_.isEmpty(sameFormsDifferentVersion)) {
-        sameFormsDifferentVersion.forEach((_form) => {
-          if (_form.published) {
-            POCForms.results.forEach((pocform) => {
-              if (pocform.uuid === _form.uuid) {
-                this.dialogService.addDialog(ConfirmComponent, {
-                    title: 'Confirm publish',
-                    message: 'There is already a version of this form published.' +
-                    'Would you like to unpublish that version and publish this one?',
-                     buttonText: 'Publish'
-                  }, {
-                    backdropColor: 'rgba(0,0,0,0.5)'
-                  })
-                  .subscribe((isConfirmed) => {
-                    if (isConfirmed) {
-                      this.saveFormService.unpublish(pocform.uuid)
-                      .subscribe((res) => this.saveFormService.publish(this.formMetadata.uuid).subscribe( (ress) => {
-                        this.showSuccessToast('Form Successfully Published!');
-                        this.formMetadata.published = true;
-                      }));
-                    }
-                  });
-              }
-            });
-          } else {
-            this.showSuccessToast('Form Successfully Published!');
-            this.saveFormService.publish(this.formMetadata.uuid)
-            .subscribe(res => this.formMetadata.published = true); // if none of the other versions are published.
+        formsWithoutVersionedNames.forEach(($form) => {
+          if ($form.name === formName) {
+            sameFormsDifferentVersion.push($form);
           }
         });
-      } else {
-        this.saveFormService.publish(this.formMetadata.uuid).subscribe(res => {
-          this.showSuccessToast('Form Successfully Published!');
-          this.formMetadata.published = true;
-        });
-      }
 
-
-
-    });
+        if (!_.isEmpty(sameFormsDifferentVersion)) {
+          sameFormsDifferentVersion.forEach((_form) => {
+            if (_form.published) {
+              POCForms.results.forEach((pocform) => {
+                if (pocform.uuid === _form.uuid) {
+                  this.dialogService
+                    .addDialog(
+                      ConfirmComponent,
+                      {
+                        title: 'Confirm publish',
+                        message:
+                          'There is already a version of this form published.' +
+                          'Would you like to unpublish that version and publish this one?',
+                        buttonText: 'Publish'
+                      },
+                      {
+                        backdropColor: 'rgba(0,0,0,0.5)'
+                      }
+                    )
+                    .subscribe((isConfirmed) => {
+                      if (isConfirmed) {
+                        this.saveFormService
+                          .unpublish(pocform.uuid)
+                          .subscribe((res) =>
+                            this.saveFormService
+                              .publish(this.formMetadata.uuid)
+                              .subscribe((ress) => {
+                                this.showSuccessToast(
+                                  'Form Successfully Published!'
+                                );
+                                this.formMetadata.published = true;
+                              })
+                          );
+                      }
+                    });
+                }
+              });
+            } else {
+              this.showSuccessToast('Form Successfully Published!');
+              this.saveFormService
+                .publish(this.formMetadata.uuid)
+                .subscribe((res) => (this.formMetadata.published = true)); // if none of the other versions are published.
+            }
+          });
+        } else {
+          this.saveFormService
+            .publish(this.formMetadata.uuid)
+            .subscribe((res) => {
+              this.showSuccessToast('Form Successfully Published!');
+              this.formMetadata.published = true;
+            });
+        }
+      });
   }
 
   unpublish() {
-    this.saveFormService.unpublish(this.formMetadata.uuid).subscribe((res) => this.formMetadata.published = false);
-
+    this.saveFormService
+      .unpublish(this.formMetadata.uuid)
+      .subscribe((res) => (this.formMetadata.published = false));
   }
-
 
   loadFormBuilder($event) {
     this.viewMode = 'singleView';
@@ -581,16 +661,23 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
 
   validateConcepts() {
     const concepts = this.fetchAllConcepts();
-    this.snackbar.openFromComponent(NotificationComponent, { data: ' Validating Concepts...'});
+    this.snackbar.openFromComponent(NotificationComponent, {
+      data: ' Validating Concepts...'
+    });
     this.conceptService.validateConcepts(concepts).subscribe((res: any[]) => {
       const undefinedConcepts = res.filter((x) => x !== undefined);
       if (undefinedConcepts.length > 0) {
         let undefined_concepts = '\n';
-        _.each(undefinedConcepts, (concept) => { undefined_concepts = undefined_concepts + '\n' + concept; });
-        this.dialogService.addDialog(AlertComponent, { message: `The following concepts are invalid: ${concepts}`});
-        this.snackbar.dismiss(); } else {
+        _.each(undefinedConcepts, (concept) => {
+          undefined_concepts = undefined_concepts + '\n' + concept;
+        });
+        this.dialogService.addDialog(AlertComponent, {
+          message: `The following concepts are invalid: ${concepts}`
+        });
+        this.snackbar.dismiss();
+      } else {
         this.showSuccessToast('All Concepts are valid');
-        }
+      }
     });
   }
 
@@ -599,7 +686,7 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     const pages = this.schema.pages;
     _.each(pages, (page: any) => {
       _.each(page.sections, (section: any) => {
-        _.each((section.questions), (question: any) => {
+        _.each(section.questions, (question: any) => {
           if (question.questionOptions.concept) {
             concepts.push(question.questionOptions.concept);
           }
@@ -616,79 +703,156 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     return concepts;
   }
 
-  addConceptMappingsToForm(_schema, pIndex?, sIndex?, qIndex?, pqIndex?, full?) {
+  addConceptMappingsToForm(
+    _schema,
+    pIndex?,
+    sIndex?,
+    qIndex?,
+    pqIndex?,
+    full?
+  ) {
     const schema = _.cloneDeep(_schema);
-    const fullSchema = full ||  _.cloneDeep(this.rawSchema);
-    this.snackbar.openFromComponent(NotificationComponent, { data: ' Adding concept mappings...'});
+    const fullSchema = full || _.cloneDeep(this.rawSchema);
+    this.snackbar.openFromComponent(NotificationComponent, {
+      data: ' Adding concept mappings...'
+    });
 
     if (schema.pages) {
-       _.forEach(schema.pages, (page, pageIndex: number) => {
-         return this.addConceptMappingsToForm(page, pageIndex, undefined, undefined, undefined, fullSchema);
-    }); } else if (schema.sections) {
+      _.forEach(schema.pages, (page, pageIndex: number) => {
+        return this.addConceptMappingsToForm(
+          page,
+          pageIndex,
+          undefined,
+          undefined,
+          undefined,
+          fullSchema
+        );
+      });
+    } else if (schema.sections) {
       _.forEach(schema.sections, (section, sectionIndex) => {
-        return this.addConceptMappingsToForm(section, pIndex, sectionIndex, undefined, undefined, fullSchema);
-      }); } else if (schema.questions && !schema.type) {
-       _.forEach(schema.questions, (question, index) => {
-         this.addConceptMappingsToForm(question, pIndex, sIndex, index, undefined, fullSchema); }); } else
-            if (schema.questions && schema.type) {
+        return this.addConceptMappingsToForm(
+          section,
+          pIndex,
+          sectionIndex,
+          undefined,
+          undefined,
+          fullSchema
+        );
+      });
+    } else if (schema.questions && !schema.type) {
+      _.forEach(schema.questions, (question, index) => {
+        this.addConceptMappingsToForm(
+          question,
+          pIndex,
+          sIndex,
+          index,
+          undefined,
+          fullSchema
+        );
+      });
+    } else if (schema.questions && schema.type) {
       _.forEach(schema.questions, (question, pqindex) => {
-        this.addConceptMappingsToForm(question, pIndex, sIndex, qIndex, pqIndex, fullSchema); });
-
-      } else {
+        this.addConceptMappingsToForm(
+          question,
+          pIndex,
+          sIndex,
+          qIndex,
+          pqIndex,
+          fullSchema
+        );
+      });
+    } else {
       if (schema.questionOptions) {
-          if (schema.questionOptions.concept) {
+        if (schema.questionOptions.concept) {
           const concept = schema.questionOptions.concept;
           let conceptId;
-          this.conceptService.getConceptID(concept).pipe(mergeMap((conceptData) => {
-            console.log(conceptData);
-            conceptId = conceptData;
-            return this.conceptService.searchConceptByUUID(concept);
-              })).subscribe((res) => {
-                const mappings = this.conceptService.createMappingsValue(res.mappings);
+          this.conceptService
+            .getConceptID(concept)
+            .pipe(
+              mergeMap((conceptData) => {
+                console.log(conceptData);
+                conceptId = conceptData;
+                return this.conceptService.searchConceptByUUID(concept);
+              })
+            )
+            .subscribe((res) => {
+              const mappings = this.conceptService.createMappingsValue(
+                res.mappings
+              );
               if (mappings) {
-                 if (pqIndex) {
-                 fullSchema.pages[pIndex].sections[sIndex].questions[pqIndex].questions[qIndex] =
-                 this.addMappingAndIDToQuestion(schema, mappings, conceptId);
+                if (pqIndex) {
+                  fullSchema.pages[pIndex].sections[sIndex].questions[
+                    pqIndex
+                  ].questions[qIndex] = this.addMappingAndIDToQuestion(
+                    schema,
+                    mappings,
+                    conceptId
+                  );
                 } else {
-                  fullSchema.pages[pIndex].sections[sIndex].questions[qIndex] =
-                  this.addMappingAndIDToQuestion(schema, mappings, conceptId);
+                  fullSchema.pages[pIndex].sections[sIndex].questions[
+                    qIndex
+                  ] = this.addMappingAndIDToQuestion(
+                    schema,
+                    mappings,
+                    conceptId
+                  );
                 }
                 if (this.isLastQuestion(pIndex, sIndex, qIndex, pqIndex)) {
                   this.showSuccessToast('Finished mapping concepts!');
                   this.setFormEditorByRawSchema(fullSchema);
+                }
               }
-              }
-              });
-            }
+            });
+        }
         if (schema.questionOptions.answers) {
-           const answers = schema.questionOptions.answers;
-        answers.forEach((answer, answerIndex) => {
-          const concept = answer.concept;
-          let conceptData;
-          this.conceptService.searchConceptByUUID(concept).pipe(mergeMap((r) => {
-            conceptData = r;
-            return this.conceptService.getConceptID(concept);
-          })).subscribe((res) => {
-            const mappings = this.conceptService.createMappingsValue(conceptData.mappings);
-            if (mappings) {
-              if (pqIndex) { fullSchema.pages[pIndex].sections[sIndex].questions[pqIndex].questions[qIndex].answers[answerIndex] =
-                this.addMappingAndIdToAnswer(answer, mappings, res[0].concept_id);
-               } else {
-                 fullSchema.pages[pIndex].sections[sIndex].questions[qIndex].answers =
-                 this.addMappingAndIdToAnswer(answer, mappings, res[0].concept_id);
-               }
-            }
+          const answers = schema.questionOptions.answers;
+          answers.forEach((answer, answerIndex) => {
+            const concept = answer.concept;
+            let conceptData;
+            this.conceptService
+              .searchConceptByUUID(concept)
+              .pipe(
+                mergeMap((r) => {
+                  conceptData = r;
+                  return this.conceptService.getConceptID(concept);
+                })
+              )
+              .subscribe((res) => {
+                const mappings = this.conceptService.createMappingsValue(
+                  conceptData.mappings
+                );
+                if (mappings) {
+                  if (pqIndex) {
+                    fullSchema.pages[pIndex].sections[sIndex].questions[
+                      pqIndex
+                    ].questions[qIndex].answers[
+                      answerIndex
+                    ] = this.addMappingAndIdToAnswer(
+                      answer,
+                      mappings,
+                      res[0].concept_id
+                    );
+                  } else {
+                    fullSchema.pages[pIndex].sections[sIndex].questions[
+                      qIndex
+                    ].answers = this.addMappingAndIdToAnswer(
+                      answer,
+                      mappings,
+                      res[0].concept_id
+                    );
+                  }
+                }
+              });
           });
-        });
-      }}
+        }
       }
     }
-
+  }
 
   addMappingAndIDToQuestion(question: Question, mappings: any[], ID: any) {
-      question.questionOptions.conceptMappings = mappings;
-      question.questionOptions.conceptId = ID[0].concept_id;
-      return question;
+    question.questionOptions.conceptMappings = mappings;
+    question.questionOptions.conceptId = ID[0].concept_id;
+    return question;
   }
 
   addMappingAndIdToAnswer(answer, mappings: any[], ID: string) {
@@ -702,7 +866,10 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     this.fs.getReferencedFormsSchemasArray().subscribe((refForms) => {
       this.rawSchema = rawSchema;
       const uncompiledSchema = _.cloneDeep(rawSchema);
-      this.schema = this.formSchemaCompiler.compileFormSchema(uncompiledSchema, refForms);
+      this.schema = this.formSchemaCompiler.compileFormSchema(
+        uncompiledSchema,
+        refForms
+      );
       this.navigatorService.setRawSchema(this.rawSchema);
     });
   }
@@ -712,25 +879,34 @@ export class FormEditorComponent implements OnInit, OnDestroy, AfterViewChecked,
     if (pqIndex) {
       if (pIndex === this.rawSchema.pages.length - 1) {
         if (sIndex === this.rawSchema.pages[pIndex].sections.length - 1) {
-          if (qIndex === this.rawSchema.pages[pIndex].sections[sIndex].questions.length - 1 ) {
-            if (pqIndex === this.rawSchema.pages[pIndex].sections[sIndex].questions[qIndex].questions.length - 1) {
+          if (
+            qIndex ===
+            this.rawSchema.pages[pIndex].sections[sIndex].questions.length - 1
+          ) {
+            if (
+              pqIndex ===
+              this.rawSchema.pages[pIndex].sections[sIndex].questions[qIndex]
+                .questions.length -
+                1
+            ) {
               answer = true;
             }
           }
         }
       }
-     } else {
-        if (pIndex === this.rawSchema.pages.length - 1) {
+    } else {
+      if (pIndex === this.rawSchema.pages.length - 1) {
         if (sIndex === this.rawSchema.pages[pIndex].sections.length - 1) {
-          if (qIndex === this.rawSchema.pages[pIndex].sections[sIndex].questions.length - 1 ) {
-      answer = true;
-      }
+          if (
+            qIndex ===
+            this.rawSchema.pages[pIndex].sections[sIndex].questions.length - 1
+          ) {
+            answer = true;
+          }
 
-      return answer;
-  }
-
+          return answer;
         }
       }
     }
   }
-
+}

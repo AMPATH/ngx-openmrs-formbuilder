@@ -1,4 +1,3 @@
-
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -6,57 +5,76 @@ import { AuthenticationService } from '../authentication/authentication.service'
 import { SessionStorageService } from '../storage/session-storage.service';
 import { FetchFormDetailService } from '../openmrs-api/fetch-form-detail.service';
 import { LocalStorageService } from '../storage/local-storage.service';
-import { BehaviorSubject} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable()
 export class FetchAllFormsService {
+  private headers = new HttpHeaders();
+  private forms = {};
+  private baseUrl: string;
+  private formType: BehaviorSubject<string> = new BehaviorSubject('');
+  private allPOCFormsSchemas: BehaviorSubject<any>;
+  public resaveAllPOCSchemasToLocalStorage: BehaviorSubject<
+    boolean
+  > = new BehaviorSubject(false);
 
- private headers = new HttpHeaders();
- private forms = {};
- private baseUrl: string;
- private formType: BehaviorSubject<string> = new BehaviorSubject('');
- private allPOCFormsSchemas: BehaviorSubject<any>;
- public resaveAllPOCSchemasToLocalStorage: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-constructor(private http: HttpClient,
-  private sessionStorageService: SessionStorageService,
-  private localStorageService: LocalStorageService,
-  private router: Router,
-  private authenticationService: AuthenticationService,
-  private fetchFormDetailService: FetchFormDetailService) {
-  this.allPOCFormsSchemas = new BehaviorSubject(localStorageService.getObject('POC_FORM_SCHEMAS'));
-  authenticationService.getBaseUrl().subscribe((baseUrl) => this.baseUrl = baseUrl);
-  this.headers.append('Content-Type', 'application/json');
+  constructor(
+    private http: HttpClient,
+    private sessionStorageService: SessionStorageService,
+    private localStorageService: LocalStorageService,
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private fetchFormDetailService: FetchFormDetailService
+  ) {
+    this.allPOCFormsSchemas = new BehaviorSubject(
+      localStorageService.getObject('POC_FORM_SCHEMAS')
+    );
+    authenticationService
+      .getBaseUrl()
+      .subscribe((baseUrl) => (this.baseUrl = baseUrl));
+    this.headers.append('Content-Type', 'application/json');
   }
 
-
-   fetchAllPOCForms() {
-    const v = 'custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference))';
-    return this.http.get<any>(`${this.baseUrl}/ws/rest/v1/form?q=POC&v=${v}`, {headers: this.headers}).pipe(
-      catchError((e) => {
-        if (e.status === 0) {
-          alert('Please check that you have internet connection and CORS is turned on then refresh.');
-        } else if ( e.status === 403) {
-          this.router.navigate(['/login']);
-        }
-        return e;
-      }));
-
-   }
-
+  fetchAllPOCForms() {
+    const v =
+      'custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference))';
+    return this.http
+      .get<any>(`${this.baseUrl}/ws/rest/v1/form?q=POC&v=${v}`, {
+        headers: this.headers
+      })
+      .pipe(
+        catchError((e) => {
+          if (e.status === 0) {
+            alert(
+              'Please check that you have internet connection and CORS is turned on then refresh.'
+            );
+          } else if (e.status === 403) {
+            this.router.navigate(['/login']);
+          }
+          return e;
+        })
+      );
+  }
 
   fetchAllComponentForms() {
-    const v = 'custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference)';
+    const v =
+      'custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference)';
     return this.http
-    .get<any>(`${this.baseUrl}/ws/rest/v1/form?q=Component&v=${v})`, {headers: this.headers}).pipe(
-      catchError((e) => {
-        if (e.status === 0) {
-          alert('Please check that you have internet connection and CORS is turned on then refresh.');
-        } else if ( e.status === 403) {
-          this.router.navigate(['/login']);
-        }
-        return e;
-      }));
+      .get<any>(`${this.baseUrl}/ws/rest/v1/form?q=Component&v=${v})`, {
+        headers: this.headers
+      })
+      .pipe(
+        catchError((e) => {
+          if (e.status === 0) {
+            alert(
+              'Please check that you have internet connection and CORS is turned on then refresh.'
+            );
+          } else if (e.status === 403) {
+            this.router.navigate(['/login']);
+          }
+          return e;
+        })
+      );
   }
 
   setFormType(form: string) {

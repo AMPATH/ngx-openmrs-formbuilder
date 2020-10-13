@@ -1,4 +1,10 @@
-import { Component, Input, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  AfterViewChecked,
+  ChangeDetectorRef
+} from '@angular/core';
 import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 
@@ -11,32 +17,32 @@ export interface UpdateFormsWizardModel {
 @Component({
   selector: 'prompt',
   templateUrl: './update-forms-wizard-modal.component.html',
-    styleUrls: ['./update-forms-wizard-modal.component.css']
-
+  styleUrls: ['./update-forms-wizard-modal.component.css']
 })
-export class  UpdateFormsWizardModalComponent extends DialogComponent<UpdateFormsWizardModel, string> 
-implements UpdateFormsWizardModel, OnInit, AfterViewChecked {
-
+export class UpdateFormsWizardModalComponent
+  extends DialogComponent<UpdateFormsWizardModel, string>
+  implements UpdateFormsWizardModel, OnInit, AfterViewChecked {
   selectedForms: any;
   componentMetadata: any;
   oldComponentUUID: any;
-  constructor(dialogService: DialogService,
+  constructor(
+    dialogService: DialogService,
     private fb: FormBuilder,
-    private cdRef: ChangeDetectorRef) {
+    private cdRef: ChangeDetectorRef
+  ) {
     super(dialogService);
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
   }
 
-  finish($event){
+  finish($event) {
     this.result = 'finished';
-    if ($event) { super.close(); }
+    if ($event) {
+      super.close();
+    }
   }
-
 }

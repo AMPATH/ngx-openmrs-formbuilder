@@ -6,15 +6,13 @@ import * as env from '../../environments/environment';
   styleUrls: ['./build-version-footer.component.css']
 })
 export class BuildVersionFooterComponent implements OnInit {
-
   date: string;
   version: string;
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
-    const d = new Date( +env.environment.date );
+    const d = new Date(+env.environment.date);
     this.date = d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
     this.version = env.environment.version;
   }
-
 }

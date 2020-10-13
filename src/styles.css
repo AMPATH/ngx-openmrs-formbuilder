@@ -1,31 +1,30 @@
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Roboto');
- 
-.mat-sidenav-content {
-    position: relative;
-    transform: translate3d(0,0,0);
-    display: block;
-    /* height: fill-available !important; */
-    overflow-x:hidden !important;
-} 
 
+.mat-sidenav-content {
+  position: relative;
+  transform: translate3d(0, 0, 0);
+  display: block;
+  /* height: fill-available !important; */
+  overflow-x: hidden !important;
+}
 
 html {
-    height: 100%;
-    box-sizing: border-box;
-  }
-  
-  *,
-  *:before,
-  *:after {
-    box-sizing: inherit;
-  }
-  
-  body {
-    position: relative;
-    margin: 0;
-    padding-bottom: 6rem;
-    min-height: 100%;
-    background: #f9fafc;
-  }
+  height: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
+  min-height: 100%;
+  background: #f9fafc;
+}

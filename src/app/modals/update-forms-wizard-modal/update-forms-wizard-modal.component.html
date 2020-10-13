@@ -1,13 +1,16 @@
 <div class="modal-xl">
-    <div class="modal-content">
-       <div class="modal-header">
-         <button type="button" class="close" (click)="close()">&times;</button>
-         <h4 class="modal-title">Update Forms Wizard</h4>
-
-       </div>
-       <div class="modal-body">
-       <app-update-forms-wizard [_selectedForms]="selectedForms" [_newComponentMetadata]="componentMetadata" 
-       [_oldComponentMetadata]="oldComponentUUID" (finished)="finish($event)"></app-update-forms-wizard>
-       </div>
-     </div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" (click)="close()">&times;</button>
+      <h4 class="modal-title">Update Forms Wizard</h4>
     </div>
+    <div class="modal-body">
+      <app-update-forms-wizard
+        [_selectedForms]="selectedForms"
+        [_newComponentMetadata]="componentMetadata"
+        [_oldComponentMetadata]="oldComponentUUID"
+        (finished)="finish($event)"
+      ></app-update-forms-wizard>
+    </div>
+  </div>
+</div>

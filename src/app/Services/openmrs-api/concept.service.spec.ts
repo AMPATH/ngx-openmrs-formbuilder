@@ -8,7 +8,10 @@ describe('ConceptService', () => {
     });
   });
 
-  it('should be created', inject([ConceptService], (service: ConceptService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [ConceptService],
+    (service: ConceptService) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

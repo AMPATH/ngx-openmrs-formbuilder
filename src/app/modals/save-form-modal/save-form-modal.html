@@ -5,42 +5,50 @@
       <h4 class="modal-title">{{title || 'Prompt'}}</h4>
     </div>
     <div class="modal-body">
-        
       <form [formGroup]="form">
-          <div class="form-group">
-            <label>Name</label>
-            <input class="form-control"  formControlName="name">
-          </div>
+        <div class="form-group">
+          <label>Name</label>
+          <input class="form-control" formControlName="name" />
+        </div>
 
-          <div class="form-group" *ngIf="uuid">
-                <label>UUID</label>
-                <input class="form-control" [value]="uuid"  disabled>
-              </div>
+        <div class="form-group" *ngIf="uuid">
+          <label>UUID</label>
+          <input class="form-control" [value]="uuid" disabled />
+        </div>
 
-              <div class="form-group">
-                    <label>Version</label>
-                    <input class="form-control"  formControlName="version">
-                  </div>
+        <div class="form-group">
+          <label>Version</label>
+          <input class="form-control" formControlName="version" />
+        </div>
 
-                   <div class="form-group" *ngIf="encounterTypes&&formType!='component'">
-                        <label for="encounter-type">Encounter Type</label>
-                        <select class="form-control" formControlName="encounter">
-                            <option  value="" selected>Select Encounter Type</option>
-                            <option *ngFor="let e of encounterTypes" [selected]="encounterType == e.display">{{e.display}}</option>
-                        </select>
-                      </div> 
-                       
-                      <div class="form-group">
-                          <label>Description</label>
-                          <textarea class="form-control" rows="4" formControlName="description"></textarea>
-                      </div>
-       
+        <div class="form-group" *ngIf="encounterTypes&&formType!='component'">
+          <label for="encounter-type">Encounter Type</label>
+          <select class="form-control" formControlName="encounter">
+            <option value="" selected>Select Encounter Type</option>
+            <option
+              *ngFor="let e of encounterTypes"
+              [selected]="encounterType == e.display"
+            >
+              {{e.display}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea
+            class="form-control"
+            rows="4"
+            formControlName="description"
+          ></textarea>
+        </div>
       </form>
-
     </div>
     <div class="modal-footer">
       <button class="btn btn-primary" (click)="save(form.value)">OK</button>
-      <button type="button" class="btn btn-default" (click)="close()">Cancel</button>
+      <button type="button" class="btn btn-default" (click)="close()">
+        Cancel
+      </button>
     </div>
   </div>
 </div>

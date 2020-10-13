@@ -1,22 +1,21 @@
 export class Constants {
-    
-      public static readonly CREDENTIALS_KEY = 'auth.credentials';
-    
-      public static readonly USER_KEY = 'user';
+  public static readonly CREDENTIALS_KEY = 'auth.credentials';
 
-      public static readonly BASE_URL = 'url';
+  public static readonly USER_KEY = 'user';
 
-      public static readonly SCHEMA = "schema";
+  public static readonly BASE_URL = 'url';
 
-      public static readonly RAW_SCHEMA = "rawSchema";
+  public static readonly SCHEMA = 'schema';
 
-      public static readonly FORM_METADATA = "formMetadata";
+  public static readonly RAW_SCHEMA = 'rawSchema';
 
-      public static readonly TIME_STAMP = "timestamp"; //for saving locally
+  public static readonly FORM_METADATA = 'formMetadata';
 
-      public static readonly COMPONENT = "component";
+  public static readonly TIME_STAMP = 'timestamp'; //for saving locally
 
-      public static readonly POC = "poc";
+  public static readonly COMPONENT = 'component';
 
-      public static readonly FORM_TYPE = "formType";
-    }
+  public static readonly POC = 'poc';
+
+  public static readonly FORM_TYPE = 'formType';
+}

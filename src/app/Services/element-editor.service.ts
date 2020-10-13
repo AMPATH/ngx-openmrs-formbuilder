@@ -2,18 +2,16 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 @Injectable()
 export class ElementEditorService {
-
   private previouslySelectAnswers: Subject<Object> = new Subject();
   private setMembersSubject: Subject<any[]> = new Subject();
-  private reshowSetMembers: Subject<any[]>= new Subject();
+  private reshowSetMembers: Subject<any[]> = new Subject();
   private mappings: Subject<any> = new Subject();
   private id: Subject<any> = new Subject();
-  constructor() { }
+  constructor() {}
 
   reShowAnswersDialog(previouslySelected: any) {
     this.previouslySelectAnswers.next(previouslySelected);
   }
-
 
   reselectAnswers() {
     return this.previouslySelectAnswers.asObservable();
@@ -48,5 +46,4 @@ export class ElementEditorService {
   getConceptId() {
     return this.id;
   }
-
 }

@@ -1,20 +1,17 @@
 import { Injectable } from '@angular/core';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 @Injectable()
 export class QuestionIdService {
+  private IDs = [];
 
-  private IDs=[]
-  
   constructor() {}
 
-    getIDs(schema){
-      return this.collectIDs(schema);
-   }
+  getIDs(schema) {
+    return this.collectIDs(schema);
+  }
 
- 
-  
-  private collectIDs(schema){
+  private collectIDs(schema) {
     //   let $schema = _.cloneDeep(schema);
     //     if($schema.pages!=null) this.collectIDs(schema.pages);
     //     if(Array.isArray($schema)){
@@ -29,7 +26,6 @@ export class QuestionIdService {
     //         }
     //     })  }
     this.IDs = [];
-        return this.IDs;
-    }
-
+    return this.IDs;
+  }
 }

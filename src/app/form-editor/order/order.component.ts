@@ -7,18 +7,16 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
-  question: PropertyModel <any>;
+  question: PropertyModel<any>;
   form: FormGroup;
-  @Input() set _question(question: PropertyModel<any>){
+  @Input() set _question(question: PropertyModel<any>) {
     this.question = question;
   }
 
-  @Input() set _form(form: FormGroup){
+  @Input() set _form(form: FormGroup) {
     this.form = form;
   }
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

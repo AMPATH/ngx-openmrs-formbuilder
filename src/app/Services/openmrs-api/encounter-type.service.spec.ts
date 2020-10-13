@@ -9,7 +9,10 @@ describe('EncounterTypeService', () => {
     });
   });
 
-  it('should be created', inject([EncounterTypeService], (service: EncounterTypeService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [EncounterTypeService],
+    (service: EncounterTypeService) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

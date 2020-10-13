@@ -9,7 +9,10 @@ describe('FormElementFactoryService', () => {
     });
   });
 
-  it('should be created', inject([FormElementFactory], (service: FormElementFactory) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [FormElementFactory],
+    (service: FormElementFactory) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

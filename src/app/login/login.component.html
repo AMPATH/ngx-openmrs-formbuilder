@@ -1,59 +1,97 @@
-<div class="container">    
-    <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
-        <mat-card class="card" >
-                <!-- <div class="panel-heading">
+<div class="container">
+  <div
+    id="loginbox"
+    style="margin-top: 50px"
+    class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2"
+  >
+    <mat-card class="card">
+      <!-- <div class="panel-heading">
                     <div class="panel-title">Log In</div>
                     
                 </div>      -->
 
-                <div style="padding-top:30px" class="" >
+      <div style="padding-top: 30px" class="">
+        <div class="logo">
+          <img class="img-responsive" src="./assets/ampath-logo.png" />
+        </div>
 
-                    <div class="logo">
-                            <img class="img-responsive" src="./assets/ampath-logo.png">
-                    </div>
-                   
-                          
-                    <form #loginForm="ngForm"  (ngSubmit)="login(loginForm.value)" class="form-signin">
+        <form
+          #loginForm="ngForm"
+          (ngSubmit)="login(loginForm.value)"
+          class="form-signin"
+        >
+          <div style="margin-bottom: 25px">
+            <input
+              [typeahead]="baseUrls"
+              class="form-control"
+              placeholder="OpenMRS Server URL"
+              name="baseUrl"
+              ngModel
+              required
+              autocomplete="off"
+              autofocus
+            />
+          </div>
 
-                        <div style="margin-bottom: 25px">
-                            
-                            <input [typeahead]="baseUrls" class="form-control" placeholder="OpenMRS Server URL" name="baseUrl" ngModel required autocomplete="off" autofocus> 
-                        </div>
-                                
-                        <div style="margin-bottom: 25px">
-                                    
-                                    <input type="text" class="form-control" name="username" placeholder="Username" ngModel required>                                        
-                                </div>
-                            
-                        <div style="margin-bottom: 25px">
-                                    
-                                    <input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password" (keyDown)="authenticated=undefined" ngModel required>
-                                </div>
-                                <div *ngIf="authenticated!=undefined&&!authenticated" class="alert alert-danger">
-                                    <p>
-                                      Incorrect username or password
-                                    </p>
-                                  </div>
+          <div style="margin-bottom: 25px">
+            <input
+              type="text"
+              class="form-control"
+              name="username"
+              placeholder="Username"
+              ngModel
+              required
+            />
+          </div>
 
-                        <div class="text-center">
-                          <button type="submit" class="btn btn-lg btn-primary btn-block btn-signin" [disabled]="!loginForm.valid">Log In</button>
-                        </div>         
-  
-                        </form>     
+          <div style="margin-bottom: 25px">
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              id="inputPassword"
+              placeholder="Password"
+              (keyDown)="authenticated = undefined"
+              ngModel
+              required
+            />
+          </div>
+          <div
+            *ngIf="authenticated != undefined && !authenticated"
+            class="alert alert-danger"
+          >
+            <p>Incorrect username or password</p>
+          </div>
 
-                      
-                        <div class="message" *ngIf="message">
-                                <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
-                                <div class="alert" [class.alert-warning]="!authenticated" [class.alert-success]="authenticated">
-                                        <small>{{message}}</small>
-                                        <div *ngIf="message.indexOf('Logging')!=-1" class="spinner">
-                                        <i class="fa fa-spinner fa-spin"></i>
-                                        </div>
-                                      </div>
-                                </div>
+          <div class="text-center">
+            <button
+              type="submit"
+              class="btn btn-lg btn-primary btn-block btn-signin"
+              [disabled]="!loginForm.valid"
+            >
+              Log In
+            </button>
+          </div>
+        </form>
+
+        <div class="message" *ngIf="message">
+          <div
+            style="display: none"
+            id="login-alert"
+            class="alert alert-danger col-sm-12"
+          ></div>
+          <div
+            class="alert"
+            [class.alert-warning]="!authenticated"
+            [class.alert-success]="authenticated"
+          >
+            <small>{{ message }}</small>
+            <div *ngIf="message.indexOf('Logging') != -1" class="spinner">
+              <i class="fa fa-spinner fa-spin"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
 </div>
-
-                            </mat-card>                     
-                </div>  
-    </div>
-

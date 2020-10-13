@@ -1,10 +1,9 @@
-import {FormElement} from './FormElement'
-export class Page extends FormElement{
+import { FormElement } from './FormElement';
+export class Page extends FormElement {
+  sections: Array<{}> = [];
 
-    sections:Array<{}> = [];
-
-    constructor(options:{}={}){
-            super(options);
-            this.sections = options['sections'] || [];
-    }
+  constructor(options: {} = {}) {
+    super(options);
+    this.sections = options['sections'] || [];
+  }
 }

@@ -1,19 +1,19 @@
 // Modules
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormEntryModule} from 'ngx-openmrs-formentry/dist/ngx-formentry';
+import { FormEntryModule } from 'ngx-openmrs-formentry/dist/ngx-formentry';
 import { SharedModule } from '../../shared-module';
 // Services
 import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
-import {NavigatorService} from '../../Services/navigator.service';
-import {QuestionControlService} from '../../Services/question-control.service';
-import {PropertyFactory} from '../models/property-factory';
-import {FormElementFactory} from '../form-elements/form-element-factory';
-import {QuestionIdService} from '../../Services/question-id.service';
-import {ConceptService} from '../../Services/openmrs-api/concept.service';
-import {FormFactory} from '../form-elements/form-factory.service';
-import {FetchAllFormsService} from '../../Services/openmrs-api/fetch-all-forms.service';
-import {ElementEditorService} from '../../Services/element-editor.service';
+import { NavigatorService } from '../../Services/navigator.service';
+import { QuestionControlService } from '../../Services/question-control.service';
+import { PropertyFactory } from '../models/property-factory';
+import { FormElementFactory } from '../form-elements/form-element-factory';
+import { QuestionIdService } from '../../Services/question-id.service';
+import { ConceptService } from '../../Services/openmrs-api/concept.service';
+import { FormFactory } from '../form-elements/form-factory.service';
+import { FetchAllFormsService } from '../../Services/openmrs-api/fetch-all-forms.service';
+import { ElementEditorService } from '../../Services/element-editor.service';
 import { FormSchemaCompiler } from '../../Services/schema-compiler.service';
 import { UpdateComponentService } from '../../Services/update-component.service';
 
@@ -22,18 +22,14 @@ import { ReferenceFormsComponent } from '../reference-forms/reference-forms.comp
 import { SchemaEditorComponent } from '../schema-editor/schema-editor.component';
 import { ElementEditorComponent } from '../element-editor/element-editor.component';
 import { FormRendererComponent } from '../form-renderer/form-renderer.component';
-import {DynamicQuestionComponent} from '../element-editor/dynamic-question/dynamic-question.component';
+import { DynamicQuestionComponent } from '../element-editor/dynamic-question/dynamic-question.component';
 import { ConceptComponent } from '../concept/concept.component';
 import { FormEditorComponent } from './form-editor.component';
 import { AuditInfoComponent } from '../audit-info/audit-info.component';
 import { UpdateFormsComponent } from '../update-forms/update-forms.component';
 import { OrderComponent } from '../order/order.component';
 @NgModule({
-  imports: [
-    CommonModule,
-    FormEntryModule,
-    SharedModule
-  ],
+  imports: [CommonModule, FormEntryModule, SharedModule],
 
   declarations: [
     SchemaEditorComponent,
@@ -63,8 +59,6 @@ import { OrderComponent } from '../order/order.component';
     UpdateComponentService
   ],
 
-  exports: [
-    FormEntryModule
-  ]
+  exports: [FormEntryModule]
 })
-export class FormEditorModule { }
+export class FormEditorModule {}
