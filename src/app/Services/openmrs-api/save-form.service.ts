@@ -138,8 +138,6 @@ export class SaveFormService {
     return this.newDescription.asObservable();
   }
 
-  ///////////////////////////////////////////////////////////////////////
-
   publish(uuid) {
     const body = { published: true };
     return this.http.post(`${this.baseUrl}/ws/rest/v1/form/${uuid}`, body, {
