@@ -51,7 +51,9 @@ export class ConfirmComponent
 
   close() {
     super.close();
-    if (!this.result) this.result = 0;
+    if (!this.result) {
+      this.result = 0;
+    }
   }
 
   confirm() {

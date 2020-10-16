@@ -19,8 +19,7 @@ export class QuestionControlService {
   ) {}
 
   toFormGroup(questions: PropertyModel<any>[]): FormGroup {
-    let group: any = {};
-    let ArrPropModelArray: any;
+    const group: any = {};
     questions.forEach((question) => {
       group[question.key] = question.required
         ? new FormControl(question.value || '', Validators.required)
@@ -32,10 +31,13 @@ export class QuestionControlService {
 
   toPropertyModelArray(schema: any) {
     this.propertyModels = [];
-    let flattenedSchema: any = this.flatten(schema);
+    const flattenedSchema: any = this.flatten(schema);
     console.log(flattenedSchema);
-    for (var prop in flattenedSchema) {
-      this.createFields(prop, flattenedSchema[prop]);
+    // TODO: Replace with for...of
+    for (const prop in flattenedSchema) {
+      if (flattenedSchema.hasOwnProperty(prop)) {
+        this.createFields(prop, flattenedSchema[prop]);
+      }
     }
 
     return this.propertyModels;
@@ -284,7 +286,9 @@ export class QuestionControlService {
       case 'validators':
         options.label = 'Validators';
         options.rows = 5;
-        if (value) options.value = JSON.stringify(value, undefined, '\t');
+        if (value) {
+          options.value = JSON.stringify(value, undefined, '\t');
+        }
         this.propertyModels.push(
           this.propertyFactory.createProperty('textarea', options)
         );
@@ -302,7 +306,9 @@ export class QuestionControlService {
       case 'questionOptions.answers':
         options.label = 'Answers';
         options.rows = 5;
-        if (value) options.value = JSON.stringify(value, undefined, '\t');
+        if (value) {
+          options.value = JSON.stringify(value, undefined, '\t');
+        }
         this.propertyModels.push(
           this.propertyFactory.createProperty('textarea', options)
         );
@@ -311,7 +317,9 @@ export class QuestionControlService {
       case 'historicalExpression':
         options.label = 'Historical Expression';
         options.rows = 4;
-        if (value) options.value = JSON.stringify(value, undefined, '\t');
+        if (value) {
+          options.value = JSON.stringify(value, undefined, '\t');
+        }
         this.propertyModels.push(
           this.propertyFactory.createProperty('textarea', options)
         );
@@ -355,7 +363,9 @@ export class QuestionControlService {
       case 'questionOptions.showDateOptions':
         options.label = 'Show Date Options';
         options.rows = 5;
-        if (value) options.value = JSON.stringify(value, undefined, '\t');
+        if (value) {
+          options.value = JSON.stringify(value, undefined, '\t');
+        }
         this.propertyModels.push(
           this.propertyFactory.createProperty('textarea', options)
         );
@@ -365,7 +375,9 @@ export class QuestionControlService {
         options.label = 'Show Weeks List';
         options.rows = 3;
         options.placeholder = '[2,12,16,18...]';
-        if (value) options.value = JSON.stringify(value, undefined, '\t');
+        if (value) {
+          options.value = JSON.stringify(value, undefined, '\t');
+        }
         this.propertyModels.push(
           this.propertyFactory.createProperty('textarea', options)
         );
@@ -374,14 +386,16 @@ export class QuestionControlService {
       case 'alert':
         options.label = 'Alert';
         options.rows = 5;
-        if (value) options.value = JSON.stringify(value, undefined, '\t');
+        if (value) {
+          options.value = JSON.stringify(value, undefined, '\t');
+        }
         this.propertyModels.push(
           this.propertyFactory.createProperty('textarea', options)
         );
         break;
 
       case 'questionOptions.selectableOrders':
-        let p = this.properties.getPropertyByName('selectableOrders');
+        const p = this.properties.getPropertyByName('selectableOrders');
         p.value = JSON.stringify(value, undefined, '\t');
         this.propertyModels.push(p);
         break;
@@ -402,7 +416,7 @@ export class QuestionControlService {
   }
 
   flatten(data) {
-    var result = {};
+    const result = {};
 
     function recurse(cur, prop) {
       if (Object(cur) !== cur) {
@@ -410,12 +424,16 @@ export class QuestionControlService {
       } else if (Array.isArray(cur)) {
         result[prop] = cur;
       } else {
-        var isEmpty = true;
-        for (var p in cur) {
-          isEmpty = false;
-          recurse(cur[p], prop ? prop + '.' + p : p);
+        let isEmpty = true;
+        for (const p in cur) {
+          if (cur.hasOwnProperty(p)) {
+            isEmpty = false;
+            recurse(cur[p], prop ? prop + '.' + p : p);
+          }
         }
-        if (isEmpty && prop) result[prop] = {};
+        if (isEmpty && prop) {
+          result[prop] = {};
+        }
       }
     }
     recurse(data, '');
@@ -424,18 +442,22 @@ export class QuestionControlService {
 
   unflatten(data) {
     'use strict';
-    if (Object(data) !== data || Array.isArray(data)) return data;
-    var regex = /\.?([^.\[\]]+)|\[(\d+)\]/g,
+    if (Object(data) !== data || Array.isArray(data)) {
+      return data;
+    }
+    const regex = /\.?([^.\[\]]+)|\[(\d+)\]/g,
       resultholder = {};
-    for (var p in data) {
-      var cur = resultholder,
-        prop = '',
-        m;
-      while ((m = regex.exec(p))) {
-        cur = cur[prop] || (cur[prop] = m[2] ? [] : {});
-        prop = m[2] || m[1];
+    for (const p in data) {
+      if (data.hasOwnProperty(p)) {
+        let cur = resultholder,
+          prop = '',
+          m;
+        while ((m = regex.exec(p))) {
+          cur = cur[prop] || (cur[prop] = m[2] ? [] : {});
+          prop = m[2] || m[1];
+        }
+        cur[prop] = data[p];
       }
-      cur[prop] = data[p];
     }
     return resultholder[''] || resultholder;
   }

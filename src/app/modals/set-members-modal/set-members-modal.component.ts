@@ -25,6 +25,7 @@ interface Answer {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'set-members-modal',
   templateUrl: './set-members-modal.component.html',
   styleUrls: ['./set-members-modal.component.css']
@@ -59,7 +60,7 @@ export class SetMembersModalComponent
 
   setQuestions(event, i) {
     if (event.target.checked) {
-      let question: Questions = {
+      const question: Questions = {
         label: this.setMembers[i].display,
         concept: this.setMembers[i].uuid,
         answers: []
@@ -67,7 +68,7 @@ export class SetMembersModalComponent
       this.questionsChecked.push(question);
     } else {
       this.questionsChecked.forEach((question, index) => {
-        if (question.concept == this.setMembers[i].uuid) {
+        if (question.concept === this.setMembers[i].uuid) {
           this.questionsChecked.splice(index, 1);
           return;
         }
@@ -76,9 +77,9 @@ export class SetMembersModalComponent
   }
 
   setAnswers(event, i, j) {
-    let $ans = this.setMembers[i].answers[j];
+    const $ans = this.setMembers[i].answers[j];
     if (event.target.checked) {
-      let answer: Answer = {
+      const answer: Answer = {
         label: $ans.display,
         concept: $ans.uuid,
         conceptMappings: this.cs.createMappingsValue($ans.mappings)
@@ -86,8 +87,8 @@ export class SetMembersModalComponent
 
       this.questionsChecked.forEach((question, index) => {
         if (
-          question.concept == this.setMembers[i].uuid &&
-          question.answers.indexOf(answer) == -1
+          question.concept === this.setMembers[i].uuid &&
+          question.answers.indexOf(answer) === -1
         ) {
           this.questionsChecked[index]['answers'].push(answer);
           return;
@@ -96,7 +97,7 @@ export class SetMembersModalComponent
     } else {
       this.questionsChecked.forEach((question, qIndex) => {
         question.answers.forEach((answer, aIndex) => {
-          if (answer.concept == this.setMembers[i].answers[j].uuid) {
+          if (answer.concept === this.setMembers[i].answers[j].uuid) {
             this.questionsChecked[qIndex].answers.splice(aIndex, 1);
             return;
           }
@@ -106,9 +107,9 @@ export class SetMembersModalComponent
   }
 
   isQuestionChecked(index) {
-    let isChecked: boolean = false;
+    let isChecked = false;
     this.questionsChecked.forEach((question) => {
-      if (this.setMembers[index].display == question.label) {
+      if (this.setMembers[index].display === question.label) {
         isChecked = true;
       }
     });

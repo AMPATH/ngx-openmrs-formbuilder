@@ -1,15 +1,7 @@
 <mat-toolbar color="primary">
-  <span
-    class="menu"
-    style="font-size: 18px; font-family: 'Roboto'; color: white"
-    >Form Builder</span
-  >
+  <span class="menu" style="font-size: 18px; font-family: 'Roboto'; color: white">Form Builder</span>
   <span style="margin-left: 15px">
-    <button
-      mat-button
-      (click)="createNew()"
-      style="color: white; font-size: 14px"
-    >
+    <button mat-button (click)="createNew()" style="color: white; font-size: 14px">
       <i class="fa fa-plus-circle"></i> Create New
     </button>
   </span>
@@ -18,23 +10,13 @@
     </span> -->
   <span class="fill"></span>
   <span class="dropdown">
-    <button
-      class="btn btn-info dropdown-toggle"
-      type="button"
-      data-toggle="dropdown"
-    >
+    <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
       <i class="fa fa-user"></i> {{ username }} <span class="caret"></span>
     </button>
     <ul class="dropdown-menu pull-right">
       <li>
-        <a (click)="logout()"
-          ><i class="fa fa-sign-out" style="color: red"></i> Sign Out
-          <i
-            [class.fa-spinner]="loggingOut"
-            [class.fa-spin]="loggingOut"
-            class="fa"
-          ></i
-        ></a>
+        <a (click)="logout()"><i class="fa fa-sign-out" style="color: red"></i> Sign Out
+          <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i></a>
       </li>
     </ul>
   </span>
@@ -68,10 +50,7 @@
         <div class="panel-heading">
           <div class="row">
             <div class="col col-xs-2">
-              <select
-                class="form-control panel-title"
-                (change)="onChange($event.target.value)"
-              >
+              <select class="form-control panel-title" (change)="onChange($event.target.value)">
                 <option>POC Forms</option>
                 <option>Component Forms</option>
               </select>
@@ -80,38 +59,19 @@
             <div class="col col-xs-5 pull-right">
               <div class="input-group">
                 <!-- Input -->
-                <input
-                  type="text"
-                  class="form-control"
-                  [(ngModel)]="searchValue"
-                  placeholder="Search"
-                  id="search-box"
-                />
-                <span
-                  class="input-group-addon"
-                  style="background: white; border-left: none"
-                >
+                <input type="text" class="form-control" [(ngModel)]="searchValue" placeholder="Search"
+                  id="search-box" />
+                <span class="input-group-addon" style="background: white; border-left: none">
                   <i class="fa fa-search"></i>
                 </span>
                 <!-- Dropdown -->
                 <div class="input-group-btn">
-                  <button
-                    type="button"
-                    class="btn btn-default"
-                    data-toggle="dropdown"
-                  >
-                    <i class="fa fa-filter"></i> Filter<span
-                      class="caret"
-                    ></span>
+                  <button type="button" class="btn btn-default" data-toggle="dropdown">
+                    <i class="fa fa-filter"></i> Filter<span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu pull-right" role="menu">
                     <li>
-                      <input
-                        type="radio"
-                        name="filter"
-                        value="published"
-                        [(ngModel)]="searchFilter"
-                      />
+                      <input type="radio" name="filter" value="published" [(ngModel)]="searchFilter" />
                       Published
                     </li>
                   </ul>
@@ -132,77 +92,50 @@
               </tr>
             </thead>
             <tbody *ngIf="forms.length > 0">
-              <tr
-                *ngFor="
+              <tr *ngFor="
                   let form of forms
                     | formfilter: searchValue:searchFilter
                     | paginate: { itemsPerPage: 11, currentPage: page };
                   let i = index
-                "
-              >
+                ">
                 <td class="formName">
                   <b>{{ form.name }}</b>
                 </td>
                 <td>{{ form.version }}</td>
                 <td>
-                  <label *ngIf="form.published" class="label label-success"
-                    >Yes</label
-                  >
-                  <label *ngIf="!form.published" class="label label-danger"
-                    >No</label
-                  >
+                  <label *ngIf="form.published" class="label label-success">Yes</label>
+                  <label *ngIf="!form.published" class="label label-danger">No</label>
                 </td>
                 <td>
-                  <label *ngIf="form.retired" class="label label-danger"
-                    >Yes</label
-                  >
-                  <label *ngIf="!form.retired" class="label label-success"
-                    >No</label
-                  >
+                  <label *ngIf="form.retired" class="label label-danger">Yes</label>
+                  <label *ngIf="!form.retired" class="label label-success">No</label>
                 </td>
-                <td
-                  *ngIf="
-                    form.resources.length == 0 ||
+                <td *ngIf="
+                    form.resources.length === 0 ||
                     !form.resources[0]?.valueReference
-                  "
-                >
+                  ">
                   <a style="cursor: pointer">
-                    <i
-                      class="material-icons"
-                      (click)="addSchema(form)"
-                      data-toggle="tooltip"
-                      title="No schema associated with this form. Import schema?"
-                      >note_add</i
-                    >
+                    <i class="material-icons" (click)="addSchema(form)" data-toggle="tooltip"
+                      title="No schema associated with this form. Import schema?">note_add</i>
                   </a>
                 </td>
-                <td
-                  *ngIf="
+                <td *ngIf="
                     form.resources.length > 0 ||
                     form.resources[0]?.valueReference
-                  "
-                >
-                  <a
-                    (click)="editForm(form, form.uuid)"
-                    style="cursor: pointer"
-                    data-toggle="tooltip"
-                    title="Edit Schema"
-                  >
+                  ">
+                  <a (click)="editForm(form, form.uuid)" style="cursor: pointer" data-toggle="tooltip"
+                    title="Edit Schema">
                     <i class="material-icons edit">mode_edit</i>
                   </a>
-                  <a
-                    (click)="download(form.resources[0].valueReference)"
-                    style="cursor: pointer"
-                    data-toggle="tooltip"
-                    title="Download Schema"
-                  >
+                  <a (click)="download(form.resources[0].valueReference)" style="cursor: pointer" data-toggle="tooltip"
+                    title="Download Schema">
                     <i class="material-icons download">get_app</i>
                   </a>
                 </td>
               </tr>
             </tbody>
 
-            <tbody *ngIf="forms.length == 0">
+            <tbody *ngIf="forms.length === 0">
               <td>{{ loadingMessage }}</td>
               <td>-</td>
               <td>-</td>
@@ -212,9 +145,7 @@
         </div>
         <div class="panel-footer">
           <div class="row">
-            <pagination-controls
-              (pageChange)="page = $event"
-            ></pagination-controls>
+            <pagination-controls (pageChange)="page = $event"></pagination-controls>
           </div>
         </div>
       </div>

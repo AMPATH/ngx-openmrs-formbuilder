@@ -14,6 +14,7 @@ export interface ReferenceModel {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'prompt',
   templateUrl: './insert-reference-forms.modal.html',
   styleUrls: ['./insert-reference-forms.modal.css']
@@ -23,7 +24,7 @@ export class InsertReferenceComponent
   implements ReferenceModel, OnInit, AfterViewChecked {
   title: string;
   forms: any;
-  selected: boolean = false;
+  selected = false;
   errorMessage: string;
 
   constructor(
@@ -41,7 +42,7 @@ export class InsertReferenceComponent
   }
 
   save(value) {
-    let uuid = this.findFormUUID(value.refForm);
+    const uuid = this.findFormUUID(value.refForm);
 
     if (_.isUndefined(uuid)) {
       this.errorMessage = 'Invalid form.';
@@ -60,7 +61,9 @@ export class InsertReferenceComponent
   findFormUUID(formName) {
     let uuid;
     this.forms.forEach((form) => {
-      if (form.name == formName) uuid = form.uuid;
+      if (form.name === formName) {
+        uuid = form.uuid;
+      }
     });
     return uuid;
   }

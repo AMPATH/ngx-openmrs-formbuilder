@@ -12,6 +12,7 @@ export interface AnswersModel {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'prompt',
   templateUrl: './answers-modal.html',
   styleUrls: ['./answers-modal.css']
@@ -21,7 +22,7 @@ export class AnswersComponent
   implements AnswersModel, OnInit, AfterViewChecked {
   answers: any;
   checkboxes = [];
-  checked: boolean = false;
+  checked = false;
 
   constructor(
     dialogService: DialogService,

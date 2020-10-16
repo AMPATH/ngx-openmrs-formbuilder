@@ -16,8 +16,8 @@ export class AuthenticationService {
     private sessionService: SessionService
   ) {
     if (
-      this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY) != null &&
-      this.sessionStorageService.getItem(Constants.BASE_URL) != null
+      this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY) !== null &&
+      this.sessionStorageService.getItem(Constants.BASE_URL) !== null
     ) {
       this.setCredentialsSubjectEncrypted(
         this.sessionStorageService.getItem(Constants.CREDENTIALS_KEY)

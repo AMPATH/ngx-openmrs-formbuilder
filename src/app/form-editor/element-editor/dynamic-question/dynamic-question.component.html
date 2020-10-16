@@ -3,33 +3,19 @@
 
   <label [attr.for]="question.key" class="label">{{ question.label }}</label>
   <span>
-    <small *ngIf="!isControlValid(question.key)" class="text-danger"
-      >This field is required.</small
-    >
+    <small *ngIf="!isControlValid(question.key)" class="text-danger">This field is required.</small>
   </span>
 
   <div [ngSwitch]="question.controlType">
     <div [id]="question.label" class="">
       <div class="form-group">
-        <input
-          *ngSwitchCase="'textbox'"
-          class="form-control"
-          [formControlName]="question.key"
-          [id]="question.key"
-          [type]="question.type"
-          [placeholder]="question.placeholder"
-          [value]="question.value"
-          [type]="question.type"
-        />
+        <input *ngSwitchCase="'textbox'" class="form-control" [formControlName]="question.key" [id]="question.key"
+          [type]="question.type" [placeholder]="question.placeholder" [value]="question.value" [type]="question.type" />
       </div>
 
       <div class="form-group">
-        <select
-          *ngSwitchCase="'select'"
-          class="form-control"
-          [formControlName]="question.key"
-          (change)="typeSelected(question.key)"
-        >
+        <select *ngSwitchCase="'select'" class="form-control" [formControlName]="question.key"
+          (change)="typeSelected(question.key)">
           <option *ngFor="let opt of question.options" [value]="opt.key">
             {{ opt.value }}
           </option>
@@ -37,35 +23,18 @@
       </div>
 
       <div class="form-group ace-input">
-        <textarea
-          *ngSwitchCase="'textarea'"
-          [formControlName]="question.key"
-          style="display: none"
-          [value]="question.value"
-        ></textarea>
-        <div
-          *ngSwitchCase="'textarea'"
-          ace-editor
-          [(text)]="question.value"
-          [mode]="'javascript'"
-          [theme]="'chrome'"
-          [readOnly]="false"
-          [autoUpdateContent]="true"
-          [durationBeforeCallback]="1000"
-          (textChanged)="onTextAreaChanged($event, question.key)"
-          style="min-height: 200px; width: 100%"
-        ></div>
+        <textarea *ngSwitchCase="'textarea'" [formControlName]="question.key" style="display: none"
+          [value]="question.value"></textarea>
+        <div *ngSwitchCase="'textarea'" ace-editor [(text)]="question.value" [mode]="'javascript'" [theme]="'chrome'"
+          [readOnly]="false" [autoUpdateContent]="true" [durationBeforeCallback]="1000"
+          (textChanged)="onTextAreaChanged($event, question.key)" style="min-height: 200px; width: 100%"></div>
       </div>
 
       <div class="form-group">
         <div *ngSwitchCase="'searchbox'">
-          <app-concept
-            *ngIf="question.searchData == 'concept'"
-            [question]="question"
-            [form]="form"
-            (answers)="emitAnswers($event)"
-          ></app-concept>
-          <!--<app-order *ngIf="question.searchData == 'order'" [_question]="question" [_form]="form"></app-order>-->
+          <app-concept *ngIf="question.searchData === 'concept'" [question]="question" [form]="form"
+            (answers)="emitAnswers($event)"></app-concept>
+          <!--<app-order *ngIf="question.searchData === 'order'" [_question]="question" [_form]="form"></app-order>-->
         </div>
       </div>
     </div>

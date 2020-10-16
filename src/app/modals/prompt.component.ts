@@ -8,6 +8,7 @@ export interface PromptModel {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'prompt',
   template: `<div class="modal-dialog">
     <div class="modal-content">
@@ -72,7 +73,7 @@ export class PromptComponent
   implements PromptModel {
   title: string;
   questions: any;
-  message: string = '';
+  message = '';
   form: FormGroup;
 
   constructor(dialogService: DialogService) {
@@ -84,6 +85,8 @@ export class PromptComponent
   }
 
   keyDownFunction($event) {
-    if ($event.keyCode == 13 && this.form.valid) this.save();
+    if ($event.keyCode === 13 && this.form.valid) {
+      this.save();
+    }
   }
 }

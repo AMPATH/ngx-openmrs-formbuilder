@@ -36,18 +36,18 @@ export class DynamicQuestionComponent implements OnInit {
   }
 
   typeSelected(selectBox: string) {
-    if (selectBox == 'type') {
-      let value = this.form.controls['type'].value;
+    if (selectBox === 'type') {
+      const value = this.form.controls['type'].value;
       this.type.emit(value);
     }
 
-    if (selectBox == 'questionOptions.rendering') {
-      let value = this.form.controls['questionOptions.rendering'].value;
+    if (selectBox === 'questionOptions.rendering') {
+      const value = this.form.controls['questionOptions.rendering'].value;
       this.rendering.emit(value);
     }
 
-    if (selectBox == 'questionOptions.showDate') {
-      let value = this.form.controls['questionOptions.showDate'].value;
+    if (selectBox === 'questionOptions.showDate') {
+      const value = this.form.controls['questionOptions.showDate'].value;
       this.showDate.emit(value);
     }
   }

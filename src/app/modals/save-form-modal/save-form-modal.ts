@@ -91,16 +91,15 @@ export class SaveFormsComponent
           });
       }
       if (this.encounterType !== formValue.encounter) {
-        // tslint:disable-next-line:no-shadowed-variable
-        const encounterType = _.find(
+        const encType = _.find(
           this.encounterTypes,
           (encounterType: { display: any }) => {
             return encounterType.display === formValue.encounter;
           }
         );
-        if (encounterType) {
+        if (encType) {
           this.saveFormService
-            .updateEncounterType(encounterType, this.uuid)
+            .updateEncounterType(encType, this.uuid)
             .subscribe((res) => {
               this.updateForm();
             });

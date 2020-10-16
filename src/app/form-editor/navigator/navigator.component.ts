@@ -115,7 +115,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       this.editMode = true;
       this.selectMode = false;
       this.updateMode = false;
-    } else if (this.mode == 'update') {
+    } else if (this.mode === 'update') {
       this.selectMode = false;
       this.editMode = false;
       this.updateMode = true;
@@ -125,7 +125,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       this.updateMode = false;
     }
     this.subscription = this.ns.getExcludedQuestions().subscribe((res) => {
-      if (res != '') {
+      if (res !== '') {
         this.excludedQuestions.push(res);
       } else {
         this.excludedQuestions = [];
@@ -154,7 +154,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
     if (this.selectMode) {
       return;
     }
-    let schemaObj = {};
+    const schemaObj = {};
     schemaObj['selectedSchema'] = selectedSchema;
     schemaObj['pageIndex'] = pageIndex;
     schemaObj['sectionIndex'] = sectionIndex;
@@ -162,10 +162,10 @@ export class NavigatorComponent implements OnInit, OnDestroy {
     this.ns.setClickedElementSchema(schemaObj);
 
     if (
-      pageIndex != undefined &&
-      sectionIndex != undefined &&
-      questionIndex != undefined &&
-      parentQuestionIndex != undefined
+      pageIndex !== undefined &&
+      sectionIndex !== undefined &&
+      questionIndex !== undefined &&
+      parentQuestionIndex !== undefined
     ) {
       if (this.rawSchema.pages[pageIndex].label) {
         if (this.rawSchema.pages[pageIndex].sections[sectionIndex].label) {
@@ -185,9 +185,9 @@ export class NavigatorComponent implements OnInit, OnDestroy {
         this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex]);
       }
     } else if (
-      pageIndex != undefined &&
-      sectionIndex != undefined &&
-      questionIndex != undefined
+      pageIndex !== undefined &&
+      sectionIndex !== undefined &&
+      questionIndex !== undefined
     ) {
       if (this.rawSchema.pages[pageIndex].label) {
         if (this.rawSchema.pages[pageIndex].sections[sectionIndex].label) {
@@ -207,7 +207,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
         this.ns.setClickedElementRawSchema(this.rawSchema.pages[pageIndex]);
         return;
       }
-    } else if (pageIndex != undefined && sectionIndex != undefined) {
+    } else if (pageIndex !== undefined && sectionIndex !== undefined) {
       if (this.rawSchema.pages[pageIndex].label) {
         this.ns.setClickedElementRawSchema(
           this.rawSchema.pages[pageIndex].sections[sectionIndex]
@@ -243,8 +243,8 @@ export class NavigatorComponent implements OnInit, OnDestroy {
   }
 
   showAddForm(element: string, pageIndex?: number) {
-    if (element == 'page') {
-      let newPage = this.formElementFactory.createFormElement(element, {
+    if (element === 'page') {
+      const newPage = this.formElementFactory.createFormElement(element, {
         label: ''
       });
       this.propertyModelArray = this.qcs.toPropertyModelArray(newPage);
@@ -252,7 +252,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       this.showAddDialog(this.propertyModelArray, this.addForm);
     } else {
       console.log(pageIndex);
-      let newSection = this.formElementFactory.createFormElement(element, {});
+      const newSection = this.formElementFactory.createFormElement(element, {});
       this.propertyModelArray = this.qcs.toPropertyModelArray(newSection);
       this.addForm = this.qcs.toFormGroup(this.propertyModelArray);
       this.showAddDialog(this.propertyModelArray, this.addForm, pageIndex);
@@ -280,22 +280,24 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       )
       .subscribe((isConfirmed) => {
         if (isConfirmed) {
-          if (element == 'page') this.deletePage(pageIndex);
-          else if (element == 'section')
+          if (element === 'page') {
+            this.deletePage(pageIndex);
+          } else if (element === 'section') {
             this.deleteSection(pageIndex, sectionIndex);
-          else
+          } else {
             this.deleteQuestion(
               pageIndex,
               sectionIndex,
               questionIndex,
               parentQuestionIndex
             );
+          }
         }
       });
   }
 
   showEditDialog(propModelArray, form, pageIndex, sectionIndex?) {
-    if (sectionIndex > -1)
+    if (sectionIndex > -1) {
       this.subscription = this.dialogService
         .addDialog(PromptComponent, {
           title: 'Edit Section',
@@ -303,9 +305,11 @@ export class NavigatorComponent implements OnInit, OnDestroy {
           form: form
         })
         .subscribe((formValue) => {
-          if (formValue) this.editSection(formValue, pageIndex, sectionIndex);
+          if (formValue) {
+            this.editSection(formValue, pageIndex, sectionIndex);
+          }
         });
-    else
+    } else {
       this.subscription = this.dialogService
         .addDialog(PromptComponent, {
           title: 'Edit Page',
@@ -313,12 +317,15 @@ export class NavigatorComponent implements OnInit, OnDestroy {
           form: form
         })
         .subscribe((formValue) => {
-          if (formValue) this.editPage(formValue['label'], pageIndex);
+          if (formValue) {
+            this.editPage(formValue['label'], pageIndex);
+          }
         });
+    }
   }
 
   showAddDialog(propModelArray, form, pageIndex?) {
-    if (pageIndex != undefined && pageIndex > -1) {
+    if (pageIndex !== undefined && pageIndex > -1) {
       this.subscription = this.dialogService
         .addDialog(
           PromptComponent,
@@ -332,9 +339,11 @@ export class NavigatorComponent implements OnInit, OnDestroy {
           }
         )
         .subscribe((formValue) => {
-          if (formValue != undefined) this.addSection(formValue, pageIndex);
+          if (formValue !== undefined) {
+            this.addSection(formValue, pageIndex);
+          }
         });
-    } else
+    } else {
       this.subscription = this.dialogService
         .addDialog(
           PromptComponent,
@@ -348,8 +357,11 @@ export class NavigatorComponent implements OnInit, OnDestroy {
           }
         )
         .subscribe((formValue) => {
-          if (formValue) this.addPage(formValue['label']);
+          if (formValue) {
+            this.addPage(formValue['label']);
+          }
         });
+    }
   }
 
   editPage(label, pageIndex) {
@@ -390,7 +402,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
     questionIndex: number,
     parentQuestionIndex?: number
   ) {
-    let schemaObj = {};
+    const schemaObj = {};
     schemaObj['selectedSchema'] = question;
     schemaObj['pageIndex'] = pageIndex;
     schemaObj['sectionIndex'] = sectionIndex;
@@ -399,7 +411,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
     this.ns.setClickedElementSchema(schemaObj); // set the current edited question in the schema editor
 
     this.propertyModelArray = this.qcs.toPropertyModelArray(question);
-    if (parentQuestionIndex != undefined && parentQuestionIndex > -1) {
+    if (parentQuestionIndex !== undefined && parentQuestionIndex > -1) {
       // thy art an obsgroup question!
       this.ns.newQuestion(
         this.propertyModelArray,
@@ -422,7 +434,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
 
   addPage(label: string) {
     if (!this.doesPageExist(label)) {
-      let newPage = this.formElementFactory.createFormElement('page', {
+      const newPage = this.formElementFactory.createFormElement('page', {
         label: label
       });
       this.rawSchema.pages.push(newPage);
@@ -430,14 +442,15 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       this.ns.setSchema(this._formSchema);
       this.ns.setRawSchema(this.rawSchema);
       this.onClicked(newPage, this.rawSchema.pages.length - 1);
-    } else
+    } else {
       this.showAlertDialog(
         'Page already exists! \n Try creating one with a different label!'
       );
+    }
   }
 
   addSection(value, pageIndex: number) {
-    let newSection = this.formElementFactory.createFormElement('section', {
+    const newSection = this.formElementFactory.createFormElement('section', {
       label: value.label,
       isExpanded: value.isExpanded
     });
@@ -466,9 +479,12 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       'questionIndex',
       questionIndex
     );
-    let newQuestion = this.formElementFactory.createFormElement('question', {});
-    let propertyModelArray = this.qcs.toPropertyModelArray(newQuestion);
-    if (questionIndex != undefined) {
+    const newQuestion = this.formElementFactory.createFormElement(
+      'question',
+      {}
+    );
+    const propertyModelArray = this.qcs.toPropertyModelArray(newQuestion);
+    if (questionIndex !== undefined) {
       this.ns.newQuestion(
         propertyModelArray,
         pageIndex,
@@ -545,7 +561,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
   }
 
   addReferencePage() {
-    if (this.referencedForms.length > 0)
+    if (this.referencedForms.length > 0) {
       this.subscription = this.dialogService
         .addDialog(
           ReferenceModalComponent,
@@ -557,16 +573,18 @@ export class NavigatorComponent implements OnInit, OnDestroy {
           }
         )
         .subscribe((res) => {
-          if (res != undefined) {
+          if (res !== undefined) {
             this.createRefPages(JSON.parse(res));
           }
         });
-    else this.showAlertDialog('Insert reference form first');
+    } else {
+      this.showAlertDialog('Insert reference form first');
+    }
   }
 
   addReferenceSection(pageIndex) {
     this.ns.setExcludedQuestions('');
-    if (this.referencedForms.length > 0)
+    if (this.referencedForms.length > 0) {
       this.subscription = this.dialogService
         .addDialog(
           ReferenceModalComponent,
@@ -578,15 +596,17 @@ export class NavigatorComponent implements OnInit, OnDestroy {
           }
         )
         .subscribe((res) => {
-          if (res != undefined) {
+          if (res !== undefined) {
             this.createRefSections(JSON.parse(res), pageIndex);
           }
         });
-    else this.showAlertDialog('Insert reference form first');
+    } else {
+      this.showAlertDialog('Insert reference form first');
+    }
   }
 
   addReferenceQuestion(pageIndex, sectionIndex, questionIndex?) {
-    if (this.referencedForms.length > 0)
+    if (this.referencedForms.length > 0) {
       this.subscription = this.dialogService
         .addDialog(
           ReferenceModalComponent,
@@ -598,10 +618,11 @@ export class NavigatorComponent implements OnInit, OnDestroy {
           }
         )
         .subscribe((res) => {
-          if (res != undefined) {
+          if (res !== undefined) {
             // this.createRefQuestions(JSON.parse(res),pageIndex,sectionIndex,questionIndex)
           }
         });
+    }
   }
 
   setCheckedReferenceElement(event, element?) {
@@ -620,12 +641,15 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       this.checkedRefElements.push(el);
     } else {
       if (this.checkedRefElements.length > 0) {
-        this.checkedRefElements.forEach((element, index) => {
-          if (typeof element != 'object' && element == el) {
+        this.checkedRefElements.forEach((checkedRefElement, index) => {
+          if (
+            typeof checkedRefElement !== 'object' &&
+            checkedRefElement === el
+          ) {
             this.checkedRefElements.splice(index, 1);
           } else if (
-            typeof element == 'object' &&
-            JSON.stringify(el) === JSON.stringify(element)
+            typeof checkedRefElement === 'object' &&
+            JSON.stringify(el) === JSON.stringify(checkedRefElement)
           ) {
             this.checkedRefElements.splice(index, 1);
           }
@@ -633,12 +657,13 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       }
     }
 
-    if (this.schema['pages'])
+    if (this.schema['pages']) {
       this.checkedRefElementsEmitter.emit(this.checkedRefElements);
+    }
   }
 
   emitCheckedReferenceElement(event, element) {
-    let e = {};
+    const e = {};
     e['event'] = event;
     e['element'] = element;
     this.nestedCheckedRefElementEmitter.emit(e);
@@ -649,10 +674,9 @@ export class NavigatorComponent implements OnInit, OnDestroy {
   }
 
   createRefPages(res) {
-    let formProps = this.createBasicFormProps();
-    let tempSchema: Object;
+    const formProps = this.createBasicFormProps();
 
-    for (var el of JSON.parse(res['Pages'])) {
+    for (const el of JSON.parse(res['Pages'])) {
       let obj: any = {};
       obj['reference'] = {
         form: res.form,
@@ -665,8 +689,8 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       this.rawSchema.pages.push(JSON.parse(obj));
     }
 
-    let mockForm = this.formFactory.createForm(formProps);
-    let compiledForm = this.fsc.compileFormSchema(
+    const mockForm = this.formFactory.createForm(formProps);
+    const compiledForm = this.fsc.compileFormSchema(
       mockForm,
       this.referencedForms
     );
@@ -685,9 +709,9 @@ export class NavigatorComponent implements OnInit, OnDestroy {
   }
 
   createRefSections(res, pageIndex) {
-    let formProps = this.createBasicFormProps(pageIndex);
-    let formAlias = res.form;
-    for (var el of JSON.parse(res['Sections'])) {
+    const formProps = this.createBasicFormProps(pageIndex);
+    const formAlias = res.form;
+    for (const el of JSON.parse(res['Sections'])) {
       let obj: any = {};
       if (this.excludedQuestions.length > 0) {
         obj['reference'] = {
@@ -713,28 +737,30 @@ export class NavigatorComponent implements OnInit, OnDestroy {
         );
         return false;
       } else {
-        if (!this.sectionExist(pageIndex, JSON.parse(obj).reference.section))
+        if (!this.sectionExist(pageIndex, JSON.parse(obj).reference.section)) {
           this.rawSchema.pages[pageIndex].sections.push(JSON.parse(obj));
+        }
       }
     }
-    let mockForm = this.formFactory.createForm(formProps);
-    let compiledForm = this.fsc.compileFormSchema(
+    const mockForm = this.formFactory.createForm(formProps);
+    const compiledForm = this.fsc.compileFormSchema(
       mockForm,
       this.referencedForms
     );
 
     compiledForm['pages'][0]['sections'].forEach((section) => {
-      if (!this.sectionExist(pageIndex, section.label))
+      if (!this.sectionExist(pageIndex, section.label)) {
         this._formSchema.pages[pageIndex].sections.push(section);
+      }
     });
     this.setSchema(this._formSchema);
     this.setRawSchema(this.rawSchema);
   }
 
   sectionExist(pageIndex, sectionlabel) {
-    let exist: boolean = false;
+    let exist = false;
     this._formSchema.pages[pageIndex].sections.forEach((section) => {
-      if (section.label == sectionlabel) {
+      if (section.label === sectionlabel) {
         exist = true;
       }
     });
@@ -768,14 +794,14 @@ export class NavigatorComponent implements OnInit, OnDestroy {
   // }
 
   createBasicFormProps(pageIndex?, sectionIndex?) {
-    let formProps = {};
+    const formProps = {};
     formProps['name'] = this.rawSchema.name;
     formProps['uuid'] = this.rawSchema.uuid;
     formProps['processor'] = this.rawSchema.processor;
     formProps['referencedForms'] = this.rawSchema.referencedForms;
     formProps['pages'] = [];
 
-    if (pageIndex != undefined && sectionIndex != undefined) {
+    if (pageIndex !== undefined && sectionIndex !== undefined) {
       formProps['pages'].push(
         this.formElementFactory.createFormElement('page', {
           label: this._formSchema.pages[pageIndex].label
@@ -804,10 +830,10 @@ export class NavigatorComponent implements OnInit, OnDestroy {
   }
 
   addExcludedQuestions(res, el) {
-    let exQ = this.excludedQuestions;
-    let formAlias = res;
-    let final = [];
-    let acceptedQuestionIds = [];
+    const exQ = this.excludedQuestions;
+    const formAlias = res;
+    const final = [];
+    const acceptedQuestionIds = [];
     let referencedFormDits = [];
 
     this.fs.getReferencedFormsDetails().subscribe((dits) => {
@@ -815,12 +841,12 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       referencedFormDits.forEach((form) => {
         if ((form.alias = formAlias)) {
           this.referencedForms.forEach((form$, index) => {
-            if (form$.name == form.formName) {
+            if (form$.name === form.formName) {
               form$.pages.forEach((page, pageIndex) => {
-                if (page.label == el.page) {
+                if (page.label === el.page) {
                   form$.pages[pageIndex].sections.forEach(
                     (section, sectionIndex) => {
-                      if (section.label == el.section) {
+                      if (section.label === el.section) {
                         form$.pages[pageIndex].sections[
                           sectionIndex
                         ].questions.forEach((question) => {
@@ -841,7 +867,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
 
     acceptedQuestionIds.forEach((questionID) => {
       exQ.forEach((excludedQuestionId) => {
-        if (excludedQuestionId == questionID) {
+        if (excludedQuestionId === questionID) {
           final.push(excludedQuestionId);
         }
       });
@@ -856,7 +882,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
     parentQuestionIndex,
     questionID
   ) {
-    if (parentQuestionIndex != undefined) {
+    if (parentQuestionIndex !== undefined) {
       this._formSchema.pages[pageIndex].sections[sectionIndex].questions[
         parentQuestionIndex
       ].questions.splice(questionIndex, 1);
@@ -878,7 +904,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
 
   findAndReplaceReferenceFormByName(name: string, schema: Object) {
     this.referencedForms.forEach((form, index) => {
-      if (form.name == name) {
+      if (form.name === name) {
         this.referencedForms.splice(index, 1, schema);
       }
     });
@@ -916,12 +942,10 @@ export class NavigatorComponent implements OnInit, OnDestroy {
   showSpinner() {
     try {
       if (!_.isEmpty(this._formSchema.pages)) {
-        let lastPageIndex = this._formSchema.pages.length - 1;
-
+        const lastPageIndex = this._formSchema.pages.length - 1;
         if (!_.isEmpty(this._formSchema.pages[lastPageIndex].sections)) {
-          let lastSectionIndex =
+          const lastSectionIndex =
             this._formSchema.pages[lastPageIndex].sections.length - 1;
-
           if (
             this._formSchema.pages[lastPageIndex].sections[lastSectionIndex]
           ) {
@@ -929,7 +953,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
               this._formSchema.pages[lastPageIndex].sections[lastSectionIndex]
                 .questions
             ) {
-              let lastQuestionIndex =
+              const lastQuestionIndex =
                 this._formSchema.pages[lastPageIndex].sections[lastSectionIndex]
                   .questions.length - 1;
               this.fs.setLoaded(true);
@@ -977,14 +1001,17 @@ export class NavigatorComponent implements OnInit, OnDestroy {
     let section: any = {};
     if (!this.IsPageReferenced(pageIndex)) {
       section = this.rawSchema.pages[pageIndex].sections[sectionIndex];
-      if (section.reference) result = true;
-      else result = true;
+      if (section.reference) {
+        result = true;
+      } else {
+        result = true;
+      }
     }
     return result;
   }
 
   editReferenceSection(pageIndex, sectionIndex: any) {
-    let section = this.rawSchema.pages[pageIndex].sections[sectionIndex];
+    const section = this.rawSchema.pages[pageIndex].sections[sectionIndex];
 
     this.ns.setPrechecked(section.reference.section);
     _.forEach(this.rawSchema.referencedForms, (form: any) => {
@@ -1007,7 +1034,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
                 )
                 .subscribe((res) => {
                   console.log(typeof res);
-                  if (res)
+                  if (res) {
                     this.createRefSections(
                       {
                         form: form.alias,
@@ -1015,6 +1042,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
                       },
                       pageIndex
                     );
+                  }
                 });
             });
         });
@@ -1027,8 +1055,7 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       k,
       1
     );
-    let section = this.rawSchema.pages[pageIndex].sections[sectionIndex];
-    let newSection = '';
+    const section = this.rawSchema.pages[pageIndex].sections[sectionIndex];
     if (this.isSectionCustomized(section)) {
       this.rawSchema.pages[pageIndex].sections[
         sectionIndex
@@ -1058,14 +1085,15 @@ export class NavigatorComponent implements OnInit, OnDestroy {
 
     if (this.updateMode) {
       if (this.IsPageReferenced(pageIndex)) {
-        if (this.rawSchema.pages[pageIndex].reference.form == this.alias)
+        if (this.rawSchema.pages[pageIndex].reference.form === this.alias) {
           return true;
+        }
       }
 
       if (!_.isEmpty(sections)) {
         _.each(sections, (section) => {
           if (!section.label) {
-            if (section.reference.form == this.alias) {
+            if (section.reference.form === this.alias) {
               result = true;
             }
           }

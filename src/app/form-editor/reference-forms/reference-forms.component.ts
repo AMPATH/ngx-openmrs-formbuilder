@@ -25,8 +25,7 @@ export class ReferenceFormsComponent implements OnInit {
   _schema: any;
   private _rawSchema: any;
   private componentForms: any;
-  private refForm: ReferenceForms = new ReferenceForms(); //the one being inserted
-  private st: string = '';
+  private refForm: ReferenceForms = new ReferenceForms(); // the one being inserted
   private refFormsArray: any[];
   @Input() set schema(schema) {
     this._schema = _.cloneDeep(schema);
@@ -85,7 +84,7 @@ export class ReferenceFormsComponent implements OnInit {
       this._rawSchema.referencedForms.push(refForm);
       this.fs.setReferencedFormsDetails(this._schema.referencedForms);
     } else {
-      let newOrderedSchema = {};
+      const newOrderedSchema = {};
       newOrderedSchema['name'] = this._schema.name;
       newOrderedSchema['uuid'] = this._schema.uuid;
       newOrderedSchema['processor'] = this._schema.processor;
@@ -112,7 +111,7 @@ export class ReferenceFormsComponent implements OnInit {
   }
 
   display(form) {
-    let strForm = JSON.stringify(form, null, '\t');
+    const strForm = JSON.stringify(form, null, '\t');
     this.ds.addDialog(
       SchemaModalComponent,
       { schema: strForm, title: 'Form' },

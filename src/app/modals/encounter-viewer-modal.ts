@@ -7,6 +7,7 @@ export interface EncounterViewerModel {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'encounter-viewer-modal',
   template: `<div class="modal-dialog modal-lg">
     <div class="modal-content">

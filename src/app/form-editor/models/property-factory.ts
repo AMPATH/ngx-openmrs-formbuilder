@@ -10,13 +10,16 @@ export class PropertyFactory {
   constructor() {}
 
   createProperty(type: string, options: {}): PropertyModel<any> {
-    if (type.toLowerCase() === 'textbox') return new TextboxProperty(options);
-    else if (type.toLowerCase() === 'select')
+    if (type.toLowerCase() === 'textbox') {
+      return new TextboxProperty(options);
+    } else if (type.toLowerCase() === 'select') {
       return new SelectProperty(options);
-    else if (type.toLowerCase() === 'searchbox')
+    } else if (type.toLowerCase() === 'searchbox') {
       return new SearchboxProperty(options);
-    else if (type.toLowerCase() === 'textarea')
+    } else if (type.toLowerCase() === 'textarea') {
       return new TextAreaProperty(options);
-    else console.log('No such property exists');
+    } else {
+      console.log('No such property exists');
+    }
   }
 }
