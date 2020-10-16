@@ -1,61 +1,67 @@
-import { Component, Input,OnInit,AfterViewChecked,ChangeDetectorRef } from '@angular/core';
-import { DialogComponent, DialogService } from "ng2-bootstrap-modal";
-import{ FormGroup, FormBuilder, FormControl } from "@angular/forms";
+import {
+  Component,
+  Input,
+  OnInit,
+  AfterViewChecked,
+  ChangeDetectorRef
+} from '@angular/core';
+import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import * as _ from 'lodash';
 export interface ReferenceModel {
-  title:string;
-  forms:any;
+  title: string;
+  forms: any;
 }
 
 @Component({
   selector: 'prompt',
-  templateUrl:'./insert-reference-forms.modal.html' ,
-  styleUrls:['./insert-reference-forms.modal.css']
+  templateUrl: './insert-reference-forms.modal.html',
+  styleUrls: ['./insert-reference-forms.modal.css']
 })
-export class  InsertReferenceComponent extends DialogComponent<ReferenceModel, string> implements ReferenceModel,OnInit,AfterViewChecked {
+export class InsertReferenceComponent
+  extends DialogComponent<ReferenceModel, string>
+  implements ReferenceModel, OnInit, AfterViewChecked {
   title: string;
-  forms:any;
-  selected:boolean = false;
-  errorMessage:string;
+  forms: any;
+  selected: boolean = false;
+  errorMessage: string;
 
-  constructor(dialogService: DialogService,private fb:FormBuilder,private cdRef:ChangeDetectorRef) {
+  constructor(
+    dialogService: DialogService,
+    private fb: FormBuilder,
+    private cdRef: ChangeDetectorRef
+  ) {
     super(dialogService);
   }
 
-  ngOnInit(){
-      
-  }
+  ngOnInit() {}
 
-  ngAfterViewChecked(){
+  ngAfterViewChecked() {
     this.cdRef.detectChanges();
   }
 
   save(value) {
     let uuid = this.findFormUUID(value.refForm);
 
-    if(_.isUndefined(uuid)){
-      this.errorMessage = "Invalid form."
-    }
-    
-    else{
+    if (_.isUndefined(uuid)) {
+      this.errorMessage = 'Invalid form.';
+    } else {
       this.errorMessage = undefined;
-      value.form = uuid+" "+value.refForm;
+      value.form = uuid + ' ' + value.refForm;
       this.result = value;
       this.close();
     }
-    
   }
 
-  optionSelected($event){
+  optionSelected($event) {
     this.selected = true;
   }
 
-  findFormUUID(formName){
+  findFormUUID(formName) {
     let uuid;
-    this.forms.forEach(form => {
-      if(form.name==formName) uuid = form.uuid;
+    this.forms.forEach((form) => {
+      if (form.name == formName) uuid = form.uuid;
     });
     return uuid;
   }
- 
 }

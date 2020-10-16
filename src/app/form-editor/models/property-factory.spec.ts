@@ -9,7 +9,10 @@ describe('PropertyFactory', () => {
     });
   });
 
-  it('should be created', inject([PropertyFactory], (service: PropertyFactory) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [PropertyFactory],
+    (service: PropertyFactory) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

@@ -19,17 +19,14 @@ Then `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app 
 
 Run `git clone https://github.com/AMPATH/ng2-openmrs-formbuilder.git` to clone the repo locally.
 
-Run `docker build -t ng2-openmrs-formbuilder:1.2-alpha .`  (don't forget the fullstop at the end)
+Run `docker build -t ng2-openmrs-formbuilder:1.2-alpha .` (don't forget the fullstop at the end)
 
 Then `docker run -p 4200:80 ng2-openmrs-formbuilder:1.2-alpha`
- 
+
 ### From Docker Hub
 
 Run`docker run --rm -p 4200:80 fatmali/ng2-openmrs-formbuilder`
 
-
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-

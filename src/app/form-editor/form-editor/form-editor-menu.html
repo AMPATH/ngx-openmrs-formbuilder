@@ -1,68 +1,130 @@
 <div class="btn-group show-on-hover">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-     <span class="fb-menu-item">File</span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-      <li><a (click)="saveLocally()">
-        <span style="font-size:14px;font-weight:500"><i class="glyphicon glyphicon-save" aria-hidden="true"></i> Save Locally</span></a>
-      </li>
-      <li><a (click)="saveRemotely()">
-        <span style="margin-top:15px; font-size:14px;font-weight:500"><i class="fa fa-server" aria-hidden="true"></i> Save to Server</span></a>
-      </li>
-    </ul>
-  </div>
+  <button
+    type="button"
+    class="btn btn-default dropdown-toggle"
+    data-toggle="dropdown"
+  >
+    <span class="fb-menu-item">File</span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a (click)="saveLocally()">
+        <span style="font-size: 14px; font-weight: 500"
+          ><i class="glyphicon glyphicon-save" aria-hidden="true"></i> Save
+          Locally</span
+        ></a
+      >
+    </li>
+    <li>
+      <a (click)="saveRemotely()">
+        <span style="margin-top: 15px; font-size: 14px; font-weight: 500"
+          ><i class="fa fa-server" aria-hidden="true"></i> Save to Server</span
+        ></a
+      >
+    </li>
+  </ul>
+</div>
 
+<div class="btn-group show-on-hover">
+  <button
+    type="button"
+    class="btn btn-default dropdown-toggle"
+    data-toggle="dropdown"
+  >
+    <span class="fb-menu-item">View</span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a (click)="toggleView()"
+        ><span style="font-size: 14px; font-weight: 500"
+          ><i class="fa fa-square-o" aria-hidden="true"></i> Single View</span
+        >
+        <i
+          class="fa"
+          [class.fa-check]="viewMode=='singleView'"
+          style="color: green"
+        ></i
+      ></a>
+    </li>
+    <li>
+      <a (click)="toggleView()"
+        ><span style="font-size: 15px; font-weight: 500">
+          <i class="fa fa-columns" aria-hidden="true"></i> Split View</span
+        >
+        <i
+          class="fa"
+          [class.fa-check]="viewMode=='multiView'"
+          style="color: green"
+        ></i
+      ></a>
+    </li>
+  </ul>
+</div>
 
-  <div class="btn-group show-on-hover">
-      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-          <span class="fb-menu-item">View</span>
-      </button>
-      <ul class="dropdown-menu" role="menu">
-        <li> <a (click)="toggleView()"><span  style="font-size:14px;font-weight:500"><i class="fa fa-square-o" aria-hidden="true"></i> Single View</span> <i class="fa" [class.fa-check]="viewMode=='singleView'" style="color:green"></i></a>
-        </li>
-        <li>
-          <a (click)="toggleView()"><span  style="font-size:15px;font-weight:500">
-            <i class="fa fa-columns" aria-hidden="true"></i> Split View</span> <i class="fa" [class.fa-check]="viewMode=='multiView'" style="color:green"></i></a>
-        </li>
-      </ul>
-    </div>
+<div class="btn-group show-on-hover">
+  <button
+    type="button"
+    class="btn btn-default dropdown-toggle"
+    data-toggle="dropdown"
+  >
+    <span class="fb-menu-item">Tasks</span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a (click)="validateConcepts()"
+        ><i class="fa fa-check-square-o"></i>
+        <span style="font-size: 14px; font-weight: 500">
+          Validate Concepts</span
+        ></a
+      >
+    </li>
+    <li>
+      <a (click)="validateConcepts()"
+        ><i class="fa fa-check-square-o"></i>
+        <span style="font-size: 14px; font-weight: 500">
+          Validate Concepts</span
+        ></a
+      >
+    </li>
+  </ul>
+</div>
 
-    <div class="btn-group show-on-hover">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span class="fb-menu-item">Tasks</span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li>
-              <a (click)="validateConcepts()"><i class="fa fa-check-square-o"></i>
-                <span  style="font-size:14px;font-weight:500;"> Validate Concepts</span></a>
-          </li>
-          <li>
-            <a (click)="validateConcepts()"><i class="fa fa-check-square-o"></i>
-              <span  style="font-size:14px;font-weight:500;"> Validate Concepts</span></a>
-          </li>
-        </ul>
-      </div>
+<div class="btn-group show-on-hover">
+  <button
+    type="button"
+    class="btn btn-default dropdown-toggle"
+    data-toggle="dropdown"
+  >
+    <span class="fb-menu-item">User</span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a>
+        <span class="fa fa-user"></span
+        ><span style="font-size: 14px; font-weight: 500"> {{user}}</span></a
+      >
+    </li>
+    <li>
+      <a>
+        <i class="fa fa-server"></i
+        ><span style="font-size: 14px; font-weight: 500"></span> {{url}}</a
+      >
+    </li>
+  </ul>
+</div>
 
-      <div class="btn-group show-on-hover">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              <span class="fb-menu-item">User</span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <li>
-                <a>
-                    <span class="fa fa-user"></span><span  style="font-size:14px;font-weight:500"> {{user}}</span></a>
-            </li>
-            <li>
-                <a> <i class="fa fa-server"></i><span style="font-size:14px;font-weight:500"></span> {{url}}</a>
-            </li>
-          </ul>
-        </div>
-   
-        
 <div class="btn-group">
-<button type="button" class="btn btn-default"  data-toggle="collapse" data-target="#audit-info">
-  <span class="fb-menu-item">Audit</span></button>
-</div>   
+  <button
+    type="button"
+    class="btn btn-default"
+    data-toggle="collapse"
+    data-target="#audit-info"
+  >
+    <span class="fb-menu-item">Audit</span>
+  </button>
+</div>
 <div class="btn-group">
-  <button type="button" class="btn btn-default"  (click)="exit()"><span class="fb-menu-item"> Exit</span></button>
-</div>  
+  <button type="button" class="btn btn-default" (click)="exit()">
+    <span class="fb-menu-item"> Exit</span>
+  </button>
+</div>

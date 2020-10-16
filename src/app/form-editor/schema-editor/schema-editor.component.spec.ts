@@ -8,9 +8,8 @@ describe('SchemaEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SchemaEditorComponent ]
-    })
-    .compileComponents();
+      declarations: [SchemaEditorComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -22,5 +21,4 @@ describe('SchemaEditorComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
-
 });

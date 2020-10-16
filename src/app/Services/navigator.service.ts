@@ -5,102 +5,98 @@ import { Constants } from './constants';
 
 @Injectable()
 export class NavigatorService {
-
   schema: Object; //stores the state of the current schema and all the changes in memory.
-  rawSchema:Object; //stores the raw version of above
-  schemaEditorSubject:Subject<Object> = new Subject();
-  rawSchemaEditorSubject:Subject<Object> = new Subject();
-  schemaSubject:Subject<Object> = new Subject();
-  questionSubject:Subject<Object> = new Subject();
-  rawSchemaSubject:BehaviorSubject<Object> = new BehaviorSubject({});
-  excludedQuestionsSubject:BehaviorSubject<string> = new BehaviorSubject("");
-  prechecked:BehaviorSubject<string> = new BehaviorSubject('');
+  rawSchema: Object; //stores the raw version of above
+  schemaEditorSubject: Subject<Object> = new Subject();
+  rawSchemaEditorSubject: Subject<Object> = new Subject();
+  schemaSubject: Subject<Object> = new Subject();
+  questionSubject: Subject<Object> = new Subject();
+  rawSchemaSubject: BehaviorSubject<Object> = new BehaviorSubject({});
+  excludedQuestionsSubject: BehaviorSubject<string> = new BehaviorSubject('');
+  prechecked: BehaviorSubject<string> = new BehaviorSubject('');
 
-  constructor() {
+  constructor() {}
+
+  setClickedElementSchema(schema) {
+    this.schemaEditorSubject.next(schema);
   }
 
-  setClickedElementSchema(schema){
-      this.schemaEditorSubject.next(schema);
-  }
-
-  getClickedElementSchema():Observable<Object>{
+  getClickedElementSchema(): Observable<Object> {
     return this.schemaEditorSubject.asObservable();
- }
+  }
 
- setClickedElementRawSchema(rawSchema){
-  this.rawSchemaEditorSubject.next(rawSchema)
- }
+  setClickedElementRawSchema(rawSchema) {
+    this.rawSchemaEditorSubject.next(rawSchema);
+  }
 
- getClickedElementRawSchema(){
-  return this.rawSchemaEditorSubject.asObservable();
- }
+  getClickedElementRawSchema() {
+    return this.rawSchemaEditorSubject.asObservable();
+  }
 
+  setSchema(schema: Object) {
+    this.schema = schema;
+    this.schemaSubject.next(schema);
+  }
 
+  getSchema() {
+    return this.schemaSubject.asObservable();
+  }
 
- setSchema(schema:Object){
- 
-   this.schema = schema;
-   this.schemaSubject.next(schema);
- }
+  newQuestion(
+    propModelArray: any,
+    pageIndex: number,
+    sectionIndex: number,
+    questionIndex?: number,
+    parentQuestionIndex?: number,
+    schema?: any
+  ) {
+    if (questionIndex != undefined) {
+      console.log('ObsGroup Question!');
+    }
+    let question = {};
+    question['propModelArray'] = propModelArray;
+    question['pageIndex'] = pageIndex;
+    question['sectionIndex'] = sectionIndex;
+    question['questionIndex'] = questionIndex;
+    question['parentQuestionIndex'] = parentQuestionIndex || -1;
+    question['schema'] = schema;
+    this.questionSubject.next(question);
+  }
 
- getSchema(){
-   return this.schemaSubject.asObservable();
- }
+  getNewQuestion() {
+    return this.questionSubject.asObservable();
+  }
 
- newQuestion(propModelArray:any,pageIndex:number,sectionIndex:number,questionIndex?:number,parentQuestionIndex?:number,schema?:any){
-   if(questionIndex!=undefined){
-     console.log("ObsGroup Question!");
-   }
-     let question = {}
-     question['propModelArray']=propModelArray;
-     question['pageIndex']=pageIndex;
-     question['sectionIndex']=sectionIndex;
-     question['questionIndex']=questionIndex;
-     question['parentQuestionIndex']=parentQuestionIndex || -1;
-     question['schema']=schema;
-     this.questionSubject.next(question);
- }
+  setRawSchema(rawSchema: Object) {
+    this.rawSchema = rawSchema;
+    this.rawSchemaSubject.next(rawSchema);
+  }
 
- getNewQuestion(){
-  return this.questionSubject.asObservable();
- }
+  getRawSchema() {
+    return this.rawSchemaSubject.asObservable();
+  }
 
- setRawSchema(rawSchema:Object){
-   this.rawSchema = rawSchema;
-   this.rawSchemaSubject.next(rawSchema);
-   
+  //  addToRawSchema(options:{},pageIndex?:number){
+  //   let obj = this.rawSchemaSubject.getValue();
+  //    if(pageIndex==undefined){
+  //     obj['pages'].push(options);
+  //     this.setRawSchema(obj);
+  //    }
 
- }
+  //    else{
+  //     obj['pages'][pageIndex].sections.push(options)
+  //     this.setRawSchema(obj)
+  //    }}
 
- getRawSchema(){
-   return this.rawSchemaSubject.asObservable();
- }
+  setExcludedQuestions(questionIDs: string) {
+    this.excludedQuestionsSubject.next(questionIDs);
+  }
 
+  getExcludedQuestions() {
+    return this.excludedQuestionsSubject.asObservable();
+  }
 
-//  addToRawSchema(options:{},pageIndex?:number){
-//   let obj = this.rawSchemaSubject.getValue();
-//    if(pageIndex==undefined){
-//     obj['pages'].push(options);
-//     this.setRawSchema(obj);
-//    }
-
-//    else{
-//     obj['pages'][pageIndex].sections.push(options)
-//     this.setRawSchema(obj)
-//    }}
-    
-setExcludedQuestions(questionIDs:string){
-  this.excludedQuestionsSubject.next(questionIDs)
-}
-   
-getExcludedQuestions(){
-  return this.excludedQuestionsSubject.asObservable();
-}
-
-setPrechecked(label){
-  this.prechecked.next(label);
-}
-
-
-
+  setPrechecked(label) {
+    this.prechecked.next(label);
+  }
 }

@@ -3,39 +3,65 @@
     <div class="modal-header">
       <button type="button" class="close" (click)="close()">&times;</button>
       <h4 class="modal-title">Components</h4>
-
     </div>
     <div class="modal-body">
       <form #form="ngForm" (ngSubmit)="save(form.value)">
         <div class="form-group data-list">
           <label>Select forms</label>
-          
-        <input list="forms" name="refForm" class="form-control" ngModel required>
-         <datalist id="forms">
-            <option *ngFor="let form of forms"  [value]="form.name">{{form.name}}
-        </datalist>
 
-            </div>
+          <input
+            list="forms"
+            name="refForm"
+            class="form-control"
+            ngModel
+            required
+          />
+          <datalist id="forms">
+            <option *ngFor="let form of forms" [value]="form.name">
+              {{form.name}}
+            </option>
+          </datalist>
+        </div>
 
-          <div class="form-group">
-            <label>Alias</label>
-            <input type="text" class="form-control" placeholder="Enter alias" name="alias" ngModel required>
-          </div>
+        <div class="form-group">
+          <label>Alias</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter alias"
+            name="alias"
+            ngModel
+            required
+          />
+        </div>
 
+        <div class="form-group">
+          <label>Display</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Display"
+            name="display"
+            ngModel
+            required
+          />
+        </div>
 
-
-          <div class="form-group">
-            <label>Display</label>
-            <input type="text" class="form-control" placeholder="Display" name="display" ngModel required>
-          </div>
-        
-          <div *ngIf="errorMessage" class="alert alert-danger">
-              <small><b>{{errorMessage}}</b></small>
-            </div>
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          <small><b>{{errorMessage}}</b></small>
+        </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" [disabled]="!form.valid">OK</button>
-          <button type="button" class="btn btn-default" (click)="close()">Cancel</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!form.valid"
+          >
+            OK
+          </button>
+          <button type="button" class="btn btn-default" (click)="close()">
+            Cancel
+          </button>
         </div>
       </form>
     </div>

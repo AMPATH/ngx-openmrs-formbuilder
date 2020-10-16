@@ -9,7 +9,10 @@ describe('NavigatorService', () => {
     });
   });
 
-  it('should be created', inject([NavigatorService], (service: NavigatorService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [NavigatorService],
+    (service: NavigatorService) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class SessionStorageService {
-  
   public getItem(keyName: string): string {
     return window.sessionStorage.getItem(keyName);
   }

@@ -9,7 +9,10 @@ describe('FetchFormsService', () => {
     });
   });
 
-  it('should be created', inject([FetchFormDetailService], (service: FetchFormDetailService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [FetchFormDetailService],
+    (service: FetchFormDetailService) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

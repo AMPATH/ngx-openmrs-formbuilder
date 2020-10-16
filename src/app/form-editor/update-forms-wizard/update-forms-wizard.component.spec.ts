@@ -8,9 +8,8 @@ describe('UpdateFormsWizardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UpdateFormsWizardComponent ]
-    })
-    .compileComponents();
+      declarations: [UpdateFormsWizardComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,11 +1,7 @@
-export class FormElement{
-    label:string;
+export class FormElement {
+  label: string;
 
-    constructor(options:{
-        label?:string
-    }){
-        this.label = options.label;
-    }
-
-    
+  constructor(options: { label?: string }) {
+    this.label = options.label;
+  }
 }

@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
-import { CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {
+  CanDeactivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot
+} from '@angular/router';
 import { FormEditorComponent } from '../../form-editor/form-editor/form-editor.component';
-import {ConfirmComponent} from '../../modals/confirm.component';
+import { ConfirmComponent } from '../../modals/confirm.component';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 @Injectable()
-export class SaveFormsGuardService implements CanDeactivate<FormEditorComponent> {
+export class SaveFormsGuardService
+  implements CanDeactivate<FormEditorComponent> {
+  constructor(private router: Router) {}
 
-  constructor(private router: Router) { }
-
-  canDeactivate(component: FormEditorComponent,
+  canDeactivate(
+    component: FormEditorComponent,
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): boolean|Observable<boolean>|Promise<boolean> {
-
+    state: RouterStateSnapshot
+  ): boolean | Observable<boolean> | Promise<boolean> {
     const can = component.canDeactivate();
     // console.log('DeactivateGuard#canDeactivate called, can: ', can);
     if (!can) {

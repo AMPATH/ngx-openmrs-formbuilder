@@ -8,9 +8,8 @@ describe('AuditInfoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AuditInfoComponent ]
-    })
-    .compileComponents();
+      declarations: [AuditInfoComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

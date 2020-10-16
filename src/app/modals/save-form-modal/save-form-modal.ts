@@ -1,6 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 import * as _ from 'lodash';
 import { SaveFormService } from '../../Services/openmrs-api/save-form.service';
 import { MatSnackBar } from '@angular/material';
@@ -26,8 +31,9 @@ export interface SaveFormModel {
   selector: 'save-form',
   templateUrl: './save-form-modal.html'
 })
-
-export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> implements SaveFormModel, OnInit {
+export class SaveFormsComponent
+  extends DialogComponent<SaveFormModel, any>
+  implements SaveFormModel, OnInit {
   form: FormGroup;
   title: string;
   name: any;
@@ -44,15 +50,21 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
   published: boolean;
   formType: string;
 
-  constructor(dialogService: DialogService, private saveFormService: SaveFormService,
-    private fb: FormBuilder, private snackbar: MatSnackBar) {
+  constructor(
+    dialogService: DialogService,
+    private saveFormService: SaveFormService,
+    private fb: FormBuilder,
+    private snackbar: MatSnackBar
+  ) {
     super(dialogService);
   }
 
   ngOnInit() {
-    _.includes(this.name, 'component') ? this.formType = Constants.COMPONENT : this.formType = Constants.POC;
+    _.includes(this.name, 'component')
+      ? (this.formType = Constants.COMPONENT)
+      : (this.formType = Constants.POC);
 
-    this.encounterTypes.forEach(encounterType => {
+    this.encounterTypes.forEach((encounterType) => {
       if (encounterType.display === this.encounterType) {
         this.encounterTypeUUID = encounterType.uuid;
       }
@@ -63,12 +75,8 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
       encounter: new FormControl(this.encounterType || ''),
       description: new FormControl(this.description || '')
     });
-
-
   }
   save(formValue) {
-
-
     if (this.operation === 'overwrite') {
       if (this.name !== formValue.name) {
         this.updateName(formValue.name, this.uuid).subscribe((res) => {
@@ -76,17 +84,23 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
         });
       }
       if (this.version !== formValue.version) {
-        this.saveFormService.updateVersion(formValue.version, this.uuid).subscribe((res) => {
-          this.updateForm();
-        });
+        this.saveFormService
+          .updateVersion(formValue.version, this.uuid)
+          .subscribe((res) => {
+            this.updateForm();
+          });
       }
       if (this.encounterType !== formValue.encounter) {
         // tslint:disable-next-line:no-shadowed-variable
-        const encounterType = _.find(this.encounterTypes, (encounterType: { display: any; }) => {
-          return encounterType.display === formValue.encounter;
-        });
+        const encounterType = _.find(
+          this.encounterTypes,
+          (encounterType: { display: any }) => {
+            return encounterType.display === formValue.encounter;
+          }
+        );
         if (encounterType) {
-          this.saveFormService.updateEncounterType(encounterType, this.uuid)
+          this.saveFormService
+            .updateEncounterType(encounterType, this.uuid)
             .subscribe((res) => {
               this.updateForm();
             });
@@ -102,7 +116,6 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
       this.uuid = undefined;
       this.createForm(formValue);
     }
-
 
     this.result = true;
     super.close();
@@ -122,52 +135,70 @@ export class SaveFormsComponent extends DialogComponent<SaveFormModel, any> impl
     super.close();
   }
 
-
   // save form with same version (overwrite)
   updateForm() {
-  this.saveFormService.deleteClobData(this.valueReference).catch(error => console.error('Unable to delete clob data.')).then(res => {
-    this.saveFormService.deleteResource(this.uuid, this.resourceUUID).catch(error => console.error('Unable to delete resource uuid. '))
-    .then(() => {
-      this.saveFormService.uploadSchema(this.rawSchema).subscribe(valueReference => {
-        this.saveFormService.setNewValueReference(valueReference);
-        this.saveFormService.getResourceUUID(this.uuid, valueReference).subscribe(resourceUUID => {
-            const parsedRes = JSON.parse(resourceUUID);
-            this.saveFormService.setNewResourceUUID(parsedRes.uuid);
-            this.showDoneSnackBar();
-        }); });
+    this.saveFormService
+      .deleteClobData(this.valueReference)
+      .catch((error) => console.error('Unable to delete clob data.'))
+      .then((res) => {
+        this.saveFormService
+          .deleteResource(this.uuid, this.resourceUUID)
+          .catch((error) => console.error('Unable to delete resource uuid. '))
+          .then(() => {
+            this.saveFormService
+              .uploadSchema(this.rawSchema)
+              .subscribe((valueReference) => {
+                this.saveFormService.setNewValueReference(valueReference);
+                this.saveFormService
+                  .getResourceUUID(this.uuid, valueReference)
+                  .subscribe((resourceUUID) => {
+                    const parsedRes = JSON.parse(resourceUUID);
+                    this.saveFormService.setNewResourceUUID(parsedRes.uuid);
+                    this.showDoneSnackBar();
+                  });
+              });
+          });
       });
-      });
-}
-
+  }
 
   // create new form/ update form version
   createForm(form) {
-    if (form.encounter) { this.encounterTypes.forEach((encounterType) => {
-      if (encounterType.display === form.encounter) {
-        this.encounterTypeUUID = encounterType.uuid;
-      }
-    });
+    if (form.encounter) {
+      this.encounterTypes.forEach((encounterType) => {
+        if (encounterType.display === form.encounter) {
+          this.encounterTypeUUID = encounterType.uuid;
+        }
+      });
     } else {
       this.encounterTypeUUID = undefined;
     }
-    this.saveFormService.uploadSchema(this.rawSchema).subscribe(valueReference => {
-      this.saveFormService.saveNewForm(form.name, form.version, false, form.description, this.encounterTypeUUID).subscribe(createdForm => {
-
-        const parsedRes = JSON.parse(createdForm._body);
-        this.saveFormService.setNewFormUUID(parsedRes.uuid);
-        this.saveFormService.getResourceUUID(parsedRes.uuid, valueReference).subscribe(resourceUUID => {
-          // tslint:disable-next-line:no-shadowed-variable
-          const parsedRes = JSON.parse(resourceUUID);
-          this.saveFormService.setNewResourceUUID(parsedRes.uuid);
-          this.showDoneSnackBar();
-        });
+    this.saveFormService
+      .uploadSchema(this.rawSchema)
+      .subscribe((valueReference) => {
+        this.saveFormService
+          .saveNewForm(
+            form.name,
+            form.version,
+            false,
+            form.description,
+            this.encounterTypeUUID
+          )
+          .subscribe((createdForm) => {
+            const parsedRes = JSON.parse(createdForm._body);
+            this.saveFormService.setNewFormUUID(parsedRes.uuid);
+            this.saveFormService
+              .getResourceUUID(parsedRes.uuid, valueReference)
+              .subscribe((resourceUUID) => {
+                // tslint:disable-next-line:no-shadowed-variable
+                const parsedRes = JSON.parse(resourceUUID);
+                this.saveFormService.setNewResourceUUID(parsedRes.uuid);
+                this.showDoneSnackBar();
+              });
+          });
       });
-    });
   }
-
 
   updateName(name: string, uuid: string) {
     return this.saveFormService.updateName(name, uuid);
   }
-
 }

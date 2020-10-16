@@ -12,17 +12,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "types": [
-      "node",
-      "jasmine"
-    ],
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
-    "lib": [
-      "es2016",
-      "dom"
-    ],
+    "types": ["node", "jasmine"],
+    "typeRoots": ["./node_modules/@types"],
+    "lib": ["es2016", "dom"],
     "module": "es2015",
     "baseUrl": "./"
   }

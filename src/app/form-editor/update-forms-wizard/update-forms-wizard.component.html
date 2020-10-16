@@ -2,46 +2,75 @@
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
 
- 
-  <mat-toolbar color="primary" *ngIf="!loading">
-      <p>{{currentSchemaMetadata.name}}</p>
-      
-      <span class="fill-space"></span>
-    <div>
-      <span *ngIf="currentRawSchema">
-        <form #form="ngForm">
-            <div class="form-group">
-                <input type="number" class="form-control" placeholder="new version" name="version" ngModel required>
-            </div>
-          </form>
-        </span>
+<mat-toolbar color="primary" *ngIf="!loading">
+  <p>{{ currentSchemaMetadata.name }}</p>
 
-        <span>
-      <button class="btn btn-info" *ngIf="currentNode.previous" (click)="fetchPreviousSchema()">Previous
+  <span class="fill-space"></span>
+  <div>
+    <span *ngIf="currentRawSchema">
+      <form #form="ngForm">
+        <div class="form-group">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="new version"
+            name="version"
+            ngModel
+            required
+          />
+        </div>
+      </form>
+    </span>
+
+    <span>
+      <button
+        class="btn btn-info"
+        *ngIf="currentNode.previous"
+        (click)="fetchPreviousSchema()"
+      >
+        Previous
         <i class="fa fa-arrow-left"></i>
       </button>
-      <button class="btn btn-info" *ngIf="currentNode.next" (click)="fetchNextSchema(form?.value.version)" [disabled]="form&&!form?.valid">Next
+      <button
+        class="btn btn-info"
+        *ngIf="currentNode.next"
+        (click)="fetchNextSchema(form?.value.version)"
+        [disabled]="form && !form?.valid"
+      >
+        Next
         <i class="fa fa-arrow-right"></i>
-      </button>  
-      
-      <button class="btn btn-success" *ngIf="!currentNode.next" (click)="done(form?.value.version)" [disabled]="form&&!form?.valid">Finish
-          <i class="fa fa-check"></i>
-        </button> 
-        </span>
-    </div>
-  </mat-toolbar>
+      </button>
+
+      <button
+        class="btn btn-success"
+        *ngIf="!currentNode.next"
+        (click)="done(form?.value.version)"
+        [disabled]="form && !form?.valid"
+      >
+        Finish
+        <i class="fa fa-check"></i>
+      </button>
+    </span>
+  </div>
+</mat-toolbar>
 <div class="container">
   <div class="alert alert-danger" *ngIf="errorMessage">
-    <span><i class="fa fa-exclamation-circle"></i> {{errorMessage}}</span>
+    <span><i class="fa fa-exclamation-circle"></i> {{ errorMessage }}</span>
   </div>
 </div>
-  
 
-  <div *ngIf="currentRawSchema">
-  <h5 class="alert alert-success"><b>The following are sections that reference the new component. Please customize or click next.</b></h5>
+<div *ngIf="currentRawSchema">
+  <h5 class="alert alert-success">
+    <b
+      >The following are sections that reference the new component. Please
+      customize or click next.</b
+    >
+  </h5>
 
-  <app-navigator [_schema]="currentCompiledSchema" [formSchema]="currentCompiledSchema" [mode]="'update'" [componentToHighlight]="oldComponentMetadata"></app-navigator>
+  <app-navigator
+    [_schema]="currentCompiledSchema"
+    [formSchema]="currentCompiledSchema"
+    [mode]="'update'"
+    [componentToHighlight]="oldComponentMetadata"
+  ></app-navigator>
 </div>
-
-
-

@@ -1,19 +1,19 @@
-a{
-    cursor: pointer;
-    margin:5px;
+a {
+  cursor: pointer;
+  margin: 5px;
 }
- a:hover{
-     color: #01a9ff
- }
- a>i.material-icons.yellow{
-     color:#FFA500 !important;
- }
-
-.material-icons:hover{
-    color:#5cb85c;
+a:hover {
+  color: #01a9ff;
+}
+a > i.material-icons.yellow {
+  color: #ffa500 !important;
 }
 
-.btn-primary{
-    padding:10px;
-    margin-bottom:10px;
+.material-icons:hover {
+  color: #5cb85c;
+}
+
+.btn-primary {
+  padding: 10px;
+  margin-bottom: 10px;
 }

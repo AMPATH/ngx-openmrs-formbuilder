@@ -1,6 +1,6 @@
-.app{ 
-    min-height: calc(100vh - 70px);
+.app {
+  min-height: calc(100vh - 70px);
 }
-.footer{ 
-    height: 50px;
+.footer {
+  height: 50px;
 }

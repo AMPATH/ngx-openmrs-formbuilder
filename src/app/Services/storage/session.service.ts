@@ -1,4 +1,3 @@
-
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { SessionStorageService } from './session-storage.service';
@@ -8,14 +7,14 @@ import { Constants } from '../constants';
 
 @Injectable()
 export class SessionService {
-
   private url;
 
-  constructor(private http: HttpClient, private sessionStorageService: SessionStorageService) {
-  }
+  constructor(
+    private http: HttpClient,
+    private sessionStorageService: SessionStorageService
+  ) {}
 
   public getUrl(): string {
-
     return this.url;
   }
 
@@ -27,12 +26,12 @@ export class SessionService {
     }
 
     return this.http.get(this.url).pipe(
-    catchError((error) => {
-      console.log(error);
-      return error;
-    }));
+      catchError((error) => {
+        console.log(error);
+        return error;
+      })
+    );
   }
-
 
   public deleteSession() {
     const url = this.getUrl();

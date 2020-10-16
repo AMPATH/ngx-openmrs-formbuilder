@@ -4,11 +4,12 @@ import * as _ from 'lodash';
   name: 'filter'
 })
 export class FilterPipe implements PipeTransform {
-
   transform(value: any[], searchValue: string, searchObject: string): any {
-    if (!value || searchValue === '') { return value; }
+    if (!value || searchValue === '') {
+      return value;
+    }
     const results = [];
-   searchValue = searchValue.toLowerCase();
+    searchValue = searchValue.toLowerCase();
     _.forEach(value, (val) => {
       if (_.includes(val[searchObject].toLowerCase(), searchValue)) {
         results.push(val);
@@ -16,5 +17,4 @@ export class FilterPipe implements PipeTransform {
     });
     return results;
   }
-
 }

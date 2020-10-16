@@ -1,9 +1,28 @@
 <div *ngIf="question">
   <div [formGroup]="form">
-      <div class="input-group">
-          <input class="form-control" placeholder="Enter order id, uuid or label to search" [formControlName]="question.key" [id]="question.key" [type]="question.type" [value]="question.value">
-          <span class="input-group-btn">
-      <button class="btn btn-primary" type="button" (click)="searchOrder()" [attr.disable]="searching"><i class="fa"  [class.fa-search]=!searching [ngClass]="{'fa-spinner fa-spin fa-fw':searching}"></i></button>
- </span>
-      </div>
+    <div class="input-group">
+      <input
+        class="form-control"
+        placeholder="Enter order id, uuid or label to search"
+        [formControlName]="question.key"
+        [id]="question.key"
+        [type]="question.type"
+        [value]="question.value"
+      />
+      <span class="input-group-btn">
+        <button
+          class="btn btn-primary"
+          type="button"
+          (click)="searchOrder()"
+          [attr.disable]="searching"
+        >
+          <i
+            class="fa"
+            [class.fa-search]="!searching"
+            [ngClass]="{ 'fa-spinner fa-spin fa-fw': searching }"
+          ></i>
+        </button>
+      </span>
+    </div>
+  </div>
 </div>

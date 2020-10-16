@@ -10,7 +10,8 @@ import { DialogService } from 'ng2-bootstrap-modal';
 import { ElementEditorService } from '../../Services/element-editor.service';
 import { Question } from '../form-elements/Question';
 import { SchemaModalComponent } from '../../modals/schema-editor.modal';
-import { ALL_PROPERTIES, Properties } from '../models/properties'; import * as _ from 'lodash';
+import { ALL_PROPERTIES, Properties } from '../models/properties';
+import * as _ from 'lodash';
 import { PropertyFactory } from '../models/property-factory';
 import { TextboxProperty } from '../models/textbox-property';
 import { ConceptService } from '../../Services/openmrs-api/concept.service';
@@ -24,7 +25,7 @@ export class ElementEditorComponent implements OnInit {
   _rawSchema: any;
   _schema: any;
   _questionSchema: any;
-  questions: PropertyModel < any > [];
+  questions: PropertyModel<any>[];
   questionProperties: Properties = new Properties();
   form: FormGroup;
   setMembers: any[] = [];
@@ -32,27 +33,30 @@ export class ElementEditorComponent implements OnInit {
   @Input() sectionIndex: number;
   @Input() questionIndex: number; // if editMode or addMode obsGroup Question
   @Input() parentQuestionIndex: number;
-  @Input() set rawSchema(rawSchema) { this._rawSchema = _.cloneDeep(rawSchema); } // if edit obsGroup question
-  @Output() closeComponent: EventEmitter < boolean >= new EventEmitter();
+  @Input() set rawSchema(rawSchema) {
+    this._rawSchema = _.cloneDeep(rawSchema);
+  } // if edit obsGroup question
+  @Output() closeComponent: EventEmitter<boolean> = new EventEmitter();
 
   pageStr: string;
   sectionStr: string;
   questionStr: string;
-  allPossibleproperties: Array < any > ;
+  allPossibleproperties: Array<any>;
   addMode = false;
   editMode = false;
   id: number; // ID to the current edited question
   answers: Object;
 
-
-  constructor(private qcs: QuestionControlService,
+  constructor(
+    private qcs: QuestionControlService,
     private formElementFactory: FormElementFactory,
     private qis: QuestionIdService,
     private ns: NavigatorService,
     private dialogService: DialogService,
     private el: ElementEditorService,
     private propertyFactory: PropertyFactory,
-    private conceptService: ConceptService) {}
+    private conceptService: ConceptService
+  ) {}
 
   @Input() set schema(schema) {
     this._schema = _.clone(schema);
@@ -64,7 +68,6 @@ export class ElementEditorComponent implements OnInit {
     this.form = this.qcs.toFormGroup(this.questions);
     this.setMode(this.form);
     this.breadcrumbsSetup();
-
   }
 
   @Input() set questionSchema(schema: any) {
@@ -76,9 +79,7 @@ export class ElementEditorComponent implements OnInit {
     }
   }
 
-
   ngOnInit() {
-
     this.form = this.qcs.toFormGroup(this.questions);
     this.setMode(this.form);
     this.allPossibleproperties = ALL_PROPERTIES;
@@ -98,9 +99,11 @@ export class ElementEditorComponent implements OnInit {
   public setConceptId(id) {
     const prop = this.getProperty('conceptID');
     if (!this.form.contains(prop.key)) {
-       prop.value = id;
-       this.addProperty(prop);
-    } else { this.form.controls[prop.key].setValue(id); }
+      prop.value = id;
+      this.addProperty(prop);
+    } else {
+      this.form.controls[prop.key].setValue(id);
+    }
   }
   addProperty(prop: PropertyModel<any>) {
     if (this.form.contains(prop.key)) {
@@ -110,10 +113,10 @@ export class ElementEditorComponent implements OnInit {
     if (!prop.value) {
       this.form.addControl(prop.key, new FormControl(''));
     } else {
-      this.form.addControl(prop.key, new FormControl(prop.value)); }
+      this.form.addControl(prop.key, new FormControl(prop.value));
+    }
     this.questions.push(prop);
   }
-
 
   onSubmit() {
     const id = this.getProperty('id');
@@ -128,7 +131,9 @@ export class ElementEditorComponent implements OnInit {
     }
 
     if (question['validators']) {
-      question['validators'] = this.parse(this.form.controls['validators'].value);
+      question['validators'] = this.parse(
+        this.form.controls['validators'].value
+      );
     }
 
     if (question['alert']) {
@@ -140,31 +145,52 @@ export class ElementEditorComponent implements OnInit {
     }
 
     if (question.questionOptions['answers']) {
-      question.questionOptions['answers'] = this.parse(this.form.controls['questionOptions.answers'].value);
+      question.questionOptions['answers'] = this.parse(
+        this.form.controls['questionOptions.answers'].value
+      );
     }
 
     if (question.questionOptions['selectableOrders']) {
-      question.questionOptions['selectableOrders'] = this.parse(this.form.controls['questionOptions.selectableOrders'].value);
+      question.questionOptions['selectableOrders'] = this.parse(
+        this.form.controls['questionOptions.selectableOrders'].value
+      );
     }
 
     if (question.questionOptions['conceptMappings']) {
-      question.questionOptions['conceptMappings'] = this.parse(this.form.controls['questionOptions.conceptMappings'].value);
+      question.questionOptions['conceptMappings'] = this.parse(
+        this.form.controls['questionOptions.conceptMappings'].value
+      );
     }
 
     if (this.addMode) {
-      this.addQuestion(question, this.pageIndex, this.sectionIndex, this.questionIndex);
+      this.addQuestion(
+        question,
+        this.pageIndex,
+        this.sectionIndex,
+        this.questionIndex
+      );
     }
     if (this.editMode) {
-      this.editQuestion(question, this.pageIndex, this.sectionIndex, this.questionIndex, this.parentQuestionIndex);
+      this.editQuestion(
+        question,
+        this.pageIndex,
+        this.sectionIndex,
+        this.questionIndex,
+        this.parentQuestionIndex
+      );
     }
   }
 
   breadcrumbsSetup() {
     this.pageStr = this._schema.pages[this.pageIndex].label;
-    this.sectionStr = this._schema.pages[this.pageIndex].sections[this.sectionIndex].label;
+    this.sectionStr = this._schema.pages[this.pageIndex].sections[
+      this.sectionIndex
+    ].label;
     this.questionStr = '';
     if (this.editMode && this.questionIndex !== -1) {
-      this.questionStr = this._schema.pages[this.pageIndex].sections[this.sectionIndex].questions[this.questionIndex].label;
+      this.questionStr = this._schema.pages[this.pageIndex].sections[
+        this.sectionIndex
+      ].questions[this.questionIndex].label;
     }
   }
 
@@ -172,18 +198,18 @@ export class ElementEditorComponent implements OnInit {
     return JSON.parse(str);
   }
 
-//   parseTextAreaQuestions(form: FormGroup, formValue: any) {
-//     const question = this.qcs.unflatten(formValue);
-//     for (const prop in formValue){
-//         const propModel = this.getProperty(prop); 
-//         if (propModel) {
-//           if (propModel.controlType === 'textarea') {
-//             question[propModel.key] = this.parse(form.controls[propModel.key].value);
-//           }
-//         } 
-//   }
-//   return question;
-// }
+  //   parseTextAreaQuestions(form: FormGroup, formValue: any) {
+  //     const question = this.qcs.unflatten(formValue);
+  //     for (const prop in formValue){
+  //         const propModel = this.getProperty(prop);
+  //         if (propModel) {
+  //           if (propModel.controlType === 'textarea') {
+  //             question[propModel.key] = this.parse(form.controls[propModel.key].value);
+  //           }
+  //         }
+  //   }
+  //   return question;
+  // }
 
   deleteProp(index: number) {
     this.form.removeControl(this.questions[index].key);
@@ -191,7 +217,9 @@ export class ElementEditorComponent implements OnInit {
   }
 
   setMode(form: FormGroup) {
-    this.form.get('label').value === '' ? this.setAddMode() : this.setEditMode() ;
+    this.form.get('label').value === ''
+      ? this.setAddMode()
+      : this.setEditMode();
   }
 
   setAddMode() {
@@ -200,9 +228,9 @@ export class ElementEditorComponent implements OnInit {
   }
 
   setEditMode() {
-      this.editMode = true;
-      this.addMode = false;
-      this.id = this.form.get('id').value;
+    this.editMode = true;
+    this.addMode = false;
+    this.id = this.form.get('id').value;
   }
 
   setSetMembers(setMembers) {
@@ -215,9 +243,7 @@ export class ElementEditorComponent implements OnInit {
       const question: Question = new Question();
       question.label = setMember.label;
       question.type = 'obs';
-      question.id = '',
-        question.questionOptions.rendering = rendering;
-
+      (question.id = ''), (question.questionOptions.rendering = rendering);
 
       question.questionOptions['concept'] = setMember.concept;
       if (!_.isEmpty(setMember.answers)) {
@@ -235,7 +261,9 @@ export class ElementEditorComponent implements OnInit {
       const ids = this.qis.getIDs(this._rawSchema);
       let count = 0;
       for (let $id of ids) {
-        if ($id === _id) { count++; }
+        if ($id === _id) {
+          count++;
+        }
       }
       if (this.editMode && this.id !== _id && count > 0) {
         this.showAlert('ID exists \n Try using a different ID');
@@ -264,22 +292,21 @@ export class ElementEditorComponent implements OnInit {
     this.answers = answers; // selectedAnswers
     if (answers.length > 0) {
       if (this.form.contains(answersProp.key)) {
-        this.setPropValue(answersProp.key, JSON.stringify(answers, undefined, '\t'));
+        this.setPropValue(
+          answersProp.key,
+          JSON.stringify(answers, undefined, '\t')
+        );
       } else {
         answersProp.value = JSON.stringify(answers, undefined, '\t');
         this.addProperty(answersProp);
-      }} else {
+      }
+    } else {
       if (this.form.controls[answersProp.key]) {
         this.removeQuestion('questionOptions.answers');
       } else {
         return;
       }
-
     }
-
-
-
-
   }
 
   setMappings(mappings) {
@@ -288,36 +315,49 @@ export class ElementEditorComponent implements OnInit {
     if (!this.form.controls[mappingsProp.key]) {
       mappingsProp.value = JSON.stringify(props, null, '\t');
       this.addProperty(mappingsProp);
-    } else { this.form.controls[mappingsProp.key].setValue(JSON.stringify(props, null, '\t')); }
+    } else {
+      this.form.controls[mappingsProp.key].setValue(
+        JSON.stringify(props, null, '\t')
+      );
+    }
     console.log(this.form.value);
   }
 
-
-  addQuestion(question: any, pageIndex: number, sectionIndex: number, questionIndex ?: number) {
+  addQuestion(
+    question: any,
+    pageIndex: number,
+    sectionIndex: number,
+    questionIndex?: number
+  ) {
     console.log(question, pageIndex, sectionIndex, questionIndex);
-    if (questionIndex !== undefined) { // obsGroup question
+    if (questionIndex !== undefined) {
+      // obsGroup question
       console.log('has parent!');
       if (this._rawSchema.pages[pageIndex].label) {
         if (this._rawSchema.pages[pageIndex].sections[sectionIndex].label) {
-          this._schema.pages[pageIndex].sections[sectionIndex].questions[questionIndex].questions.push(question);
-          this._rawSchema.pages[pageIndex].sections[sectionIndex].questions[questionIndex].questions.push(question);
+          this._schema.pages[pageIndex].sections[sectionIndex].questions[
+            questionIndex
+          ].questions.push(question);
+          this._rawSchema.pages[pageIndex].sections[sectionIndex].questions[
+            questionIndex
+          ].questions.push(question);
         } else {
           this.showAlert('You cannot add a question to a referenced section.');
           return;
         }
-
       } else {
         this.showAlert('You cannot add a question to a referenced page.');
         return;
       }
-
     } else {
-
-
       if (this._rawSchema.pages[pageIndex].label) {
         if (this._rawSchema.pages[pageIndex].sections[sectionIndex].label) {
-          this._rawSchema.pages[pageIndex].sections[sectionIndex].questions.push(question);
-          this._schema.pages[pageIndex].sections[sectionIndex].questions.push(question);
+          this._rawSchema.pages[pageIndex].sections[
+            sectionIndex
+          ].questions.push(question);
+          this._schema.pages[pageIndex].sections[sectionIndex].questions.push(
+            question
+          );
         } else {
           this.showAlert('You cannot add a question to a referenced section.');
           return;
@@ -326,7 +366,6 @@ export class ElementEditorComponent implements OnInit {
         this.showAlert('You cannot add a question to a referenced page.');
         return;
       }
-
     }
     this.ns.setSchema(this._schema);
     this.ns.setRawSchema(this._rawSchema);
@@ -334,16 +373,22 @@ export class ElementEditorComponent implements OnInit {
     this.closeElementEditor();
   }
 
-
-  editQuestion(question, pageIndex, sectionIndex, questionIndex, parentQuestionIndex ? ) {
-
+  editQuestion(
+    question,
+    pageIndex,
+    sectionIndex,
+    questionIndex,
+    parentQuestionIndex?
+  ) {
     if (parentQuestionIndex !== undefined) {
-
       if (this._rawSchema.pages[pageIndex].label) {
         if (this._rawSchema.pages[pageIndex].sections[sectionIndex].label) {
-          this._schema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex].questions.splice(questionIndex, 1, question);
-          this._rawSchema.pages[pageIndex].sections[sectionIndex].questions[parentQuestionIndex]
-          .questions.splice(questionIndex, 1, question);
+          this._schema.pages[pageIndex].sections[sectionIndex].questions[
+            parentQuestionIndex
+          ].questions.splice(questionIndex, 1, question);
+          this._rawSchema.pages[pageIndex].sections[sectionIndex].questions[
+            parentQuestionIndex
+          ].questions.splice(questionIndex, 1, question);
         } else {
           this.showAlert('You cannot edit a question of a referenced section');
           return;
@@ -352,33 +397,38 @@ export class ElementEditorComponent implements OnInit {
         this.showAlert('You cannot edit a question of a referenced page');
         return;
       }
-
     } else {
       console.log(questionIndex);
 
       if (this._rawSchema.pages[pageIndex].label) {
         if (this._rawSchema.pages[pageIndex].sections[sectionIndex].label) {
-          this._schema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex, 1, question);
-          this._rawSchema.pages[pageIndex].sections[sectionIndex].questions.splice(questionIndex, 1, question);
+          this._schema.pages[pageIndex].sections[sectionIndex].questions.splice(
+            questionIndex,
+            1,
+            question
+          );
+          this._rawSchema.pages[pageIndex].sections[
+            sectionIndex
+          ].questions.splice(questionIndex, 1, question);
         } else {
           this.showAlert('You cannot edit a question of a referenced section.');
           return;
         }
-
       } else {
         this.showAlert('You cannot edit a question of a referenced page.');
         return;
       }
-
     }
     this.ns.setSchema(this._schema);
     this.ns.setRawSchema(this._rawSchema);
   }
 
-
   checkQuestion(question) {
-
-    if (question.key === 'label' || question.key === 'type' || question.key === 'questionOptions.rendering') {
+    if (
+      question.key === 'label' ||
+      question.key === 'type' ||
+      question.key === 'questionOptions.rendering'
+    ) {
       return false;
     }
     return true;
@@ -389,18 +439,22 @@ export class ElementEditorComponent implements OnInit {
     const orderTypeProperty = this.getProperty('ordertype');
     const orderSettingUuid = this.getProperty('ordersettinguuid');
     if (type === 'obs') {
-      if (!this.form.contains(conceptProperty.key)) { this.addProperty(conceptProperty); }
+      if (!this.form.contains(conceptProperty.key)) {
+        this.addProperty(conceptProperty);
+      }
     } else if (type === 'testOrder') {
-      if (!this.form.contains(orderTypeProperty.key)) { this.addProperty(orderTypeProperty); }
-      if (!this.form.contains(orderSettingUuid.key)) {  this.addProperty(orderSettingUuid); }
+      if (!this.form.contains(orderTypeProperty.key)) {
+        this.addProperty(orderTypeProperty);
+      }
+      if (!this.form.contains(orderSettingUuid.key)) {
+        this.addProperty(orderSettingUuid);
+      }
     }
   }
-
 
   getProperty(propertyName: string): PropertyModel<any> {
     return this.questionProperties.getPropertyByName(propertyName);
   }
-
 
   renderingSelected(rendering: string) {
     const maxProperty = this.getProperty('max');
@@ -412,7 +466,10 @@ export class ElementEditorComponent implements OnInit {
     switch (rendering) {
       case 'number':
         this.removePreviousFields(rendering);
-        if (!this.form.contains(maxProperty.key) && !this.form.contains(minProperty.key)) {
+        if (
+          !this.form.contains(maxProperty.key) &&
+          !this.form.contains(minProperty.key)
+        ) {
           this.addProperty(maxProperty);
           this.addProperty(minProperty);
           this.addProperty(showDateProperty);
@@ -434,13 +491,16 @@ export class ElementEditorComponent implements OnInit {
         break;
       default:
         this.removePreviousFields(rendering);
-
     }
   }
 
   reselectAnswers() {
-    if (this.answers !== undefined) { this.el.reShowAnswersDialog(this.answers); } else {
-       this.el.reShowAnswersDialog(JSON.parse(this.form.controls['questionOptions.answers'].value));
+    if (this.answers !== undefined) {
+      this.el.reShowAnswersDialog(this.answers);
+    } else {
+      this.el.reShowAnswersDialog(
+        JSON.parse(this.form.controls['questionOptions.answers'].value)
+      );
     }
   }
 
@@ -471,7 +531,6 @@ export class ElementEditorComponent implements OnInit {
         this.removeDateRelatedFields();
         break;
 
-
       case 'date':
         this.removeNumberRelatedFields();
         this.removeTextAreaRelatedFields();
@@ -482,15 +541,16 @@ export class ElementEditorComponent implements OnInit {
         this.removeNumberRelatedFields();
         this.removeTextAreaRelatedFields();
         break;
-
-
     }
   }
 
   removeQuestion(qn) {
     let i;
     this.questions.forEach((question, index) => {
-      if (question['key'] === qn) { i = index; }});
+      if (question['key'] === qn) {
+        i = index;
+      }
+    });
     this.deleteProp(i);
   }
 
@@ -535,6 +595,4 @@ export class ElementEditorComponent implements OnInit {
       this.removeQuestion('questionOptions.weeksList');
     }
   }
-
-
 }

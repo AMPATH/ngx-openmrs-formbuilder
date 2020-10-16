@@ -1,44 +1,52 @@
-import { Component, Input, OnInit, OnDestroy} from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { DialogComponent, DialogService } from 'ng2-bootstrap-modal';
-import { FormGroup,FormControl,FormBuilder,Validators } from '@angular/forms'
-import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service'
+import {
+  FormGroup,
+  FormControl,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
+import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
 import { NavigatorModalComponent } from './../navigator.modal';
-import {ReferenceForm} from '../../form-editor/reference-forms/reference-form-model'
-import {Observable, Subscription} from 'rxjs';
+import { ReferenceForm } from '../../form-editor/reference-forms/reference-form-model';
+import { Observable, Subscription } from 'rxjs';
 
 // Observable class extensions
 
-
-
-
 export interface ReferenceFormModalModel {
-  title:string;
-  refElement:string;
+  title: string;
+  refElement: string;
 }
 
 @Component({
   selector: 'prompt',
-  templateUrl:'./reference-form.modal.html',
-  styleUrls:['./reference-form.madal.css']
+  templateUrl: './reference-form.modal.html',
+  styleUrls: ['./reference-form.madal.css']
 })
-export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalModel, string> implements ReferenceFormModalModel,OnInit,OnDestroy {
+export class ReferenceModalComponent
+  extends DialogComponent<ReferenceFormModalModel, string>
+  implements ReferenceFormModalModel, OnInit, OnDestroy {
   title: string;
-  refElement:string; //new element to be refd
-  form:FormGroup;
-  formAlias:string; //the form alias selected
-  refForms:any[];
-  searchValue:string='';
-  filteredForms:Observable<any[]>;
-  selectField: FormControl = new FormControl('',Validators.required);
-  errorMessage:string;
-  subscription:Subscription;
-  constructor(dialogService: DialogService,private fb:FormBuilder,private fs:FetchFormDetailService) {
+  refElement: string; //new element to be refd
+  form: FormGroup;
+  formAlias: string; //the form alias selected
+  refForms: any[];
+  searchValue: string = '';
+  filteredForms: Observable<any[]>;
+  selectField: FormControl = new FormControl('', Validators.required);
+  errorMessage: string;
+  subscription: Subscription;
+  constructor(
+    dialogService: DialogService,
+    private fb: FormBuilder,
+    private fs: FetchFormDetailService
+  ) {
     super(dialogService);
-    this.form = fb.group({selectField : this.selectField})
+    this.form = fb.group({ selectField: this.selectField });
   }
 
-  ngOnInit(){
-    this.fs.getReferencedFormsDetails().subscribe((res) =>{
+  ngOnInit() {
+    this.fs.getReferencedFormsDetails().subscribe((res) => {
       this.refForms = res;
     });
 
@@ -54,68 +62,73 @@ export class ReferenceModalComponent extends DialogComponent<ReferenceFormModalM
 
   save(value) {
     let selectedForm;
-    this.refForms.forEach(form =>{
-      if(form['formName']==value) {
-        selectedForm = form
-        this.formAlias = form['alias']
+    this.refForms.forEach((form) => {
+      if (form['formName'] == value) {
+        selectedForm = form;
+        this.formAlias = form['alias'];
       }
     });
 
-    if(selectedForm==undefined){
+    if (selectedForm == undefined) {
       this.errorMessage = 'Please select a valid form';
       return;
     }
-    if(selectedForm.ref.uuid){
+    if (selectedForm.ref.uuid) {
       this.errorMessage = undefined;
-      this.fs.fetchFormMetadata(selectedForm.ref.uuid,true)
-      .then(res => this.fs.fetchForm(res.resources[0].valueReference,true)
-      .then(schema => this.showNavigatorDialog(schema,this.refElement,`Select ${this.refElement} to reference`)))
-    }
-    
-
-    else
-    console.error('formName is undefined!');
-    
+      this.fs
+        .fetchFormMetadata(selectedForm.ref.uuid, true)
+        .then((res) =>
+          this.fs
+            .fetchForm(res.resources[0].valueReference, true)
+            .then((schema) =>
+              this.showNavigatorDialog(
+                schema,
+                this.refElement,
+                `Select ${this.refElement} to reference`
+              )
+            )
+        );
+    } else console.error('formName is undefined!');
   }
 
-  showNavigatorDialog(schema,refElement:string,title:string){
-    
-    this.subscription = this.dialogService.addDialog(NavigatorModalComponent,
-       {title:title,schema:schema, referenceElement:refElement.toLowerCase()},{backdropColor:'rgba(0, 0, 0, 0.8)'})
-    .subscribe((formValue)=>{
+  showNavigatorDialog(schema, refElement: string, title: string) {
+    this.subscription = this.dialogService
+      .addDialog(
+        NavigatorModalComponent,
+        {
+          title: title,
+          schema: schema,
+          referenceElement: refElement.toLowerCase()
+        },
+        { backdropColor: 'rgba(0, 0, 0, 0.8)' }
+      )
+      .subscribe((formValue) => {
+        let i = {};
+        i['form'] = this.formAlias;
+        i[refElement + 's'] = formValue;
 
-      let i = {}
-      i['form']=this.formAlias;
-      i[refElement+'s']=formValue;
-    
-      if(formValue!=undefined) {
-        console.log(i);
-        this.result = JSON.stringify(i);
-        this.close();
-        }  
-        
-      
-  });
+        if (formValue != undefined) {
+          console.log(i);
+          this.result = JSON.stringify(i);
+          this.close();
+        }
+      });
   }
-  
-  keyDownFunction($event){
+
+  keyDownFunction($event) {
     //validate!
-    if($event.keyCode==13&&this.form.valid)
-       this.save(this.selectField.value);
+    if ($event.keyCode == 13 && this.form.valid)
+      this.save(this.selectField.value);
   }
 
-  filterForms(searchString:string){
+  filterForms(searchString: string) {
     searchString = searchString.toLowerCase();
     return this.refForms.filter((form) => {
-       form.name.toLowerCase().indexOf(searchString) != -1
-         
+      form.name.toLowerCase().indexOf(searchString) != -1;
     });
   }
-  
-  typeaheadOnSelect(e){
+
+  typeaheadOnSelect(e) {
     this.save(e.value);
   }
-
-
-
 }

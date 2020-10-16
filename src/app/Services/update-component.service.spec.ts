@@ -9,7 +9,10 @@ describe('UpdateComponentService', () => {
     });
   });
 
-  it('should be created', inject([UpdateComponentService], (service: UpdateComponentService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', inject(
+    [UpdateComponentService],
+    (service: UpdateComponentService) => {
+      expect(service).toBeTruthy();
+    }
+  ));
 });

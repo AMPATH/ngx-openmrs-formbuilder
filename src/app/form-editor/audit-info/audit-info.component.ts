@@ -6,18 +6,13 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./audit-info.component.css']
 })
 export class AuditInfoComponent implements OnInit {
+  formMetadata: any;
 
-  formMetadata:any;
-
-  @Input() set _formMetadata(formMetadata){
+  @Input() set _formMetadata(formMetadata) {
     this.formMetadata = formMetadata;
   }
-  
-  constructor() { }
 
-  ngOnInit() {
-    
+  constructor() {}
 
-  }
-
+  ngOnInit() {}
 }
