@@ -190,7 +190,7 @@ export class FormEditorComponent
             }
             this.formMetadata.auditInfo = metadata.auditInfo;
             this.formMetadata.published = metadata.published;
-            // this.saveFormMetadata(this.formMetadata); //save form metadata to local storage for retrieval later on
+            // this.saveFormMetadata(this.formMetadata); // save form metadata to local storage for retrieval later on
             if (metadata.resources.length) {
               this.formMetadata.valueReference =
                 metadata.resources[0].valueReference || '';

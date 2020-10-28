@@ -15,6 +15,7 @@ export interface UpdateFormsWizardModel {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'prompt',
   templateUrl: './update-forms-wizard-modal.component.html',
   styleUrls: ['./update-forms-wizard-modal.component.css']

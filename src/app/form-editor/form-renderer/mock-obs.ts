@@ -42,11 +42,13 @@ export class MockObs {
               {
                 rel: 'self',
                 uri:
+                  // tslint:disable-next-line:max-line-length
                   'https://amrs.ampath.or.ke:8443/amrs/ws/rest/v1/patient/dbb2f104-82f3-4fa9-aaaa-3b0ea908f936/identifier/cae5f716-e7f0-4851-a348-7ed27be2cd28'
               },
               {
                 rel: 'full',
                 uri:
+                  // tslint:disable-next-line:max-line-length
                   'https://amrs.ampath.or.ke:8443/amrs/ws/rest/v1/patient/dbb2f104-82f3-4fa9-aaaa-3b0ea908f936/identifier/cae5f716-e7f0-4851-a348-7ed27be2cd28?v=full'
               }
             ],

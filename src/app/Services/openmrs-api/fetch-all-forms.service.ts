@@ -112,8 +112,8 @@ export class FetchAllFormsService {
   //     count = index;
   //     schemas.push({schema:schema,metadata:formMetadata});
   //     console.log(count,numberOfPOCForms,schemas.length);
-  //     if(count == numberOfPOCForms-1) {
-  //       //this.fetchAllFormsService.setAllPOCFormSchemas(schemas);
+  //     if(count === numberOfPOCForms-1) {
+  //       // this.fetchAllFormsService.setAllPOCFormSchemas(schemas);
   //       this.ls.setObject("POC_FORM_SCHEMAS",schemas);
   //       let finishTime = (new Date().getTime() - date)/1000;
   //       console.log("Done fetching schemas. Took " + finishTime + "seconds");

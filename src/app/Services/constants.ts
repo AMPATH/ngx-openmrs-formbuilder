@@ -11,7 +11,7 @@ export class Constants {
 
   public static readonly FORM_METADATA = 'formMetadata';
 
-  public static readonly TIME_STAMP = 'timestamp'; //for saving locally
+  public static readonly TIME_STAMP = 'timestamp'; //  for saving locally
 
   public static readonly COMPONENT = 'component';
 

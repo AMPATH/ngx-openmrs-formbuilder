@@ -96,10 +96,10 @@ export class ViewFormsComponent implements OnInit {
       this.restoreMessage = `Form ${
         this.ls.getObject(Constants.FORM_METADATA).name
       } was last worked on at ${new Date(
-        parseInt(timestamp)
+        parseInt(timestamp, 10)
       ).toLocaleDateString()}
     ${new Date(
-      parseInt(timestamp)
+      parseInt(timestamp, 10)
     ).toLocaleTimeString()} Would you like to continue working on this?`;
     }
   }

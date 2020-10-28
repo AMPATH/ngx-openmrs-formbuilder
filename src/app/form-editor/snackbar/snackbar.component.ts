@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_SNACK_BAR_DATA } from '@angular/material';
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'snackbar',
   template: `<div class="text-center">
     <span style="color:green"><i class="fa fa-check-circle fa-2x"></i></span>

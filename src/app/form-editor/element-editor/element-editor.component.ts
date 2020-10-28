@@ -260,7 +260,7 @@ export class ElementEditorComponent implements OnInit {
       const _id = this.form.get('id').value;
       const ids = this.qis.getIDs(this._rawSchema);
       let count = 0;
-      for (let $id of ids) {
+      for (const $id of ids) {
         if ($id === _id) {
           count++;
         }

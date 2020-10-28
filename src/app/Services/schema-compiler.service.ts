@@ -19,7 +19,7 @@ export class FormSchemaCompiler {
     referencedComponents: Array<any>
   ): Object {
     // get all referenced forms
-    let refForms: Object = this.getReferencedForms(
+    const refForms: Object = this.getReferencedForms(
       formSchema,
       referencedComponents
     );
@@ -28,7 +28,7 @@ export class FormSchemaCompiler {
     }
 
     // get all place-holders from the form schema
-    let placeHolders = this.getAllPlaceholderObjects(formSchema);
+    const placeHolders = this.getAllPlaceholderObjects(formSchema);
     if (_.isEmpty(placeHolders)) {
       return formSchema;
     }
@@ -75,7 +75,7 @@ export class FormSchemaCompiler {
     if (_.isEmpty(schema) || _.isEmpty(pageLabel) || _.isEmpty(sectionLabel)) {
       return;
     }
-    let foundPage: any = this.getPageInSchemaByLabel(schema, pageLabel);
+    const foundPage: any = this.getPageInSchemaByLabel(schema, pageLabel);
     if (_.isEmpty(foundPage)) {
       return;
     }
@@ -107,7 +107,7 @@ export class FormSchemaCompiler {
       if (this.isQuestionObjectWithId(schema, questionId)) {
         return schema;
       } else if (this.isSchemaSubObjectExpandable(schema)) {
-        let toExpand = schema.pages || schema.sections || schema.questions;
+        const toExpand = schema.pages || schema.sections || schema.questions;
         return this.getQuestionByIdInSchema(toExpand, questionId);
       } else {
         return;
@@ -152,7 +152,7 @@ export class FormSchemaCompiler {
       if (this.isQuestionObjectWithId(object, questionId)) {
         return parent;
       } else if (this.isSchemaSubObjectExpandable(object)) {
-        let toExpand = object.pages || object.sections || object.questions;
+        const toExpand = object.pages || object.sections || object.questions;
         return this.getQuestionsArrayByQuestionId(
           toExpand,
           toExpand,
@@ -169,7 +169,7 @@ export class FormSchemaCompiler {
   // object is page or section or question
   private isSchemaSubObjectExpandable(object: Object): Boolean {
     if (typeof object === 'object') {
-      let objectKeys = Object.keys(object);
+      const objectKeys = Object.keys(object);
       if (
         _.includes(objectKeys, 'pages') ||
         _.includes(objectKeys, 'sections') ||
@@ -186,7 +186,7 @@ export class FormSchemaCompiler {
   }
 
   private getAllPlaceholderObjects(schema: Object): Array<any> {
-    let referencedObjects: Array<any> = [];
+    const referencedObjects: Array<any> = [];
     this.extractPlaceholderObjects(schema, referencedObjects);
     return referencedObjects;
   }
@@ -208,7 +208,7 @@ export class FormSchemaCompiler {
       if (!_.isEmpty(subSchema.reference)) {
         objectsArray.push(subSchema);
       } else if (this.isSchemaSubObjectExpandable(subSchema)) {
-        let toExpand =
+        const toExpand =
           subSchema.pages || subSchema.sections || subSchema.questions;
         this.extractPlaceholderObjects(toExpand, objectsArray);
       }
@@ -219,7 +219,7 @@ export class FormSchemaCompiler {
     placeHolderObject: Object,
     referenceObject: Object
   ): Object {
-    for (let member in referenceObject) {
+    for (const member in referenceObject) {
       if (_.isEmpty(placeHolderObject[member])) {
         placeHolderObject[member] = referenceObject[member];
       }
@@ -232,7 +232,7 @@ export class FormSchemaCompiler {
     placeHoldersArray: Array<any>
   ): Array<any> {
     _.each(placeHoldersArray, (placeHolder) => {
-      let referencedObject: Object = this.getReferencedObject(
+      const referencedObject: Object = this.getReferencedObject(
         placeHolder.reference,
         keyValReferencedForms
       );
@@ -252,7 +252,7 @@ export class FormSchemaCompiler {
   }
 
   private removeObjectFromArray(array: Array<any>, object: Object): void {
-    let indexOfObject = array.indexOf(object);
+    const indexOfObject = array.indexOf(object);
     if (indexOfObject === -1) {
       return;
     }
@@ -263,7 +263,7 @@ export class FormSchemaCompiler {
   private removeExcludedQuestionsFromPlaceholder(placeHolder: any): Object {
     if (Array.isArray(placeHolder.reference.excludeQuestions)) {
       _.each(placeHolder.reference.excludeQuestions, (excludedQuestionId) => {
-        let questionsArray: Array<any> = this.getQuestionsArrayByQuestionIdInSchema(
+        const questionsArray: Array<any> = this.getQuestionsArrayByQuestionIdInSchema(
           placeHolder,
           excludedQuestionId
         );
@@ -271,7 +271,7 @@ export class FormSchemaCompiler {
         if (!Array.isArray(questionsArray)) {
           return;
         }
-        let question = this.getQuestionByIdInSchema(
+        const question = this.getQuestionByIdInSchema(
           questionsArray,
           excludedQuestionId
         );
@@ -326,13 +326,13 @@ export class FormSchemaCompiler {
     formSchema: any,
     formSchemasLookupArray: Array<any>
   ): Object {
-    let referencedForms: Array<any> = formSchema.referencedForms;
+    const referencedForms: Array<any> = formSchema.referencedForms;
     console.log(referencedForms, formSchema, formSchemasLookupArray);
     if (_.isEmpty(referencedForms)) {
       return;
     }
 
-    let keyValReferencedForms: Object = {};
+    const keyValReferencedForms: Object = {};
 
     _.each(referencedForms, (reference: any) => {
       keyValReferencedForms[reference.alias] = this.findSchemaByName(

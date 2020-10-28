@@ -19,6 +19,7 @@ export interface ReferenceFormModalModel {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'prompt',
   templateUrl: './reference-form.modal.html',
   styleUrls: ['./reference-form.madal.css']
@@ -27,11 +28,11 @@ export class ReferenceModalComponent
   extends DialogComponent<ReferenceFormModalModel, string>
   implements ReferenceFormModalModel, OnInit, OnDestroy {
   title: string;
-  refElement: string; //new element to be refd
+  refElement: string; // new element to be refd
   form: FormGroup;
-  formAlias: string; //the form alias selected
+  formAlias: string; // the form alias selected
   refForms: any[];
-  searchValue: string = '';
+  searchValue = '';
   filteredForms: Observable<any[]>;
   selectField: FormControl = new FormControl('', Validators.required);
   errorMessage: string;
@@ -57,19 +58,19 @@ export class ReferenceModalComponent
 
   // filter(ref){
   //   return this.refForms.filter(form =>
-  //       form.formName.toLowerCase().indexOf(ref.toLowerCase()) != -1);
+  //       form.formName.toLowerCase().indexOf(ref.toLowerCase()) !==-1);
   // }
 
   save(value) {
     let selectedForm;
     this.refForms.forEach((form) => {
-      if (form['formName'] == value) {
+      if (form['formName'] === value) {
         selectedForm = form;
         this.formAlias = form['alias'];
       }
     });
 
-    if (selectedForm == undefined) {
+    if (selectedForm === undefined) {
       this.errorMessage = 'Please select a valid form';
       return;
     }
@@ -88,7 +89,9 @@ export class ReferenceModalComponent
               )
             )
         );
-    } else console.error('formName is undefined!');
+    } else {
+      console.error('formName is undefined!');
+    }
   }
 
   showNavigatorDialog(schema, refElement: string, title: string) {
@@ -103,11 +106,11 @@ export class ReferenceModalComponent
         { backdropColor: 'rgba(0, 0, 0, 0.8)' }
       )
       .subscribe((formValue) => {
-        let i = {};
+        const i = {};
         i['form'] = this.formAlias;
         i[refElement + 's'] = formValue;
 
-        if (formValue != undefined) {
+        if (formValue !== undefined) {
           console.log(i);
           this.result = JSON.stringify(i);
           this.close();
@@ -116,15 +119,16 @@ export class ReferenceModalComponent
   }
 
   keyDownFunction($event) {
-    //validate!
-    if ($event.keyCode == 13 && this.form.valid)
+    // validate!
+    if ($event.keyCode === 13 && this.form.valid) {
       this.save(this.selectField.value);
+    }
   }
 
   filterForms(searchString: string) {
     searchString = searchString.toLowerCase();
     return this.refForms.filter((form) => {
-      form.name.toLowerCase().indexOf(searchString) != -1;
+      return form.name.toLowerCase().indexOf(searchString) !== -1;
     });
   }
 

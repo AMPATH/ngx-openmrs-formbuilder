@@ -233,10 +233,10 @@ export class ConceptComponent implements OnInit, OnDestroy {
   }
 
   setSelectedAnswers(strUuids) {
-    let selectedAnswers = [];
+    const selectedAnswers = [];
     const uuids = JSON.parse(strUuids);
     _.forEach(uuids, (uuid) => {
-      let ans = this.getAns(uuid);
+      const ans = this.getAns(uuid);
       if (ans) {
         selectedAnswers.push(ans);
       }
@@ -257,9 +257,9 @@ export class ConceptComponent implements OnInit, OnDestroy {
   }
 
   createSchemaAnswers(answers: any[]) {
-    let schemaAns = [];
+    const schemaAns = [];
     _.forEach(answers, (answer) => {
-      let answerObj = {
+      const answerObj = {
         concept: answer.uuid,
         label: answer.display,
         conceptMappings: this.cs.createMappingsValue(answer.mappings)

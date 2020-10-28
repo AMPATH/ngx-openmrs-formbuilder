@@ -5,8 +5,8 @@ import { Constants } from './constants';
 
 @Injectable()
 export class NavigatorService {
-  schema: Object; //stores the state of the current schema and all the changes in memory.
-  rawSchema: Object; //stores the raw version of above
+  schema: Object; // stores the state of the current schema and all the changes in memory.
+  rawSchema: Object; // stores the raw version of above
   schemaEditorSubject: Subject<Object> = new Subject();
   rawSchemaEditorSubject: Subject<Object> = new Subject();
   schemaSubject: Subject<Object> = new Subject();
@@ -50,10 +50,10 @@ export class NavigatorService {
     parentQuestionIndex?: number,
     schema?: any
   ) {
-    if (questionIndex != undefined) {
+    if (questionIndex !== undefined) {
       console.log('ObsGroup Question!');
     }
-    let question = {};
+    const question = {};
     question['propModelArray'] = propModelArray;
     question['pageIndex'] = pageIndex;
     question['sectionIndex'] = sectionIndex;
@@ -78,7 +78,7 @@ export class NavigatorService {
 
   //  addToRawSchema(options:{},pageIndex?:number){
   //   let obj = this.rawSchemaSubject.getValue();
-  //    if(pageIndex==undefined){
+  //    if (pageIndex === undefined) {
   //     obj['pages'].push(options);
   //     this.setRawSchema(obj);
   //    }

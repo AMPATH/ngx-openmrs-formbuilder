@@ -50,7 +50,9 @@ import * as _ from 'lodash';
   </div>`,
   providers: [PatientResourceService, LocationResourceService]
 })
-export class EncounterModalDetailsComponent extends DialogComponent<any, any> {
+export class EncounterModalDetailsComponent
+  extends DialogComponent<any, any>
+  implements OnInit {
   patients: any;
   form: any = { patient: '', location: '' };
   constructor(

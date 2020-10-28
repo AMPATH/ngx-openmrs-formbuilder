@@ -13,14 +13,14 @@ export class QuestionIdService {
 
   private collectIDs(schema) {
     //   let $schema = _.cloneDeep(schema);
-    //     if($schema.pages!=null) this.collectIDs(schema.pages);
+    //     if($schema.pages!==ull) this.collectIDs(schema.pages);
     //     if(Array.isArray($schema)){
     //         $schema.forEach(element => {
     //             if(element.sections) this.collectIDs(element.sections)
     //             if(element.questions) this.collectIDs(element.questions)
     //             else {
     //                 let id = _.cloneDeep(element.id)
-    //             if(typeof(id) != 'undefined'){
+    //             if(typeof(id) !=='undefined'){
     //                this.IDs.push(id)
     //             }
     //         }

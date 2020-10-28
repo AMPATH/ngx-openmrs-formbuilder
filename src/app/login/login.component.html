@@ -57,7 +57,7 @@
             />
           </div>
           <div
-            *ngIf="authenticated != undefined && !authenticated"
+            *ngIf="authenticated !==undefined && !authenticated"
             class="alert alert-danger"
           >
             <p>Incorrect username or password</p>
@@ -86,7 +86,7 @@
             [class.alert-success]="authenticated"
           >
             <small>{{ message }}</small>
-            <div *ngIf="message.indexOf('Logging') != -1" class="spinner">
+            <div *ngIf="message.indexOf('Logging') !==-1" class="spinner">
               <i class="fa fa-spinner fa-spin"></i>
             </div>
           </div>

@@ -6,6 +6,7 @@ export interface AlertModel {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'alert',
   template: `<div class="modal-dialog">
     <div class="modal-content">

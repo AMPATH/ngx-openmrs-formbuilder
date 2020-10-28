@@ -14,45 +14,25 @@
 
     <div class="pull-right">
       <div class="dropdown" style="display: inline-block">
-        <a
-          class="btn btn-primary dropdown-toggle"
-          type="button"
-          data-toggle="dropdown"
-          ><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add
-          Property <span class="caret"></span
-        ></a>
+        <a class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i
+            class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add
+          Property <span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li
-            (click)="addProperty(prop, prop.parentPath)"
-            *ngFor="let prop of allPossibleproperties"
-          >
-            <a [class.disabled]="prop.type == 'disabled'">{{ prop.label }}</a>
+          <li (click)="addProperty(prop, prop.parentPath)" *ngFor="let prop of allPossibleproperties">
+            <a [class.disabled]="prop.type === 'disabled'">{{ prop.label }}</a>
           </li>
         </ul>
       </div>
-      <div
-        *ngIf="setMembers.length > 0"
-        class="dropdown"
-        style="display: inline-block"
-      >
-        <a
-          class="btn btn-success dropdown-toggle"
-          type="button"
-          data-toggle="dropdown"
-        >
-          Set Members <span class="caret"></span
-        ></a>
+      <div *ngIf="setMembers.length > 0" class="dropdown" style="display: inline-block">
+        <a class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+          Set Members <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li>
-            <a (click)="viewSetMembers()"
-              ><i class="fa fa-eye" aria-hidden="true"></i> View Set Members</a
-            >
+            <a (click)="viewSetMembers()"><i class="fa fa-eye" aria-hidden="true"></i> View Set Members</a>
           </li>
 
           <li>
-            <a (click)="reselectSetMembers()"
-              ><i class="fa fa-refresh"></i> Reselect Set Members</a
-            >
+            <a (click)="reselectSetMembers()"><i class="fa fa-refresh"></i> Reselect Set Members</a>
           </li>
         </ul>
       </div>
@@ -65,56 +45,34 @@
         <div *ngFor="let question of questions; let i = index">
           <div class="pull-right" *ngIf="checkQuestion(question)">
             <a (click)="deleteProp(i)" data-toggle="tooltip" title="Delete">
-              <i
-                class="fa fa-times"
-                style="
+              <i class="fa fa-times" style="
                   font-size: 16px;
                   margin: 5px;
                   color: red;
                   cursor: pointer;
-                "
-              ></i>
+                "></i>
             </a>
           </div>
 
-          <div
-            class="pull-right"
-            *ngIf="question.key == 'questionOptions.answers' && question.value"
-          >
-            <a
-              (click)="reselectAnswers()"
-              data-toggle="tooltip"
-              title="Reselect Answers"
-            >
-              <i
-                class="fa fa-undo"
-                style="
+          <div class="pull-right" *ngIf="question.key === 'questionOptions.answers' && question.value">
+            <a (click)="reselectAnswers()" data-toggle="tooltip" title="Reselect Answers">
+              <i class="fa fa-undo" style="
                   font-size: 16px;
                   margin: 5px;
                   color: green;
                   cursor: pointer;
-                "
-              ></i>
+                "></i>
             </a>
           </div>
 
-          <app-dynamic-question
-            [question]="question"
-            [_form]="form"
-            (answers)="setAnswers($event)"
-            (type)="typeSelected($event)"
-            (rendering)="renderingSelected($event)"
-            (showDate)="showDate($event)"
-          ></app-dynamic-question>
+          <app-dynamic-question [question]="question" [_form]="form" (answers)="setAnswers($event)"
+            (type)="typeSelected($event)" (rendering)="renderingSelected($event)" (showDate)="showDate($event)">
+          </app-dynamic-question>
         </div>
 
         <div class="form-row">
           <br />
-          <button
-            class="btn btn-primary btn-lg center-block"
-            (click)="onSubmit()"
-            [disabled]="!form.valid"
-          >
+          <button class="btn btn-primary btn-lg center-block" (click)="onSubmit()" [disabled]="!form.valid">
             OK
           </button>
         </div>
