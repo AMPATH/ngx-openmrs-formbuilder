@@ -1,0 +1,145 @@
+.panel{
+  background-color:#fff;
+  box-shadow:0px 2px 2px #aaa;
+  border-color:lightgray;
+  
+}
+.panel-table .panel-body{
+    padding:0;
+    /* background-color:#fff;
+    box-shadow:0px 2px 2px #aaa; */
+  }
+  
+  .panel-table .panel-body .table-bordered{
+    border-style: none;
+    margin:0;
+  }
+  
+  .panel-table .panel-body .table-bordered > thead > tr > th:first-of-type {
+      text-align:center;
+      width: 100px;
+  }
+  
+  .panel-table .panel-body .table-bordered > thead > tr > th:last-of-type,
+  .panel-table .panel-body .table-bordered > tbody > tr > td:last-of-type {
+    border-right: 0px;
+  }
+  
+  .panel-table .panel-body .table-bordered > thead > tr > th:first-of-type,
+  .panel-table .panel-body .table-bordered > tbody > tr > td:first-of-type {
+    border-left: 0px;
+  }
+  
+  .panel-table .panel-body .table-bordered > tbody > tr:first-of-type > td{
+    border-bottom: 0px;
+  }
+  
+  .panel-table .panel-body .table-bordered > thead > tr:first-of-type > th{
+    border-top: 0px;
+  }
+  
+  .panel-table .panel-footer .pagination{
+    margin:0; 
+  }
+
+  .panel-primary>.panel-heading {
+    color: #fff;
+    background-color: #3f51b5;
+    border-color: #808080;
+}
+  
+  /*
+  used to vertically center elements, may need modification if you're not using default sizes.
+  */
+  .panel-table .panel-footer .col{
+   line-height: 34px;
+   height: 34px;
+  }
+  
+  .panel-table .panel-heading .col h3{
+   line-height: 30px;
+   height: 30px;
+  }
+  
+  .panel-table .panel-body .table-bordered > tbody > tr > td{
+    line-height: 34px;
+  }
+  
+  .formName{
+      font-size:14px;
+  }
+
+ 
+.stylish-input-group .input-group-addon{
+    background: white !important; 
+}
+.stylish-input-group .form-control{
+	border-right:0; 
+	box-shadow:0 0 0; 
+	border-color:#ccc;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+}
+.material-icons.edit{
+  color:green;
+}
+.navbar-btn{
+  margin: 5px 5px 0px 5px;
+}
+
+.btn.btn-circle { border-radius: 5px; }
+.btn-create{ color: #1AC91A}
+/* .navbar-nav.navbar-right .btn:not(.collapsed) {
+    background-color: rgb(111, 84, 153);
+    border-color: rgb(111, 84, 153);
+    color: rgb(255, 255, 255);
+} */
+a:hover{
+  text-decoration: none;
+}
+.panel-title{
+  color:black;
+}
+.restoreMsg{
+  margin-top:10px;
+ padding-left: 30px;
+ padding-right: 30px;
+}
+
+.menuItem{
+  font-weight:500;
+  color:white;
+  font-family:'Roboto';
+  font-size:14px;
+}
+
+.name{
+  font-size:18px;
+  color:white;
+  font-weight:600;
+  
+}
+.space{
+  margin-left:50px;
+}
+mat-card{
+ 
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    margin: 5px 5px 5px 50px;
+
+}
+.fill{
+  flex: 1 1 auto;
+}
+.dropdown-menu{
+  color: black;
+  font-family: 'Roboto';
+  font-weight: 500;
+}
+.dropdown-menu>li {
+  margin-left:5px;
+}

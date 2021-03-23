@@ -1,0 +1,185 @@
+
+<mat-toolbar color="primary">
+  <span class="menu" style="font-size:18px; font-family:'Roboto'; color:white;">Form Builder</span>
+  <span class="fill"></span>
+  <span class="dropdown">
+    <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
+    <i class="fa fa-search fa-fw"></i>Search
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu pull-right">
+      <li><a (click)="navigateToForms()">Forms</a></li>
+    </ul>
+  </span>
+</mat-toolbar>
+
+<div class="container-f">
+
+
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <div class="panel  panel-table">
+      <div class="panel-heading">
+        <form class="form-horizontal">
+        <div class="">
+          <div class="form-group">
+            <div class="col-sm-10 col-md-10 col-lg-10 col-xs-12">
+              <label for="searchValue">Concept: </label>
+            <input 
+               type="text" 
+               class="form-control" 
+               [(ngModel)]="searchValue" 
+               placeholder="Search Concept" 
+               id="searchValue"
+               name="searchValue"
+               />
+            </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-10 col-md-10 col-lg-10 col-xs-12">
+            <button class="btn btn-primary" (click)="searchConcept()">Search <i class="fa fa-search fa-fw"></i></button>
+            <button class="btn btn-danger" (click)="reset()">Reset <i class="fa fa-trash fa-fw"></i></button>
+          </div>
+        </div>
+      </div>
+      </form>
+      </div>
+      <div class="panel-body">
+  <div class="row">
+  <div class="col-md-12 col-lg-12 col-sm-12">
+    <div class="row">
+      <div class="col-md-12 col-lg-12 col-sm-12">
+         <h3 align="center">Viewing Concept {{concept?.display}}</h3>
+      </div>
+    </div> 
+  <hr class="intro-divider" />        
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>UUID</td>
+        <td>{{concept?.uuid}}</td>
+      </tr>
+      <tr>
+        <td>Fully Specified Name</td>
+        <td>{{concept?.name?.name}}</td>
+      </tr>
+      <tr>
+        <td>Synonyms</td>
+        <td>
+          <tr *ngFor="let name of concept?.names">
+            <td>{{name.display}}</td>
+          </tr>
+        </td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td>
+          <tr *ngFor="let desc of concept?.descriptions">
+          <td>{{desc.display}}</td>
+        </tr>
+      </td>
+      </tr>
+      <tr>
+        <td>Class</td>
+        <td>{{concept?.conceptClass?.name}}</td>
+      </tr>
+      <tr>
+        <td>Datatype</td>
+        <td>{{concept?.datatype.display}}</td>
+      </tr>
+      <tr *ngIf="concept?.datatype?.display === 'Coded'">
+        <td>Answers</td>
+        <td>
+            <tr *ngFor="let answer of concept?.answers">
+              <td *ngIf="answer?.mappings?.length > 0"><b>{{answer.display}} ({{answer?.mappings[0]?.display}})</b></td>
+            </tr>
+        </td>
+      </tr>
+      <tr *ngIf="concept?.datatype?.display === 'Numeric'">
+        <td>Numeric</td>
+        <td>
+          <tr>
+            <td>Absolute High : {{concept?.hiAbsolute}}</td>
+          </tr>
+          <tr>
+            <td>Critical High : {{concept?.hiCritical}}</td>
+          </tr>
+          <tr>
+            <td>Normal High : {{concept?.hiNormal}}</td>
+          </tr>
+          <tr>
+            <td>Normal Low: {{concept?.lowNormal}}</td>
+          </tr>
+          <tr>
+            <td>Critical Low : {{concept?.lowCritical}}</td>
+          </tr>
+          <tr>
+            <td>Absolute Low : {{concept?.lowAbsolute}}</td>
+          </tr>
+          <tr>
+            <td>Units : {{concept?.units}}</td>
+          </tr>
+          <tr>
+            <td>Allow Decimal : {{concept?.allowDecimal}}</td>
+          </tr>
+          <tr>
+            <td>Display Precision : {{concept?.displayPrecision}}</td>
+          </tr>
+        </td>
+      </tr>
+      <tr *ngIf="concept?.set === true">
+        <td>Set Members</td>
+        <td>
+          <tr *ngFor="let member of concept?.setMembers">
+            <td>{{member?.display}}</td>
+        </tr>
+        </td>
+      </tr>
+      <tr *ngIf="concept?.mappings.length > 0">
+        <td>Mappings </td>
+        <td>
+          <table class="table">
+          <thead>
+              <th>Relationship</th>
+              <th>Source : Code</th>
+              <th>Name</th>
+          </thead>
+          <tr *ngFor="let map of concept?.mappings">
+              <td>{{map?.conceptMapType?.display}}</td>
+              <td>{{map?.display}}</td>
+              <td></td>
+          </tr>
+        </table>
+        </td>
+      </tr>
+      <tr>
+        <td>Version</td>
+        <td>{{concept?.version}}</td>
+      </tr>
+      <tr>
+        <td>Created By</td>
+        <td>{{concept?.auditInfo.creator?.display}} : {{concept?.auditInfo?.dateCreated}}</td>
+      </tr>
+      <tr>
+        <td>Changed By</td>
+        <td>{{concept?.auditInfo.changedBy?.display}} : {{concept?.auditInfo.dateChanged}}</td>
+      </tr>
+    </tbody>
+  </table>
+ </div>
+
+      </div>
+      <div class="panel-footer">
+        <div class="row">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>

@@ -67,6 +67,7 @@ export class ViewFormsComponent implements OnInit {
     });
     this.POCForms = _.cloneDeep(f);
     this.forms = _.cloneDeep(f);
+    console.log('Forms', [this.forms]);
 
 
     // this.fetchAllFormSchemas(this.POCForms);
@@ -195,6 +196,10 @@ export class ViewFormsComponent implements OnInit {
 
   navigateToTestPage(){
     this.router.navigate(['/test']);
+  }
+  navigateToConceptSearchPage(){
+    console.log('navigateToConceptSearchPage..');
+    this.router.navigate(['/concept-search']);
   }
 
 }

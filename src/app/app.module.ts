@@ -26,6 +26,7 @@ import { FormBuilderComponent } from './app-entry-point/form-builder.component';
 import { Str2Num } from './pipes/string_to_number.pipe';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormBuilderHttpInteceptor } from './Services/http-interceptor.service';
+import { ConceptSearchComponent } from './concept-search/concept-search.component';
 
 
 
@@ -42,7 +43,8 @@ import { FormBuilderHttpInteceptor } from './Services/http-interceptor.service';
     SaveSnackbarComponent,
     FormBuilderComponent,
     ViewFormsComponent,
-    NotificationComponent
+    NotificationComponent,
+    ConceptSearchComponent
   ],
 
 

@@ -9,6 +9,15 @@
     </span> -->
     <span class="fill"></span>
     <span class="dropdown">
+      <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
+      <i class="fa fa-search fa-fw"></i>Search
+      <span class="caret"></span></button>
+      <ul class="dropdown-menu pull-right">
+        <li><a (click)="navigateToConceptSearchPage()"> Concept
+          <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i></a></li>
+      </ul>
+    </span>
+    <span class="dropdown">
         <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
         <i class="fa fa-user"></i> {{ username }}
         <span class="caret"></span></button>
