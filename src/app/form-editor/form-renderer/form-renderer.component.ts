@@ -150,7 +150,6 @@ export class FormRendererComponent implements OnInit {
             .subscribe((res) => {
               const form = this.fc.createForm(this._schema);
               this.encAdapter.populateForm(form, res);
-              console.log(res.obs);
               this.showDialog(EncounterViewerModalComponent, {
                 encounter: res,
                 form: form

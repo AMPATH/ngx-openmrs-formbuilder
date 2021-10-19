@@ -1,0 +1,7 @@
+services:
+  formbuilder:
+    image: ng2-openmrs-formbuilder
+    ports:
+      - "4200:80"
+    environment:
+      - OPENMRS_HOST_URL=${OPENMRS_HOST_URL}

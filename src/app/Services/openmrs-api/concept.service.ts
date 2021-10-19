@@ -64,12 +64,10 @@ export class ConceptService {
       observablesArray.push(
         this.searchConceptByUUID(conceptUuid).pipe(
           map((concept) => {
-            if (concept.error) {
-              return conceptUuid;
-            }
+            return { conceptUuid: concept.uuid, valid: true };
           }),
           catchError((error) => {
-            return error;
+            return [{ conceptUuid: conceptUuid, valid: false }];
           })
         )
       );
@@ -89,11 +87,12 @@ export class ConceptService {
 
   public getConceptID(conceptUuid: string): Observable<any> {
     return this.http
-      .get(`https://ngx.ampath.or.ke/concept-server/api/${conceptUuid}`)
+      .get(`${this.baseUrl}/ws/rest/v1/concept/${conceptUuid}`)
       .pipe(
         catchError((error: Response) => {
           console.error(error.status);
-          return observableOf(error.json());
+          console.log(error);
+          return observableOf(error);
         })
       );
   }

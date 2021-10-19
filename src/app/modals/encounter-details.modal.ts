@@ -73,12 +73,10 @@ export class EncounterModalDetailsComponent
   }
 
   public onSelectPatient($patient) {
-    console.log($patient);
     this.form.patient = $patient.item.uuid;
   }
 
   public onSelectLocation($location) {
-    console.log($location);
     this.form.location = $location.item.uuid;
   }
 

@@ -13,7 +13,8 @@ export class LoginComponent implements OnInit {
   message: string;
   baseUrls: string[] = [
     'https://ngx.ampath.or.ke/test-amrs',
-    'https://ngx.ampath.or.ke/amrs'
+    'https://ngx.ampath.or.ke/amrs',
+    '/openmrs'
   ];
   constructor(private auth: AuthenticationService, private router: Router) {
     this.setMessage();

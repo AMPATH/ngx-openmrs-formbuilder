@@ -183,14 +183,18 @@ export class SaveFormsComponent
             this.encounterTypeUUID
           )
           .subscribe((createdForm) => {
-            const parsedRes = JSON.parse(createdForm._body);
+            let parsedRes = createdForm;
+            if (createdForm._body) {
+              parsedRes = JSON.parse(createdForm._body);
+            }
             this.saveFormService.setNewFormUUID(parsedRes.uuid);
             this.saveFormService
               .getResourceUUID(parsedRes.uuid, valueReference)
               .subscribe((resourceUUID) => {
                 // tslint:disable-next-line:no-shadowed-variable
-                const parsedRes = JSON.parse(resourceUUID);
-                this.saveFormService.setNewResourceUUID(parsedRes.uuid);
+                let toSave = JSON.parse(resourceUUID);
+                this.saveFormService.setNewResourceUUID(toSave.uuid);
+
                 this.showDoneSnackBar();
               });
           });

@@ -52,36 +52,8 @@ export class ViewFormsComponent implements OnInit {
     //     this.fetchAllFormSchemas(this.POCForms);
     //   }
     // });
-    this.subscription = this.fetchAllFormsService
-      .fetchAllPOCForms()
-      .subscribe((forms) => {
-        const f = forms.results;
-        f.forEach((form, index) => {
-          this.fetchFormDetailService
-            .fetchFormMetadata(form.uuid, false)
-            .then((res) => {
-              if (!form.resources[0] || form.resources.length === 0) {
-                this.formsWithoutSchemas.push(form.name);
-              } else {
-                this.POCForms.push(form);
-              }
-            });
-        });
-        this.POCForms = _.cloneDeep(f);
-        this.forms = _.cloneDeep(f);
 
-        // this.fetchAllFormSchemas(this.POCForms);
-
-        if (this.forms.length === 0) {
-          this.loadingMessage = 'No forms to display';
-        }
-      });
-
-    this.subscription = this.fetchAllFormsService
-      .fetchAllComponentForms()
-      .subscribe((forms) => {
-        this.componentForms = forms.results;
-      });
+    this.fetchPOCForms();
 
     if (
       this.ls.getObject(Constants.RAW_SCHEMA) &&
@@ -106,10 +78,8 @@ export class ViewFormsComponent implements OnInit {
 
   editForm(form: any, uuid: string) {
     if (_.includes(this.componentForms, form)) {
-      console.log('tis but a component form');
       this.fetchAllFormsService.setFormType(Constants.COMPONENT);
     } else {
-      console.log('tis but a poc form');
       this.fetchAllFormsService.setFormType(Constants.POC);
     }
     this.router.navigate(['/edit', uuid]);
@@ -143,10 +113,45 @@ export class ViewFormsComponent implements OnInit {
 
   onChange($event) {
     if ($event === 'Component Forms') {
-      this.forms = this.componentForms;
+      this.fetchComponentForms();
     } else {
-      this.forms = this.POCForms;
+      this.fetchPOCForms();
     }
+  }
+
+  fetchPOCForms() {
+    this.subscription = this.fetchAllFormsService
+      .fetchAllPOCForms()
+      .subscribe((forms) => {
+        const f = forms.results;
+        f.forEach((form, index) => {
+          this.fetchFormDetailService
+            .fetchFormMetadata(form.uuid, false)
+            .then((res) => {
+              if (!form.resources[0] || form.resources.length === 0) {
+                this.formsWithoutSchemas.push(form.name);
+              } else {
+                this.POCForms.push(form);
+              }
+            });
+        });
+        this.POCForms = _.cloneDeep(f);
+        this.forms = _.cloneDeep(f);
+
+        // this.fetchAllFormSchemas(this.POCForms);
+
+        if (this.forms.length === 0) {
+          this.loadingMessage = 'No forms to display';
+        }
+      });
+  }
+
+  fetchComponentForms() {
+    this.subscription = this.fetchAllFormsService
+      .fetchAllComponentForms()
+      .subscribe((forms) => {
+        this.forms = forms.results;
+      });
   }
 
   // fetchAllFormSchemas(POCForms) {

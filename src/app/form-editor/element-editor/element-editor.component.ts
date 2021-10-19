@@ -63,7 +63,6 @@ export class ElementEditorComponent implements OnInit {
   }
 
   @Input() set _questions(questions) {
-    console.log(questions);
     this.questions = questions;
     this.form = this.qcs.toFormGroup(this.questions);
     this.setMode(this.form);
@@ -320,7 +319,6 @@ export class ElementEditorComponent implements OnInit {
         JSON.stringify(props, null, '\t')
       );
     }
-    console.log(this.form.value);
   }
 
   addQuestion(
@@ -329,10 +327,8 @@ export class ElementEditorComponent implements OnInit {
     sectionIndex: number,
     questionIndex?: number
   ) {
-    console.log(question, pageIndex, sectionIndex, questionIndex);
     if (questionIndex !== undefined) {
       // obsGroup question
-      console.log('has parent!');
       if (this._rawSchema.pages[pageIndex].label) {
         if (this._rawSchema.pages[pageIndex].sections[sectionIndex].label) {
           this._schema.pages[pageIndex].sections[sectionIndex].questions[
@@ -398,8 +394,6 @@ export class ElementEditorComponent implements OnInit {
         return;
       }
     } else {
-      console.log(questionIndex);
-
       if (this._rawSchema.pages[pageIndex].label) {
         if (this._rawSchema.pages[pageIndex].sections[sectionIndex].label) {
           this._schema.pages[pageIndex].sections[sectionIndex].questions.splice(

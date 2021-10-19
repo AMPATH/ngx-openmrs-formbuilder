@@ -39,7 +39,6 @@ export class UpdateFormsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.fa.getPOCFormSchemas().subscribe((res) => {
       this.formSchemas = res;
-      console.log('res');
     });
 
     this.subscription = this.route.params.subscribe((params) => {
@@ -110,7 +109,6 @@ export class UpdateFormsComponent implements OnInit, OnDestroy {
   }
 
   updateForms() {
-    console.log(this.newComponentMetadata);
     this.dialogService
       .addDialog(
         UpdateFormsWizardModalComponent,

@@ -45,7 +45,7 @@
         </div>
         <button
           (click)="render()"
-          *ngIf="buildSchemaMode && parsedRawSchema.name !== undefined"
+          *ngIf="buildSchemaMode && parsedRawSchema && parsedRawSchema.name !== undefined"
           class="btn btn-primary"
           data-toggle="tooltip"
           title="Update and render the schema"

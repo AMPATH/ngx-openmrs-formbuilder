@@ -64,7 +64,6 @@ export class FetchFormDetailService {
             this.setReferencedFormsDetails(res.referencedForms);
             return this.fetchReferencedFormSchemas(res.referencedForms).then(
               (referencedForms) => {
-                console.log('setting ref forms');
                 this.referencedFormsSchemasSubject = new BehaviorSubject(
                   referencedForms
                 );

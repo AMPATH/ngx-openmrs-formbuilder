@@ -277,7 +277,6 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].indexOf(foo) !== -1) {
         fooLineNumbers.push(i);
-        console.log(lines[i], foo, fooLineNumbers);
       }
     }
 
@@ -286,7 +285,11 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
 
   onTextChanged(text: string) {
     if (!_.isEmpty(text) && !_.includes(text, 'Updating...')) {
-      this.parsedRawSchema = JSON.parse(text);
+      try {
+        this.parsedRawSchema = JSON.parse(text);
+      } catch (e) {
+        console.error('Invalid Json');
+      }
     }
   }
 }
