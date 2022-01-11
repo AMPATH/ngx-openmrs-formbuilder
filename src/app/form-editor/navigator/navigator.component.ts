@@ -251,7 +251,6 @@ export class NavigatorComponent implements OnInit, OnDestroy {
       this.addForm = this.qcs.toFormGroup(this.propertyModelArray);
       this.showAddDialog(this.propertyModelArray, this.addForm);
     } else {
-      console.log(pageIndex);
       const newSection = this.formElementFactory.createFormElement(element, {});
       this.propertyModelArray = this.qcs.toPropertyModelArray(newSection);
       this.addForm = this.qcs.toFormGroup(this.propertyModelArray);
@@ -471,14 +470,6 @@ export class NavigatorComponent implements OnInit, OnDestroy {
   }
 
   addQuestion(pageIndex: number, sectionIndex: number, questionIndex?: number) {
-    console.log(
-      'Page Index',
-      pageIndex,
-      'Section Index',
-      sectionIndex,
-      'questionIndex',
-      questionIndex
-    );
     const newQuestion = this.formElementFactory.createFormElement(
       'question',
       {}
@@ -629,7 +620,6 @@ export class NavigatorComponent implements OnInit, OnDestroy {
     let ev;
     let el;
     if (element) {
-      console.log(element);
       ev = event;
       el = element;
     } else {
@@ -814,7 +804,6 @@ export class NavigatorComponent implements OnInit, OnDestroy {
           questions: []
         })
       );
-      console.log('formProps', formProps);
       return formProps;
     }
     if (pageIndex !== undefined) {
@@ -1033,7 +1022,6 @@ export class NavigatorComponent implements OnInit, OnDestroy {
                   }
                 )
                 .subscribe((res) => {
-                  console.log(typeof res);
                   if (res) {
                     this.createRefSections(
                       {

@@ -92,7 +92,8 @@ export class FormEditorComponent
     private encounterTypeService: EncounterTypeService,
     private sessionStorageService: SessionStorageService,
     private conceptService: ConceptService,
-    private formSchemaCompiler: FormSchemaCompiler
+    private formSchemaCompiler: FormSchemaCompiler,
+    private fetchFormDetailService: FetchFormDetailService
   ) {}
 
   closeElementEditor() {
@@ -117,7 +118,7 @@ export class FormEditorComponent
 
   ngOnInit() {
     this.loading = true;
-    this.viewMode = 'singleView'; // default view mode
+    this.viewMode = this.getViewMode(); // default view mode
     this.user = this.sessionStorageService.getObject('user').username;
     this.url = this.sessionStorageService.getItem('url');
     this.fectAllFormsService.getFormType().subscribe((res) => {
@@ -176,6 +177,7 @@ export class FormEditorComponent
         }
         this.formType = this.localStorageService.getItem('formType');
       } else {
+        console.log('Get form', uuid);
         this.formMetadata.uuid = uuid;
         this.fs
           .fetchFormMetadata(this.formMetadata.uuid, false)
@@ -191,6 +193,7 @@ export class FormEditorComponent
             this.formMetadata.auditInfo = metadata.auditInfo;
             this.formMetadata.published = metadata.published;
             // this.saveFormMetadata(this.formMetadata); // save form metadata to local storage for retrieval later on
+            console.log('Resources', metadata.resources);
             if (metadata.resources.length) {
               this.formMetadata.valueReference =
                 metadata.resources[0].valueReference || '';
@@ -243,7 +246,6 @@ export class FormEditorComponent
             null,
             '\t'
           );
-          console.log(res);
         }
       });
     // prevent from saving form metadata.
@@ -298,7 +300,10 @@ export class FormEditorComponent
         this.previousVersionUUID = this.formMetadata.uuid;
         this.formMetadata.uuid = uuid;
         this.disableCanDeactivate = true;
-        this.router.navigate(['/edit', uuid]);
+        //FIXME This call should be uncessary but for some reason openmrs does not return forms resources on the after call after saving
+        this.fs.fetchFormMetadata(uuid, false).then((form) => {
+          this.router.navigate(['/edit', form.uuid]);
+        });
       });
 
     this.subscription = this.saveFormService
@@ -425,7 +430,6 @@ export class FormEditorComponent
     });
   }
   setFormEditor(schema, rawSchema, formMetadata?) {
-    console.log(schema, 'SCHEMA');
     this.selectedSchema = schema;
     this.schema = schema;
     this.strSchema = JSON.stringify(schema, null, '\t');
@@ -451,7 +455,6 @@ export class FormEditorComponent
     if (this.formMetadata.published || !_.isEmpty(this.formMetadata.uuid)) {
       let message = '';
       if (this.formMetadata.published) {
-        console.log(this.formMetadata.published);
         message =
           'This form has been published. Would you want to overwrite the existing form?';
       } else if (!_.isEmpty(this.formMetadata.uuid)) {
@@ -548,6 +551,7 @@ export class FormEditorComponent
 
   toggleView() {
     this.viewMode = this.viewMode === 'singleView' ? 'multiView' : 'singleView';
+    localStorage.setItem('viewMode', this.viewMode);
   }
 
   showSaveSnackbar() {
@@ -652,11 +656,15 @@ export class FormEditorComponent
   }
 
   loadFormBuilder($event) {
-    this.viewMode = 'singleView';
+    this.viewMode = this.getViewMode();
   }
 
   exit() {
     this.router.navigate(['/forms']);
+  }
+
+  getViewMode() {
+    return localStorage.getItem('viewMode') || 'multiView';
   }
 
   validateConcepts() {
@@ -664,21 +672,29 @@ export class FormEditorComponent
     this.snackbar.openFromComponent(NotificationComponent, {
       data: ' Validating Concepts...'
     });
-    this.conceptService.validateConcepts(concepts).subscribe((res: any[]) => {
-      const undefinedConcepts = res.filter((x) => x !== undefined);
-      if (undefinedConcepts.length > 0) {
-        let undefined_concepts = '\n';
-        _.each(undefinedConcepts, (concept) => {
-          undefined_concepts = undefined_concepts + '\n' + concept;
-        });
-        this.dialogService.addDialog(AlertComponent, {
-          message: `The following concepts are invalid: ${concepts}`
-        });
+    this.conceptService.validateConcepts(concepts).subscribe(
+      (res: any[]) => {
+        const invalidConcepts = res.filter((concept) => !concept.valid);
+        if (invalidConcepts.length > 0) {
+          let errored_concepts = '\n';
+          _.each(invalidConcepts, (concept) => {
+            errored_concepts = errored_concepts + '\n' + concept.conceptUuid;
+          });
+          this.dialogService.addDialog(AlertComponent, {
+            message: `The following concepts are invalid: ${errored_concepts}`
+          });
+          this.snackbar.dismiss();
+        } else {
+          this.showSuccessToast('All Concepts are valid');
+        }
+      },
+      (error) => {
         this.snackbar.dismiss();
-      } else {
-        this.showSuccessToast('All Concepts are valid');
+        this.dialogService.addDialog(AlertComponent, {
+          message: `Unknown error validating concepts`
+        });
       }
-    });
+    );
   }
 
   fetchAllConcepts() {
@@ -770,7 +786,6 @@ export class FormEditorComponent
             .getConceptID(concept)
             .pipe(
               mergeMap((conceptData) => {
-                console.log(conceptData);
                 conceptId = conceptData;
                 return this.conceptService.searchConceptByUUID(concept);
               })
@@ -862,7 +877,6 @@ export class FormEditorComponent
   }
 
   setFormEditorByRawSchema(rawSchema) {
-    console.log(JSON.stringify(rawSchema));
     this.fs.getReferencedFormsSchemasArray().subscribe((refForms) => {
       this.rawSchema = rawSchema;
       const uncompiledSchema = _.cloneDeep(rawSchema);
@@ -874,7 +888,6 @@ export class FormEditorComponent
     });
   }
   isLastQuestion(pIndex?, sIndex?, qIndex?, pqIndex?): boolean {
-    console.log(pIndex, sIndex, qIndex, pqIndex);
     let answer = false;
     if (pqIndex) {
       if (pIndex === this.rawSchema.pages.length - 1) {

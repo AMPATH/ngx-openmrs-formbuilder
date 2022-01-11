@@ -111,7 +111,6 @@ export class ReferenceModalComponent
         i[refElement + 's'] = formValue;
 
         if (formValue !== undefined) {
-          console.log(i);
           this.result = JSON.stringify(i);
           this.close();
         }

@@ -32,7 +32,6 @@ export class QuestionControlService {
   toPropertyModelArray(schema: any) {
     this.propertyModels = [];
     const flattenedSchema: any = this.flatten(schema);
-    console.log(flattenedSchema);
     // TODO: Replace with for...of
     for (const prop in flattenedSchema) {
       if (flattenedSchema.hasOwnProperty(prop)) {

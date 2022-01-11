@@ -44,7 +44,5 @@ export class EncounterViewerModalComponent
   constructor(dialogService: DialogService) {
     super(dialogService);
   }
-  ngOnInit() {
-    console.log(this.form, this.encounter);
-  }
+  ngOnInit() {}
 }

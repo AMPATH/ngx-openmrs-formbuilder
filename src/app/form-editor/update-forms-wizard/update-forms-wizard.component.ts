@@ -30,7 +30,6 @@ export class UpdateFormsWizardComponent implements OnInit {
   loading: boolean;
   currentNode: Node;
   @Input() set _newComponentMetadata(data) {
-    console.log(data);
     this.componentMetadata = data;
   } // for the new component form
   @Input() set _selectedForms(data) {
@@ -64,7 +63,6 @@ export class UpdateFormsWizardComponent implements OnInit {
     this.head = this.list.head;
     this.currentNode = this.list.head;
     this.fetchSchema(this.head);
-    console.log(this.currentNode);
   }
 
   fetchSchema(node: Node) {
@@ -146,7 +144,6 @@ export class UpdateFormsWizardComponent implements OnInit {
     let newName = this.formListService.removeVersionInformation(form.name);
     newName = newName + ' v' + newVersion;
     this.saveFormService.uploadSchema(schema).subscribe((valueReference) => {
-      console.log(valueReference);
       this.saveFormService
         .saveNewForm(newName, strNewVersion, false, form.description)
         .subscribe((createdForm) => {
@@ -167,7 +164,6 @@ export class UpdateFormsWizardComponent implements OnInit {
   done(newVersion) {
     this.ns.getRawSchema().subscribe((rawSchema) => {
       this.saveForm(rawSchema, this.currentNode.formMetadata, newVersion);
-      console.log('done');
       this.finished.emit(true);
     });
   }

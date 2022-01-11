@@ -209,7 +209,9 @@ export class ConceptComponent implements OnInit, OnDestroy {
 
   public setConceptId(uuid) {
     this.cs.getConceptID(uuid).subscribe((res) => {
-      this.el.setConceptId(res[0].concept_id);
+      if (res.length > 0) {
+        this.el.setConceptId(res[0].concept_id);
+      }
     });
   }
 
@@ -296,7 +298,6 @@ export class ConceptComponent implements OnInit, OnDestroy {
         indexes.push(index);
       }
     });
-    console.log(indexes);
     return indexes;
   }
 

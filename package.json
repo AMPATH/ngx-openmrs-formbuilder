@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "npm run updateBuild && ng serve",
+    "start": "npm run updateBuild && ng serve --proxy-config proxy.conf.js",
     "build": "ng build && npm run updateBuild",
     "test": "ng test",
     "lint": "ng lint",

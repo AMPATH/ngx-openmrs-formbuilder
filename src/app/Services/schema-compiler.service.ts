@@ -327,7 +327,6 @@ export class FormSchemaCompiler {
     formSchemasLookupArray: Array<any>
   ): Object {
     const referencedForms: Array<any> = formSchema.referencedForms;
-    console.log(referencedForms, formSchema, formSchemasLookupArray);
     if (_.isEmpty(referencedForms)) {
       return;
     }
