@@ -10,7 +10,7 @@ import {
   EncounterAdapter,
   DataSources,
   FormErrorsService
-} from 'ngx-openmrs-formentry/dist/ngx-formentry';
+} from '@ampath-kenya/ngx-openmrs-formentry';
 import { NavigatorService } from '../../Services/navigator.service';
 import { FetchFormDetailService } from '../../Services/openmrs-api/fetch-form-detail.service';
 import { MockDataSourceService } from './mock-data-source.service';
