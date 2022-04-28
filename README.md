@@ -1,13 +1,13 @@
-# ng2-openmrs-formbuilder
+# ngx-openmrs-formbuilder
 
 This is a tool that builds OpenMRS Form Schemas interactively.
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.1.
 
 ## Development
 
-Run `git clone https://github.com/AMPATH/ng2-openmrs-formbuilder.git` to clone the repo locally.
+Run `git clone https://github.com/AMPATH/ngx-openmrs-formbuilder.git` to clone the repo locally.
 
-Run `cd ng2-openmrs-formbuilder`
+Run `cd ngx-openmrs-formbuilder`
 
 Run `npm install` to install dependencies.
 
@@ -30,9 +30,9 @@ Then `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app
 - (docker)[https://docs.docker.com/engine/install/]
 - (docker-compose)[https://docs.docker.com/compose/install/]
 
-Run `git clone https://github.com/AMPATH/ng2-openmrs-formbuilder.git` to clone the repo locally.
+Run `git clone https://github.com/AMPATH/ngx-openmrs-formbuilder.git` to clone the repo locally.
 
-Run `docker build -t ng2-openmrs-formbuilder .` (don't forget the fullstop at the end)
+Run `docker build -t ngx-openmrs-formbuilder .` (don't forget the fullstop at the end)
 
 Run `export OPENMRS_HOST_URL=http://172.17.0.1`
 
