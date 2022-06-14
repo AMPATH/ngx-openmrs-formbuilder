@@ -1,6 +1,17 @@
 .app {
-  min-height: calc(100vh - 70px);
+  height: calc(100vh - 6rem);
 }
+
+.main {
+  height: 100vh;
+  display: flex;
+  flex-flow: column wrap;
+}
+
 .footer {
-  height: 50px;
+  padding: 1rem 0rem;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
 }
