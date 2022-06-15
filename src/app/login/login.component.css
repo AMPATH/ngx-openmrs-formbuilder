@@ -31,11 +31,17 @@
   padding: 2rem;
 }
 
-.select-input {
+.selectInput {
   -webkit-appearance: none;
   background-image: url('../../assets/select.svg');
   background-position: right 0.5rem center;
   background-repeat: no-repeat;
   background-size: 1.5em 1.5em;
   padding-right: 2.5rem;
+}
+
+.loginButton {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 3rem;
 }

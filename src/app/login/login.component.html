@@ -49,7 +49,7 @@
             <label class="input-label" for="baseUrl">OpenMRS server URL</label>
             <select
               id="baseUrl"
-              class="select-input form-control"
+              class="selectInput form-control"
               [(ngModel)]="selectedBaseUrl"
               name="baseUrl"
               required
@@ -62,7 +62,6 @@
               </option>
             </select>
           </div>
-
           <div *ngIf="selectedBaseUrl === 'Enter a custom URL'">
             <label for="customServerUrl" class="input-label"
               >Custom server URL</label
@@ -76,7 +75,6 @@
               required
             />
           </div>
-
           <div>
             <label for="username" class="input-label">Username</label>
             <input
@@ -88,7 +86,6 @@
               required
             />
           </div>
-
           <div>
             <label for="password" class="input-label">Password</label>
             <input
@@ -101,10 +98,7 @@
               required
             />
           </div>
-
-          <div
-            style="display: flex; justify-content: flex-start; margin-top: 3rem"
-          >
+          <div class="loginButton">
             <button
               type="submit"
               class="btn btn-lg btn-primary btn-block btn-signin"
