@@ -1,10 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
 a {
   cursor: pointer;
   margin: 5px;
 }
+
 a:hover {
   color: #01a9ff;
 }
+
 a > i.material-icons.yellow {
   color: #ffa500 !important;
 }
