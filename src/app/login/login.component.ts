@@ -1,32 +1,37 @@
-import { catchError } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../Services/authentication/authentication.service';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs/operators';
+import { AuthenticationService } from '../Services/authentication/authentication.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  authenticated: boolean;
-  selectedValue: string;
-  message: string;
-  baseUrls: string[] = [
-    'https://ngx.ampath.or.ke/test-amrs',
-    'https://ngx.ampath.or.ke/amrs',
-    '/openmrs'
-  ];
   constructor(private auth: AuthenticationService, private router: Router) {
     this.setMessage();
   }
 
+  authenticated: boolean;
+  hasConnectionProblem = false;
+  hasInvalidCredentials = false;
+  selectedValue: string;
+  message: string;
+  corsError: string;
+  selectedBaseUrl = '';
+  baseUrls: string[] = ['https://ngx.ampath.or.ke/amrs', 'Enter a custom URL'];
+
   ngOnInit() {}
 
   login(credentials) {
+    if (credentials.customServerUrl) {
+      credentials.baseUrl = credentials.customServerUrl;
+    }
+
+    this.authenticated = false;
     this.auth.setBaseUrl(credentials.baseUrl);
     this.auth.setCredentialsSubject(credentials.username, credentials.password);
-
-    this.message = 'Logging in...';
     this.auth
       .authenticate(
         credentials.username,
@@ -35,18 +40,16 @@ export class LoginComponent implements OnInit {
       )
       .pipe(
         catchError((error) => {
-          if (
-            error.message.indexOf(
-              'You provided an invalid object where a stream was expected.'
-            ) !== -1
-          ) {
-            this.message =
-              'Kindly check your internet connection and make sure CORS is turned on then refresh the page.';
+          if (error.status === 0) {
+            this.hasConnectionProblem = true;
           }
           return error;
         })
       )
-      .subscribe((res) => {
+      .subscribe((res: any) => {
+        if (res.sessionId && !res.authenticated) {
+          this.hasInvalidCredentials = true;
+        }
         this.setMessage();
         if (this.auth.isLoggedIn) {
           this.authenticated = true;

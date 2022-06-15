@@ -1,6 +1,8 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ApplicationRef } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSelectModule } from '@angular/material';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AppRoutingModule } from './app-routing.module';
@@ -24,41 +26,40 @@ import { BuildVersionFooterComponent } from './build-version-footer/build-versio
 import { SaveSnackbarComponent } from './form-editor/snackbar/saved-snackbar';
 import { FormBuilderComponent } from './app-entry-point/form-builder.component';
 import { Str2Num } from './pipes/string_to_number.pipe';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormBuilderHttpInteceptor } from './Services/http-interceptor.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    SearchFormFilterPipe,
-    Str2Num,
-    SnackbarComponent,
     BuildVersionFooterComponent,
-    SaveSnackbarComponent,
     FormBuilderComponent,
-    ViewFormsComponent,
-    NotificationComponent
+    LoginComponent,
+    NotificationComponent,
+    SaveSnackbarComponent,
+    SearchFormFilterPipe,
+    SnackbarComponent,
+    Str2Num,
+    ViewFormsComponent
   ],
 
   imports: [
-    BrowserModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    BootstrapModalModule,
-    NgxPaginationModule,
-    FormEditorModule,
+    AppMaterialModule,
     AppRoutingModule,
     AuthenticationModule,
-    AppMaterialModule,
+    BootstrapModalModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    FormEditorModule,
+    HttpClientModule,
+    MatSelectModule,
     ModalsModule,
+    NgxPaginationModule,
     SharedModule
   ],
-
   entryComponents: [
+    NotificationComponent,
     SaveSnackbarComponent,
-    SnackbarComponent,
-    NotificationComponent
+    SnackbarComponent
   ],
   providers: [
     AuthGuardService,
@@ -76,7 +77,7 @@ import { FormBuilderHttpInteceptor } from './Services/http-interceptor.service';
 })
 export class AppModule {
   constructor(applicationRef: ApplicationRef) {
-    // for ng2-bootstrap-modal in angualar 5
+    // for ng2-bootstrap-modal in angular 5
     Object.defineProperty(applicationRef, '_rootComponents', {
       get: () => applicationRef['components']
     });
