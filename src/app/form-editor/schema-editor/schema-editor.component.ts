@@ -125,7 +125,9 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
       .subscribe((refFormArray) => (this.referencedForms = refFormArray));
 
     this.editor.getEditor().setOptions({
-      printMargin: false
+      fontFamily: 'Roboto Mono',
+      printMargin: false,
+      tabSize: 2
     });
     this.editor.setTheme('chrome');
     this.editor.setMode('json');
