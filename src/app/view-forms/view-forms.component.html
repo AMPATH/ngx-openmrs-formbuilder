@@ -1,56 +1,153 @@
 <mat-toolbar color="primary">
-  <span class="menu" style="font-size: 18px; font-family: 'Roboto'; color: white">Form Builder</span>
-  <span style="margin-left: 15px">
-    <button mat-button (click)="createNew()" style="color: white; font-size: 14px">
-      <i class="fa fa-plus-circle"></i> Create New
-    </button>
+  <span class="menu" style="font-size: 18px">
+    <img alt="AMPATH logo" width="36" height="36" src="../../assets/logo.svg" />
   </span>
-  <!-- <span style="margin-left: 15px;">
-        <button mat-button (click)="download()" style="color:white; font-size:14px;"><i class="fa fa-download"></i> Download</button>
-    </span> -->
-  <span class="fill"></span>
-  <span class="dropdown">
-    <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
-      <i class="fa fa-user"></i> {{ username }} <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu pull-right">
-      <li>
-        <a (click)="logout()"><i class="fa fa-sign-out" style="color: red"></i> Sign Out
-          <i [class.fa-spinner]="loggingOut" [class.fa-spin]="loggingOut" class="fa"></i></a>
-      </li>
-    </ul>
-  </span>
+  <div style="width: 100%; display: flex; justify-content: space-between">
+    <span style="margin-left: 11rem">
+      <button
+        mat-raised-button
+        color="basic"
+        (click)="createNew()"
+        class="addButton"
+      >
+        <i style="margin-right: 0.5rem" class="fa fa-plus-circle"></i>Create a
+        new form
+      </button>
+    </span>
+    <span>
+      <div style="position: relative; display: inline-block">
+        <button
+          (click)="toggleMenu()"
+          id="menu-button"
+          aria-expanded="true"
+          aria-haspopup="true"
+          mat-raised-button
+          color="primary"
+          style="display: flex; align-items: center"
+        >
+          <i class="fa fa-user" style="margin-right: 0.5rem"></i>
+          {{ username }}
+          <span class="caret"></span>
+        </button>
+      </div>
+      <div
+        *ngIf="isMenuExpanded"
+        style="
+          position: absolute;
+          z-index: 10;
+          right: 1.5rem;
+          margin-top: 0.5rem;
+          transform-origin: top right;
+          width: 176px;
+          background-color: white;
+          font-size: 16px;
+          color: black;
+          border-radius: 0.375rem;
+          filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
+            drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+          border-color: rgb(243 244 246);
+        "
+        role="menu"
+        aria-orientation="vertical"
+        aria-labelledby="menu-button"
+        tabindex="-1"
+      >
+        <div>
+          <div
+            style="
+              padding: 2rem 1rem;
+              margin-bottom: 0.5rem;
+              border-bottom: 1px solid rgb(235, 236, 240);
+            "
+          >
+            <span>
+              {{ fullName }}
+            </span>
+          </div>
+          <a
+            class="logoutLink"
+            style="
+              padding: 0.5rem 1rem;
+              display: flex;
+              align-items: center;
+              appearance: none;
+            "
+            (click)="logout()"
+            type="submit"
+            role="menuitem"
+            tabindex="-1"
+            id="menu-item-3"
+          >
+            <span
+              style="display: inline-flex; align-items: center; font-size: 15px"
+            >
+              Sign out
+            </span>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
 </mat-toolbar>
 
 <div class="container-f">
   <div class="restoreMsg">
     <div *ngIf="draftAvailable">
-      <mat-card>
-        <div style="display: inline-block">
-          <small style="font-size: 14px">
-            <i class="fa fa-exclamation-circle fa-lg"></i>
-            <b> {{ restoreMessage }}</b>
-          </small>
-        </div>
-        <div style="display: inline-block" class="pull-right">
-          <button class="btn btn-sm btn-primary" (click)="restore()">
-            Restore
-          </button>
-          <button class="btn btn-sm btn-danger" (click)="discard()">
-            Discard
-          </button>
+      <mat-card style="display: flex; align-items: center">
+        <div style="display: flex; flex-direction: column">
+          <p>
+            <i
+              class="fa fa-exclamation-circle fa-lg"
+              style="margin-right: 0.5rem"
+            ></i
+            >Draft form found
+          </p>
+          <p>
+            <b>{{ draftForm || 'An untitled form' }}</b> was last edited on
+            {{ dateDraftWasLastOpened | date: 'medium' }}.
+          </p>
+          <div
+            style="display: flex; justify-content: flex-end; margin-top: 1rem"
+          >
+            <button
+              style="margin-left: 0.5rem"
+              class="btn btn-sm btn-primary"
+              (click)="restore()"
+            >
+              Restore
+            </button>
+            <button
+              style="margin-left: 0.5rem"
+              class="btn btn-sm btn-danger"
+              (click)="discard()"
+            >
+              Discard
+            </button>
+          </div>
         </div>
       </mat-card>
     </div>
   </div>
 
-  <div class="row">
+  <div *ngIf="forms.length === 0" class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <button mat-stroked-button color="primary">
+        <i class="fa fa-spinner" aria-hidden="true"></i>
+        Loading forms...
+      </button>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="forms.length">
     <div class="col-md-10 col-md-offset-1">
       <div class="panel panel-primary panel-table">
         <div class="panel-heading">
           <div class="row">
             <div class="col col-xs-2">
-              <select class="form-control panel-title" (change)="onChange($event.target.value)">
+              <select
+                class="select-input form-control panel-title"
+                (change)="onChange($event.target.value)"
+              >
                 <option>POC Forms</option>
                 <option>Component Forms</option>
               </select>
@@ -59,20 +156,38 @@
             <div class="col col-xs-5 pull-right">
               <div class="input-group">
                 <!-- Input -->
-                <input type="text" class="form-control" [(ngModel)]="searchValue" placeholder="Search"
-                  id="search-box" />
-                <span class="input-group-addon" style="background: white; border-left: none">
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="searchValue"
+                  placeholder="Search forms"
+                  id="search-box"
+                />
+                <span
+                  class="input-group-addon"
+                  style="background: white; border-left: none"
+                >
                   <i class="fa fa-search"></i>
                 </span>
                 <!-- Dropdown -->
                 <div class="input-group-btn">
-                  <button type="button" class="btn btn-default" data-toggle="dropdown">
-                    <i class="fa fa-filter"></i> Filter<span class="caret"></span>
+                  <button
+                    type="button"
+                    class="btn btn-default"
+                    data-toggle="dropdown"
+                  >
+                    <i class="fa fa-filter"></i> Filter
                   </button>
                   <ul class="dropdown-menu pull-right" role="menu">
                     <li>
-                      <input type="radio" name="filter" value="published" [(ngModel)]="searchFilter" />
-                      Published
+                      <input
+                        type="radio"
+                        name="filter"
+                        value="published"
+                        [(ngModel)]="searchFilter"
+                        style="margin: 0"
+                      />
+                      <span style="margin-left: 0.5rem">Published</span>
                     </li>
                   </ul>
                 </div>
@@ -88,64 +203,102 @@
                 <th width="7%">Version</th>
                 <th width="7%">Published</th>
                 <th width="7%">Retired</th>
-                <th width="10%">Actions</th>
+                <th width="10%">Form Actions</th>
               </tr>
             </thead>
-            <tbody *ngIf="forms.length > 0">
-              <tr *ngFor="
+            <tbody *ngIf="forms.length">
+              <tr
+                *ngFor="
                   let form of forms
                     | formfilter: searchValue:searchFilter
                     | paginate: { itemsPerPage: 11, currentPage: page };
                   let i = index
-                ">
+                "
+              >
                 <td class="formName">
                   <b>{{ form.name }}</b>
                 </td>
                 <td>{{ form.version }}</td>
                 <td>
-                  <label *ngIf="form.published" class="label label-success">Yes</label>
-                  <label *ngIf="!form.published" class="label label-danger">No</label>
+                  <label *ngIf="form.published" class="label label-success"
+                    >Yes</label
+                  >
+                  <label *ngIf="!form.published" class="label label-danger"
+                    >No</label
+                  >
                 </td>
                 <td>
-                  <label *ngIf="form.retired" class="label label-danger">Yes</label>
-                  <label *ngIf="!form.retired" class="label label-success">No</label>
+                  <label *ngIf="form.retired" class="label label-danger"
+                    >Yes</label
+                  >
+                  <label *ngIf="!form.retired" class="label label-success"
+                    >No</label
+                  >
                 </td>
-                <td *ngIf="
+                <td
+                  *ngIf="
                     form.resources.length === 0 ||
                     !form.resources[0]?.valueReference
-                  ">
-                  <a style="cursor: pointer">
-                    <i class="material-icons" (click)="addSchema(form)" data-toggle="tooltip"
-                      title="No schema associated with this form. Import schema?">note_add</i>
-                  </a>
+                  "
+                >
+                  <button
+                    (click)="addSchema(form)"
+                    mat-stroked-button
+                    color="basic"
+                    style="cursor: pointer"
+                    data-toggle="tooltip"
+                    title="Missing schema"
+                  >
+                    <i class="material-icons edit" style="font-size: 16px"
+                      >note_add</i
+                    >
+                    Import
+                  </button>
                 </td>
-                <td *ngIf="
+                <td
+                  *ngIf="
                     form.resources.length > 0 ||
                     form.resources[0]?.valueReference
-                  ">
-                  <a (click)="editForm(form, form.uuid)" style="cursor: pointer" data-toggle="tooltip"
-                    title="Edit Schema">
-                    <i class="material-icons edit">mode_edit</i>
-                  </a>
-                  <a (click)="download(form.resources[0].valueReference)" style="cursor: pointer" data-toggle="tooltip"
-                    title="Download Schema">
-                    <i class="material-icons download">get_app</i>
-                  </a>
+                  "
+                >
+                  <div style="display: flex; align-items: center">
+                    <button
+                      (click)="editForm(form, form.uuid)"
+                      mat-stroked-button
+                      color="primary"
+                      style="cursor: pointer"
+                      data-toggle="tooltip"
+                      title="Edit Schema"
+                    >
+                      <i class="material-icons edit" style="font-size: 16px"
+                        >mode_edit</i
+                      >
+                      Edit
+                    </button>
+                    <button
+                      (click)="download(form.resources[0].valueReference)"
+                      mat-stroked-button
+                      color="basic"
+                      style="cursor: pointer; margin-left: 1rem"
+                      data-toggle="tooltip"
+                      title="Download Schema"
+                    >
+                      <i class="material-icons download" style="font-size: 16px"
+                        >get_app</i
+                      >
+                      Download
+                    </button>
+                  </div>
                 </td>
               </tr>
-            </tbody>
-
-            <tbody *ngIf="forms.length === 0">
-              <td>{{ loadingMessage }}</td>
-              <td>-</td>
-              <td>-</td>
-              <td>-</td>
             </tbody>
           </table>
         </div>
         <div class="panel-footer">
           <div class="row">
-            <pagination-controls (pageChange)="page = $event"></pagination-controls>
+            <pagination-controls
+              (pageChange)="page = $event"
+            ></pagination-controls>
           </div>
         </div>
       </div>

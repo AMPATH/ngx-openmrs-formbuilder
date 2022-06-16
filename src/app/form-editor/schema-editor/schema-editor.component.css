@@ -1,23 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
-
-a {
-  cursor: pointer;
-  margin: 5px;
+@font-face {
+  font-family: 'Roboto Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''), url('../../../assets/roboto-mono.woff') format('woff');
 }
 
-a:hover {
-  color: #01a9ff;
+.editorContainer {
+  padding: 0rem 1rem 1rem;
+  background-color: rgb(243 244 246);
 }
 
-a > i.material-icons.yellow {
-  color: #ffa500 !important;
+.m-4 {
+  margin: 1rem;
 }
 
-.material-icons:hover {
-  color: #5cb85c;
+.mr-2 {
+  margin-right: 0.5rem;
 }
 
-.btn-primary {
-  padding: 10px;
-  margin-bottom: 10px;
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.text-base {
+  font-size: 16px;
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexCenter {
+  display: flex;
+  align-items: center;
+}
+
+.errorIcon {
+  font-size: 16px;
+  margin-right: 0.5rem;
+}
+
+.editor {
+  height: 100vh;
+  width: 100%;
+  overflow: auto;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  padding: 1rem;
 }
