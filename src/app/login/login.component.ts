@@ -18,9 +18,13 @@ export class LoginComponent implements OnInit {
   hasInvalidCredentials = false;
   selectedValue: string;
   message: string;
-  corsError: string;
   selectedBaseUrl = '';
-  baseUrls: string[] = ['https://ngx.ampath.or.ke/amrs', 'Enter a custom URL'];
+  baseUrls: string[] = [
+    'Enter a custom URL',
+    'https://ngx.ampath.or.ke/amrs',
+    'https://data.kenyahmis.org:8500/openmrs',
+    'https://dev3.openmrs.org/openmrs'
+  ];
 
   ngOnInit() {}
 

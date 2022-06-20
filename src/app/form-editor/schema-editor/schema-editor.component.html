@@ -1,67 +1,57 @@
-<div style="background: #ebebeb; padding-top: 5px">
-  <div style="clear: both" id="label" class="text-center">
-    <div style="display: inline-block; float: right" *ngIf="_schema">
-      <label class="badge"
-        ><b>{{ badge }}</b></label
-      >
-      <a
-        data-toggle="tooltip"
-        title="View Full Schema"
-        (click)="viewFullSchema()"
-        ><i class="material-icons">code</i></a
-      >
-      <a data-toggle="tooltip" [title]="tooltip"
-        ><i
-          class="material-icons"
-          (click)="toggleEditor()"
-          [class.yellow]="viewingUncompiled"
-          >visibility</i
-        ></a
-      >
-      <a
-        data-toggle="tooltip"
-        title="Copy"
-        (click)="showSnackbar()"
-        ngxClipboard
-        [cbContent]="editor.getEditor().getValue()"
-        ><i class="material-icons">content_copy</i></a
+<div class="editorContainer">
+  <div class="errorContainer" *ngIf="viewingUncompiled">
+    <div class="alert alert-danger m-4" *ngIf="errorMessage">
+      <b class="flexCenter">
+        <i class="material-icons text-base mr-2">error</i>{{ errorMessage }}</b
       >
     </div>
   </div>
-
-  <div style="clear: both">
-    <ace-editor
-      #editor
-      (textChanged)="onTextChanged($event)"
-      style="height: 70vh; width: 100%; overflow: auto"
-    ></ace-editor
-    ><br />
-    <div class="row">
-      <div class="text-center container" *ngIf="viewingUncompiled">
-        <div class="alert alert-danger" *ngIf="errorMessage">
-          <small
-            ><b>{{ errorMessage }}</b></small
-          >
-        </div>
+  <div id="label" class="actionButtons">
+    <div class="flexCenter" *ngIf="_schema">
+      <button
+        mat-raised-button
+        color="basic"
+        (click)="showSnackbar()"
+        ngxClipboard
+        [cbContent]="editor.getEditor().getValue()"
+      >
+        Copy schema to clipboard
+        <i class="material-icons text-base ml-2">content_copy</i>
+      </button>
+    </div>
+    <div class="">
+      <div class="" *ngIf="viewingUncompiled">
         <button
+          mat-raised-button
+          color="primary"
           (click)="render()"
-          *ngIf="buildSchemaMode && parsedRawSchema && parsedRawSchema.name !== undefined"
-          class="btn btn-primary"
-          data-toggle="tooltip"
-          title="Update and render the schema"
+          *ngIf="
+            buildSchemaMode &&
+            parsedRawSchema &&
+            parsedRawSchema.name !== undefined
+          "
         >
-          Render
+          Render form
+          <i class="material-icons text-base ml-2">arrow_forward</i>
         </button>
         <button
-          (click)="reCompile()"
+          mat-raised-button
+          color="primary"
+          class="mr-2"
+          (click)="recompileSchema()"
           *ngIf="correctSchemaMode"
-          class="btn btn-success"
-          data-toggle="tooltip"
-          title="Fix errors"
         >
-          Compile
+          Compile schema
         </button>
       </div>
     </div>
+  </div>
+  <div>
+    <ace-editor
+      class="editor"
+      #editor
+      (textChanged)="onTextChanged($event)"
+    ></ace-editor
+    ><br />
   </div>
 </div>

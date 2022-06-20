@@ -267,7 +267,7 @@ export class FormEditorComponent
       this.strSchema = JSON.stringify(this.schema, null, '\t');
       this.saveDraft(this.schema);
       this.saveFormMetadata(this.formMetadata);
-      this.showSuccessToast('Schema Updated!');
+      this.showSuccessToast('Schema updated');
     });
 
     this.subscription = this.navigatorService

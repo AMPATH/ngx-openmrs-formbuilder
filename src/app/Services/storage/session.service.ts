@@ -1,13 +1,11 @@
-import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { SessionStorageService } from './session-storage.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Constants } from '../constants';
-// TODO inject service
 
 @Injectable()
 export class SessionService {
-  private url;
+  private sessionUrl;
 
   constructor(
     private http: HttpClient,
@@ -15,22 +13,18 @@ export class SessionService {
   ) {}
 
   public getUrl(): string {
-    return this.url;
+    return this.sessionUrl;
   }
 
   public getSession(credentials: any = null, baseUrl: string) {
-    this.url = baseUrl + '/ws/rest/v1/session';
+    this.sessionUrl = baseUrl + '/ws/rest/v1/session';
+
     if (credentials && credentials.username) {
       const base64 = btoa(credentials.username + ':' + credentials.password);
       this.sessionStorageService.setItem(Constants.CREDENTIALS_KEY, base64);
     }
 
-    return this.http.get(this.url).pipe(
-      catchError((error) => {
-        console.log(error);
-        return error;
-      })
-    );
+    return this.http.get(this.sessionUrl);
   }
 
   public deleteSession() {

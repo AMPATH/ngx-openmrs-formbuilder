@@ -124,6 +124,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
       .getReferencedFormsSchemasArray()
       .subscribe((refFormArray) => (this.referencedForms = refFormArray));
 
+    this.editor.getEditor().setFontSize(16);
     this.editor.getEditor().setOptions({
       fontFamily: 'Roboto Mono',
       printMargin: false,
@@ -131,7 +132,6 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     });
     this.editor.setTheme('chrome');
     this.editor.setMode('json');
-    this.editor.getEditor().setFontSize(16);
 
     this.ns.getRawSchema().subscribe((schema) => {
       if (!_.isEmpty(schema) && !this.correctSchemaMode) {
@@ -172,7 +172,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
       );
     } catch (e) {
       compiledSchema = e;
-      this.errorMessage = 'Invalid JSON schema. ' + e;
+      this.errorMessage = `${e}`;
     }
 
     const schema = JSON.parse(JSON.stringify(compiledSchema));
@@ -186,7 +186,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  reCompile() {
+  recompileSchema() {
     const editedSchema = this.editor.getEditor().getValue();
     const rawSchema = _.cloneDeep(editedSchema);
     const referencedForms = JSON.parse(rawSchema).referencedForms;
@@ -214,7 +214,7 @@ export class SchemaEditorComponent implements OnInit, OnDestroy {
   }
 
   showSnackbar() {
-    this.snackbar.open('Copied to clipboard', '', { duration: 1200 });
+    this.snackbar.open('Schema copied to clipboard', '', { duration: 1200 });
   }
 
   ngOnDestroy() {}

@@ -25,14 +25,17 @@ export class ViewFormsComponent implements OnInit {
   loggingOut = false;
   searchValue = '';
   loadingMessage = 'Loading Forms...';
-  restoreMessage = '';
   draftAvailable = false;
   draft: any;
   rawDraft: any;
   formsWithoutSchemas: any[] = [];
   subscription: Subscription;
+  draftForm = '';
   username: string;
+  fullName: string;
   searchFilter: string;
+  isMenuExpanded = false;
+  dateDraftWasLastOpened: Date;
   constructor(
     private fetchAllFormsService: FetchAllFormsService,
     private router: Router,
@@ -44,6 +47,7 @@ export class ViewFormsComponent implements OnInit {
   ) {
     const user = sessionStorageService.getObject('user');
     this.username = user.username;
+    this.fullName = user.person.display;
   }
 
   ngOnInit() {
@@ -65,14 +69,10 @@ export class ViewFormsComponent implements OnInit {
       if (this.ls.getObject(Constants.TIME_STAMP)) {
         timestamp = this.ls.getObject(Constants.TIME_STAMP);
       }
-      this.restoreMessage = `Form ${
-        this.ls.getObject(Constants.FORM_METADATA).name
-      } was last worked on at ${new Date(
-        parseInt(timestamp, 10)
-      ).toLocaleDateString()}
-    ${new Date(
-      parseInt(timestamp, 10)
-    ).toLocaleTimeString()} Would you like to continue working on this?`;
+
+      this.dateDraftWasLastOpened = new Date(parseInt(timestamp, 10));
+
+      this.draftForm = this.ls.getObject(Constants.FORM_METADATA).name;
     }
   }
 
@@ -117,6 +117,10 @@ export class ViewFormsComponent implements OnInit {
     } else {
       this.fetchPOCForms();
     }
+  }
+
+  toggleMenu() {
+    this.isMenuExpanded = !this.isMenuExpanded;
   }
 
   fetchPOCForms() {

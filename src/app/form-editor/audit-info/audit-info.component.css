@@ -1,3 +1,5 @@
 .row {
-  margin-top: 10px;
+  display: flex;
+  align-items: baseline;
+  margin: 0.625rem;
 }
