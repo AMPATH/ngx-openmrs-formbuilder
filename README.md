@@ -1,7 +1,8 @@
-<p align="center">
-  <img width="340" alt="AMPATH logo" src="https://raw.githubusercontent.com/AMPATH/ngx-openmrs-formbuilder/50ef914febf222d291f433132c002c32646766ba/src/assets/ampath-logo.svg">
+<p align="center" margin="1rem">
+  <img width="340" alt="AMPATH logo" src="https://raw.githubusercontent.com/AMPATH/ngx-openmrs-formbuilder/c728fa6437628a24bcc54ce6ffc6a4c55a16a03e/src/assets/ampath-forms-logo.svg">
 </p>
-
+<br />
+<br />
 <p align="center">
   <img alt="Screenshot showing the Schema Editor of the AMPATH Form Builder" src="https://raw.githubusercontent.com/AMPATH/ngx-openmrs-formbuilder/master/src/assets/screen.png" />
 </p>
