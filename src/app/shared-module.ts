@@ -9,7 +9,7 @@ import { TypeaheadModule } from 'ngx-bootstrap';
 import { LocalStorageService } from './Services/storage/local-storage.service';
 import { SessionStorageService } from './Services/storage/session-storage.service';
 import { SessionService } from './Services/storage/session.service';
-import { FormEntryModule } from 'ngx-openmrs-formentry/dist/ngx-formentry';
+import { FormEntryModule } from '@ampath-kenya/ngx-openmrs-formentry';
 @NgModule({
   declarations: [NavigatorComponent],
   imports: [

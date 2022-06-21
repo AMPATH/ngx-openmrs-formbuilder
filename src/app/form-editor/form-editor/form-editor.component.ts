@@ -31,7 +31,7 @@ import { ConceptService } from '../../Services/openmrs-api/concept.service';
 import { NotificationComponent } from '../snackbar/notification-toast';
 import * as _ from 'lodash';
 import { Question } from '../form-elements/Question';
-import { FormSchemaCompiler } from 'ngx-openmrs-formentry/dist/ngx-formentry';
+import { FormSchemaCompiler } from '@ampath-kenya/ngx-openmrs-formentry';
 
 interface FormMetadata {
   name: string;
