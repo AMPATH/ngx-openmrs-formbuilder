@@ -8,6 +8,7 @@
         [id]="question.key"
         [type]="question.type"
         [value]="question.value"
+        (keyup.enter)="searchConcept()"
       />
       <span class="input-group-btn">
         <button

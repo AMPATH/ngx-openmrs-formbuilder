@@ -80,7 +80,7 @@ export class ConceptComponent implements OnInit, OnDestroy {
           .subscribe((res) => {
             this.searching = false;
             const arr = [];
-            if (res !== []) {
+            if (_.isEmpty(res)) {
               arr.push(res);
               this.showConceptsDialog(arr);
             } else {
@@ -277,15 +277,6 @@ export class ConceptComponent implements OnInit, OnDestroy {
 
   setConceptMappings(mappings) {
     this.el.setMappings(mappings);
-  }
-
-  keyDownFunction($event) {
-    if (
-      $event.keyCode === 13 &&
-      this.form.controls[this.question.key].value !== ''
-    ) {
-      this.searchConcept();
-    }
   }
 
   findIndexesOfPreviouslySelectedAnswers(
