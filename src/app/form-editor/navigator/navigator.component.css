@@ -101,3 +101,8 @@ label {
 .yellow {
   color: green;
 }
+.question-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
