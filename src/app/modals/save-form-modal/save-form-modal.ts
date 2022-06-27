@@ -49,6 +49,7 @@ export class SaveFormsComponent
   encounterTypeUUID: string;
   published: boolean;
   formType: string;
+  isSavingForm: boolean;
 
   constructor(
     dialogService: DialogService,
@@ -77,6 +78,7 @@ export class SaveFormsComponent
     });
   }
   save(formValue) {
+    this.isSavingForm = true;
     if (this.operation === 'overwrite') {
       if (this.name !== formValue.name) {
         this.updateName(formValue.name, this.uuid).subscribe((res) => {
@@ -115,9 +117,6 @@ export class SaveFormsComponent
       this.uuid = undefined;
       this.createForm(formValue);
     }
-
-    this.result = true;
-    super.close();
   }
 
   // keyDownFunction($event,form){
@@ -154,6 +153,8 @@ export class SaveFormsComponent
                     const parsedRes = JSON.parse(resourceUUID);
                     this.saveFormService.setNewResourceUUID(parsedRes.uuid);
                     this.showDoneSnackBar();
+                    this.isSavingForm = false;
+                    this.close();
                   });
               });
           });
@@ -194,8 +195,9 @@ export class SaveFormsComponent
                 // tslint:disable-next-line:no-shadowed-variable
                 let toSave = JSON.parse(resourceUUID);
                 this.saveFormService.setNewResourceUUID(toSave.uuid);
-
+                this.isSavingForm = false;
                 this.showDoneSnackBar();
+                this.close();
               });
           });
       });

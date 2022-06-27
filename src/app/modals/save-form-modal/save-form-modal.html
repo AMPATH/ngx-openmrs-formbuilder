@@ -25,7 +25,10 @@
           <label for="encounter-type">Encounter Type</label>
           <select class="form-control" formControlName="encounter">
             <option value="" selected>Select Encounter Type</option>
-            <option *ngFor="let e of encounterTypes" [selected]="encounterType === e.display">
+            <option
+              *ngFor="let e of encounterTypes"
+              [selected]="encounterType === e.display"
+            >
               {{e.display}}
             </option>
           </select>
@@ -33,12 +36,18 @@
 
         <div class="form-group">
           <label>Description</label>
-          <textarea class="form-control" rows="4" formControlName="description"></textarea>
+          <textarea
+            class="form-control"
+            rows="4"
+            formControlName="description"
+          ></textarea>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary" (click)="save(form.value)">OK</button>
+      <button [disabled]="isSavingForm" class="btn btn-primary" (click)="save(form.value)">
+        {{isSavingForm ? 'Saving form ...' : 'Ok'}}
+      </button>
       <button type="button" class="btn btn-default" (click)="close()">
         Cancel
       </button>
