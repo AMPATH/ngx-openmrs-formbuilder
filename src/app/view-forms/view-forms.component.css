@@ -105,6 +105,10 @@
   color: green;
 }
 
+.material-icons.folder_open {
+  color: rgb(209 213 219);
+}
+
 .navbar-btn {
   margin: 5px 5px 0px 5px;
 }
@@ -154,7 +158,7 @@ a:hover {
   margin-left: 50px;
 }
 
-mat-card {
+.draftForm {
   color: #3c763d;
   background-color: #dff0d8;
   border-color: #d6e9c6;
@@ -179,4 +183,17 @@ mat-card {
 
 .logoutLink:hover {
   background-color: rgba(243, 244, 246);
+}
+
+.emptyState {
+  display: flex;
+  padding: 2rem;
+  align-items: center;
+  flex-flow: column wrap;
+  justify-content: space-between;
+}
+
+.helperText {
+  color: rgb(107 114 128);
+  margin: 0.5rem 0rem;
 }

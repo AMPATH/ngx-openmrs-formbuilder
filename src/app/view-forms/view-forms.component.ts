@@ -24,7 +24,6 @@ export class ViewFormsComponent implements OnInit {
   page = 1; // pagination
   loggingOut = false;
   searchValue = '';
-  loadingMessage = 'Loading Forms...';
   draftAvailable = false;
   draft: any;
   rawDraft: any;
@@ -35,6 +34,7 @@ export class ViewFormsComponent implements OnInit {
   fullName: string;
   searchFilter: string;
   isMenuExpanded = false;
+  isLoadingForms = false;
   dateDraftWasLastOpened: Date;
   constructor(
     private fetchAllFormsService: FetchAllFormsService,
@@ -124,6 +124,7 @@ export class ViewFormsComponent implements OnInit {
   }
 
   fetchPOCForms() {
+    this.isLoadingForms = true;
     this.subscription = this.fetchAllFormsService
       .fetchAllPOCForms()
       .subscribe((forms) => {
@@ -139,14 +140,11 @@ export class ViewFormsComponent implements OnInit {
               }
             });
         });
+        this.isLoadingForms = false;
         this.POCForms = _.cloneDeep(f);
         this.forms = _.cloneDeep(f);
 
         // this.fetchAllFormSchemas(this.POCForms);
-
-        if (this.forms.length === 0) {
-          this.loadingMessage = 'No forms to display';
-        }
       });
   }
 

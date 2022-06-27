@@ -93,7 +93,7 @@
 <div class="container-f">
   <div class="restoreMsg">
     <div *ngIf="draftAvailable">
-      <mat-card style="display: flex; align-items: center">
+      <mat-card class="draftForm" style="display: flex; align-items: center">
         <div style="display: flex; flex-direction: column">
           <p>
             <i
@@ -129,12 +129,36 @@
     </div>
   </div>
 
-  <div *ngIf="forms.length === 0" class="row">
+  <div *ngIf="!forms.length && isLoadingForms" class="row">
     <div class="col-md-10 col-md-offset-1">
       <button mat-stroked-button color="primary">
         <i class="fa fa-spinner" aria-hidden="true"></i>
         Loading forms...
       </button>
+    </div>
+  </div>
+
+  <div *ngIf="!forms.length && !isLoadingForms">
+    <div class="col-md-10 col-md-offset-1">
+      <mat-card>
+        <div class="emptyState">
+          <i class="material-icons folder_open" style="font-size: 96px"
+            >folder_open</i
+          >
+          <h4>No forms to display</h4>
+          <p class="helperText">
+            Create and save forms to your server to see them listed here.
+          </p>
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="createNew()"
+            style="display: flex; align-items: center; margin-top: 2rem"
+          >
+            Create a new form
+          </button>
+        </div>
+      </mat-card>
     </div>
   </div>
 
