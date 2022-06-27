@@ -19,12 +19,7 @@ export class LoginComponent implements OnInit {
   selectedValue: string;
   message: string;
   selectedBaseUrl = '';
-  baseUrls: string[] = [
-    'Enter a custom URL',
-    'https://ngx.ampath.or.ke/amrs',
-    'https://data.kenyahmis.org:8500/openmrs',
-    'https://dev3.openmrs.org/openmrs'
-  ];
+  baseUrls: string[] = ['Enter a custom URL', 'https://ngx.ampath.or.ke/amrs'];
 
   ngOnInit() {}
 
@@ -72,7 +67,7 @@ export class LoginComponent implements OnInit {
   setMessage() {
     const str = this.authenticated ? 'in' : undefined;
     if (str) {
-      this.message = 'Already Logged ' + str;
+      this.message = 'Already logged ' + str;
     }
   }
 }
