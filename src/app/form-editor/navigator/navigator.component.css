@@ -5,6 +5,7 @@
   text-decoration: none;
   display: inline-block;
 }
+
 .element {
   font-size: 16px;
   font-weight: 600;
@@ -16,6 +17,7 @@
 .element:hover {
   color: #008cba;
 }
+
 a {
   color: white;
   font-size: 14px;
@@ -33,11 +35,14 @@ a {
 .well {
   border: none;
   background: none;
+  margin: 0.5rem 0;
 }
 
 .formName {
-  margin-bottom: 20px;
+  width: 100%;
+  margin-bottom: 3rem;
 }
+
 .display {
   display: none;
 }
@@ -51,14 +56,9 @@ label {
   margin-bottom: 15px;
   padding: 10px 10px 10px 10px;
 }
+
 .selectMode {
   display: inline-block;
-}
-
-.formName {
-  width: 100%;
-  margin: 10px 10px 5px 0px;
-  padding: 10px 0px 0px 5px;
 }
 
 .pages {
@@ -94,10 +94,18 @@ label {
 .badge.sec > a {
   color: #008cba !important;
 }
+
 .material-icons {
   color: #008cba;
   font-size: 18px;
 }
+
 .yellow {
   color: green;
+}
+
+.question-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

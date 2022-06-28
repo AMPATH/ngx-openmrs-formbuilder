@@ -75,7 +75,7 @@
             '#page' + page.label.slice(0, 2) + _formSchema.name.slice(0, 2) + i
           "
           data-toggle="collapse"
-          ><i class="fa fa-chevron-down"></i
+          ><i style="margin-right: 0.5rem" class="fa fa-chevron-down"></i
         ></a>
 
         <label (click)="onClicked(page, i)" class="element"
@@ -93,23 +93,22 @@
           style="float: right"
           [hidden]="editPageMode"
         >
-          <a *ngIf="!IsPageReferenced(i) && editMode"
-            ><i
-              (click)="showEditForm(page, i)"
-              class="material-icons"
-              aria-hidden="true"
-              >edit</i
-            ></a
+          <button
+            style="margin-right: 0.5rem"
+            (click)="showEditForm(page, i)"
+            mat-stroked-button
+            color="primary"
+            *ngIf="!IsPageReferenced(i) && editMode"
           >
-          <a
-            ><i
-              class="material-icons del"
-              aria-hidden="true"
-              style="color: #8b0000"
-              (click)="showDeleteDialog(page, 'page', i)"
-              >delete_forever</i
-            ></a
+            Edit
+          </button>
+          <button
+            (click)="showDeleteDialog(page, 'page', i)"
+            mat-stroked-button
+            color="warn"
           >
+            Delete
+          </button>
         </div>
 
         <div
@@ -175,7 +174,7 @@
             j
           "
           data-toggle="collapse"
-          ><i class="fa fa-chevron-down"> </i
+          ><i style="margin-right: 0.5rem" class="fa fa-chevron-down"> </i
         ></a>
 
         <label (click)="onClicked(section, pageIndex, j)" class="element"
@@ -198,14 +197,18 @@
           style="float: right"
           [hidden]="editPageMode || editSectionMode"
         >
-          <a *ngIf="!IsSectionReferenced(pageIndex, j)"
-            ><i
-              (click)="showEditForm(section, pageIndex, j)"
-              class="fa fa-pencil"
-              aria-hidden="true"
-            ></i
-          ></a>
-          <a
+          <button
+            style="margin-right: 0.5rem"
+            (click)="showEditForm(section, pageIndex, j)"
+            *ngIf="!IsSectionReferenced(pageIndex, j)"
+            mat-stroked-button
+            color="primary"
+          >
+            Edit
+          </button>
+          <button
+            mat-stroked-button
+            color="primary"
             *ngIf="
               IsSectionReferenced(pageIndex, j) &&
               IsSectionOnlyReferenced(pageIndex, j)
@@ -213,31 +216,21 @@
             (click)="editReferenceSection(pageIndex, j)"
             data-toggle="tooltip"
             title="Edit Referenced Section"
-            ><i
-              class="fa fa-reply-all"
-              style="color: green"
-              aria-hidden="true"
-            ></i
-          ></a>
-          <a
+          >
+            Edit Referenced Section
+          </button>
+          <button
+            mat-stroked-button
+            color="warn"
             *ngIf="
               !IsPageReferenced(pageIndex) &&
               IsSectionOnlyReferenced(pageIndex, j)
             "
-            ><i
-              class="fa fa-trash-o"
-              aria-hidden="true"
-              style="color: #8b0000"
-              (click)="showDeleteDialog(section, 'section', pageIndex, j)"
-            ></i
-          ></a>
+            (click)="showDeleteDialog(section, 'section', pageIndex, j)"
+          >
+            Delete
+          </button>
         </div>
-
-        <!--Exclude Section-->
-        <!-- <div *ngIf="selectMode&&_refElement=='page'" style="float:right;">
-          <a ><i class="fa fa-times" aria-hidden="true"  data-toggle="tooltip" title="Exclude section" style="color:red" (click)="excludeSection(pageIndex,j)"></i></a>
-          </div> -->
-
         <div
           [id]="
             'section' +
@@ -270,18 +263,15 @@
         (click)="addQuestion(pageIndex, sectionIndex, questionIndex)"
         class="create"
       >
-        <i class="fa fa-plus"></i> Create new question</a
+        <i style="margin-right: 0.5rem" class="fa fa-plus"></i> Create new
+        question</a
       >
-      <!-- <span style="border-right:1px solid lightgray;"></span>
-      <a style="cursor:pointer" data-toggle="tooltip" title="Reference question" (click)="addReferenceQuestion(pageIndex,sectionIndex,questionIndex)" class="ref" ><i class="fa fa-reply-all"></i> Reference Question</a> -->
     </div>
 
-    <div *ngFor="let question of schema.questions; let k = index">
-      <!-- <div *ngIf="selectMode&&_refElement=='question'" class="selectMode">
-      <input type="checkbox" 
-      (change)="emitCheckedReferenceElement($event,{'page':_formSchema.pages[pageIndex].label,'section':_formSchema.pages[pageIndex].sections[sectionIndex].label,'question':question.id || question.questions})">
-    </div> -->
-
+    <div
+      class="question-area"
+      *ngFor="let question of schema.questions; let k = index"
+    >
       <a
         *ngIf="question.questions"
         [href]="
@@ -293,7 +283,7 @@
           k
         "
         data-toggle="collapse"
-        ><i class="fa fa-toggle-down"> </i
+        ><i style="margin-right: 0.5rem" class="fa fa-toggle-down"> </i
       ></a>
       <p
         class="element"
@@ -307,24 +297,21 @@
         *ngIf="selectMode && _refElement == 'section' && question.id"
         style="float: right"
       >
-        <a
-          ><i
-            class="fa fa-times"
-            aria-hidden="true"
-            data-toggle="tooltip"
-            title="Exclude question"
-            style="color: red"
-            (click)="
-              excludeQuestion(
-                pageIndex,
-                sectionIndex,
-                k,
-                questionIndex,
-                question.id
-              )
-            "
-          ></i
-        ></a>
+        <button
+          (click)="
+            excludeQuestion(
+              pageIndex,
+              sectionIndex,
+              k,
+              questionIndex,
+              question.id
+            )
+          "
+          mat-stroked-button
+          color="warn"
+        >
+          Exclude question
+        </button>
       </div>
 
       <!-- Edit Question -->
@@ -333,33 +320,35 @@
         style="float: right"
         [hidden]="editPageMode || editSectionMode"
       >
-        <a *ngIf="!IsSectionReferenced(pageIndex, sectionIndex)"
-          ><i
-            (click)="
-              editQuestion(question, pageIndex, sectionIndex, k, questionIndex)
-            "
-            class="fa fa-pencil"
-            aria-hidden="true"
-          ></i
-        ></a>
-        <a *ngIf="!IsSectionReferenced(pageIndex, sectionIndex)"
-          ><i
-            class="fa fa-trash-o"
-            aria-hidden="true"
-            style="color: #8b0000"
-            (click)="
-              showDeleteDialog(
-                question,
-                'question',
-                pageIndex,
-                sectionIndex,
-                k,
-                questionIndex
-              )
-            "
-          ></i
-        ></a>
-        <a
+        <button
+          style="margin-right: 0.5rem"
+          (click)="
+            editQuestion(question, pageIndex, sectionIndex, k, questionIndex)
+          "
+          mat-stroked-button
+          color="primary"
+          *ngIf="!IsSectionReferenced(pageIndex, sectionIndex)"
+        >
+          Edit
+        </button>
+        <button
+          mat-stroked-button
+          color="warn"
+          (click)="
+            showDeleteDialog(
+              question,
+              'question',
+              pageIndex,
+              sectionIndex,
+              k,
+              questionIndex
+            )
+          "
+          *ngIf="!IsSectionReferenced(pageIndex, sectionIndex)"
+        >
+          Delete
+        </button>
+        <button
           *ngIf="
             !IsPageReferenced(pageIndex) &&
             IsSectionReferenced(pageIndex, sectionIndex) &&
@@ -367,22 +356,19 @@
             question.id?.indexOf('__') == -1 &&
             questionIndex == undefined
           "
-          ><i
-            class="fa fa-times"
-            aria-hidden="true"
-            data-toggle="tooltip"
-            title="Exclude question"
-            style="color: red"
-            (click)="
-              excludeQuestionFromReferencedSection(
-                pageIndex,
-                sectionIndex,
-                k,
-                question.id
-              )
-            "
-          ></i
-        ></a>
+          mat-button
+          color="warn"
+          (click)="
+            excludeQuestionFromReferencedSection(
+              pageIndex,
+              sectionIndex,
+              k,
+              question.id
+            )
+          "
+        >
+          Exclude question
+        </button>
         <span
           *ngIf="question.id?.indexOf('__') >= 0"
           data-toggle="tooltip"
