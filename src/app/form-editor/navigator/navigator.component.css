@@ -16,6 +16,7 @@
 .element:hover {
   color: #008cba;
 }
+
 a {
   color: white;
   font-size: 14px;
@@ -33,6 +34,7 @@ a {
 .well {
   border: none;
   background: none;
+  margin: 0.5rem 0;
 }
 
 .formName {
@@ -94,13 +96,16 @@ label {
 .badge.sec > a {
   color: #008cba !important;
 }
+
 .material-icons {
   color: #008cba;
   font-size: 18px;
 }
+
 .yellow {
   color: green;
 }
+
 .question-area {
   display: flex;
   justify-content: space-between;

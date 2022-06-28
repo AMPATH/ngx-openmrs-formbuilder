@@ -75,7 +75,7 @@
             '#page' + page.label.slice(0, 2) + _formSchema.name.slice(0, 2) + i
           "
           data-toggle="collapse"
-          ><i class="fa fa-chevron-down"></i
+          ><i style="margin-right: 0.5rem" class="fa fa-chevron-down"></i
         ></a>
 
         <label (click)="onClicked(page, i)" class="element"
@@ -94,8 +94,9 @@
           [hidden]="editPageMode"
         >
           <button
+            style="margin-right: 0.5rem"
             (click)="showEditForm(page, i)"
-            mat-button
+            mat-stroked-button
             color="primary"
             *ngIf="!IsPageReferenced(i) && editMode"
           >
@@ -103,7 +104,7 @@
           </button>
           <button
             (click)="showDeleteDialog(page, 'page', i)"
-            mat-button
+            mat-stroked-button
             color="warn"
           >
             Delete
@@ -173,7 +174,7 @@
             j
           "
           data-toggle="collapse"
-          ><i class="fa fa-chevron-down"> </i
+          ><i style="margin-right: 0.5rem" class="fa fa-chevron-down"> </i
         ></a>
 
         <label (click)="onClicked(section, pageIndex, j)" class="element"
@@ -197,6 +198,7 @@
           [hidden]="editPageMode || editSectionMode"
         >
           <button
+            style="margin-right: 0.5rem"
             (click)="showEditForm(section, pageIndex, j)"
             *ngIf="!IsSectionReferenced(pageIndex, j)"
             mat-stroked-button
@@ -261,7 +263,8 @@
         (click)="addQuestion(pageIndex, sectionIndex, questionIndex)"
         class="create"
       >
-        <i class="fa fa-plus"></i> Create new question</a
+        <i style="margin-right: 0.5rem" class="fa fa-plus"></i> Create new
+        question</a
       >
     </div>
 
@@ -280,7 +283,7 @@
           k
         "
         data-toggle="collapse"
-        ><i class="fa fa-toggle-down"> </i
+        ><i style="margin-right: 0.5rem" class="fa fa-toggle-down"> </i
       ></a>
       <p
         class="element"
@@ -318,6 +321,7 @@
         [hidden]="editPageMode || editSectionMode"
       >
         <button
+          style="margin-right: 0.5rem"
           (click)="
             editQuestion(question, pageIndex, sectionIndex, k, questionIndex)
           "
