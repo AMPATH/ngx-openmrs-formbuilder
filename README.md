@@ -14,3 +14,7 @@ The AMPATH Form Builder is a tool that helps you build and render OpenMRS form s
 ## Getting Started / Documentation
 
 Visit https://ampath-forms.vercel.app to view the full documentation.
+
+## Contributing
+
+Read our [Contributing](https://ampath-forms.vercel.app/docs/developer-guide/contributing-guide) guide.
