@@ -39,7 +39,7 @@
             <li>
               <a class="menuItem" (click)="saveLocally()">
                 <i class="glyphicon glyphicon-save mr-2" aria-hidden="true"></i>
-                <span>Save to disk</span></a
+                <span>Save draft to browser</span></a
               >
             </li>
             <li>
@@ -163,10 +163,15 @@
             </li>
           </ul>
         </div>
-
         <div class="btn-group">
-          <button type="button" class="btn btn-default" (click)="exit()">
-            <span class="fb-menu-item"> Exit form builder</span>
+          <button type="button" class="btn btn-default">
+            <a
+              class="fb-menu-item docs-link"
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://ampath-forms.vercel.app"
+              >Docs</a
+            >
           </button>
         </div>
       </span>
@@ -197,6 +202,10 @@
         <i style="font-size: 16px; margin-left: 0.5rem" class="material-icons"
           >arrow_forward</i
         >
+      </button>
+      <span class="space"></span>
+      <button type="button" class="btn btn-danger" (click)="exit()">
+        Exit
       </button>
     </mat-toolbar>
     <div id="audit-info" class="container collapse audit-content">

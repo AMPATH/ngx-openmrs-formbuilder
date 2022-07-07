@@ -12,13 +12,12 @@ export interface ConfirmModel {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" (click)="close()">&times;</button>
-
         <h4 class="modal-title">{{ title || 'Confirm' }}</h4>
       </div>
       <div class="modal-body">
         <h5>{{ message || 'Are you sure you want to delete?' }}</h5>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer actions">
         <button type="button" class="btn btn-danger" (click)="confirm()">
           {{ buttonText || 'Delete' }}
         </button>
@@ -32,11 +31,22 @@ export interface ConfirmModel {
           </button>
         </div>
         <button type="button" class="btn btn-default" (click)="close()">
-          {{ 'Cancel' || canceButtonText }}
+          {{ 'Cancel' }}
         </button>
       </div>
     </div>
-  </div>`
+  </div>`,
+  styles: [
+    `
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .actions button {
+        margin: 0rem 0.5rem;
+      }
+    `
+  ]
 })
 export class ConfirmComponent
   extends DialogComponent<ConfirmModel, number>

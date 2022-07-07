@@ -86,7 +86,7 @@ export class FormEditorComponent
     public dialogService: DialogService,
     private localStorageService: LocalStorageService,
     private cdRef: ChangeDetectorRef,
-    private fectAllFormsService: FetchAllFormsService,
+    private fetchAllFormsService: FetchAllFormsService,
     private formListService: FormListService,
     private saveFormService: SaveFormService,
     private encounterTypeService: EncounterTypeService,
@@ -121,7 +121,8 @@ export class FormEditorComponent
     this.viewMode = this.getViewMode(); // default view mode
     this.user = this.sessionStorageService.getObject('user').username;
     this.url = this.sessionStorageService.getItem('url');
-    this.fectAllFormsService.getFormType().subscribe((res) => {
+    this.fetchAllFormsService.getFormType().subscribe((res) => {
+      console.log('res: ', res);
       if (res !== '') {
         this.formType = res;
         this.localStorageService.setItem('formType', this.formType);
@@ -177,7 +178,6 @@ export class FormEditorComponent
         }
         this.formType = this.localStorageService.getItem('formType');
       } else {
-        console.log('Get form', uuid);
         this.formMetadata.uuid = uuid;
         this.fs
           .fetchFormMetadata(this.formMetadata.uuid, false)
@@ -424,11 +424,13 @@ export class FormEditorComponent
       data: message
     });
   }
+
   showNotificationMessage(message: string) {
     this.snackbar.open(message, '', {
       duration: 1200
     });
   }
+
   setFormEditor(schema, rawSchema, formMetadata?) {
     this.selectedSchema = schema;
     this.schema = schema;
@@ -458,13 +460,14 @@ export class FormEditorComponent
         message =
           'This form has been published. Would you want to overwrite the existing form?';
       } else if (!_.isEmpty(this.formMetadata.uuid)) {
-        message = 'Would you want to update the form or save as a new version?';
+        message =
+          'Do you want to update the existing form or save it as a new version?';
       }
       this.dialogService
         .addDialog(
           ConfirmComponent,
           {
-            title: 'Confirm Save',
+            title: 'Save Form',
             message: message,
             buttonText: 'Update current version'
           },
@@ -472,13 +475,13 @@ export class FormEditorComponent
             backdropColor: 'rgba(0,0, 0, 0.5)'
           }
         )
-        .subscribe((decision) => {
-          if (decision === 1) {
+        .subscribe((choice) => {
+          if (choice === 1) {
             // overwrite existing form
             this.showSaveDialog('overwrite');
           }
 
-          if (decision === 2) {
+          if (choice === 2) {
             // save as a new version
             this.showSaveDialog('new', '0');
           }
@@ -490,13 +493,15 @@ export class FormEditorComponent
   }
 
   showSaveDialog(operation: string, newVersion?: string) {
-    const dialogTitle =
-      this.formType === Constants.POC ? 'POC FORM' : 'Component';
+    console.log('formType in dialog: ', this.formType);
+    // const dialogTitle =
+    //   this.formType === Constants.POC ? 'POC FORM' : 'Component';
     this.dialogService
       .addDialog(
         SaveFormsComponent,
         {
-          title: `Save ${dialogTitle}`,
+          // title: `Save ${dialogTitle}`,
+          title: `Save`,
           operation: operation,
           name: this.formMetadata.name,
           uuid: this.formMetadata.uuid,
@@ -576,7 +581,7 @@ export class FormEditorComponent
   publish(form, index) {
     let forms = [];
     const sameFormsDifferentVersion = [];
-    this.subscription = this.fectAllFormsService
+    this.subscription = this.fetchAllFormsService
       .fetchAllPOCForms()
       .subscribe((POCForms: any) => {
         forms = _.cloneDeep(POCForms.results); // currently only poc forms version 1
@@ -606,7 +611,7 @@ export class FormEditorComponent
                         title: 'Confirm publish',
                         message:
                           'There is already a version of this form published.' +
-                          'Would you like to unpublish that version and publish this one?',
+                          'Would you like to unpublish that version and publish this one instead?',
                         buttonText: 'Publish'
                       },
                       {
