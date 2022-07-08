@@ -105,6 +105,7 @@ a {
 .errorToolbar {
   background: darkcyan;
 }
+
 .menu {
   margin-left: 10px;
 }
@@ -136,6 +137,7 @@ a {
   font-weight: 600;
   color: white;
 }
+
 .btn-default.active,
 .btn-default:active,
 .open > .dropdown-toggle.btn-default {
@@ -163,4 +165,8 @@ a {
   border-bottom: 6px solid #ffffff;
   border-left: 6px solid transparent;
   content: '';
+}
+
+.docs-link {
+  text-decoration: none;
 }

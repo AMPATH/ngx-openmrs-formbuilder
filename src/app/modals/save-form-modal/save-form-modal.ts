@@ -29,7 +29,8 @@ export interface SaveFormModel {
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'save-form',
-  templateUrl: './save-form-modal.html'
+  templateUrl: './save-form-modal.html',
+  styleUrls: ['./save-form-modal.css']
 })
 export class SaveFormsComponent
   extends DialogComponent<SaveFormModel, any>

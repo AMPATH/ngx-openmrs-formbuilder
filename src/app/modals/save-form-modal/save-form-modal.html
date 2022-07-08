@@ -44,8 +44,12 @@
         </div>
       </form>
     </div>
-    <div class="modal-footer">
-      <button [disabled]="isSavingForm" class="btn btn-primary" (click)="save(form.value)">
+    <div class="modal-footer actions">
+      <button
+        [disabled]="isSavingForm"
+        class="btn btn-primary"
+        (click)="save(form.value)"
+      >
         {{isSavingForm ? 'Saving form ...' : 'Ok'}}
       </button>
       <button type="button" class="btn btn-default" (click)="close()">
