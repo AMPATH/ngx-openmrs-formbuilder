@@ -128,8 +128,7 @@ export class ViewFormsComponent implements OnInit {
     this.subscription = this.fetchAllFormsService
       .fetchAllPOCForms()
       .subscribe((forms) => {
-        const f = forms.results;
-        f.forEach((form, index) => {
+        forms.forEach((form) => {
           this.fetchFormDetailService
             .fetchFormMetadata(form.uuid, false)
             .then((res) => {
@@ -141,10 +140,8 @@ export class ViewFormsComponent implements OnInit {
             });
         });
         this.isLoadingForms = false;
-        this.POCForms = _.cloneDeep(f);
-        this.forms = _.cloneDeep(f);
-
-        // this.fetchAllFormSchemas(this.POCForms);
+        this.POCForms = _.cloneDeep(forms);
+        this.forms = _.cloneDeep(forms);
       });
   }
 

@@ -1,11 +1,11 @@
-import { catchError } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { SessionStorageService } from '../storage/session-storage.service';
 import { FetchFormDetailService } from '../openmrs-api/fetch-form-detail.service';
 import { LocalStorageService } from '../storage/local-storage.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable()
 export class FetchAllFormsService {
@@ -35,25 +35,43 @@ export class FetchAllFormsService {
     this.headers.append('Content-Type', 'application/json');
   }
 
-  fetchAllPOCForms() {
+  fetchAllPOCForms(): Observable<any[]> {
     const v =
       'custom:(uuid,name,encounterType:(uuid,name),version,published,resources:(uuid,name,dataType,valueReference))';
-    return this.http
-      .get<any>(`${this.baseUrl}/ws/rest/v1/form?q=POC&v=${v}`, {
-        headers: this.headers
-      })
-      .pipe(
-        catchError((e) => {
-          if (e.status === 0) {
-            alert(
-              'Please check that you have internet connection and CORS is turned on then refresh.'
-            );
-          } else if (e.status === 403) {
-            this.router.navigate(['/login']);
-          }
-          return e;
-        })
-      );
+
+    const fetchPage = (startIndex = 0): Observable<any[]> => {
+      return this.http
+        .get<any>(
+          `${this.baseUrl}/ws/rest/v1/form?q=POC&v=${v}&limit=500&startIndex=${startIndex}`,
+          { headers: this.headers }
+        )
+        .pipe(
+          catchError((e) => {
+            if (e.status === 0) {
+              alert(
+                'Please check that you have internet connection and CORS is turned on then refresh.'
+              );
+            } else if (e.status === 403) {
+              this.router.navigate(['/login']);
+            }
+            throw e;
+          }),
+          switchMap((res: any) => {
+            const results = res.results || [];
+            const links = res.links || [];
+            const nextLink = links.find((l: any) => l.rel === 'next');
+
+            if (nextLink) {
+              return fetchPage(startIndex + 500).pipe(
+                map((nextResults) => results.concat(nextResults))
+              );
+            }
+            return of(results);
+          })
+        );
+    };
+
+    return fetchPage();
   }
 
   fetchAllComponentForms() {
