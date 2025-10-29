@@ -584,11 +584,13 @@ export class FormEditorComponent
     this.subscription = this.fetchAllFormsService
       .fetchAllPOCForms()
       .subscribe((POCForms: any) => {
-        forms = _.cloneDeep(POCForms.results); // currently only poc forms version 1
+        forms = _.cloneDeep(POCForms);
+
         const formName = this.formListService.removeVersionInformation(
           this.formMetadata.name
         );
         forms.splice(index, 1);
+
         const formsWithoutVersionedNames = this.formListService.removeVersionInformationFromForms(
           forms
         );
@@ -602,7 +604,7 @@ export class FormEditorComponent
         if (!_.isEmpty(sameFormsDifferentVersion)) {
           sameFormsDifferentVersion.forEach((_form) => {
             if (_form.published) {
-              POCForms.results.forEach((pocform) => {
+              forms.forEach((pocform) => {
                 if (pocform.uuid === _form.uuid) {
                   this.dialogService
                     .addDialog(
@@ -640,7 +642,7 @@ export class FormEditorComponent
               this.showSuccessToast('Form Successfully Published!');
               this.saveFormService
                 .publish(this.formMetadata.uuid)
-                .subscribe((res) => (this.formMetadata.published = true)); // if none of the other versions are published.
+                .subscribe((res) => (this.formMetadata.published = true));
             }
           });
         } else {
